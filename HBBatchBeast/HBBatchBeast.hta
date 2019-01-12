@@ -7,7 +7,7 @@
 
 
 <script type="text/javascript"> 
-  
+
   var fso = new ActiveXObject("Scripting.FileSystemObject"); 
 
 
@@ -37,9 +37,9 @@
 
 
 
-   
 
-    
+
+
     var s = "";
     var f = fso.GetFolder(folderspec);
     
@@ -47,7 +47,7 @@
         var subfolders = new Enumerator(f.SubFolders);
 
         for(; !subfolders.atEnd(); subfolders.moveNext()){s+=ShowFolderFileList((subfolders.item()).path);}  
-         
+
         // display all file path names.
 
       var thisFile ="";
@@ -351,7 +351,7 @@
 
 
 
-     
+
      var tempWrite = fso.OpenTextFile("./Config/Processes/sourceQueue.txt", 8, true);
      tempWrite.WriteLine(inputPathArray[i]);
      tempWrite.Close();   
@@ -624,7 +624,7 @@ function saveConfig(){
   var tempWrite = fso.OpenTextFile("./Recent/periodicScanningOnOff.txt", 2, true);
 
   if(document.getElementById("scanOnOff").checked==true){
-    
+
     tempWrite.WriteLine("1")
   }else{
 
@@ -637,7 +637,7 @@ function saveConfig(){
   var tempWrite = fso.OpenTextFile("./Config/viewCMDOnOff.txt", 2, true);
 
   if(document.getElementById("viewCMDOnOff").checked==true){
-    
+
     tempWrite.WriteLine("1")
   }else{
 
@@ -765,9 +765,9 @@ p {
   <center><h1 style="font-family:verdana;">HBBatchBeast</h1></center>
 
   <input type="button" onclick="openURL()" value="by HaveAGitGat">
-  
 
-  <p>Scan interval (seconds):<input type="text"  id="timer"></p>
+
+
 
 
   <p>Source folder path:(e.g "\\Server\share\Videos" or "C:\Videos" (without quotes))</p><textarea type="text"  class="folderPaths"   id="sourcePath"></textarea>
@@ -878,6 +878,7 @@ p {
   <br>
 
   <p>Enable periodic scanning?:<input type="checkbox" id="scanOnOff" ></p>
+    <p>Scan interval (seconds):<input type="text"  id="timer"></p>
 
 
   <p>Show Handbrake CMD windows when conversion is running?:<input type="checkbox" id="viewCMDOnOff" ></p>
