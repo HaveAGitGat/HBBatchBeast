@@ -1,7 +1,7 @@
 # HBBatchBeast
 A simple GUI application for Handbrake with an emphasis on batch conversion (including recursive folder scans and folder watching). The destination folder structure is kept the same as the source folder structure. Media in subfolders is also converted.
 
-This is standalone program that is based on HTAs (HTML Applications) while also making use of batch files and the Handbrake CLI. 
+This is a standalone program that is based on HTAs (HTML Applications) while also making use of batch files and the Handbrake CLI. 
 
 You'll need to add the HandbrakeCLI.exe to the root folder (Place it alongside "HBBatchBeast.hta".)
 
