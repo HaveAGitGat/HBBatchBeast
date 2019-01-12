@@ -21,3 +21,7 @@ The program makes use of 6 HTA's altogther:
  The program scans the source folder for all files. It then compares the source folder files with the destination folder files to see if any of the source files exist in the destination folder already.If not, the program queues the files for conversion.
  
 The 4 worker HTAs then work through the conversion queue. If periodic scanning is enabled then the program will run at the chosen interval.
+
+Demo video - https://sendvid.com/lmzaikh0
+
+Full zip download (including HandbrakeCLI.exe) - https://drive.google.com/file/d/1OFtn5Ss11yC74a4J_tqfKZP5-QCi4D4f/view
