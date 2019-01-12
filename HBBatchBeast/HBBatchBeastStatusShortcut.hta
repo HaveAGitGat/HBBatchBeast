@@ -1,0 +1,45 @@
+
+<html> 
+<head> 
+    <title>HBBatchBeast Status</title>
+    <meta http-equiv="x-ua-compatible" content="IE=9" />
+    <HTA:APPLICATION ID="HBBatchBeast Status" APPLICATIONNAME="BHBBatchBeast Status" BORDER="DIALOG" BORDERSTYLE="normal" CAPTION="yes" ICON="rocket.ico" MAXIMIZEBUTTON="yes" MINIMIZEBUTTON="yes" SCROLL="auto" scrollFlat="yes" SHOWINTASKBAR="yes" SINGLEINSTANCE="yes" SYSMENU="yes" VERSION="1.0" Navigable="yes" WINDOWSTATE="normal" />
+ 
+<script type="text/javascript"> 
+
+   window.onload = function() {
+
+window.resizeTo(1, 1);
+
+
+var path = "/Config/HBBatchBeastStatus.hta"
+  var shell = new ActiveXObject("WScript.Shell");
+            var rootdir = shell.currentDirectory;
+RunFileRel(path);
+
+            function RunFileRel(path) {
+                WshShell = new ActiveXObject("WScript.Shell");
+                WshShell.Run('"' + rootdir + path + '"', 1, false);
+        }
+
+        window.close();
+
+}
+
+
+   
+</script>
+
+<style>
+  
+
+
+
+
+</style>
+</head>
+ 
+<body> 
+  
+      
+</html>
