@@ -1,100 +1,100 @@
 
 <html> 
 <head> 
-    <title>HBBatchBeast Worker</title>
-    <meta http-equiv="x-ua-compatible" content="IE=9" />
-    <HTA:APPLICATION ID="HBBatchBeast Worker" APPLICATIONNAME="HBBatchBeast Worker" BORDER="DIALOG" BORDERSTYLE="normal" CAPTION="yes" ICON="rocket.ico" MAXIMIZEBUTTON="yes" MINIMIZEBUTTON="yes" SCROLL="auto" scrollFlat="yes" SHOWINTASKBAR="no" SINGLEINSTANCE="no" SYSMENU="yes" VERSION="1.0" Navigable="yes" WINDOWSTATE="minimize" />
- 
-<script type="text/javascript"> 
+  <title>HBBatchBeast Worker</title>
+  <meta http-equiv="x-ua-compatible" content="IE=9" />
+  <HTA:APPLICATION ID="HBBatchBeast Worker" APPLICATIONNAME="HBBatchBeast Worker" BORDER="DIALOG" BORDERSTYLE="normal" CAPTION="yes" ICON="rocket.ico" MAXIMIZEBUTTON="yes" MINIMIZEBUTTON="yes" SCROLL="auto" scrollFlat="yes" SHOWINTASKBAR="no" SINGLEINSTANCE="no" SYSMENU="yes" VERSION="1.0" Navigable="yes" WINDOWSTATE="minimize" />
+  
+  <script type="text/javascript"> 
 
-  function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
+    function sleep(milliseconds) {
+      var start = new Date().getTime();
+      for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds){
+          break;
+        }
+      }
     }
-  }
-}
 
-   window.onload = function() {
+    window.onload = function() {
 
-window.resizeTo(1, 1);
+      window.resizeTo(1, 1);
 
-window.moveTo(-100, -100);
+      window.moveTo(-100, -100);
 
 
-                    var fso = new ActiveXObject('Scripting.FileSystemObject');
+      var fso = new ActiveXObject('Scripting.FileSystemObject');
 
 
-var workerNumber ="1";  
+      var workerNumber ="1";  
 
 
-                        var tempRead = fso.OpenTextFile("./Config/presetString.txt", 1, true);
-                        var preset = tempRead.ReadLine();
-                        tempRead.Close();
+      var tempRead = fso.OpenTextFile("./Config/presetString.txt", 1, true);
+      var preset = tempRead.ReadLine();
+      tempRead.Close();
 
-                        var tempRead = fso.OpenTextFile("./Config/customPreset.txt", 1, true);
-                        var customPresets = tempRead.ReadLine();
-                        tempRead.Close();
-
-
-                   
-                    queueNumberPath = "./Config/Processes/queueNumberPath.txt";
-                     sourcePath = "./Config/Processes/sourceQueue.txt";
-                     destinationPath = "./Config/Processes/destinationQueue.txt"
-                     var handBrakeCLIPath = fso.GetAbsolutePathName('./HandBrakeCLI.exe');
-                     var globalQueueNumber;
-                     var currentLineNumber=0;
+      var tempRead = fso.OpenTextFile("./Config/customPreset.txt", 1, true);
+      var customPresets = tempRead.ReadLine();
+      tempRead.Close();
 
 
-                     var tempRead = fso.OpenTextFile("./Config/viewCMDOnOff.txt", 1, true);
-                        var viewCMDOnOff = tempRead.ReadLine();
-                        tempRead.Close();
+      
+      queueNumberPath = "./Config/Processes/queueNumberPath.txt";
+      sourcePath = "./Config/Processes/sourceQueue.txt";
+      destinationPath = "./Config/Processes/destinationQueue.txt"
+      var handBrakeCLIPath = fso.GetAbsolutePathName('./HandBrakeCLI.exe');
+      var globalQueueNumber;
+      var currentLineNumber=0;
 
 
-                    iStreamSource = fso.OpenTextFile(sourcePath, 1, false);
-                    iStreamDestination = fso.OpenTextFile(destinationPath, 1, false);
-
-                    while (!iStreamSource.AtEndOfStream) {
-
-                       sleep((2000*Math.random()));
-
-                      var currentSourceLine = iStreamSource.ReadLine(); 
-                       var currentDestinationLine = iStreamDestination.ReadLine(); 
-
-                      var tempRead = fso.OpenTextFile(queueNumberPath, 1, true);
-                        globalQueueNumber = tempRead.ReadLine();
-                        tempRead.Close();
-
-                    
-
-                       
-
-                       
+      var tempRead = fso.OpenTextFile("./Config/viewCMDOnOff.txt", 1, true);
+      var viewCMDOnOff = tempRead.ReadLine();
+      tempRead.Close();
 
 
-                        if (currentLineNumber == globalQueueNumber) {
+      iStreamSource = fso.OpenTextFile(sourcePath, 1, false);
+      iStreamDestination = fso.OpenTextFile(destinationPath, 1, false);
+
+      while (!iStreamSource.AtEndOfStream) {
+
+       sleep((2000*Math.random()));
+
+       var currentSourceLine = iStreamSource.ReadLine(); 
+       var currentDestinationLine = iStreamDestination.ReadLine(); 
+
+       var tempRead = fso.OpenTextFile(queueNumberPath, 1, true);
+       globalQueueNumber = tempRead.ReadLine();
+       tempRead.Close();
+
+       
+
+       
+
+       
 
 
-                                globalQueueNumber++;
-
-                     
-                      var tempWrite = fso.OpenTextFile(queueNumberPath, 2, true);
-                      tempWrite.WriteLine(globalQueueNumber);
-                      tempWrite.Close(); 
+       if (currentLineNumber == globalQueueNumber) {
 
 
-                              
+        globalQueueNumber++;
 
-                 
+        
+        var tempWrite = fso.OpenTextFile(queueNumberPath, 2, true);
+        tempWrite.WriteLine(globalQueueNumber);
+        tempWrite.Close(); 
 
-                      var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker"+workerNumber+"FileName.txt", 2, true);
-                      tempWrite.WriteLine(currentDestinationLine);
-                      tempWrite.Close(); 
 
-                      var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker"+workerNumber+"QueueNumber.txt", 2, true);
-                      tempWrite.WriteLine(globalQueueNumber-1);
-                      tempWrite.Close(); 
+        
+
+        
+
+        var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker"+workerNumber+"FileName.txt", 2, true);
+        tempWrite.WriteLine(currentDestinationLine);
+        tempWrite.Close(); 
+
+        var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker"+workerNumber+"QueueNumber.txt", 2, true);
+        tempWrite.WriteLine(globalQueueNumber-1);
+        tempWrite.Close(); 
 
 
 
@@ -107,63 +107,63 @@ var workerNumber ="1";
                                       t.Close();
 
 
-                                       var path = "/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp"+workerNumber+".bat"
-                                       var shell = new ActiveXObject("WScript.Shell");
+                                      var path = "/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp"+workerNumber+".bat"
+                                      var shell = new ActiveXObject("WScript.Shell");
                                       var rootdir = shell.currentDirectory;
                                       WshShell = new ActiveXObject("WScript.Shell");
-                                       WshShell.Run('"' + rootdir + path + '"', viewCMDOnOff, true);
+                                      WshShell.Run('"' + rootdir + path + '"', viewCMDOnOff, true);
 
                                     }else{  }
 
-                                     currentLineNumber++;
+                                    currentLineNumber++;
 
 
-                    }
-
-
-
-                
-               
-
-
-                 iStreamSource.Close();
-                iStreamDestination.Close();
-
-                 var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker"+workerNumber+"FileName.txt", 2, true);
-                      tempWrite.WriteLine("Complete!");
-                      tempWrite.Close(); 
-
-                      var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker"+workerNumber+"QueueNumber.txt", 2, true);
-                      tempWrite.WriteLine("Complete!");
-                      tempWrite.Close(); 
-                    
-                    window.close();
+                                  }
 
 
 
+                                  
+                                  
 
-}
 
+                                  iStreamSource.Close();
+                                  iStreamDestination.Close();
 
-   
-</script>
+                                  var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker"+workerNumber+"FileName.txt", 2, true);
+                                  tempWrite.WriteLine("Complete!");
+                                  tempWrite.Close(); 
 
-<style>
-  
+                                  var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker"+workerNumber+"QueueNumber.txt", 2, true);
+                                  tempWrite.WriteLine("Complete!");
+                                  tempWrite.Close(); 
+                                  
+                                  window.close();
 
 
 
 
-</style>
-</head>
- 
-<body> 
-  <center>
-    
+                                }
+
+
+                                
+                              </script>
+
+                              <style>
+                              
 
 
 
-</center>
-  
-      
-</html>
+
+                            </style>
+                          </head>
+                          
+                          <body> 
+                            <center>
+                              
+
+
+
+                            </center>
+                            
+                            
+                            </html>
