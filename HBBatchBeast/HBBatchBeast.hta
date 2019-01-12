@@ -675,9 +675,22 @@ function saveConfig(){
 
 }
 
+
+function openURL()
+{
+  var shell = new ActiveXObject("WScript.Shell");
+  shell.run("https://github.com/HaveAGitGat");
+}
+
 </script>
 
 <style>
+
+body {
+  background-color: #989898;
+  display: inline;
+}
+
 
 
 .main {
@@ -696,23 +709,74 @@ function saveConfig(){
 
 }
 
+.dropdown1 {
+
+
+
+}
+
+
+.button1 {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+
+.button2{
+  background-color: #f44336; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+p {
+
+  text-align: center;
+  text-decoration: none;
+
+  font-size: 16px;
+  font-family:verdana;
+}
+
+.selectbox{
+
+  width: 30em;
+
+}
 
 </style>
 </head>
 
 <body> 
- 
 
-  <center>  <p>Scan interval:<input type="text"  id="timer"></p>
-
-
-   <p>Source folder path:(e.g "\\Server\share\Videos" or "C:\Videos" (without quotes))<textarea type="text"  class="folderPaths"   id="sourcePath"></textarea></p>
-
-   <p>Destination folder path:<textarea type="text" class="folderPaths"  id="destinationPath"></textarea></p>
+ <center> 
 
 
-   <p>Select preset:</p>
-   <select name="preset" id="preset">
+  <center><h1 style="font-family:verdana;">HBBatchBeast</h1></center>
+
+  <input type="button" onclick="openURL()" value="by HaveAGitGat">
+  
+
+  <p>Scan interval (seconds):<input type="text"  id="timer"></p>
+
+
+  <p>Source folder path:(e.g "\\Server\share\Videos" or "C:\Videos" (without quotes))</p><textarea type="text"  class="folderPaths"   id="sourcePath"></textarea>
+
+  <p>Destination folder path:</p><textarea type="text" class="folderPaths"  id="destinationPath"></textarea>
+
+
+  <p>Select preset:</p>
+  <select name="preset" class="selectbox" id="preset">
     <option value="0"></option>
     <option value="1">Very Fast 1080p30</option>
     <option value="2">Very Fast 720p30</option>
@@ -806,7 +870,7 @@ function saveConfig(){
   </div>
 
   <p>Container:</p>
-  <select name="container" id="container">
+  <select name="container" class="selectbox" id="container">
     <option value="0">.mp4</option>  
     <option value="1">.mkv</option>
   </select>
@@ -818,18 +882,20 @@ function saveConfig(){
 
   <p>Show Handbrake CMD windows when conversion is running?:<input type="checkbox" id="viewCMDOnOff" ></p>
 
-  <input type='button' value='Save config'  onclick='saveConfig()'/>
+  <input type='button' class="button1" value='Save config'  onclick='saveConfig()'/>
 
   <br>
   <br>
   <br>
-  <input type='button' value='Scan for and convert files'  onclick='convertFiles()'/>
+  <input type='button' class="button2" value='Scan for and convert files'  onclick='convertFiles()'/>
 
   
   <p>Scanning for new files in:<input type="text"  id="countdown">seconds</p>
 
   <div id="files"></div>
   <div id="files2"></div>
+
+
 
 </center>
 
