@@ -2,374 +2,238 @@
 <html> 
 
 <title>HBBatchBeast</title>
- <meta http-equiv="x-ua-compatible" content="IE=9" />
+<meta http-equiv="x-ua-compatible" content="IE=9" />
 <HTA:APPLICATION ID="HBBatchBeast" APPLICATIONNAME="HBBatchBeast" BORDER="DIALOG" BORDERSTYLE="normal" CAPTION="yes" ICON="rocket.ico" MAXIMIZEBUTTON="yes" MINIMIZEBUTTON="yes" SCROLL="auto" scrollFlat="yes" SHOWINTASKBAR="yes" SINGLEINSTANCE="yes" SYSMENU="yes" VERSION="1.0" Navigable="yes" WINDOWSTATE="normal" /> 
 
- 
+
 <script type="text/javascript"> 
-    
-    var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+  
+  var fso = new ActiveXObject("Scripting.FileSystemObject"); 
 
 
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
+  function sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+      if ((new Date().getTime() - start) > milliseconds){
+        break;
+      }
     }
   }
-}
 
 
-    var inputPathArray = [];
-    var outputPathArray = [];
+  var inputPathArray = [];
+  var outputPathArray = [];
 
-    var inputPathArrayCounter = 0;
+  var inputPathArrayCounter = 0;
 
-    var outputFolderPathold ="";
+  var outputFolderPathold ="";
 
-    var fileNotExistsCounter =0;
-    var totalFileFoundCounter =0;
+  var fileNotExistsCounter =0;
+  var totalFileFoundCounter =0;
 
-    var g ;
-    function ShowFolderFileList(folderspec){
+  var g ;
+  function ShowFolderFileList(folderspec){
 
 
 
 
    
 
-        
-        var s = "";
-        var f = fso.GetFolder(folderspec);
-        
+    
+    var s = "";
+    var f = fso.GetFolder(folderspec);
+    
         // recurse subfolders
         var subfolders = new Enumerator(f.SubFolders);
 
         for(; !subfolders.atEnd(); subfolders.moveNext()){s+=ShowFolderFileList((subfolders.item()).path);}  
- 
+         
         // display all file path names.
 
-var thisFile ="";
-  var thisLine="";
+      var thisFile ="";
+      var thisLine="";
 
-        var fc = new Enumerator(f.files);
-        for (; !fc.atEnd(); fc.moveNext()){
-
-
-var thisFile = fc.item() +"";
+      var fc = new Enumerator(f.files);
+      for (; !fc.atEnd(); fc.moveNext()){
 
 
-
-inputPathArray[inputPathArrayCounter] = thisFile+"";
-
-
- var tFF = fso.OpenTextFile("./Config/totalFilesFound.txt", 2, true);
-  tFF.WriteLine(totalFileFoundCounter+1);
-   tFF.Close();
-   totalFileFoundCounter++
-
-
-var str = inputPathArray[inputPathArrayCounter];
-str = str.substring(str.indexOf("topFolder") + topFolderCharLength+1);
-
-
-pointer  = str.split('\\');
-
-filePathEnd =pointer[pointer.length - 1]
-
-filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));
-
-subfilePath = filePathEndFileType+document.getElementById("container").options[document.getElementById("container").selectedIndex].text;
-
-LongsubfilePath = str.slice(0, str.lastIndexOf('\\'));
-
-newsubfilePath = LongsubfilePath+"\\"+ subfilePath ;
+        var thisFile = fc.item() +"";
 
 
 
- outputPathArray[inputPathArrayCounter] = outPutPathStem+newsubfilePath;
+        inputPathArray[inputPathArrayCounter] = thisFile+"";
+
+
+        var tFF = fso.OpenTextFile("./Config/totalFilesFound.txt", 2, true);
+        tFF.WriteLine(totalFileFoundCounter+1);
+        tFF.Close();
+        totalFileFoundCounter++
+
+
+        var str = inputPathArray[inputPathArrayCounter];
+        str = str.substring(str.indexOf("topFolder") + topFolderCharLength+1);
+
+
+        pointer  = str.split('\\');
+
+        filePathEnd =pointer[pointer.length - 1]
+
+        filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));
+
+        subfilePath = filePathEndFileType+document.getElementById("container").options[document.getElementById("container").selectedIndex].text;
+
+        LongsubfilePath = str.slice(0, str.lastIndexOf('\\'));
+
+        newsubfilePath = LongsubfilePath+"\\"+ subfilePath ;
 
 
 
-
-
-var outputFolderPath = outputPathArray[inputPathArrayCounter].substring(0, outputPathArray[inputPathArrayCounter].lastIndexOf('\\'));
-
-
- if(fso.FileExists(outputPathArray[inputPathArrayCounter])){
-
-
- }else{
-
-  var uFF = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 2, true);
-   uFF.WriteLine(fileNotExistsCounter+1);
-   uFF.Close();
-   fileNotExistsCounter++
-
- }
-
-if(fso.FolderExists(outputFolderPath)){
-
-
-}else{
-
-
-
-if(outputFolderPath!=outputFolderPathold){
-g.WriteLine("mkdir "+"\""+outputFolderPath+"\"");
-
-outputFolderPathold=outputFolderPath;
-
-}
+        outputPathArray[inputPathArrayCounter] = outPutPathStem+newsubfilePath;
 
 
 
 
-}
+
+        var outputFolderPath = outputPathArray[inputPathArrayCounter].substring(0, outputPathArray[inputPathArrayCounter].lastIndexOf('\\'));
+
+
+        if(fso.FileExists(outputPathArray[inputPathArrayCounter])){
+
+
+        }else{
+
+          var uFF = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 2, true);
+          uFF.WriteLine(fileNotExistsCounter+1);
+          uFF.Close();
+          fileNotExistsCounter++
+
+        }
+
+        if(fso.FolderExists(outputFolderPath)){
+
+
+        }else{
+
+
+
+          if(outputFolderPath!=outputFolderPathold){
+            g.WriteLine("mkdir "+"\""+outputFolderPath+"\"");
+
+            outputFolderPathold=outputFolderPath;
+
+          }
 
 
 
 
-inputPathArrayCounter++;
-
-
-
-
-if (thisFile.indexOf("csv") >=0){}
-
-
-
-}
-
-
- }
-
-var outPutPathStem
-var inputPathStem 
-var inputPathStemSplit 
-var topFolder
-var topFolderCharLength 
-var programPath=""
- 
-function convertFiles(){
-
-  saveConfig();
-
-   var tFF = fso.OpenTextFile("./Config/totalFilesFound.txt", 2, true);
-  tFF.WriteLine("0");
-   tFF.Close();
-
-    var uFF = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 2, true);
-   uFF.WriteLine("0");
-   uFF.Close();
-
-   var cF = fso.OpenTextFile("./Config/convertedFiles.txt", 2, true);
-                         cF.WriteLine("0");
-                           cF.Close();
-
-var path = "/Config/HBBatchBeastStatus.hta"
-  var shell = new ActiveXObject("WScript.Shell");
-            var rootdir = shell.currentDirectory;
-RunFileRel(path);
-
-            function RunFileRel(path) {
-                WshShell = new ActiveXObject("WScript.Shell");
-                WshShell.Run('"' + rootdir + path + '"', 1, false);
         }
 
 
 
 
-
-fileNotExistsCounter =0;
-totalFileFoundCounter =0;
+        inputPathArrayCounter++;
 
 
 
 
-
- inputPathStem =document.getElementById("sourcePath").value;
-
- inputPathStemSplit = inputPathStem.split(',');
+        if (thisFile.indexOf("csv") >=0){}
 
 
 
- topFolder = inputPathStemSplit[inputPathStemSplit.length - 1]
-
- topFolderCharLength = topFolder.length
+      }
 
 
+  }
 
- outPutPathStem =document.getElementById("destinationPath").value;
-
+  var outPutPathStem
+  var inputPathStem 
+  var inputPathStemSplit 
+  var topFolder
+  var topFolderCharLength 
+  var programPath=""
   
+  function convertFiles(){
 
+    saveConfig();
 
- inputPathArrayCounter = 0
+    var tFF = fso.OpenTextFile("./Config/totalFilesFound.txt", 2, true);
+    tFF.WriteLine("0");
+    tFF.Close();
 
-   inputPathArray = [];
-   outputPathArray = [];
+    var uFF = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 2, true);
+    uFF.WriteLine("0");
+    uFF.Close();
 
+    var cF = fso.OpenTextFile("./Config/convertedFiles.txt", 2, true);
+    cF.WriteLine("0");
+    cF.Close();
 
+    var path = "/Config/HBBatchBeastStatus.hta"
+    var shell = new ActiveXObject("WScript.Shell");
+    var rootdir = shell.currentDirectory;
+    RunFileRel(path);
 
-var outputpath3 = "./MakeDirBatchTemp.bat";
-
- if(fso.FileExists(outputpath3)){
-fso.DeleteFile(outputpath3)
+    function RunFileRel(path) {
+      WshShell = new ActiveXObject("WScript.Shell");
+      WshShell.Run('"' + rootdir + path + '"', 1, false);
     }
 
 
-  g = fso.OpenTextFile("./MakeDirBatchTemp.bat", 8, true);
 
 
 
-
- 
-
-
-ShowFolderFileList(inputPathStem);
-
-g.Close();
-
-
- 
+    fileNotExistsCounter =0;
+    totalFileFoundCounter =0;
 
 
 
 
 
+    inputPathStem =document.getElementById("sourcePath").value;
+
+    inputPathStemSplit = inputPathStem.split(',');
 
 
 
-var currentWindowPath = window.location.pathname;
+    topFolder = inputPathStemSplit[inputPathStemSplit.length - 1]
 
-    currentFolderPath = currentWindowPath.substring(0, currentWindowPath.lastIndexOf('\\'));
-
-
-
-var handBrakeCLIPath = fso.GetAbsolutePathName('./HandBrakeCLI.exe');
-
-var conversionStatusPath = fso.GetAbsolutePathName('./Config/convertedFiles.txt');
-var conversionStatusFilePath = fso.GetAbsolutePathName('./Config/currentFile.txt');
-
-var conversionStatusPath2 = fso.GetAbsolutePathName('./Config/convertedFiles2.txt');
-var conversionStatusFilePath2 = fso.GetAbsolutePathName('./Config/currentFile2.txt');
-
-var process1TotalPath = fso.GetAbsolutePathName('./Config/Processes/process1Total.txt');
-var process1Tota2Path = fso.GetAbsolutePathName('./Config/process2Total.txt');
+    topFolderCharLength = topFolder.length
 
 
 
+    outPutPathStem =document.getElementById("destinationPath").value;
 
-var tempWrite = fso.OpenTextFile("./Config/convertedFiles.txt", 2, true);
-  tempWrite.WriteLine("-");
-   tempWrite.Close();
-
- var tempWrite = fso.OpenTextFile("./Config/currentFile.txt", 2, true);
-  tempWrite.WriteLine("-");
-   tempWrite.Close();
-   
-   var tempWrite = fso.OpenTextFile("./Config/convertedFiles2.txt", 2, true);
-  tempWrite.WriteLine("-");
-   tempWrite.Close();
-
-   var tempWrite = fso.OpenTextFile("./Config/currentFile2.txt", 2, true);
-  tempWrite.WriteLine("-");
-   tempWrite.Close();
-
-   var tempWrite = fso.OpenTextFile("./Config/Processes/process1Total.txt", 2, true);
-  tempWrite.WriteLine("-");
-   tempWrite.Close();
-
-   var tempWrite = fso.OpenTextFile("./Config/process2Total.txt", 2, true);
-  tempWrite.WriteLine("-");
-   tempWrite.Close();  
+    
 
 
-    var tempWrite = fso.OpenTextFile("./Config/Processes/sourceQueue.txt", 2, true);
-   tempWrite.Close(); 
+    inputPathArrayCounter = 0
 
-       var tempWrite = fso.OpenTextFile("./Config/Processes/destinationQueue.txt", 2, true);
-   tempWrite.Close();
-
-          var tempWrite = fso.OpenTextFile("./Config/Processes/queueNumberPath.txt", 2, true);
-           tempWrite.WriteLine("0");
-   tempWrite.Close();
-
-
-   //reset worker stats
-
-   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker1QueueNumber.txt", 2, true);
-           tempWrite.WriteLine("-");
-   tempWrite.Close();
-
-   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker2QueueNumber.txt", 2, true);
-           tempWrite.WriteLine("-");
-   tempWrite.Close();
-   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker3QueueNumber.txt", 2, true);
-           tempWrite.WriteLine("-");
-   tempWrite.Close();
-
-   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker4QueueNumber.txt", 2, true);
-           tempWrite.WriteLine("-");
-   tempWrite.Close();
-
-   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker1FileName.txt", 2, true);
-           tempWrite.WriteLine("-");
-   tempWrite.Close();
-
-   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker2FileName.txt", 2, true);
-           tempWrite.WriteLine("-");
-   tempWrite.Close();
-
-   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker3FileName.txt", 2, true);
-           tempWrite.WriteLine("-");
-   tempWrite.Close();
-
-   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker4FileName.txt", 2, true);
-           tempWrite.WriteLine("-");
-   tempWrite.Close();
-
-          var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/AllComplete.txt", 2, true);
-                      tempWrite.WriteLine("0");
-                      tempWrite.Close();
+    inputPathArray = [];
+    outputPathArray = [];
 
 
 
+    var outputpath3 = "./MakeDirBatchTemp.bat";
 
-var writeNumber = 0;
-
-
-
-
- for (var i = 0; i < outputPathArray.length; i++) {
-
-  if(fso.FileExists(outputPathArray[i])){
-
-  }else{
+    if(fso.FileExists(outputpath3)){
+      fso.DeleteFile(outputpath3)
+    }
 
 
-
- 
- var tempWrite = fso.OpenTextFile("./Config/Processes/sourceQueue.txt", 8, true);
-  tempWrite.WriteLine(inputPathArray[i]);
-   tempWrite.Close();   
-
-    var tempWrite = fso.OpenTextFile("./Config/Processes/destinationQueue.txt", 8, true);
-  tempWrite.WriteLine(outputPathArray[i]);
-   tempWrite.Close();  
-
- writeNumber++;
+    g = fso.OpenTextFile("./MakeDirBatchTemp.bat", 8, true);
 
 
 
 
     
-  }
 
 
-  }
+    ShowFolderFileList(inputPathStem);
+
+    g.Close();
+
+
+    
 
 
 
@@ -377,50 +241,183 @@ var writeNumber = 0;
 
 
 
-   
-  WshShell = new ActiveXObject("WScript.Shell");
 
-  try{ 
- WshShell.Run("MakeDirBatchTemp.bat", 1, true); 
-   } catch (err) {}
+    var currentWindowPath = window.location.pathname;
+
+    currentFolderPath = currentWindowPath.substring(0, currentWindowPath.lastIndexOf('\\'));
+
+
+
+    var handBrakeCLIPath = fso.GetAbsolutePathName('./HandBrakeCLI.exe');
+
+    var conversionStatusPath = fso.GetAbsolutePathName('./Config/convertedFiles.txt');
+    var conversionStatusFilePath = fso.GetAbsolutePathName('./Config/currentFile.txt');
+
+    var conversionStatusPath2 = fso.GetAbsolutePathName('./Config/convertedFiles2.txt');
+    var conversionStatusFilePath2 = fso.GetAbsolutePathName('./Config/currentFile2.txt');
+
+    var process1TotalPath = fso.GetAbsolutePathName('./Config/Processes/process1Total.txt');
+    var process1Tota2Path = fso.GetAbsolutePathName('./Config/process2Total.txt');
+
+
+
+
+    var tempWrite = fso.OpenTextFile("./Config/convertedFiles.txt", 2, true);
+    tempWrite.WriteLine("-");
+    tempWrite.Close();
+
+    var tempWrite = fso.OpenTextFile("./Config/currentFile.txt", 2, true);
+    tempWrite.WriteLine("-");
+    tempWrite.Close();
+    
+    var tempWrite = fso.OpenTextFile("./Config/convertedFiles2.txt", 2, true);
+    tempWrite.WriteLine("-");
+    tempWrite.Close();
+
+    var tempWrite = fso.OpenTextFile("./Config/currentFile2.txt", 2, true);
+    tempWrite.WriteLine("-");
+    tempWrite.Close();
+
+    var tempWrite = fso.OpenTextFile("./Config/Processes/process1Total.txt", 2, true);
+    tempWrite.WriteLine("-");
+    tempWrite.Close();
+
+    var tempWrite = fso.OpenTextFile("./Config/process2Total.txt", 2, true);
+    tempWrite.WriteLine("-");
+    tempWrite.Close();  
+
+
+    var tempWrite = fso.OpenTextFile("./Config/Processes/sourceQueue.txt", 2, true);
+    tempWrite.Close(); 
+
+    var tempWrite = fso.OpenTextFile("./Config/Processes/destinationQueue.txt", 2, true);
+    tempWrite.Close();
+
+    var tempWrite = fso.OpenTextFile("./Config/Processes/queueNumberPath.txt", 2, true);
+    tempWrite.WriteLine("0");
+    tempWrite.Close();
+
+
+   //reset worker stats
+
+   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker1QueueNumber.txt", 2, true);
+   tempWrite.WriteLine("-");
+   tempWrite.Close();
+
+   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker2QueueNumber.txt", 2, true);
+   tempWrite.WriteLine("-");
+   tempWrite.Close();
+   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker3QueueNumber.txt", 2, true);
+   tempWrite.WriteLine("-");
+   tempWrite.Close();
+
+   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker4QueueNumber.txt", 2, true);
+   tempWrite.WriteLine("-");
+   tempWrite.Close();
+
+   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker1FileName.txt", 2, true);
+   tempWrite.WriteLine("-");
+   tempWrite.Close();
+
+   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker2FileName.txt", 2, true);
+   tempWrite.WriteLine("-");
+   tempWrite.Close();
+
+   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker3FileName.txt", 2, true);
+   tempWrite.WriteLine("-");
+   tempWrite.Close();
+
+   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker4FileName.txt", 2, true);
+   tempWrite.WriteLine("-");
+   tempWrite.Close();
+
+   var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/AllComplete.txt", 2, true);
+   tempWrite.WriteLine("0");
+   tempWrite.Close();
+
+
+
+
+   var writeNumber = 0;
+
+
+
+
+   for (var i = 0; i < outputPathArray.length; i++) {
+
+    if(fso.FileExists(outputPathArray[i])){
+
+    }else{
+
+
+
+     
+     var tempWrite = fso.OpenTextFile("./Config/Processes/sourceQueue.txt", 8, true);
+     tempWrite.WriteLine(inputPathArray[i]);
+     tempWrite.Close();   
+
+     var tempWrite = fso.OpenTextFile("./Config/Processes/destinationQueue.txt", 8, true);
+     tempWrite.WriteLine(outputPathArray[i]);
+     tempWrite.Close();  
+
+     writeNumber++;
+
+
+
+
+     
+   }
+
+
+ }
+
+
+
+
+
+
+
+ 
+ WshShell = new ActiveXObject("WScript.Shell");
+
+ try{ 
+   WshShell.Run("MakeDirBatchTemp.bat", 1, true); 
+ } catch (err) {}
 
  try{ 
 
 
 
-                var path = "/Config/Processes/Worker";
-                var shell = new ActiveXObject("WScript.Shell");
-                 var rootdir = shell.currentDirectory;
-              WshShell = new ActiveXObject("WScript.Shell");
-             WshShell.Run('"' + rootdir + path + '1.hta"', 0, false);
-             sleep(1000);
-             WshShell.Run('"' + rootdir + path + '2.hta"', 0, false);
-             sleep(1000);
-             WshShell.Run('"' + rootdir + path + '3.hta"', 0, false);
-             sleep(1000);
-              WshShell.Run('"' + rootdir + path + '4.hta"', 0, false);
+  var path = "/Config/Processes/Worker";
+  var shell = new ActiveXObject("WScript.Shell");
+  var rootdir = shell.currentDirectory;
+  WshShell = new ActiveXObject("WScript.Shell");
+  WshShell.Run('"' + rootdir + path + '1.hta"', 0, false);
+  sleep(1000);
+  WshShell.Run('"' + rootdir + path + '2.hta"', 0, false);
+  sleep(1000);
+  WshShell.Run('"' + rootdir + path + '3.hta"', 0, false);
+  sleep(1000);
+  WshShell.Run('"' + rootdir + path + '4.hta"', 0, false);
 
 
- } catch (err) {}
+} catch (err) {}
  //  }
 
-   if(document.getElementById("scanOnOff").checked==true){
+ if(document.getElementById("scanOnOff").checked==true){
 
 
-    countDownOn=1;
-       document.getElementById("countdown").value = document.getElementById("timer").value
+  countDownOn=1;
+  document.getElementById("countdown").value = document.getElementById("timer").value
 
-       
+  
 
-  }else{
+}else{
 
-countDownOn=0;
+  countDownOn=0;
 
-document.getElementById("countdown").value = "Disabled";
-  }
-
- 
-
+  document.getElementById("countdown").value = "Disabled";
+}
 
 
 
@@ -428,8 +425,11 @@ document.getElementById("countdown").value = "Disabled";
 
 
 
-  scanCompleted2=1;
-  scanCompleted=0;
+
+
+
+scanCompleted2=1;
+scanCompleted=0;
 
 
 }
@@ -437,239 +437,239 @@ document.getElementById("countdown").value = "Disabled";
 var scanCompleted=0;
 var scanCompleted2=0;
 
- window.setInterval("runScan();", 1000);
+window.setInterval("runScan();", 1000);
 
 
 
 
- var countDownOn=0;
+var countDownOn=0;
 
-                    function runScan() {
-
-
-                      if(scanCompleted==1 && scanCompleted2==1){
-      var today = new Date();
-             var dd = today.getDate();
-             var mm = today.getMonth() + 1; 
-             var yyyy = today.getFullYear();
-             if (dd < 10) {
-                 dd = '0' + dd
-             }
-             if (mm < 10) {
-                 mm = '0' + mm
-             }
-             today = dd + '/' + mm + '/' + yyyy;
-             today2 = dd + '-' + mm + '-' + yyyy;
-             
-             var d = new Date(),
-                h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
-                m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
-                s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
-                timenow = h + '-' + m + '-' + s;
+function runScan() {
 
 
-        var uFF2 = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 1, true);                 
-          var convertedFiles1= uFF2.ReadLine();
-            uFF2.Close();
-
-                
-
-
-                          queueNumberPath = "./Config/Processes/queueNumberPath.txt";
-                           var tempRead = fso.OpenTextFile(queueNumberPath, 1, true);
-                        convertedFiles = tempRead.ReadLine();
-                        tempRead.Close();
-
-                        var tempRead = fso.OpenTextFile("./Config/presetString.txt", 1, true);
-                        var preset = tempRead.ReadLine();
-                        tempRead.Close();
-
-
-                           var uFF2 = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 1, true);
-                     
-                         var unConvertedFiles = uFF2.ReadLine();
-            
-                           uFF2.Close();
-
-     document.getElementById("files").innerHTML += "<p>Scan completed on "+ today2+"-"+timenow+".-------Total files found:"+totalFileFoundCounter+"---------Unconverted files:"+unConvertedFiles+"------.Files processed:"+convertedFiles+" out of "+convertedFiles1+"-------Preset:"+preset+".<\p>";
+  if(scanCompleted==1 && scanCompleted2==1){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; 
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+     dd = '0' + dd
+   }
+   if (mm < 10) {
+     mm = '0' + mm
+   }
+   today = dd + '/' + mm + '/' + yyyy;
+   today2 = dd + '-' + mm + '-' + yyyy;
+   
+   var d = new Date(),
+   h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
+   m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+   s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
+   timenow = h + '-' + m + '-' + s;
 
 
-  
+   var uFF2 = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 1, true);                 
+   var convertedFiles1= uFF2.ReadLine();
+   uFF2.Close();
+
+   
 
 
-     var tempWrite = fso.OpenTextFile("./Logs/Scans.txt", 8, true);
-  tempWrite.WriteLine("Scan completed on "+ today2+"-"+timenow+".-------Total files found:"+totalFileFoundCounter+"---------Unconverted files:"+unConvertedFiles+"------.Files processed:"+convertedFiles+" out of "+convertedFiles1+"-------Preset:"+preset+".");
+   queueNumberPath = "./Config/Processes/queueNumberPath.txt";
+   var tempRead = fso.OpenTextFile(queueNumberPath, 1, true);
+   convertedFiles = tempRead.ReadLine();
+   tempRead.Close();
+
+   var tempRead = fso.OpenTextFile("./Config/presetString.txt", 1, true);
+   var preset = tempRead.ReadLine();
+   tempRead.Close();
+
+
+   var uFF2 = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 1, true);
+   
+   var unConvertedFiles = uFF2.ReadLine();
+   
+   uFF2.Close();
+
+   document.getElementById("files").innerHTML += "<p>Scan completed on "+ today2+"-"+timenow+".-------Total files found:"+totalFileFoundCounter+"---------Unconverted files:"+unConvertedFiles+"------.Files processed:"+convertedFiles+" out of "+convertedFiles1+"-------Preset:"+preset+".<\p>";
+
+
+   
+
+
+   var tempWrite = fso.OpenTextFile("./Logs/Scans.txt", 8, true);
+   tempWrite.WriteLine("Scan completed on "+ today2+"-"+timenow+".-------Total files found:"+totalFileFoundCounter+"---------Unconverted files:"+unConvertedFiles+"------.Files processed:"+convertedFiles+" out of "+convertedFiles1+"-------Preset:"+preset+".");
    tempWrite.Close();
 
-     scanCompleted2=0;
+   scanCompleted2=0;
 
 
-}
+ }
 
  if(fso.FileExists("./Config/Processes/WorkerStatus/AllComplete.txt")){
- var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/AllComplete.txt", 1, true);
+   var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/AllComplete.txt", 1, true);
 
- try{
- var AllComplete = tempRead.ReadLine();
-tempRead.Close();  
+   try{
+     var AllComplete = tempRead.ReadLine();
+     tempRead.Close();  
 
-}catch(err){
-var AllComplete ="0";
+   }catch(err){
+    var AllComplete ="0";
 
-}
+  }
 
 }             
 
- if(countDownOn==1&&AllComplete=="1"){
-scanCompleted=1;
+if(countDownOn==1&&AllComplete=="1"){
+  scanCompleted=1;
 
-var timerSeconds =  document.getElementById("countdown").value
+  var timerSeconds =  document.getElementById("countdown").value
 
-timerSeconds--;
+  timerSeconds--;
 
-document.getElementById("countdown").value=timerSeconds ;
+  document.getElementById("countdown").value=timerSeconds ;
 
 
-if(timerSeconds==0){
+  if(timerSeconds==0){
 
-  convertFiles();
+    convertFiles();
 
- document.getElementById("countdown").value=document.getElementById("timer").value
+    document.getElementById("countdown").value=document.getElementById("timer").value
+
+    
+  }
+}
+
+
+
+
+}
+
+
+
+window.onload = function() {
+
+
+  try{
+    var tempRead = fso.OpenTextFile("./Recent/scanInterval.txt", 1, true);
+    document.getElementById("timer").value = tempRead.ReadLine();
+    tempRead.Close();
+
+    var tempRead = fso.OpenTextFile("./Recent/periodicScanningOnOff.txt", 1, true);
+    var scanningOnOff = tempRead.ReadLine();
+    tempRead.Close();
+
+    if(scanningOnOff=="1"){
+      document.getElementById("scanOnOff").checked=true;
+    }else{
+      document.getElementById("scanOnOff").checked=false;
+
+    }
+
+
+    var tempRead = fso.OpenTextFile("./Config/viewCMDOnOff.txt", 1, true);
+    var viewCMDOnOff = tempRead.ReadLine();
+    tempRead.Close();
+
+    if(viewCMDOnOff=="1"){
+      document.getElementById("viewCMDOnOff").checked=true;
+    }else{
+      document.getElementById("viewCMDOnOff").checked=false;
+
+    }                     
+
+    var tempRead = fso.OpenTextFile("./Recent/recentDestination.txt", 1, true);
+    document.getElementById("destinationPath").value = tempRead.ReadLine();
+    tempRead.Close();
+
+    var tempRead = fso.OpenTextFile("./Recent/recentSource.txt", 1, true);
+    document.getElementById("sourcePath").value = tempRead.ReadLine();
+    tempRead.Close();
+
+
+    var tempRead = fso.OpenTextFile("./Config/preset.txt", 1, true);
+    var selectedIndex = tempRead.ReadLine();
+
+    document.getElementById("preset").selectedIndex = selectedIndex;
+    tempRead.Close();
+
+    var tempRead = fso.OpenTextFile("./Config/container.txt", 1, true);
+    var selectedIndex = tempRead.ReadLine();
+
+    document.getElementById("container").selectedIndex = selectedIndex;
+    tempRead.Close();
+
+
+    var tempRead = fso.OpenTextFile("./config/customPreset.txt", 1, true);
+    document.getElementById("customPresets").value = tempRead.ReadLine();
+    tempRead.Close();
+
+  }catch(err){}
 
   
-  }
-  }
+  
+  
 
-
-
-
-                    }
-
-                
-
-                        window.onload = function() {
-
-
-try{
-                      var tempRead = fso.OpenTextFile("./Recent/scanInterval.txt", 1, true);
-                        document.getElementById("timer").value = tempRead.ReadLine();
-                        tempRead.Close();
-
-                        var tempRead = fso.OpenTextFile("./Recent/periodicScanningOnOff.txt", 1, true);
-                        var scanningOnOff = tempRead.ReadLine();
-                        tempRead.Close();
-
-                        if(scanningOnOff=="1"){
-document.getElementById("scanOnOff").checked=true;
-                        }else{
-                          document.getElementById("scanOnOff").checked=false;
-
-                        }
-
-
-                          var tempRead = fso.OpenTextFile("./Config/viewCMDOnOff.txt", 1, true);
-                        var viewCMDOnOff = tempRead.ReadLine();
-                        tempRead.Close();
-
-                        if(viewCMDOnOff=="1"){
-document.getElementById("viewCMDOnOff").checked=true;
-                        }else{
-                          document.getElementById("viewCMDOnOff").checked=false;
-
-                        }                     
-
-                        var tempRead = fso.OpenTextFile("./Recent/recentDestination.txt", 1, true);
-                        document.getElementById("destinationPath").value = tempRead.ReadLine();
-                        tempRead.Close();
-
-                         var tempRead = fso.OpenTextFile("./Recent/recentSource.txt", 1, true);
-                        document.getElementById("sourcePath").value = tempRead.ReadLine();
-                        tempRead.Close();
-
-
-                         var tempRead = fso.OpenTextFile("./Config/preset.txt", 1, true);
-                         var selectedIndex = tempRead.ReadLine();
-
-                        document.getElementById("preset").selectedIndex = selectedIndex;
-                        tempRead.Close();
-
-                        var tempRead = fso.OpenTextFile("./Config/container.txt", 1, true);
-                         var selectedIndex = tempRead.ReadLine();
-
-                        document.getElementById("container").selectedIndex = selectedIndex;
-                        tempRead.Close();
-
-
-                        var tempRead = fso.OpenTextFile("./config/customPreset.txt", 1, true);
-                        document.getElementById("customPresets").value = tempRead.ReadLine();
-                        tempRead.Close();
-
-}catch(err){}
-
-                        
-             
-                       
-
-                        }
+}
 
 
 function saveConfig(){
 
 
-var tempWrite = fso.OpenTextFile("./Recent/scanInterval.txt", 2, true);
+  var tempWrite = fso.OpenTextFile("./Recent/scanInterval.txt", 2, true);
   tempWrite.WriteLine(document.getElementById("timer").value);
-   tempWrite.Close();
+  tempWrite.Close();
 
 
-   var tempWrite = fso.OpenTextFile("./Recent/periodicScanningOnOff.txt", 2, true);
+  var tempWrite = fso.OpenTextFile("./Recent/periodicScanningOnOff.txt", 2, true);
 
-   if(document.getElementById("scanOnOff").checked==true){
+  if(document.getElementById("scanOnOff").checked==true){
     
-tempWrite.WriteLine("1")
-   }else{
+    tempWrite.WriteLine("1")
+  }else{
 
-tempWrite.WriteLine("0")
+    tempWrite.WriteLine("0")
 
-   }
-   tempWrite.Close();
+  }
+  tempWrite.Close();
 
 
-      var tempWrite = fso.OpenTextFile("./Config/viewCMDOnOff.txt", 2, true);
+  var tempWrite = fso.OpenTextFile("./Config/viewCMDOnOff.txt", 2, true);
 
-   if(document.getElementById("viewCMDOnOff").checked==true){
+  if(document.getElementById("viewCMDOnOff").checked==true){
     
-tempWrite.WriteLine("1")
-   }else{
+    tempWrite.WriteLine("1")
+  }else{
 
-tempWrite.WriteLine("0")
+    tempWrite.WriteLine("0")
 
-   }
-   tempWrite.Close();
+  }
+  tempWrite.Close();
 
 
-   var tempWrite = fso.OpenTextFile("./Recent/recentSource.txt", 2, true);
+  var tempWrite = fso.OpenTextFile("./Recent/recentSource.txt", 2, true);
   tempWrite.WriteLine(document.getElementById("sourcePath").value);
-   tempWrite.Close();
+  tempWrite.Close();
 
-   var tempWrite = fso.OpenTextFile("./Recent/recentDestination.txt", 2, true);
+  var tempWrite = fso.OpenTextFile("./Recent/recentDestination.txt", 2, true);
   tempWrite.WriteLine(document.getElementById("destinationPath").value);
-   tempWrite.Close();
+  tempWrite.Close();
 
-   var tempWrite = fso.OpenTextFile("./Config/preset.txt", 2, true);
+  var tempWrite = fso.OpenTextFile("./Config/preset.txt", 2, true);
   tempWrite.WriteLine(document.getElementById("preset").value);
-   tempWrite.Close();
+  tempWrite.Close();
 
-    var tempWrite = fso.OpenTextFile("./Config/container.txt", 2, true);
+  var tempWrite = fso.OpenTextFile("./Config/container.txt", 2, true);
   tempWrite.WriteLine(document.getElementById("container").value);
-   tempWrite.Close();
+  tempWrite.Close();
 
-     var tempWrite = fso.OpenTextFile("./Config/presetString.txt", 2, true);
+  var tempWrite = fso.OpenTextFile("./Config/presetString.txt", 2, true);
   tempWrite.WriteLine(document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text);
-   tempWrite.Close();
+  tempWrite.Close();
 
-   var tempWrite = fso.OpenTextFile("./Config/customPreset.txt", 2, true);
+  var tempWrite = fso.OpenTextFile("./Config/customPreset.txt", 2, true);
   tempWrite.WriteLine(document.getElementById("customPresets").value);
-   tempWrite.Close();
+  tempWrite.Close();
 
 
 
@@ -678,9 +678,9 @@ tempWrite.WriteLine("0")
 </script>
 
 <style>
-  
 
- .main {
+
+.main {
 
   height: 20em;
 
@@ -688,7 +688,7 @@ tempWrite.WriteLine("0")
 
 }
 
- .folderPaths {
+.folderPaths {
 
   height: 2em;
 
@@ -699,121 +699,121 @@ tempWrite.WriteLine("0")
 
 </style>
 </head>
- 
+
 <body> 
-   
+ 
 
   <center>  <p>Scan interval:<input type="text"  id="timer"></p>
 
 
-     <p>Source folder path:(e.g "\\Server\share\Videos" or "C:\Videos" (without quotes))<textarea type="text"  class="folderPaths"   id="sourcePath"></textarea></p>
+   <p>Source folder path:(e.g "\\Server\share\Videos" or "C:\Videos" (without quotes))<textarea type="text"  class="folderPaths"   id="sourcePath"></textarea></p>
 
-     <p>Destination folder path:<textarea type="text" class="folderPaths"  id="destinationPath"></textarea></p>
-
-
- <p>Select preset:</p>
-<select name="preset" id="preset">
-<option value="0"></option>
-<option value="1">Very Fast 1080p30</option>
-<option value="2">Very Fast 720p30</option>
-<option value="3">Very Fast 576p25</option>
-<option value="4">Very Fast 480p30</option>
-<option value="5">Fast 1080p30</option>
-<option value="6">Fast 720p30</option>
-<option value="7">Fast 576p25</option>
-<option value="8">Fast 480p30</option>
-<option value="9">HQ 1080p30 Surround</option>
-<option value="10">HQ 720p30 Surround</option>
-<option value="11">HQ 576p25 Surround</option>
-<option value="12">HQ 480p30 Surround</option>
-<option value="13">Super HQ 1080p30 Surround</option>
-<option value="14">Super HQ 720p30 Surround</option>
-<option value="15">Super HQ 576p25 Surround</option>
-<option value="16">Super HQ 480p30 Surround</option>
-<option value="17">Gmail Large 3 Minutes 720p30</option>
-<option value="18">Gmail Medium 5 Minutes 480p30</option>
-<option value="19">Gmail Small 10 Minutes 288p30</option>
-<option value="20">Vimeo YouTube HQ 2160p60 4K</option>
-<option value="21">Vimeo YouTube HQ 1440p60 2.5K</option>
-<option value="22">Vimeo YouTube HQ 1080p60</option>
-<option value="23">Vimeo YouTube HQ 720p60</option>
-<option value="24">Vimeo YouTube 720p30</option>
-<option value="25">Android 1080p30</option>
-<option value="26">Android 720p30</option>
-<option value="27">Android 576p25</option>
-<option value="28">Android 480p30</option>
-<option value="29">Apple 2160p60 4K HEVC Surround</option>
-<option value="30">Apple 1080p60 Surround</option>
-<option value="31">Apple 1080p30 Surround</option>
-<option value="32">Apple 720p30 Surround</option>
-<option value="33">Apple 540p30 Surround</option>
-<option value="34">Apple 240p30</option>
-<option value="35">Chromecast 2160p60 4K HEVC Surround</option>
-<option value="36">Chromecast 1080p60 Surround</option>
-<option value="37">Chromecast 1080p30 Surround</option>
-<option value="38">Amazon Fire 2160p60 4K HEVC Surround</option>
-<option value="39">Amazon Fire 1080p30 Surround</option>
-<option value="40">Amazon Fire 720p30</option>
-<option value="41">Playstation 1080p30 Surround</option>
-<option value="42">Playstation 720p30</option>
-<option value="43">Playstation 540p30</option>
-<option value="44">Roku 2160p60 4K HEVC Surround</option>
-<option value="45">Roku 1080p30 Surround</option>
-<option value="46">Roku 720p30 Surround</option>
-<option value="47">Roku 576p25</option>
-<option value="48">Roku 480p30</option>
-<option value="49">Windows Mobile 1080p30</option>
-<option value="50">Windows Mobile 720p30</option>
-<option value="51">Windows Mobile 540p30</option>
-<option value="52">Windows Mobile 480p30</option>
-<option value="53">Xbox 1080p30 Surround</option>
-<option value="54">Xbox Legacy 1080p30 Surround</option>
-<option value="55">H.265 MKV 2160p60</option>
-<option value="56">H.265 MKV 1080p30</option>
-<option value="57">H.265 MKV 720p30</option>
-<option value="58">H.265 MKV 576p25</option>
-<option value="59">H.265 MKV 480p30</option>
-<option value="60">H.264 MKV 2160p60</option>
-<option value="61">H.264 MKV 1080p30</option>
-<option value="62">H.264 MKV 720p30</option>
-<option value="63">H.264 MKV 576p25</option>
-<option value="64">H.264 MKV 480p30</option>
-<option value="65">VP9 MKV 2160p60</option>
-<option value="66">VP9 MKV 1080p30</option>
-<option value="67">VP9 MKV 720p30</option>
-<option value="68">VP9 MKV 576p25</option>
-<option value="69">VP9 MKV 480p30</option>
-<option value="70">VP8 MKV 1080p30</option>
-<option value="71">VP8 MKV 720p30</option>
-<option value="72">VP8 MKV 576p25</option>
-<option value="73">VP8 MKV 480p30</option>
-<option value="74">Production Max</option>
-<option value="75">Production Standard</option>
-<option value="76">Production Proxy 1080p</option>
-<option value="77">Production Proxy 540p</option>
+   <p>Destination folder path:<textarea type="text" class="folderPaths"  id="destinationPath"></textarea></p>
 
 
-</select>
+   <p>Select preset:</p>
+   <select name="preset" id="preset">
+    <option value="0"></option>
+    <option value="1">Very Fast 1080p30</option>
+    <option value="2">Very Fast 720p30</option>
+    <option value="3">Very Fast 576p25</option>
+    <option value="4">Very Fast 480p30</option>
+    <option value="5">Fast 1080p30</option>
+    <option value="6">Fast 720p30</option>
+    <option value="7">Fast 576p25</option>
+    <option value="8">Fast 480p30</option>
+    <option value="9">HQ 1080p30 Surround</option>
+    <option value="10">HQ 720p30 Surround</option>
+    <option value="11">HQ 576p25 Surround</option>
+    <option value="12">HQ 480p30 Surround</option>
+    <option value="13">Super HQ 1080p30 Surround</option>
+    <option value="14">Super HQ 720p30 Surround</option>
+    <option value="15">Super HQ 576p25 Surround</option>
+    <option value="16">Super HQ 480p30 Surround</option>
+    <option value="17">Gmail Large 3 Minutes 720p30</option>
+    <option value="18">Gmail Medium 5 Minutes 480p30</option>
+    <option value="19">Gmail Small 10 Minutes 288p30</option>
+    <option value="20">Vimeo YouTube HQ 2160p60 4K</option>
+    <option value="21">Vimeo YouTube HQ 1440p60 2.5K</option>
+    <option value="22">Vimeo YouTube HQ 1080p60</option>
+    <option value="23">Vimeo YouTube HQ 720p60</option>
+    <option value="24">Vimeo YouTube 720p30</option>
+    <option value="25">Android 1080p30</option>
+    <option value="26">Android 720p30</option>
+    <option value="27">Android 576p25</option>
+    <option value="28">Android 480p30</option>
+    <option value="29">Apple 2160p60 4K HEVC Surround</option>
+    <option value="30">Apple 1080p60 Surround</option>
+    <option value="31">Apple 1080p30 Surround</option>
+    <option value="32">Apple 720p30 Surround</option>
+    <option value="33">Apple 540p30 Surround</option>
+    <option value="34">Apple 240p30</option>
+    <option value="35">Chromecast 2160p60 4K HEVC Surround</option>
+    <option value="36">Chromecast 1080p60 Surround</option>
+    <option value="37">Chromecast 1080p30 Surround</option>
+    <option value="38">Amazon Fire 2160p60 4K HEVC Surround</option>
+    <option value="39">Amazon Fire 1080p30 Surround</option>
+    <option value="40">Amazon Fire 720p30</option>
+    <option value="41">Playstation 1080p30 Surround</option>
+    <option value="42">Playstation 720p30</option>
+    <option value="43">Playstation 540p30</option>
+    <option value="44">Roku 2160p60 4K HEVC Surround</option>
+    <option value="45">Roku 1080p30 Surround</option>
+    <option value="46">Roku 720p30 Surround</option>
+    <option value="47">Roku 576p25</option>
+    <option value="48">Roku 480p30</option>
+    <option value="49">Windows Mobile 1080p30</option>
+    <option value="50">Windows Mobile 720p30</option>
+    <option value="51">Windows Mobile 540p30</option>
+    <option value="52">Windows Mobile 480p30</option>
+    <option value="53">Xbox 1080p30 Surround</option>
+    <option value="54">Xbox Legacy 1080p30 Surround</option>
+    <option value="55">H.265 MKV 2160p60</option>
+    <option value="56">H.265 MKV 1080p30</option>
+    <option value="57">H.265 MKV 720p30</option>
+    <option value="58">H.265 MKV 576p25</option>
+    <option value="59">H.265 MKV 480p30</option>
+    <option value="60">H.264 MKV 2160p60</option>
+    <option value="61">H.264 MKV 1080p30</option>
+    <option value="62">H.264 MKV 720p30</option>
+    <option value="63">H.264 MKV 576p25</option>
+    <option value="64">H.264 MKV 480p30</option>
+    <option value="65">VP9 MKV 2160p60</option>
+    <option value="66">VP9 MKV 1080p30</option>
+    <option value="67">VP9 MKV 720p30</option>
+    <option value="68">VP9 MKV 576p25</option>
+    <option value="69">VP9 MKV 480p30</option>
+    <option value="70">VP8 MKV 1080p30</option>
+    <option value="71">VP8 MKV 720p30</option>
+    <option value="72">VP8 MKV 576p25</option>
+    <option value="73">VP8 MKV 480p30</option>
+    <option value="74">Production Max</option>
+    <option value="75">Production Standard</option>
+    <option value="76">Production Proxy 1080p</option>
+    <option value="77">Production Proxy 540p</option>
 
 
+  </select>
 
 
 
-<div style="display: none;">
-  <p>OR write custom preset:</p>
-  <p>Custom presets:<textarea type="text" class="folderPaths"  id="customPresets"></textarea></p>
 
-          </div>
 
-<p>Container:</p>
-<select name="container" id="container">
-<option value="0">.mp4</option>  
-<option value="1">.mkv</option>
-</select>
+  <div style="display: none;">
+    <p>OR write custom preset:</p>
+    <p>Custom presets:<textarea type="text" class="folderPaths"  id="customPresets"></textarea></p>
 
-<br>
+  </div>
 
- <p>Enable periodic scanning?:<input type="checkbox" id="scanOnOff" ></p>
+  <p>Container:</p>
+  <select name="container" id="container">
+    <option value="0">.mp4</option>  
+    <option value="1">.mkv</option>
+  </select>
+
+  <br>
+
+  <p>Enable periodic scanning?:<input type="checkbox" id="scanOnOff" ></p>
 
 
   <p>Show Handbrake CMD windows when conversion is running?:<input type="checkbox" id="viewCMDOnOff" ></p>
@@ -821,21 +821,21 @@ tempWrite.WriteLine("0")
   <input type='button' value='Save config'  onclick='saveConfig()'/>
 
   <br>
-   <br>
-    <br>
-      <input type='button' value='Scan for and convert files'  onclick='convertFiles()'/>
+  <br>
+  <br>
+  <input type='button' value='Scan for and convert files'  onclick='convertFiles()'/>
 
- 
-   <p>Scanning for new files in:<input type="text"  id="countdown">seconds</p>
+  
+  <p>Scanning for new files in:<input type="text"  id="countdown">seconds</p>
 
-    <div id="files"></div>
-      <div id="files2"></div>
+  <div id="files"></div>
+  <div id="files2"></div>
 
 </center>
 
 
-          
 
-    
-      
+
+
+
 </html>
