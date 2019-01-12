@@ -1,148 +1,148 @@
 
 <html> 
 <head> 
-    <title>HBBatchBeast Status</title>
-    <meta http-equiv="x-ua-compatible" content="IE=9" />
-    <HTA:APPLICATION ID="HBBatchBeast Status" APPLICATIONNAME="HBBatchBeast Status" BORDER="DIALOG" BORDERSTYLE="normal" CAPTION="yes" ICON="rocket.ico" MAXIMIZEBUTTON="yes" MINIMIZEBUTTON="yes" SCROLL="auto" scrollFlat="yes" SHOWINTASKBAR="yes" SINGLEINSTANCE="yes" SYSMENU="yes" VERSION="1.0" Navigable="yes" WINDOWSTATE="normal" />
- 
-<script type="text/javascript"> 
+  <title>HBBatchBeast Status</title>
+  <meta http-equiv="x-ua-compatible" content="IE=9" />
+  <HTA:APPLICATION ID="HBBatchBeast Status" APPLICATIONNAME="HBBatchBeast Status" BORDER="DIALOG" BORDERSTYLE="normal" CAPTION="yes" ICON="rocket.ico" MAXIMIZEBUTTON="yes" MINIMIZEBUTTON="yes" SCROLL="auto" scrollFlat="yes" SHOWINTASKBAR="yes" SINGLEINSTANCE="yes" SYSMENU="yes" VERSION="1.0" Navigable="yes" WINDOWSTATE="normal" />
+  
+  <script type="text/javascript"> 
 
    window.onload = function() {
 
-window.resizeTo(800, 500);
+    window.resizeTo(800, 500);
 
-}
+  }
 
-    var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+  var fso = new ActiveXObject("Scripting.FileSystemObject"); 
 
 
   window.setInterval("readFiles();", 2000);
 
-                    function readFiles() {
+  function readFiles() {
 
 
-              
+    
 
-try{
-                       var tFF2 = fso.OpenTextFile("./Config/totalFilesFound.txt", 1, true);
-          
-                        document.getElementById("totalFilesFound").value = tFF2.ReadLine();
-             
-                       tFF2.Close();
-
-
-                         var uFF2 = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 1, true);
-                     
-                         document.getElementById("unconvertedFilesFound").value = uFF2.ReadLine();
-            
-                           uFF2.Close();
+    try{
+     var tFF2 = fso.OpenTextFile("./Config/totalFilesFound.txt", 1, true);
+     
+     document.getElementById("totalFilesFound").value = tFF2.ReadLine();
+     
+     tFF2.Close();
 
 
+     var uFF2 = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 1, true);
+     
+     document.getElementById("unconvertedFilesFound").value = uFF2.ReadLine();
+     
+     uFF2.Close();
 
-       
 
-                        var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker1QueueNumber.txt", 1, true);
-                        var QueueNumber1 = tempRead.ReadLine();
-                        tempRead.Close();
 
-                         var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker1FileName.txt", 1, true);
-                        var FileName1 = tempRead.ReadLine();
-                        tempRead.Close();
+     
 
-        
-                      document.getElementById("worker1").innerHTML = "<p>Worker 1 processing queue number:"+QueueNumber1+"<\p>";
-                      document.getElementById("worker1").innerHTML += "<p>File:"+FileName1+"<\p>";
+     var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker1QueueNumber.txt", 1, true);
+     var QueueNumber1 = tempRead.ReadLine();
+     tempRead.Close();
+
+     var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker1FileName.txt", 1, true);
+     var FileName1 = tempRead.ReadLine();
+     tempRead.Close();
+
+     
+     document.getElementById("worker1").innerHTML = "<p>Worker 1 processing queue number:"+QueueNumber1+"<\p>";
+     document.getElementById("worker1").innerHTML += "<p>File:"+FileName1+"<\p>";
 
                       //worker 2
-                        var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker2QueueNumber.txt", 1, true);
-                        var QueueNumber2 = tempRead.ReadLine();
-                        tempRead.Close();
+                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker2QueueNumber.txt", 1, true);
+                      var QueueNumber2 = tempRead.ReadLine();
+                      tempRead.Close();
 
-                         var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker2FileName.txt", 1, true);
-                        var FileName2 = tempRead.ReadLine();
-                        tempRead.Close();
+                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker2FileName.txt", 1, true);
+                      var FileName2 = tempRead.ReadLine();
+                      tempRead.Close();
 
-        
+                      
                       document.getElementById("worker2").innerHTML = "<p>Worker 2 processing queue number:"+QueueNumber2+"<\p>";
                       document.getElementById("worker2").innerHTML += "<p>File:"+FileName2+"<\p>";
 
                       //worker 3
-                        var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker3QueueNumber.txt", 1, true);
-                        var QueueNumber3 = tempRead.ReadLine();
-                        tempRead.Close();
+                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker3QueueNumber.txt", 1, true);
+                      var QueueNumber3 = tempRead.ReadLine();
+                      tempRead.Close();
 
-                         var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker3FileName.txt", 1, true);
-                        var FileName3 = tempRead.ReadLine();
-                        tempRead.Close();
+                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker3FileName.txt", 1, true);
+                      var FileName3 = tempRead.ReadLine();
+                      tempRead.Close();
 
-        
+                      
                       document.getElementById("worker3").innerHTML = "<p>Worker 3 processing queue number:"+QueueNumber3+"<\p>";
                       document.getElementById("worker3").innerHTML += "<p>File:"+FileName3+"<\p>";
 
                       //worker 4
-                        var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker4QueueNumber.txt", 1, true);
-                        var QueueNumber4 = tempRead.ReadLine();
-                        tempRead.Close();
+                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker4QueueNumber.txt", 1, true);
+                      var QueueNumber4 = tempRead.ReadLine();
+                      tempRead.Close();
 
-                         var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker4FileName.txt", 1, true);
-                        var FileName4 = tempRead.ReadLine();
-                        tempRead.Close();
+                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker4FileName.txt", 1, true);
+                      var FileName4 = tempRead.ReadLine();
+                      tempRead.Close();
 
-        
+                      
                       document.getElementById("worker4").innerHTML = "<p>Worker 4 processing queue number:"+QueueNumber4+"<\p>";
                       document.getElementById("worker4").innerHTML += "<p>File:"+FileName4+"<\p>";
 
-                     
+                      
 
-}catch(err){}
+                    }catch(err){}
 
-if(QueueNumber1=="Complete!"&&QueueNumber2=="Complete!"&&QueueNumber3=="Complete!"&&QueueNumber4=="Complete!"){
+                    if(QueueNumber1=="Complete!"&&QueueNumber2=="Complete!"&&QueueNumber3=="Complete!"&&QueueNumber4=="Complete!"){
 
-var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/AllComplete.txt", 2, true);
+                      var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/AllComplete.txt", 2, true);
                       tempWrite.WriteLine("1");
                       tempWrite.Close();
 
-}
-
-
-
                     }
-    
-   
-</script>
-
-<style>
-  
 
 
 
+                  }
+                  
+                  
+                </script>
 
-</style>
-</head>
- 
-<body> 
-  <center>
-    
-
-    <p>Total number of files found:<input type="text"  id="totalFilesFound" ></p>
-    <p>Number of unconverted files found(files which don't exist in destination folders):<input type="text"  id="unconvertedFilesFound" ></p>
-
- 
-
-
-       <div id="worker1"/>  </div>
-        <div id="worker2"/>  </div>
-         <div id="worker3"/>  </div>
-          <div id="worker4"/>  </div>
-
-         
-     
+                <style>
+                
 
 
 
 
+              </style>
+            </head>
+            
+            <body> 
+              <center>
+                
 
-</center>
-  
-      
-</html>
+                <p>Total number of files found:<input type="text"  id="totalFilesFound" ></p>
+                <p>Number of unconverted files found(files which don't exist in destination folders):<input type="text"  id="unconvertedFilesFound" ></p>
+
+                
+
+
+                <div id="worker1"/>  </div>
+                <div id="worker2"/>  </div>
+                <div id="worker3"/>  </div>
+                <div id="worker4"/>  </div>
+
+                
+                
+
+
+
+
+
+              </center>
+              
+              
+              </html>
