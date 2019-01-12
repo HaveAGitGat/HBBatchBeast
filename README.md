@@ -22,6 +22,8 @@ The program makes use of 6 HTA's altogther:
  
 The 4 worker HTAs then work through the conversion queue. If periodic scanning is enabled then the program will run at the chosen interval.
 
+Screenshot - https://imgur.com/a/rV9zJEK
+
 Demo video - https://sendvid.com/lmzaikh0
 
 Full zip download (including HandbrakeCLI.exe) - https://drive.google.com/file/d/1OFtn5Ss11yC74a4J_tqfKZP5-QCi4D4f/view
