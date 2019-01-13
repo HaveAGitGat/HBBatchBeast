@@ -66,12 +66,48 @@
         fileTypeSplit = thisFile.split('.');
         fileType =fileTypeSplit[fileTypeSplit.length - 1]
 
-     //   document.getElementById("files2").innerHTML += "<p>"+ fileType+"<\p>";
+        document.getElementById("files2").innerHTML += "<p>"+ fileType+"<\p>";
 
 
-     if(fileType=="mp4" || fileType=="mkv" || fileType=="mov" || fileType=="m4v" || fileType=="mpg" || fileType=="mpeg" || fileType=="avi"){
+   var supportedFileTypeArray = [
 
-//document.getElementById("files2").innerHTML += "<p>"+ thisFile+"<\p>";
+"mp4",
+"mkv",
+"mov",
+"m4v",
+"mpg",
+"mpeg",
+"avi",
+
+
+"flv",
+"webm",
+"wmv",
+"vob",
+"evo",
+"mts",
+"m2ts",
+"ts",
+
+
+
+     ];
+
+     var supportedFileSwitch =0;
+
+
+     for (var j = 0; j < supportedFileTypeArray.length; j++) {
+
+      if(fileType==supportedFileTypeArray[j]){
+        supportedFileSwitch = 1;
+      }
+
+     }
+
+
+     if(supportedFileSwitch == 1){
+
+document.getElementById("files2").innerHTML += "<p>"+ thisFile+"<\p>";
 
 inputPathArray[inputPathArrayCounter] = thisFile+"";
 
@@ -596,6 +632,11 @@ window.onload = function() {
     document.getElementById("preset").selectedIndex = selectedIndex;
     tempRead.Close();
 
+
+    var tempRead = fso.OpenTextFile("./Config/customPreset.txt", 1, true);
+   document.getElementById("customPresets").selectedIndex = tempRead.ReadLine();
+    tempRead.Close();
+
     var tempRead = fso.OpenTextFile("./Config/container.txt", 1, true);
     var selectedIndex = tempRead.ReadLine();
 
@@ -662,17 +703,33 @@ function saveConfig(){
   tempWrite.WriteLine(document.getElementById("preset").value);
   tempWrite.Close();
 
+
+    var tempWrite = fso.OpenTextFile("./Config/customPreset.txt", 2, true);
+  tempWrite.WriteLine(document.getElementById("customPresets").value);
+  tempWrite.Close();
+
+
+
+
   var tempWrite = fso.OpenTextFile("./Config/container.txt", 2, true);
   tempWrite.WriteLine(document.getElementById("container").value);
   tempWrite.Close();
 
+ if(document.getElementById("selectStandardPreset").checked==true){
   var tempWrite = fso.OpenTextFile("./Config/presetString.txt", 2, true);
-  tempWrite.WriteLine(document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text);
+  tempWrite.WriteLine("-Z \""+document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text+"\"");
   tempWrite.Close();
+}
 
-  var tempWrite = fso.OpenTextFile("./Config/customPreset.txt", 2, true);
+
+ if(document.getElementById("selectCustomPreset").checked==true){
+  var tempWrite = fso.OpenTextFile("./Config/presetString.txt", 2, true);
   tempWrite.WriteLine(document.getElementById("customPresets").value);
   tempWrite.Close();
+}
+
+
+
 
 
 
@@ -684,6 +741,32 @@ function openURL()
   var shell = new ActiveXObject("WScript.Shell");
   shell.run("https://github.com/HaveAGitGat");
 }
+
+  function cbChange1(obj) {
+         if (obj.checked == false) {
+             obj.checked = false;
+         } else if (obj.checked == true) {
+             var cbs = document.getElementsByClassName("cb1");
+             for (var i = 0; i < cbs.length; i++) {
+                 cbs[i].checked = false;
+             }
+             obj.checked = true;
+         }
+
+          document.getElementById("standardPresetDiv").style.display = 'none';
+           document.getElementById("customPresetDiv").style.display = 'none';
+
+         if(document.getElementById("selectStandardPreset").checked==true){
+          document.getElementById("standardPresetDiv").style.display = 'block';
+         }
+
+          if(document.getElementById("selectCustomPreset").checked==true){
+        
+          document.getElementById("customPresetDiv").style.display = 'block';
+         }
+
+
+     }
 
 </script>
 
@@ -707,6 +790,14 @@ body {
 .folderPaths {
 
   height: 2em;
+
+  width: 100em;
+
+}
+
+.customPresetBox {
+
+  height: 10em;
 
   width: 100em;
 
@@ -777,8 +868,13 @@ p {
 
   <p>Destination folder path:</p><textarea type="text" class="folderPaths"  id="destinationPath"></textarea>
 
+  <p>Standard preset:<input type="checkbox" id="selectStandardPreset" class="cb1"  onchange="cbChange1(this)"></p>
+  <p>Custom preset:<input type="checkbox" id="selectCustomPreset" class="cb1"  onchange="cbChange1(this)"></p>
 
-  <p>Select preset:</p>
+
+ <div style="display: none;" id="standardPresetDiv">
+
+  <p>Select standard preset:</p>
   <select name="preset" class="selectbox" id="preset">
     <option value="0"></option>
     <option value="1">Very Fast 1080p30</option>
@@ -861,14 +957,10 @@ p {
 
 
   </select>
+ </div>
 
-
-
-
-
-  <div style="display: none;">
-    <p>OR write custom preset:</p>
-    <p>Custom presets:<textarea type="text" class="folderPaths"  id="customPresets"></textarea></p>
+  <div style="display: none;" id="customPresetDiv">
+    <p>Write custom preset (e.g. "-e x264 -q 20 -B 160" (without quotes)):<textarea type="text" class="customPresetBox"  id="customPresets"></textarea></p>
 
   </div>
 
