@@ -102,7 +102,7 @@
                                       //  t.Close();
 
                                       var t = fso.OpenTextFile("./Config/Processes/BatchFiles/HandbrakeCLIBatchTemp"+workerNumber+".bat", 2, true);
-                                      t.WriteLine("\"" + handBrakeCLIPath +"\" -i \"" +currentSourceLine+"\" -o \""+currentDestinationLine+"\" -Z \""+preset+"\" "+customPresets);
+                                      t.WriteLine("\"" + handBrakeCLIPath +"\" -i \"" +currentSourceLine+"\" -o \""+currentDestinationLine+"\" "+preset);
 
                                       t.Close();
 
