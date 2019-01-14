@@ -26,7 +26,7 @@
       var fso = new ActiveXObject('Scripting.FileSystemObject');
 
 
-      var workerNumber ="4";  
+      var workerNumber ="1";  
 
 
       var tempRead = fso.OpenTextFile("./Config/presetString.txt", 1, true);
@@ -159,7 +159,19 @@
 
 
 
+//try to write to log, retry if error
+                  try{
+
                 var tempWrite = fso.OpenTextFile("./Logs/fileConversionLog.txt", 8, true);
+
+
+                    }catch(err){
+
+                      sleep((2000*Math.random()));
+
+                        var tempWrite = fso.OpenTextFile("./Logs/fileConversionLog.txt", 8, true);
+
+                    }
            
                 
 
