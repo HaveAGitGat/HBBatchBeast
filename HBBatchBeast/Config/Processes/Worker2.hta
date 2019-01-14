@@ -42,6 +42,9 @@
       queueNumberPath = "./Config/Processes/queueNumberPath.txt";
       sourcePath = "./Config/Processes/sourceQueue.txt";
       destinationPath = "./Config/Processes/destinationQueue.txt"
+      destinationPathFinal = "./Config/Processes/destinationFinalQueue.txt"
+
+
       var handBrakeCLIPath = fso.GetAbsolutePathName('./HandBrakeCLI.exe');
       var globalQueueNumber;
       var currentLineNumber=0;
@@ -55,12 +58,33 @@
       iStreamSource = fso.OpenTextFile(sourcePath, 1, false);
       iStreamDestination = fso.OpenTextFile(destinationPath, 1, false);
 
+   
+
+    var tempRead = fso.OpenTextFile("./Recent/tempDestinationOnOff.txt", 1, true);
+    var tempFolderSected = tempRead.ReadLine();
+    tempRead.Close();
+
+    if(tempFolderSected=="1"){
+
+      iStreamDestinationFinal = fso.OpenTextFile(destinationPathFinal, 1, false);
+    
+    }
+
       while (!iStreamSource.AtEndOfStream) {
 
        sleep((2000*Math.random()));
 
        var currentSourceLine = iStreamSource.ReadLine(); 
        var currentDestinationLine = iStreamDestination.ReadLine(); 
+
+         if(tempFolderSected=="1"){
+      var currentDestinationFinalLine =  iStreamDestinationFinal.ReadLine(); 
+    
+             }
+
+
+
+
 
        var tempRead = fso.OpenTextFile(queueNumberPath, 1, true);
        globalQueueNumber = tempRead.ReadLine();
@@ -112,6 +136,20 @@
                                       var rootdir = shell.currentDirectory;
                                       WshShell = new ActiveXObject("WScript.Shell");
                                       WshShell.Run('"' + rootdir + path + '"', viewCMDOnOff, true);
+
+ if(tempFolderSected=="1"){
+
+try{
+                                      fso.MoveFile(currentDestinationLine,currentDestinationFinalLine)
+                                     
+                              
+         }catch(err){
+                                         fso.DeleteFile(currentDestinationLine)
+
+
+                                      }
+
+                                    }
 
                                     }else{  }
 
