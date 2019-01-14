@@ -18,6 +18,11 @@
 
   window.setInterval("readFiles();", 2000);
 
+var previousNumberFilesFound =0;
+var currentNumberFilesFound =0;
+
+
+
   function readFiles() {
 
 
@@ -25,10 +30,22 @@
 
     try{
      var tFF2 = fso.OpenTextFile("./Config/totalFilesFound.txt", 1, true);
-     
-     document.getElementById("totalFilesFound").value = tFF2.ReadLine();
-     
+
+     var currentNumberFilesFound = tFF2.ReadLine();
      tFF2.Close();
+     
+     document.getElementById("totalFilesFound").value = currentNumberFilesFound;
+
+     if(currentNumberFilesFound !=previousNumberFilesFound){
+
+previousNumberFilesFound= currentNumberFilesFound;
+
+     }else{
+window.close();
+
+     }
+     
+     
 
 
      var uFF2 = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 1, true);
@@ -36,77 +53,10 @@
      document.getElementById("unconvertedFilesFound").value = uFF2.ReadLine();
      
      uFF2.Close();
+         
+                  }catch(err){}
 
-
-
-     
-
-     var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker1QueueNumber.txt", 1, true);
-     var QueueNumber1 = tempRead.ReadLine();
-     tempRead.Close();
-
-     var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker1FileName.txt", 1, true);
-     var FileName1 = tempRead.ReadLine();
-     tempRead.Close();
-
-     
-     document.getElementById("worker1").innerHTML = "<p>Worker 1 processing queue item number:<font color=\"red\">"+QueueNumber1+"</font><\p>";
-     document.getElementById("worker1").innerHTML += "<p>File:"+FileName1+"<\p>";
-
-                      //worker 2
-                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker2QueueNumber.txt", 1, true);
-                      var QueueNumber2 = tempRead.ReadLine();
-                      tempRead.Close();
-
-                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker2FileName.txt", 1, true);
-                      var FileName2 = tempRead.ReadLine();
-                      tempRead.Close();
-
-                      
-                      document.getElementById("worker2").innerHTML = "<p>Worker 2 processing queue item number:<font color=\"red\">"+QueueNumber2+"</font><\p>";
-                      document.getElementById("worker2").innerHTML += "<p>File:"+FileName2+"<\p>";
-
-                      //worker 3
-                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker3QueueNumber.txt", 1, true);
-                      var QueueNumber3 = tempRead.ReadLine();
-                      tempRead.Close();
-
-                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker3FileName.txt", 1, true);
-                      var FileName3 = tempRead.ReadLine();
-                      tempRead.Close();
-
-                      
-                      document.getElementById("worker3").innerHTML = "<p>Worker 3 processing queue item number:<font color=\"red\">"+QueueNumber3+"</font><\p>";
-                      document.getElementById("worker3").innerHTML += "<p>File:"+FileName3+"<\p>";
-
-                      //worker 4
-                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker4QueueNumber.txt", 1, true);
-                      var QueueNumber4 = tempRead.ReadLine();
-                      tempRead.Close();
-
-                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker4FileName.txt", 1, true);
-                      var FileName4 = tempRead.ReadLine();
-                      tempRead.Close();
-
-                      
-                      document.getElementById("worker4").innerHTML = "<p>Worker 4 processing queue item number:<font color=\"red\">"+QueueNumber4+"</font><\p>";
-                      document.getElementById("worker4").innerHTML += "<p>File:"+FileName4+"<\p>";
-
-                      
-
-                    }catch(err){}
-
-                    if(QueueNumber1=="Complete!"&&QueueNumber2=="Complete!"&&QueueNumber3=="Complete!"&&QueueNumber4=="Complete!"){
-
-                      var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/AllComplete.txt", 2, true);
-                      tempWrite.WriteLine("1");
-                      tempWrite.Close();
-
-                    }
-
-
-
-                  }
+                }
                   
                   
                 </script>
@@ -127,13 +77,11 @@
                 <p>Total number of media files found:<input type="text"  id="totalFilesFound" ></p>
                 <p>Number of unconverted media files found(files which don't exist in destination folders):<input type="text"  id="unconvertedFilesFound" ></p>
 
+
+
+                  <p>This window is just to show how many files have been found when scanning large folders. Close it whenever you like.</p>
+
                 
-
-
-                <div id="worker1"/>  </div>
-                <div id="worker2"/>  </div>
-                <div id="worker3"/>  </div>
-                <div id="worker4"/>  </div>
 
                 
                 
