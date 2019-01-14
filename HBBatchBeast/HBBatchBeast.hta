@@ -23,10 +23,12 @@
 
   var inputPathArray = [];
   var outputPathArray = [];
+    var outputPathArrayFinal = [];
 
   var inputPathArrayCounter = 0;
 
   var outputFolderPathold ="";
+  var outputFolderPathFinalold ="";
 
   var fileNotExistsCounter =0;
   var totalFileFoundCounter =0;
@@ -142,6 +144,39 @@ outputPathArray[inputPathArrayCounter] = outPutPathStem+newsubfilePath;
 var outputFolderPath = outputPathArray[inputPathArrayCounter].substring(0, outputPathArray[inputPathArrayCounter].lastIndexOf('\\'));
 
 
+if(document.getElementById("selectTemporaryConversionFolder").checked==true){
+
+outputPathArrayFinal[inputPathArrayCounter] = outPutPathStemFinal+newsubfilePath;
+var outputFolderPathFinal = outputPathArrayFinal[inputPathArrayCounter].substring(0, outputPathArrayFinal[inputPathArrayCounter].lastIndexOf('\\'));
+
+}
+
+//document.getElementById("files2").innerHTML += "<p>"+ newsubfilePath+"<\p>";
+
+
+//if temp folder unchcked
+
+
+if(document.getElementById("selectTemporaryConversionFolder").checked==true){
+
+if(fso.FileExists(outputPathArrayFinal[inputPathArrayCounter])){
+
+
+}else{
+
+  var uFF = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 2, true);
+  uFF.WriteLine(fileNotExistsCounter+1);
+  uFF.Close();
+  fileNotExistsCounter++
+}
+
+
+
+
+//ELSE if temp folder checked
+}else{
+
+  //
 if(fso.FileExists(outputPathArray[inputPathArrayCounter])){
 
 
@@ -153,6 +188,19 @@ if(fso.FileExists(outputPathArray[inputPathArrayCounter])){
   fileNotExistsCounter++
 
 }
+//
+
+
+
+
+}
+
+
+
+
+
+
+
 
 if(fso.FolderExists(outputFolderPath)){
 
@@ -167,6 +215,35 @@ if(fso.FolderExists(outputFolderPath)){
   }
 
 }
+
+//AND if tempfolderchecked
+
+if(document.getElementById("selectTemporaryConversionFolder").checked==true){
+
+
+if(fso.FolderExists(outputFolderPathFinal)){
+
+}else{
+
+  if(outputFolderPathFinal!=outputFolderPathFinalold){
+    gtwo.WriteLine("mkdir "+"\""+outputFolderPathFinal+"\"");
+
+    outputFolderPathFinalold=outputFolderPathFinal;
+
+  }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -185,6 +262,8 @@ if (thisFile.indexOf("csv") >=0){}
 }
 
 var outPutPathStem
+var outPutPathStemFinal
+
 var inputPathStem 
 var inputPathStemSplit 
 var topFolder
@@ -241,7 +320,7 @@ function convertFiles(){
 
 
   outPutPathStem =document.getElementById("destinationPath").value;
-
+ outPutPathStemFinal =document.getElementById("tempDestinationPath").value;
   
 
 
@@ -254,12 +333,23 @@ function convertFiles(){
 
   var outputpath3 = "./MakeDirBatchTemp.bat";
 
+
   if(fso.FileExists(outputpath3)){
     fso.DeleteFile(outputpath3)
   }
 
 
   g = fso.OpenTextFile("./MakeDirBatchTemp.bat", 8, true);
+
+
+    var outputpath3two = "./MakeDirBatchTemp2.bat";
+
+  if(fso.FileExists(outputpath3two)){
+    fso.DeleteFile(outputpath3two)
+  }
+
+
+  gtwo = fso.OpenTextFile("./MakeDirBatchTemp2.bat", 8, true);
 
 
 
@@ -270,6 +360,7 @@ function convertFiles(){
   ShowFolderFileList(inputPathStem);
 
   g.Close();
+  gtwo.Close();
 
 
   
@@ -332,6 +423,9 @@ function convertFiles(){
   var tempWrite = fso.OpenTextFile("./Config/Processes/destinationQueue.txt", 2, true);
   tempWrite.Close();
 
+    var tempWrite = fso.OpenTextFile("./Config/Processes/destinationFinalQueue.txt", 2, true);
+  tempWrite.Close();
+
   var tempWrite = fso.OpenTextFile("./Config/Processes/queueNumberPath.txt", 2, true);
   tempWrite.WriteLine("0");
   tempWrite.Close();
@@ -380,16 +474,13 @@ function convertFiles(){
    var writeNumber = 0;
 
 
+if(document.getElementById("selectTemporaryConversionFolder").checked==true){
 
+       for (var i = 0; i < outputPathArray.length; i++) {
 
-   for (var i = 0; i < outputPathArray.length; i++) {
-
-    if(fso.FileExists(outputPathArray[i])){
+    if(fso.FileExists(outputPathArrayFinal[i])){
 
     }else{
-
-
-
 
      var tempWrite = fso.OpenTextFile("./Config/Processes/sourceQueue.txt", 8, true);
      tempWrite.WriteLine(inputPathArray[i]);
@@ -399,16 +490,52 @@ function convertFiles(){
      tempWrite.WriteLine(outputPathArray[i]);
      tempWrite.Close();  
 
+     var tempWrite = fso.OpenTextFile("./Config/Processes/destinationFinalQueue.txt", 8, true);
+     tempWrite.WriteLine(outputPathArrayFinal[i]);
+     tempWrite.Close(); 
+
      writeNumber++;
-
-
-
-
-     
+  
    }
 
 
  }
+
+
+
+}else{
+
+
+     for (var i = 0; i < outputPathArray.length; i++) {
+
+    if(fso.FileExists(outputPathArray[i])){
+
+    }else{
+
+     var tempWrite = fso.OpenTextFile("./Config/Processes/sourceQueue.txt", 8, true);
+     tempWrite.WriteLine(inputPathArray[i]);
+     tempWrite.Close();   
+
+     var tempWrite = fso.OpenTextFile("./Config/Processes/destinationQueue.txt", 8, true);
+     tempWrite.WriteLine(outputPathArray[i]);
+     tempWrite.Close();  
+
+     var tempWrite = fso.OpenTextFile("./Config/Processes/destinationFinalQueue.txt", 8, true);
+     tempWrite.WriteLine(outputPathArrayFinal[i]);
+     tempWrite.Close(); 
+
+     writeNumber++;
+  
+   }
+
+
+ }
+
+
+
+}
+
+
 
 
 
@@ -423,6 +550,12 @@ function convertFiles(){
    WshShell.Run("MakeDirBatchTemp.bat", 1, true); 
  } catch (err) {}
 
+  WshShell = new ActiveXObject("WScript.Shell");
+
+ try{ 
+   WshShell.Run("MakeDirBatchTemp2.bat", 1, true); 
+ } catch (err) {}
+
  try{ 
 
 
@@ -431,14 +564,16 @@ function convertFiles(){
   var shell = new ActiveXObject("WScript.Shell");
   var rootdir = shell.currentDirectory;
   WshShell = new ActiveXObject("WScript.Shell");
-  WshShell.Run('"' + rootdir + path + '1.hta"', 0, false);
-  sleep(1000);
-  WshShell.Run('"' + rootdir + path + '2.hta"', 0, false);
-  sleep(1000);
-  WshShell.Run('"' + rootdir + path + '3.hta"', 0, false);
-  sleep(1000);
-  WshShell.Run('"' + rootdir + path + '4.hta"', 0, false);
 
+for (var inNum = 0; inNum < document.getElementById("instanceNumber").value ; inNum++) {
+
+
+
+
+  WshShell.Run('"' + rootdir + path + (inNum+1)+'.hta"', 0, false);
+  sleep(1000);
+
+  }
 
 } catch (err) {}
  //  }
@@ -469,6 +604,21 @@ function convertFiles(){
 
 scanCompleted2=1;
 scanCompleted=0;
+updateInfo =1;
+
+
+ document.getElementById("worker1").innerHTML = "<p>Worker 1 processing queue item number:-<\p>";
+ document.getElementById("worker1").innerHTML += "<p>File:-<\p>";
+  document.getElementById("worker2").innerHTML = "<p>Worker 2 processing queue item number:-<\p>";
+   document.getElementById("worker2").innerHTML += "<p>File:-<\p>";
+   document.getElementById("worker3").innerHTML = "<p>Worker 3 processing queue item number:-<\p>";
+    document.getElementById("worker3").innerHTML += "<p>File:-<\p>";
+    document.getElementById("worker4").innerHTML = "<p>Worker 4 processing queue item number:-<\p>";
+     document.getElementById("worker4").innerHTML += "<p>File:-<\p>";
+      var elmnt = document.getElementById("worker4");
+                    elmnt.scrollIntoView()
+
+
 
 
 }
@@ -479,14 +629,149 @@ var scanCompleted2=0;
 window.setInterval("runScan();", 1000);
 
 
-
+var updateInfo =0;
 
 var countDownOn=0;
 
 function runScan() {
 
 
+    if(updateInfo == 1){
+
+
+ try{
+     var tFF2 = fso.OpenTextFile("./Config/totalFilesFound.txt", 1, true);
+     
+     document.getElementById("totalFilesFound").value = tFF2.ReadLine();
+     
+     tFF2.Close();
+
+
+     var uFF2 = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 1, true);
+     
+     document.getElementById("unconvertedFilesFound").value = uFF2.ReadLine();
+     
+     uFF2.Close();
+
+
+
+     //worker 1
+
+     var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker1QueueNumber.txt", 1, true);
+     var QueueNumber1 = tempRead.ReadLine();
+     tempRead.Close();
+
+     var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker1FileName.txt", 1, true);
+     var FileName1 = tempRead.ReadLine();
+     tempRead.Close();
+
+     
+     document.getElementById("worker1").innerHTML = "<p>Worker 1 processing queue item number:<font color=\"red\">"+QueueNumber1+"</font><\p>";
+     document.getElementById("worker1").innerHTML += "<p>File:"+FileName1+"<\p>";
+
+                      //worker 2
+                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker2QueueNumber.txt", 1, true);
+                      var QueueNumber2 = tempRead.ReadLine();
+                      tempRead.Close();
+
+                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker2FileName.txt", 1, true);
+                      var FileName2 = tempRead.ReadLine();
+                      tempRead.Close();
+
+                      
+                      document.getElementById("worker2").innerHTML = "<p>Worker 2 processing queue item number:<font color=\"red\">"+QueueNumber2+"</font><\p>";
+                      document.getElementById("worker2").innerHTML += "<p>File:"+FileName2+"<\p>";
+
+                      //worker 3
+                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker3QueueNumber.txt", 1, true);
+                      var QueueNumber3 = tempRead.ReadLine();
+                      tempRead.Close();
+
+                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker3FileName.txt", 1, true);
+                      var FileName3 = tempRead.ReadLine();
+                      tempRead.Close();
+
+                      
+                      document.getElementById("worker3").innerHTML = "<p>Worker 3 processing queue item number:<font color=\"red\">"+QueueNumber3+"</font><\p>";
+                      document.getElementById("worker3").innerHTML += "<p>File:"+FileName3+"<\p>";
+
+                      //worker 4
+                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker4QueueNumber.txt", 1, true);
+                      var QueueNumber4 = tempRead.ReadLine();
+                      tempRead.Close();
+
+                      var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/Worker4FileName.txt", 1, true);
+                      var FileName4 = tempRead.ReadLine();
+                      tempRead.Close();
+
+                      
+                      document.getElementById("worker4").innerHTML = "<p>Worker 4 processing queue item number:<font color=\"red\">"+QueueNumber4+"</font><\p>";
+                      document.getElementById("worker4").innerHTML += "<p>File:"+FileName4+"<\p>";
+
+                      
+
+                    }catch(err){}
+
+                    var instanceNumberSetting =document.getElementById("instanceNumber").value;
+
+
+                    if(instanceNumberSetting==1 && QueueNumber1=="Complete!"){
+
+                        AllComplete();
+
+                    }
+
+                    if(instanceNumberSetting==2 && QueueNumber1=="Complete!"&&QueueNumber2=="Complete!"){
+
+                        AllComplete();
+
+                    }
+
+                    if(instanceNumberSetting==3 && QueueNumber1=="Complete!"&&QueueNumber2=="Complete!"&&QueueNumber3=="Complete!"){
+
+                        AllComplete();
+
+                    }
+
+                    if(instanceNumberSetting==4 && QueueNumber1=="Complete!"&&QueueNumber2=="Complete!"&&QueueNumber3=="Complete!"&&QueueNumber4=="Complete!"){
+
+                        AllComplete();
+
+                    }
+
+                    function AllComplete(){
+                      var tempWrite = fso.OpenTextFile("./Config/Processes/WorkerStatus/AllComplete.txt", 2, true);
+                      tempWrite.WriteLine("1");
+                      tempWrite.Close();
+
+
+                    }
+
+                  
+
+                  }
+
+
+
+
+
   if(scanCompleted==1 && scanCompleted2==1){
+
+
+
+ if(document.getElementById("deleteSourceFiles").checked==true){
+for (var i = 0; i < inputPathArray.length; i++) {
+if(fso.FileExists(inputPathArray[i])){
+
+  fso.DeleteFile(inputPathArray[i],false)
+
+}
+
+     }
+   }
+
+updateInfo =0;
+
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; 
@@ -589,7 +874,9 @@ if(countDownOn==1&&AllComplete=="1"){
 window.onload = function() {
 
 
-  try{
+
+
+  //try{
     var tempRead = fso.OpenTextFile("./Recent/scanInterval.txt", 1, true);
     document.getElementById("timer").value = tempRead.ReadLine();
     tempRead.Close();
@@ -625,6 +912,28 @@ window.onload = function() {
     document.getElementById("sourcePath").value = tempRead.ReadLine();
     tempRead.Close();
 
+    
+
+     var tempRead = fso.OpenTextFile("./Recent/tempDestinationPath.txt", 1, true);
+    document.getElementById("tempDestinationPath").value = tempRead.ReadLine();
+    tempRead.Close();
+
+
+    var tempRead = fso.OpenTextFile("./Recent/tempDestinationOnOff.txt", 1, true);
+    var temp = tempRead.ReadLine();
+    tempRead.Close();
+
+    if(temp=="1"){
+      document.getElementById("selectTemporaryConversionFolder").checked=true;
+      document.getElementById("tempConversionFolderDiv").style.display = 'block';
+
+    }else{
+      document.getElementById("selectTemporaryConversionFolder").checked=false;
+
+    } 
+
+
+
 
     var tempRead = fso.OpenTextFile("./Config/preset.txt", 1, true);
     var selectedIndex = tempRead.ReadLine();
@@ -637,6 +946,23 @@ window.onload = function() {
    document.getElementById("customPresets").selectedIndex = tempRead.ReadLine();
     tempRead.Close();
 
+    var tempRead = fso.OpenTextFile("./Config/customPresetOnOff.txt", 1, true);
+   var temp = tempRead.ReadLine();
+
+if(temp=="0"){
+document.getElementById("selectStandardPreset").checked=true
+document.getElementById("standardPresetDiv").style.display = 'block';
+
+}
+  else{
+document.getElementById("selectCustomPreset").checked=true  
+document.getElementById("customPresetDiv").style.display = 'block';  
+
+  }
+    tempRead.Close();
+  
+
+
     var tempRead = fso.OpenTextFile("./Config/container.txt", 1, true);
     var selectedIndex = tempRead.ReadLine();
 
@@ -648,11 +974,15 @@ window.onload = function() {
     document.getElementById("customPresets").value = tempRead.ReadLine();
     tempRead.Close();
 
-  }catch(err){}
+     var tempRead = fso.OpenTextFile("./config/instanceNumber.txt", 1, true);
+    document.getElementById("instanceNumber").value = tempRead.ReadLine();
+    tempRead.Close();
+
+ // }catch(err){}
 
   
   
-  
+  cbChange2();
 
 }
 
@@ -666,27 +996,19 @@ function saveConfig(){
 
 
   var tempWrite = fso.OpenTextFile("./Recent/periodicScanningOnOff.txt", 2, true);
-
   if(document.getElementById("scanOnOff").checked==true){
-
     tempWrite.WriteLine("1")
   }else{
-
     tempWrite.WriteLine("0")
-
   }
   tempWrite.Close();
 
 
   var tempWrite = fso.OpenTextFile("./Config/viewCMDOnOff.txt", 2, true);
-
   if(document.getElementById("viewCMDOnOff").checked==true){
-
     tempWrite.WriteLine("1")
   }else{
-
     tempWrite.WriteLine("0")
-
   }
   tempWrite.Close();
 
@@ -699,10 +1021,30 @@ function saveConfig(){
   tempWrite.WriteLine(document.getElementById("destinationPath").value);
   tempWrite.Close();
 
+    var tempWrite = fso.OpenTextFile("./Recent/tempDestinationPath.txt", 2, true);
+  tempWrite.WriteLine(document.getElementById("tempDestinationPath").value);
+  tempWrite.Close();
+
+
+  var tempWrite = fso.OpenTextFile("./Recent/tempDestinationOnOff.txt", 2, true);
+  if(document.getElementById("selectTemporaryConversionFolder").checked==true){
+  tempWrite.WriteLine("1");
+}else{
+   tempWrite.WriteLine("0");
+   }
+  tempWrite.Close();
+
   var tempWrite = fso.OpenTextFile("./Config/preset.txt", 2, true);
   tempWrite.WriteLine(document.getElementById("preset").value);
   tempWrite.Close();
 
+    var tempWrite = fso.OpenTextFile("./Config/customPresetOnOff.txt", 2, true);
+ if(document.getElementById("selectStandardPreset").checked==true){
+  tempWrite.WriteLine("0");
+}else{
+    tempWrite.WriteLine("1");
+}
+  tempWrite.Close();
 
     var tempWrite = fso.OpenTextFile("./Config/customPreset.txt", 2, true);
   tempWrite.WriteLine(document.getElementById("customPresets").value);
@@ -731,7 +1073,9 @@ function saveConfig(){
 
 
 
-
+var tempWrite = fso.OpenTextFile("./Config/instanceNumber.txt", 2, true);
+  tempWrite.WriteLine(document.getElementById("instanceNumber").value);
+  tempWrite.Close();
 
 }
 
@@ -765,6 +1109,31 @@ function openURL()
           document.getElementById("customPresetDiv").style.display = 'block';
          }
 
+
+     }
+
+      function cbChange2() {
+
+         if(document.getElementById("selectTemporaryConversionFolder").checked==true){
+
+          document.getElementById("tempConversionFolderDiv").style.display = 'block';
+           document.getElementById("ShowHide1").style.display = 'none';
+           document.getElementById("ShowHide2").style.display = 'block';
+
+         
+
+}else{
+document.getElementById("tempConversionFolderDiv").style.display = 'none';
+          document.getElementById("ShowHide1").style.display = 'block';
+           document.getElementById("ShowHide2").style.display = 'none';
+}
+}
+
+     function showAlert(message){
+
+if(document.getElementById("deleteSourceFiles").checked==true){
+  alert(message);
+}
 
      }
 
@@ -864,9 +1233,23 @@ p {
 
 
 
-  <p>Source folder path:(e.g "\\Server\share\Videos" or "C:\Videos" (without quotes))</p><textarea type="text"  class="folderPaths"   id="sourcePath"></textarea>
+  <p>Source folder path:(e.g "\\Server\share\Videos" or "C:\Videos" (without quotes and no last slash))</p><textarea type="text"  class="folderPaths"   id="sourcePath"></textarea>
 
-  <p>Destination folder path:</p><textarea type="text" class="folderPaths"  id="destinationPath"></textarea>
+
+  <p>Temporary conversion folder?:<input type="checkbox" id="selectTemporaryConversionFolder"  onchange="cbChange2()"></p>
+
+
+  <div id="ShowHide1"><p>Destination folder path:</p></div>
+  <div id="ShowHide2"><p>Temporary conversion folder path:</p></div>
+
+  <textarea type="text" class="folderPaths"  id="destinationPath"></textarea>
+
+
+  <div style="display: none;" id="tempConversionFolderDiv">
+    <p>Destination folder path:</p><textarea type="text" class="folderPaths"  id="tempDestinationPath"></textarea>
+  </div>
+
+
 
   <p>Standard preset:<input type="checkbox" id="selectStandardPreset" class="cb1"  onchange="cbChange1(this)"></p>
   <p>Custom preset:<input type="checkbox" id="selectCustomPreset" class="cb1"  onchange="cbChange1(this)"></p>
@@ -960,7 +1343,13 @@ p {
  </div>
 
   <div style="display: none;" id="customPresetDiv">
-    <p>Write custom preset (e.g. "-e x264 -q 20 -B 160" (without quotes)):<textarea type="text" class="customPresetBox"  id="customPresets"></textarea></p>
+    <p>Write custom presets or link to a json preset exported from handbrake. For example:</p>
+
+     <p>-e x264 -q 20 -B 160</p>
+
+     <p>or</p>
+<p>--preset-import-file "C:\Users\HaveAGitGat\Desktop\testpreset.json" -Z "My Preset"</p>
+    <textarea type="text" class="customPresetBox"  id="customPresets"></textarea>
 
   </div>
 
@@ -980,6 +1369,10 @@ p {
 
   <p>Show Handbrake CMD windows when conversion is running?:<input type="checkbox" id="viewCMDOnOff" ></p>
 
+  <p  style="color:red;">Delete source files after conversion?:<input type="checkbox" id="deleteSourceFiles" onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')" ></p>
+
+  <p>Number simulataneous Handbrake instances to use?(1-4):<input type="text"  id="instanceNumber"></p>
+
   <input type='button' class="button1" value='Save config'  onclick='saveConfig()'/>
 
   <br>
@@ -987,8 +1380,22 @@ p {
   <br>
   <input type='button' class="button2" value='Scan for and convert files'  onclick='convertFiles()'/>
 
-  
+  <div id="conversionInfo"></div>
   <p>Scanning for new files in:<input type="text"  id="countdown">seconds</p>
+
+
+ <p>---------------------------------------------------------------------------------------</p>
+
+ 
+
+                  <p>Total number of media files found:<input type="text"  id="totalFilesFound" ></p>
+                <p>Number of unconverted media files found(files which don't exist in destination folders):<input type="text"  id="unconvertedFilesFound" ></p>
+
+                <div id="worker1"/>  </div>
+                <div id="worker2"/>  </div>
+                <div id="worker3"/>  </div>
+                <div id="worker4"/>  </div>
+
 
   <div id="files"></div>
   <div id="files2"></div>
