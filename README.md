@@ -29,6 +29,7 @@ Screenshot - https://imgur.com/a/rV9zJEK
 Demo video - https://sendvid.com/lmzaikh0
 
 Full ready to go zip download (including HandbrakeCLI.exe) -https://drive.google.com/file/d/13HPihCd0IMSI1rJYLcdg4B2SFwFvFW_A/view?usp=sharing
+
 If you monitor a folder which is actively being downloaded into (and has unfinished downloads in), the program will detect that there are new files and add them to the conversion queue. However, when Handbrake goes to convert the files, it won't be able to because they haven't finished downloading so it will skip them. This will loop until the files have fully been downloaded and then they will be converted and placed in the output folder.
 
 Also, if you use a download program which has an 'incomplete downloads' folder etc, do not put that folder inside your main source folder else you'll end up converting each file twice.
