@@ -594,7 +594,23 @@ try{
   }
 
 } catch (err) {}
+
+
+
+
  //  }
+
+runEndSection();
+
+
+
+
+
+}
+
+ function runEndSection(){
+
+
 
  if(document.getElementById("scanOnOff").checked==true){
 
@@ -610,13 +626,6 @@ try{
 
   document.getElementById("countdown").value = "Disabled";
 }
-
-
-
-
-
-
-
 
 
 
@@ -636,10 +645,9 @@ document.getElementById("worker4").innerHTML += "<p>File:-<\p>";
 var elmnt = document.getElementById("worker4");
 elmnt.scrollIntoView()
 
-
-
-
 }
+
+
 
 var scanCompleted=0;
 var scanCompleted2=0;
@@ -1182,6 +1190,32 @@ function runScan() {
 
   }
 
+
+ /* window.onbeforeunload = function(){
+   if(confirm("Are you sure you want to close/refresh the page?")){
+
+
+   }else{
+
+   }
+}*/
+
+window.onbeforeunload = function() {
+            return "Any conversion queues in progress will continue until completed (Please end these in task manager if need be).";
+        }
+
+function viewLog(logPath) {
+  var path = logPath
+  var shell = new ActiveXObject("WScript.Shell");
+  var rootdir = shell.currentDirectory;
+  RunFileRel(path);
+
+  function RunFileRel(path) {
+    WshShell = new ActiveXObject("WScript.Shell");
+    WshShell.Run('"' + rootdir + path + '"', 1, false);
+  }
+}
+
 </script>
 
 <style>
@@ -1430,6 +1464,11 @@ p {
 
 
   <p>---------------------------------------------------------------------------------------</p>
+
+  <input type="button" onclick="runEndSection()" value="Press this button to re-show queue status if you closed HBBB while queue running">
+
+  <input type="button" onclick="viewLog('/Logs/Scans.txt')" value="View scan log">
+  <input type="button" onclick="viewLog('/Logs/fileConversionLog.txt')" value="File conversion log">
 
 
 
