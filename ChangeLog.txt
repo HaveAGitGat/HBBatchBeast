@@ -1,0 +1,8 @@
+
+v1.5: 07:48 14/01/2019: Added scan log button and conversion (log +button)
+
+v1.4: 00:59 14/01/2019: Added the option for temporary conversion folder, deleting files after conversion and setting how many Handbrake instances to run (1-4).
+
+v1.3: Custom presets now supported!
+
+v1.2: Update HBBB so it only scans for common video files (MP4,M4V, MOV, MPG,MPEG,AVI,MKV) instead of scanning all file types.
