@@ -3,7 +3,7 @@
 
 <title>HBBatchBeast</title>
 <meta http-equiv="x-ua-compatible" content="IE=9" />
-<HTA:APPLICATION ID="HBBatchBeast" APPLICATIONNAME="HBBatchBeast" BORDER="DIALOG" BORDERSTYLE="normal" CAPTION="yes" ICON="rocket.ico" MAXIMIZEBUTTON="yes" MINIMIZEBUTTON="yes" SCROLL="auto" scrollFlat="yes" SHOWINTASKBAR="yes" SINGLEINSTANCE="yes" SYSMENU="yes" VERSION="1.0" Navigable="yes" WINDOWSTATE="normal" /> 
+<HTA:APPLICATION ID="HBBatchBeast" APPLICATIONNAME="HBBatchBeast" BORDER="DIALOG" BORDERSTYLE="normal" CAPTION="yes" ICON="HBBB.ico" MAXIMIZEBUTTON="yes" MINIMIZEBUTTON="yes" SCROLL="auto" scrollFlat="yes" SHOWINTASKBAR="yes" SINGLEINSTANCE="no" SYSMENU="yes" VERSION="1.0" Navigable="yes" WINDOWSTATE="normal" /> 
 
 
 <script type="text/javascript"> 
@@ -11,6 +11,7 @@
   var fso = new ActiveXObject("Scripting.FileSystemObject"); 
 
 
+// wait function 
   function sleep(milliseconds) {
     var start = new Date().getTime();
     for (var i = 0; i < 1e7; i++) {
@@ -21,26 +22,8 @@
   }
 
 
-  var inputPathArray = [];
-  var outputPathArray = [];
-    var outputPathArrayFinal = [];
 
-  var inputPathArrayCounter = 0;
-
-  var outputFolderPathold ="";
-  var outputFolderPathFinalold ="";
-
-  var fileNotExistsCounter =0;
-  var totalFileFoundCounter =0;
-
-  var g ;
   function ShowFolderFileList(folderspec){
-
-
-
-
-
-
 
     var s = "";
     var f = fso.GetFolder(folderspec);
@@ -71,55 +54,70 @@
        // document.getElementById("files2").innerHTML += "<p>"+ fileType+"<\p>";
 
 
-   var supportedFileTypeArray = [
 
-"mp4",
-"mkv",
-"mov",
-"m4v",
-"mpg",
-"mpeg",
-"avi",
+//Here we define supported file types
+       var supportedFileTypeArray = [
 
-
-"flv",
-"webm",
-"wmv",
-"vob",
-"evo",
-"mts",
-"m2ts",
-"ts",
+       "mp4",
+       "mkv",
+       "mov",
+       "m4v",
+       "mpg",
+       "mpeg",
+       "avi",
 
 
+       "flv",
+       "webm",
+       "wmv",
+       "vob",
+       "evo",
+       "mts",
+       "m2ts",
+       "ts",
 
-     ];
-
-     var supportedFileSwitch =0;
 
 
-     for (var j = 0; j < supportedFileTypeArray.length; j++) {
+       ];
 
-      if(fileType==supportedFileTypeArray[j]){
-        supportedFileSwitch = 1;
+
+//Here we check to see if the current file being analysed contains a valid file type
+       var supportedFileSwitch =0;
+
+
+       for (var j = 0; j < supportedFileTypeArray.length; j++) {
+
+        if(fileType==supportedFileTypeArray[j]){
+          supportedFileSwitch = 1;
+        }
+
       }
 
-     }
 
+//If the file type is valid, then process it
 
-     if(supportedFileSwitch == 1){
+      if(supportedFileSwitch == 1){
 
 //document.getElementById("files2").innerHTML += "<p>"+ thisFile+"<\p>";
 
+
+
+//Here add the full file path to the inputPathArray
 inputPathArray[inputPathArrayCounter] = thisFile+"";
 
+
+
+//Write to file to state that file with valid format has been found
 var tFF = fso.OpenTextFile("./Config/totalFilesFound.txt", 2, true);
 tFF.WriteLine(totalFileFoundCounter+1);
 tFF.Close();
 totalFileFoundCounter++
 
 
+
 var str = inputPathArray[inputPathArrayCounter];
+
+
 str = str.substring(str.indexOf("topFolder") + topFolderCharLength+1);
 
 
@@ -146,8 +144,8 @@ var outputFolderPath = outputPathArray[inputPathArrayCounter].substring(0, outpu
 
 if(document.getElementById("selectTemporaryConversionFolder").checked==true){
 
-outputPathArrayFinal[inputPathArrayCounter] = outPutPathStemFinal+newsubfilePath;
-var outputFolderPathFinal = outputPathArrayFinal[inputPathArrayCounter].substring(0, outputPathArrayFinal[inputPathArrayCounter].lastIndexOf('\\'));
+  outputPathArrayFinal[inputPathArrayCounter] = outPutPathStemFinal+newsubfilePath;
+  var outputFolderPathFinal = outputPathArrayFinal[inputPathArrayCounter].substring(0, outputPathArrayFinal[inputPathArrayCounter].lastIndexOf('\\'));
 
 }
 
@@ -159,16 +157,16 @@ var outputFolderPathFinal = outputPathArrayFinal[inputPathArrayCounter].substrin
 
 if(document.getElementById("selectTemporaryConversionFolder").checked==true){
 
-if(fso.FileExists(outputPathArrayFinal[inputPathArrayCounter])){
+  if(fso.FileExists(outputPathArrayFinal[inputPathArrayCounter])){
 
 
-}else{
+  }else{
 
-  var uFF = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 2, true);
-  uFF.WriteLine(fileNotExistsCounter+1);
-  uFF.Close();
-  fileNotExistsCounter++
-}
+    var uFF = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 2, true);
+    uFF.WriteLine(fileNotExistsCounter+1);
+    uFF.Close();
+    fileNotExistsCounter++
+  }
 
 
 
@@ -177,17 +175,17 @@ if(fso.FileExists(outputPathArrayFinal[inputPathArrayCounter])){
 }else{
 
   //
-if(fso.FileExists(outputPathArray[inputPathArrayCounter])){
+  if(fso.FileExists(outputPathArray[inputPathArrayCounter])){
 
 
-}else{
+  }else{
 
-  var uFF = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 2, true);
-  uFF.WriteLine(fileNotExistsCounter+1);
-  uFF.Close();
-  fileNotExistsCounter++
+    var uFF = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 2, true);
+    uFF.WriteLine(fileNotExistsCounter+1);
+    uFF.Close();
+    fileNotExistsCounter++
 
-}
+  }
 //
 
 
@@ -221,16 +219,16 @@ if(fso.FolderExists(outputFolderPath)){
 if(document.getElementById("selectTemporaryConversionFolder").checked==true){
 
 
-if(fso.FolderExists(outputFolderPathFinal)){
+  if(fso.FolderExists(outputFolderPathFinal)){
 
-}else{
+  }else{
 
-  if(outputFolderPathFinal!=outputFolderPathFinalold){
-    gtwo.WriteLine("mkdir "+"\""+outputFolderPathFinal+"\"");
+    if(outputFolderPathFinal!=outputFolderPathFinalold){
+      gtwo.WriteLine("mkdir "+"\""+outputFolderPathFinal+"\"");
 
-    outputFolderPathFinalold=outputFolderPathFinal;
+      outputFolderPathFinalold=outputFolderPathFinal;
 
-  }
+    }
   }
 }
 
@@ -261,6 +259,20 @@ if (thisFile.indexOf("csv") >=0){}
 
 }
 
+  var inputPathArray = [];
+  var outputPathArray = [];
+  var outputPathArrayFinal = [];
+
+
+  var inputPathArrayCounter = 0;
+  var outputFolderPathold ="";
+  var outputFolderPathFinalold ="";
+
+  var fileNotExistsCounter =0;
+  var totalFileFoundCounter =0;
+
+var g ;
+
 var outPutPathStem
 var outPutPathStemFinal
 
@@ -274,17 +286,23 @@ function convertFiles(){
 
   saveConfig();
 
-  var tFF = fso.OpenTextFile("./Config/totalFilesFound.txt", 2, true);
-  tFF.WriteLine("0");
-  tFF.Close();
+  //Reset counters before processing
 
-  var uFF = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 2, true);
-  uFF.WriteLine("0");
-  uFF.Close();
+  var tempWrite = fso.OpenTextFile("./Config/totalFilesFound.txt", 2, true);
+  tempWrite.WriteLine("0");
+  tempWrite.Close();
 
-  var cF = fso.OpenTextFile("./Config/convertedFiles.txt", 2, true);
-  cF.WriteLine("0");
-  cF.Close();
+  var tempWrite = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 2, true);
+  tempWrite.WriteLine("0");
+  tempWrite.Close();
+
+  var tempWrite= fso.OpenTextFile("./Config/convertedFiles.txt", 2, true);
+  tempWrite.WriteLine("0");
+  tempWrite.Close();
+
+
+
+  //Launch status window to show how many files have been found (useful for large folders which take a long time to scan)
 
   var path = "/Config/HBBatchBeastStatus.hta"
   var shell = new ActiveXObject("WScript.Shell");
@@ -299,7 +317,7 @@ function convertFiles(){
 
 
 
-
+//initia counters
   fileNotExistsCounter =0;
   totalFileFoundCounter =0;
 
@@ -320,7 +338,7 @@ function convertFiles(){
 
 
   outPutPathStem =document.getElementById("destinationPath").value;
- outPutPathStemFinal =document.getElementById("tempDestinationPath").value;
+  outPutPathStemFinal =document.getElementById("tempDestinationPath").value;
   
 
 
@@ -342,7 +360,7 @@ function convertFiles(){
   g = fso.OpenTextFile("./MakeDirBatchTemp.bat", 8, true);
 
 
-    var outputpath3two = "./MakeDirBatchTemp2.bat";
+  var outputpath3two = "./MakeDirBatchTemp2.bat";
 
   if(fso.FileExists(outputpath3two)){
     fso.DeleteFile(outputpath3two)
@@ -423,7 +441,7 @@ function convertFiles(){
   var tempWrite = fso.OpenTextFile("./Config/Processes/destinationQueue.txt", 2, true);
   tempWrite.Close();
 
-    var tempWrite = fso.OpenTextFile("./Config/Processes/destinationFinalQueue.txt", 2, true);
+  var tempWrite = fso.OpenTextFile("./Config/Processes/destinationFinalQueue.txt", 2, true);
   tempWrite.Close();
 
   var tempWrite = fso.OpenTextFile("./Config/Processes/queueNumberPath.txt", 2, true);
@@ -474,39 +492,39 @@ function convertFiles(){
    var writeNumber = 0;
 
 
-if(document.getElementById("selectTemporaryConversionFolder").checked==true){
+   if(document.getElementById("selectTemporaryConversionFolder").checked==true){
 
-       for (var i = 0; i < outputPathArray.length; i++) {
+     for (var i = 0; i < outputPathArray.length; i++) {
 
-    if(fso.FileExists(outputPathArrayFinal[i])){
+      if(fso.FileExists(outputPathArrayFinal[i])){
 
-    }else{
+      }else{
 
-     var tempWrite = fso.OpenTextFile("./Config/Processes/sourceQueue.txt", 8, true);
-     tempWrite.WriteLine(inputPathArray[i]);
-     tempWrite.Close();   
+       var tempWrite = fso.OpenTextFile("./Config/Processes/sourceQueue.txt", 8, true);
+       tempWrite.WriteLine(inputPathArray[i]);
+       tempWrite.Close();   
 
-     var tempWrite = fso.OpenTextFile("./Config/Processes/destinationQueue.txt", 8, true);
-     tempWrite.WriteLine(outputPathArray[i]);
-     tempWrite.Close();  
+       var tempWrite = fso.OpenTextFile("./Config/Processes/destinationQueue.txt", 8, true);
+       tempWrite.WriteLine(outputPathArray[i]);
+       tempWrite.Close();  
 
-     var tempWrite = fso.OpenTextFile("./Config/Processes/destinationFinalQueue.txt", 8, true);
-     tempWrite.WriteLine(outputPathArrayFinal[i]);
-     tempWrite.Close(); 
+       var tempWrite = fso.OpenTextFile("./Config/Processes/destinationFinalQueue.txt", 8, true);
+       tempWrite.WriteLine(outputPathArrayFinal[i]);
+       tempWrite.Close(); 
 
-     writeNumber++;
-  
+       writeNumber++;
+
+     }
+
+
    }
 
 
- }
+
+ }else{
 
 
-
-}else{
-
-
-     for (var i = 0; i < outputPathArray.length; i++) {
+   for (var i = 0; i < outputPathArray.length; i++) {
 
     if(fso.FileExists(outputPathArray[i])){
 
@@ -525,7 +543,7 @@ if(document.getElementById("selectTemporaryConversionFolder").checked==true){
      tempWrite.Close(); 
 
      writeNumber++;
-  
+
    }
 
 
@@ -543,20 +561,20 @@ if(document.getElementById("selectTemporaryConversionFolder").checked==true){
 
 
 
- 
- WshShell = new ActiveXObject("WScript.Shell");
 
- try{ 
-   WshShell.Run("MakeDirBatchTemp.bat", 1, true); 
- } catch (err) {}
+WshShell = new ActiveXObject("WScript.Shell");
 
-  WshShell = new ActiveXObject("WScript.Shell");
+try{ 
+ WshShell.Run("MakeDirBatchTemp.bat", 1, true); 
+} catch (err) {}
 
- try{ 
-   WshShell.Run("MakeDirBatchTemp2.bat", 1, true); 
- } catch (err) {}
+WshShell = new ActiveXObject("WScript.Shell");
 
- try{ 
+try{ 
+ WshShell.Run("MakeDirBatchTemp2.bat", 1, true); 
+} catch (err) {}
+
+try{ 
 
 
 
@@ -565,13 +583,13 @@ if(document.getElementById("selectTemporaryConversionFolder").checked==true){
   var rootdir = shell.currentDirectory;
   WshShell = new ActiveXObject("WScript.Shell");
 
-for (var inNum = 0; inNum < document.getElementById("instanceNumber").value ; inNum++) {
+  for (var inNum = 0; inNum < document.getElementById("instanceNumber").value ; inNum++) {
 
 
 
 
-  WshShell.Run('"' + rootdir + path + (inNum+1)+'.hta"', 0, false);
-  sleep(1000);
+    WshShell.Run('"' + rootdir + path + (inNum+1)+'.hta"', 0, false);
+    sleep(1000);
 
   }
 
@@ -607,16 +625,16 @@ scanCompleted=0;
 updateInfo =1;
 
 
- document.getElementById("worker1").innerHTML = "<p>Worker 1 processing queue item number:-<\p>";
- document.getElementById("worker1").innerHTML += "<p>File:-<\p>";
-  document.getElementById("worker2").innerHTML = "<p>Worker 2 processing queue item number:-<\p>";
-   document.getElementById("worker2").innerHTML += "<p>File:-<\p>";
-   document.getElementById("worker3").innerHTML = "<p>Worker 3 processing queue item number:-<\p>";
-    document.getElementById("worker3").innerHTML += "<p>File:-<\p>";
-    document.getElementById("worker4").innerHTML = "<p>Worker 4 processing queue item number:-<\p>";
-     document.getElementById("worker4").innerHTML += "<p>File:-<\p>";
-      var elmnt = document.getElementById("worker4");
-                    elmnt.scrollIntoView()
+document.getElementById("worker1").innerHTML = "<p>Worker 1 processing queue item number:-<\p>";
+document.getElementById("worker1").innerHTML += "<p>File:-<\p>";
+document.getElementById("worker2").innerHTML = "<p>Worker 2 processing queue item number:-<\p>";
+document.getElementById("worker2").innerHTML += "<p>File:-<\p>";
+document.getElementById("worker3").innerHTML = "<p>Worker 3 processing queue item number:-<\p>";
+document.getElementById("worker3").innerHTML += "<p>File:-<\p>";
+document.getElementById("worker4").innerHTML = "<p>Worker 4 processing queue item number:-<\p>";
+document.getElementById("worker4").innerHTML += "<p>File:-<\p>";
+var elmnt = document.getElementById("worker4");
+elmnt.scrollIntoView()
 
 
 
@@ -636,10 +654,10 @@ var countDownOn=0;
 function runScan() {
 
 
-    if(updateInfo == 1){
+  if(updateInfo == 1){
 
 
- try{
+   try{
      var tFF2 = fso.OpenTextFile("./Config/totalFilesFound.txt", 1, true);
      
      document.getElementById("totalFilesFound").value = tFF2.ReadLine();
@@ -717,25 +735,25 @@ function runScan() {
 
                     if(instanceNumberSetting==1 && QueueNumber1=="Complete!"){
 
-                        AllComplete();
+                      AllComplete();
 
                     }
 
                     if(instanceNumberSetting==2 && QueueNumber1=="Complete!"&&QueueNumber2=="Complete!"){
 
-                        AllComplete();
+                      AllComplete();
 
                     }
 
                     if(instanceNumberSetting==3 && QueueNumber1=="Complete!"&&QueueNumber2=="Complete!"&&QueueNumber3=="Complete!"){
 
-                        AllComplete();
+                      AllComplete();
 
                     }
 
                     if(instanceNumberSetting==4 && QueueNumber1=="Complete!"&&QueueNumber2=="Complete!"&&QueueNumber3=="Complete!"&&QueueNumber4=="Complete!"){
 
-                        AllComplete();
+                      AllComplete();
 
                     }
 
@@ -747,7 +765,7 @@ function runScan() {
 
                     }
 
-                  
+
 
                   }
 
@@ -755,414 +773,414 @@ function runScan() {
 
 
 
-  if(scanCompleted==1 && scanCompleted2==1){
+                  if(scanCompleted==1 && scanCompleted2==1){
 
 
 
- if(document.getElementById("deleteSourceFiles").checked==true){
-for (var i = 0; i < inputPathArray.length; i++) {
-if(fso.FileExists(inputPathArray[i])){
+                   if(document.getElementById("deleteSourceFiles").checked==true){
+                    for (var i = 0; i < inputPathArray.length; i++) {
+                      if(fso.FileExists(inputPathArray[i])){
 
-  fso.DeleteFile(inputPathArray[i],false)
+                        fso.DeleteFile(inputPathArray[i],false)
 
-}
+                      }
 
-     }
-   }
+                    }
+                  }
 
-updateInfo =0;
+                  updateInfo =0;
 
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; 
-    var yyyy = today.getFullYear();
-    if (dd < 10) {
-     dd = '0' + dd
-   }
-   if (mm < 10) {
-     mm = '0' + mm
-   }
-   today = dd + '/' + mm + '/' + yyyy;
-   today2 = dd + '-' + mm + '-' + yyyy;
-   
-   var d = new Date(),
-   h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
-   m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
-   s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
-   timenow = h + '-' + m + '-' + s;
+                  var today = new Date();
+                  var dd = today.getDate();
+                  var mm = today.getMonth() + 1; 
+                  var yyyy = today.getFullYear();
+                  if (dd < 10) {
+                   dd = '0' + dd
+                 }
+                 if (mm < 10) {
+                   mm = '0' + mm
+                 }
+                 today = dd + '/' + mm + '/' + yyyy;
+                 today2 = dd + '-' + mm + '-' + yyyy;
 
+                 var d = new Date(),
+                 h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
+                 m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+                 s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
+                 timenow = h + '-' + m + '-' + s;
 
-   var uFF2 = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 1, true);                 
-   var convertedFiles1= uFF2.ReadLine();
-   uFF2.Close();
 
-   
+                 var uFF2 = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 1, true);                 
+                 var convertedFiles1= uFF2.ReadLine();
+                 uFF2.Close();
 
 
-   queueNumberPath = "./Config/Processes/queueNumberPath.txt";
-   var tempRead = fso.OpenTextFile(queueNumberPath, 1, true);
-   convertedFiles = tempRead.ReadLine();
-   tempRead.Close();
 
-   var tempRead = fso.OpenTextFile("./Config/presetString.txt", 1, true);
-   var preset = tempRead.ReadLine();
-   tempRead.Close();
 
+                 queueNumberPath = "./Config/Processes/queueNumberPath.txt";
+                 var tempRead = fso.OpenTextFile(queueNumberPath, 1, true);
+                 convertedFiles = tempRead.ReadLine();
+                 tempRead.Close();
 
-   var uFF2 = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 1, true);
-   
-   var unConvertedFiles = uFF2.ReadLine();
-   
-   uFF2.Close();
+                 var tempRead = fso.OpenTextFile("./Config/presetString.txt", 1, true);
+                 var preset = tempRead.ReadLine();
+                 tempRead.Close();
 
-   document.getElementById("files").innerHTML += "<p>Scan completed on "+ today2+"-"+timenow+".-------Total files found:"+totalFileFoundCounter+"---------Unconverted files:"+unConvertedFiles+"------.Files processed:"+convertedFiles+" out of "+convertedFiles1+"-------Preset:"+preset+".<\p>";
 
+                 var uFF2 = fso.OpenTextFile("./Config/unconvertedFilesFound.txt", 1, true);
 
-   
+                 var unConvertedFiles = uFF2.ReadLine();
 
+                 uFF2.Close();
 
-   var tempWrite = fso.OpenTextFile("./Logs/Scans.txt", 8, true);
-   tempWrite.WriteLine("Scan completed on "+ today2+"-"+timenow+".-------Total files found:"+totalFileFoundCounter+"---------Unconverted files:"+unConvertedFiles+"------.Files processed:"+convertedFiles+" out of "+convertedFiles1+"-------Preset:"+preset+".");
-   tempWrite.Close();
+                 document.getElementById("files").innerHTML += "<p>Scan completed on "+ today2+"-"+timenow+".-------Total files found:"+totalFileFoundCounter+"---------Unconverted files:"+unConvertedFiles+"------.Files processed:"+convertedFiles+" out of "+convertedFiles1+"-------Preset:"+preset+".<\p>";
 
-   scanCompleted2=0;
 
 
- }
 
- if(fso.FileExists("./Config/Processes/WorkerStatus/AllComplete.txt")){
-   var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/AllComplete.txt", 1, true);
 
-   try{
-     var AllComplete = tempRead.ReadLine();
-     tempRead.Close();  
+                 var tempWrite = fso.OpenTextFile("./Logs/Scans.txt", 8, true);
+                 tempWrite.WriteLine("Scan completed on "+ today2+"-"+timenow+".-------Total files found:"+totalFileFoundCounter+"---------Unconverted files:"+unConvertedFiles+"------.Files processed:"+convertedFiles+" out of "+convertedFiles1+"-------Preset:"+preset+".");
+                 tempWrite.Close();
 
-   }catch(err){
-    var AllComplete ="0";
+                 scanCompleted2=0;
 
-  }
 
-}             
+               }
 
-if(countDownOn==1&&AllComplete=="1"){
-  scanCompleted=1;
+               if(fso.FileExists("./Config/Processes/WorkerStatus/AllComplete.txt")){
+                 var tempRead = fso.OpenTextFile("./Config/Processes/WorkerStatus/AllComplete.txt", 1, true);
 
-  var timerSeconds =  document.getElementById("countdown").value
+                 try{
+                   var AllComplete = tempRead.ReadLine();
+                   tempRead.Close();  
 
-  timerSeconds--;
+                 }catch(err){
+                  var AllComplete ="0";
 
-  document.getElementById("countdown").value=timerSeconds ;
+                }
 
+              }             
 
-  if(timerSeconds==0){
+              if(countDownOn==1&&AllComplete=="1"){
+                scanCompleted=1;
 
-    convertFiles();
+                var timerSeconds =  document.getElementById("countdown").value
 
-    document.getElementById("countdown").value=document.getElementById("timer").value
+                timerSeconds--;
 
-    
-  }
-}
+                document.getElementById("countdown").value=timerSeconds ;
 
 
+                if(timerSeconds==0){
 
+                  convertFiles();
 
-}
+                  document.getElementById("countdown").value=document.getElementById("timer").value
 
 
+                }
+              }
 
-window.onload = function() {
 
 
 
+            }
 
-  try{
 
-    if(fso.FileExists("./Recent/scanInterval.txt")){
 
-    var tempRead = fso.OpenTextFile("./Recent/scanInterval.txt", 1, true);
-    document.getElementById("timer").value = tempRead.ReadLine();
-    tempRead.Close();
-    }
+            window.onload = function() {
 
-    if(fso.FileExists("./Recent/periodicScanningOnOff.txt")){
 
-    var tempRead = fso.OpenTextFile("./Recent/periodicScanningOnOff.txt", 1, true);
-    var scanningOnOff = tempRead.ReadLine();
-    tempRead.Close();
 
-    if(scanningOnOff=="1"){
-      document.getElementById("scanOnOff").checked=true;
-    }else{
-      document.getElementById("scanOnOff").checked=false;
 
-    }
-  }
+              try{
 
-if(fso.FileExists("./Config/viewCMDOnOff.txt")){
-    var tempRead = fso.OpenTextFile("./Config/viewCMDOnOff.txt", 1, true);
-    var viewCMDOnOff = tempRead.ReadLine();
-    tempRead.Close();
+                if(fso.FileExists("./Recent/scanInterval.txt")){
 
-    if(viewCMDOnOff=="1"){
-      document.getElementById("viewCMDOnOff").checked=true;
-    }else{
-      document.getElementById("viewCMDOnOff").checked=false;
+                  var tempRead = fso.OpenTextFile("./Recent/scanInterval.txt", 1, true);
+                  document.getElementById("timer").value = tempRead.ReadLine();
+                  tempRead.Close();
+                }
 
-    }     
-    }                
+                if(fso.FileExists("./Recent/periodicScanningOnOff.txt")){
 
-if(fso.FileExists("./Recent/recentDestination.txt")){
-    var tempRead = fso.OpenTextFile("./Recent/recentDestination.txt", 1, true);
-    document.getElementById("destinationPath").value = tempRead.ReadLine();
-    tempRead.Close();
-  }
+                  var tempRead = fso.OpenTextFile("./Recent/periodicScanningOnOff.txt", 1, true);
+                  var scanningOnOff = tempRead.ReadLine();
+                  tempRead.Close();
 
-if(fso.FileExists("./Recent/recentSource.txt")){
-    var tempRead = fso.OpenTextFile("./Recent/recentSource.txt", 1, true);
-    document.getElementById("sourcePath").value = tempRead.ReadLine();
-    tempRead.Close();
-  }
+                  if(scanningOnOff=="1"){
+                    document.getElementById("scanOnOff").checked=true;
+                  }else{
+                    document.getElementById("scanOnOff").checked=false;
 
-    
-if(fso.FileExists("./Recent/tempDestinationPath.txt")){
-     var tempRead = fso.OpenTextFile("./Recent/tempDestinationPath.txt", 1, true);
-    document.getElementById("tempDestinationPath").value = tempRead.ReadLine();
-    tempRead.Close();
-  }
+                  }
+                }
 
+                if(fso.FileExists("./Config/viewCMDOnOff.txt")){
+                  var tempRead = fso.OpenTextFile("./Config/viewCMDOnOff.txt", 1, true);
+                  var viewCMDOnOff = tempRead.ReadLine();
+                  tempRead.Close();
 
-if(fso.FileExists("./Recent/tempDestinationOnOff.txt")){
-    var tempRead = fso.OpenTextFile("./Recent/tempDestinationOnOff.txt", 1, true);
-    var temp = tempRead.ReadLine();
-    tempRead.Close();
+                  if(viewCMDOnOff=="1"){
+                    document.getElementById("viewCMDOnOff").checked=true;
+                  }else{
+                    document.getElementById("viewCMDOnOff").checked=false;
 
-    if(temp=="1"){
-      document.getElementById("selectTemporaryConversionFolder").checked=true;
-      document.getElementById("tempConversionFolderDiv").style.display = 'block';
+                  }     
+                }                
 
-    }else{
-      document.getElementById("selectTemporaryConversionFolder").checked=false;
+                if(fso.FileExists("./Recent/recentDestination.txt")){
+                  var tempRead = fso.OpenTextFile("./Recent/recentDestination.txt", 1, true);
+                  document.getElementById("destinationPath").value = tempRead.ReadLine();
+                  tempRead.Close();
+                }
 
-    } 
-  }
+                if(fso.FileExists("./Recent/recentSource.txt")){
+                  var tempRead = fso.OpenTextFile("./Recent/recentSource.txt", 1, true);
+                  document.getElementById("sourcePath").value = tempRead.ReadLine();
+                  tempRead.Close();
+                }
 
 
+                if(fso.FileExists("./Recent/tempDestinationPath.txt")){
+                 var tempRead = fso.OpenTextFile("./Recent/tempDestinationPath.txt", 1, true);
+                 document.getElementById("tempDestinationPath").value = tempRead.ReadLine();
+                 tempRead.Close();
+               }
 
-if(fso.FileExists("./Config/preset.txt")){
-    var tempRead = fso.OpenTextFile("./Config/preset.txt", 1, true);
-    var selectedIndex = tempRead.ReadLine();
 
-    document.getElementById("preset").selectedIndex = selectedIndex;
-    tempRead.Close();
-  }
+               if(fso.FileExists("./Recent/tempDestinationOnOff.txt")){
+                var tempRead = fso.OpenTextFile("./Recent/tempDestinationOnOff.txt", 1, true);
+                var temp = tempRead.ReadLine();
+                tempRead.Close();
 
+                if(temp=="1"){
+                  document.getElementById("selectTemporaryConversionFolder").checked=true;
+                  document.getElementById("tempConversionFolderDiv").style.display = 'block';
 
-if(fso.FileExists("./Config/customPreset.txt")){
-    var tempRead = fso.OpenTextFile("./Config/customPreset.txt", 1, true);
-   document.getElementById("customPresets").selectedIndex = tempRead.ReadLine();
-    tempRead.Close();
-  }
+                }else{
+                  document.getElementById("selectTemporaryConversionFolder").checked=false;
 
-  if(fso.FileExists("./Config/customPresetOnOff.txt")){
+                } 
+              }
 
-    var tempRead = fso.OpenTextFile("./Config/customPresetOnOff.txt", 1, true);
-   var temp = tempRead.ReadLine();
 
-if(temp=="0"){
-document.getElementById("selectStandardPreset").checked=true
-document.getElementById("standardPresetDiv").style.display = 'block';
 
-}
-  else{
-document.getElementById("selectCustomPreset").checked=true  
-document.getElementById("customPresetDiv").style.display = 'block';  
+              if(fso.FileExists("./Config/preset.txt")){
+                var tempRead = fso.OpenTextFile("./Config/preset.txt", 1, true);
+                var selectedIndex = tempRead.ReadLine();
 
-  }
-    tempRead.Close();
-  }
-  
+                document.getElementById("preset").selectedIndex = selectedIndex;
+                tempRead.Close();
+              }
 
-if(fso.FileExists("./Config/container.txt")){
-    var tempRead = fso.OpenTextFile("./Config/container.txt", 1, true);
-    var selectedIndex = tempRead.ReadLine();
 
-    document.getElementById("container").selectedIndex = selectedIndex;
-    tempRead.Close();
-  }
+              if(fso.FileExists("./Config/customPreset.txt")){
+                var tempRead = fso.OpenTextFile("./Config/customPreset.txt", 1, true);
+                document.getElementById("customPresets").selectedIndex = tempRead.ReadLine();
+                tempRead.Close();
+              }
 
-if(fso.FileExists("./config/customPreset.txt")){
+              if(fso.FileExists("./Config/customPresetOnOff.txt")){
 
-    var tempRead = fso.OpenTextFile("./config/customPreset.txt", 1, true);
-    document.getElementById("customPresets").value = tempRead.ReadLine();
-    tempRead.Close();
-  }
+                var tempRead = fso.OpenTextFile("./Config/customPresetOnOff.txt", 1, true);
+                var temp = tempRead.ReadLine();
 
-  if(fso.FileExists("./config/instanceNumber.txt")){
+                if(temp=="0"){
+                  document.getElementById("selectStandardPreset").checked=true
+                  document.getElementById("standardPresetDiv").style.display = 'block';
 
-     var tempRead = fso.OpenTextFile("./config/instanceNumber.txt", 1, true);
-    document.getElementById("instanceNumber").value = tempRead.ReadLine();
-    tempRead.Close();
-  }
+                }
+                else{
+                  document.getElementById("selectCustomPreset").checked=true  
+                  document.getElementById("customPresetDiv").style.display = 'block';  
 
-  }catch(err){}
+                }
+                tempRead.Close();
+              }
 
-  
-  
-  cbChange2();
 
-}
+              if(fso.FileExists("./Config/container.txt")){
+                var tempRead = fso.OpenTextFile("./Config/container.txt", 1, true);
+                var selectedIndex = tempRead.ReadLine();
 
+                document.getElementById("container").selectedIndex = selectedIndex;
+                tempRead.Close();
+              }
 
-function saveConfig(){
+              if(fso.FileExists("./config/customPreset.txt")){
 
+                var tempRead = fso.OpenTextFile("./config/customPreset.txt", 1, true);
+                document.getElementById("customPresets").value = tempRead.ReadLine();
+                tempRead.Close();
+              }
 
-  var tempWrite = fso.OpenTextFile("./Recent/scanInterval.txt", 2, true);
-  tempWrite.WriteLine(document.getElementById("timer").value);
-  tempWrite.Close();
+              if(fso.FileExists("./config/instanceNumber.txt")){
 
-
-  var tempWrite = fso.OpenTextFile("./Recent/periodicScanningOnOff.txt", 2, true);
-  if(document.getElementById("scanOnOff").checked==true){
-    tempWrite.WriteLine("1")
-  }else{
-    tempWrite.WriteLine("0")
-  }
-  tempWrite.Close();
-
-
-  var tempWrite = fso.OpenTextFile("./Config/viewCMDOnOff.txt", 2, true);
-  if(document.getElementById("viewCMDOnOff").checked==true){
-    tempWrite.WriteLine("1")
-  }else{
-    tempWrite.WriteLine("0")
-  }
-  tempWrite.Close();
-
-
-  var tempWrite = fso.OpenTextFile("./Recent/recentSource.txt", 2, true);
-  tempWrite.WriteLine(document.getElementById("sourcePath").value);
-  tempWrite.Close();
-
-  var tempWrite = fso.OpenTextFile("./Recent/recentDestination.txt", 2, true);
-  tempWrite.WriteLine(document.getElementById("destinationPath").value);
-  tempWrite.Close();
-
-    var tempWrite = fso.OpenTextFile("./Recent/tempDestinationPath.txt", 2, true);
-  tempWrite.WriteLine(document.getElementById("tempDestinationPath").value);
-  tempWrite.Close();
-
-
-  var tempWrite = fso.OpenTextFile("./Recent/tempDestinationOnOff.txt", 2, true);
-  if(document.getElementById("selectTemporaryConversionFolder").checked==true){
-  tempWrite.WriteLine("1");
-}else{
-   tempWrite.WriteLine("0");
-   }
-  tempWrite.Close();
-
-  var tempWrite = fso.OpenTextFile("./Config/preset.txt", 2, true);
-  tempWrite.WriteLine(document.getElementById("preset").value);
-  tempWrite.Close();
-
-    var tempWrite = fso.OpenTextFile("./Config/customPresetOnOff.txt", 2, true);
- if(document.getElementById("selectStandardPreset").checked==true){
-  tempWrite.WriteLine("0");
-}else{
-    tempWrite.WriteLine("1");
-}
-  tempWrite.Close();
-
-    var tempWrite = fso.OpenTextFile("./Config/customPreset.txt", 2, true);
-  tempWrite.WriteLine(document.getElementById("customPresets").value);
-  tempWrite.Close();
-
-
-
-
-  var tempWrite = fso.OpenTextFile("./Config/container.txt", 2, true);
-  tempWrite.WriteLine(document.getElementById("container").value);
-  tempWrite.Close();
-
- if(document.getElementById("selectStandardPreset").checked==true){
-  var tempWrite = fso.OpenTextFile("./Config/presetString.txt", 2, true);
-  tempWrite.WriteLine("-Z \""+document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text+"\"");
-  tempWrite.Close();
-}
-
-
- if(document.getElementById("selectCustomPreset").checked==true){
-  var tempWrite = fso.OpenTextFile("./Config/presetString.txt", 2, true);
-  tempWrite.WriteLine(document.getElementById("customPresets").value);
-  tempWrite.Close();
-}
-
-
-
-
-var tempWrite = fso.OpenTextFile("./Config/instanceNumber.txt", 2, true);
-  tempWrite.WriteLine(document.getElementById("instanceNumber").value);
-  tempWrite.Close();
-
-}
-
-
-function openURL()
-{
-  var shell = new ActiveXObject("WScript.Shell");
-  shell.run("https://github.com/HaveAGitGat");
-}
-
-  function cbChange1(obj) {
-         if (obj.checked == false) {
-             obj.checked = false;
-         } else if (obj.checked == true) {
-             var cbs = document.getElementsByClassName("cb1");
-             for (var i = 0; i < cbs.length; i++) {
-                 cbs[i].checked = false;
+               var tempRead = fso.OpenTextFile("./config/instanceNumber.txt", 1, true);
+               document.getElementById("instanceNumber").value = tempRead.ReadLine();
+               tempRead.Close();
              }
-             obj.checked = true;
+
+           }catch(err){}
+
+
+
+           cbChange2();
+
          }
 
-          document.getElementById("standardPresetDiv").style.display = 'none';
-           document.getElementById("customPresetDiv").style.display = 'none';
 
+         function saveConfig(){
+
+
+          var tempWrite = fso.OpenTextFile("./Recent/scanInterval.txt", 2, true);
+          tempWrite.WriteLine(document.getElementById("timer").value);
+          tempWrite.Close();
+
+
+          var tempWrite = fso.OpenTextFile("./Recent/periodicScanningOnOff.txt", 2, true);
+          if(document.getElementById("scanOnOff").checked==true){
+            tempWrite.WriteLine("1")
+          }else{
+            tempWrite.WriteLine("0")
+          }
+          tempWrite.Close();
+
+
+          var tempWrite = fso.OpenTextFile("./Config/viewCMDOnOff.txt", 2, true);
+          if(document.getElementById("viewCMDOnOff").checked==true){
+            tempWrite.WriteLine("1")
+          }else{
+            tempWrite.WriteLine("0")
+          }
+          tempWrite.Close();
+
+
+          var tempWrite = fso.OpenTextFile("./Recent/recentSource.txt", 2, true);
+          tempWrite.WriteLine(document.getElementById("sourcePath").value);
+          tempWrite.Close();
+
+          var tempWrite = fso.OpenTextFile("./Recent/recentDestination.txt", 2, true);
+          tempWrite.WriteLine(document.getElementById("destinationPath").value);
+          tempWrite.Close();
+
+          var tempWrite = fso.OpenTextFile("./Recent/tempDestinationPath.txt", 2, true);
+          tempWrite.WriteLine(document.getElementById("tempDestinationPath").value);
+          tempWrite.Close();
+
+
+          var tempWrite = fso.OpenTextFile("./Recent/tempDestinationOnOff.txt", 2, true);
+          if(document.getElementById("selectTemporaryConversionFolder").checked==true){
+            tempWrite.WriteLine("1");
+          }else{
+           tempWrite.WriteLine("0");
+         }
+         tempWrite.Close();
+
+         var tempWrite = fso.OpenTextFile("./Config/preset.txt", 2, true);
+         tempWrite.WriteLine(document.getElementById("preset").value);
+         tempWrite.Close();
+
+         var tempWrite = fso.OpenTextFile("./Config/customPresetOnOff.txt", 2, true);
          if(document.getElementById("selectStandardPreset").checked==true){
-          document.getElementById("standardPresetDiv").style.display = 'block';
+          tempWrite.WriteLine("0");
+        }else{
+          tempWrite.WriteLine("1");
+        }
+        tempWrite.Close();
+
+        var tempWrite = fso.OpenTextFile("./Config/customPreset.txt", 2, true);
+        tempWrite.WriteLine(document.getElementById("customPresets").value);
+        tempWrite.Close();
+
+
+
+
+        var tempWrite = fso.OpenTextFile("./Config/container.txt", 2, true);
+        tempWrite.WriteLine(document.getElementById("container").value);
+        tempWrite.Close();
+
+        if(document.getElementById("selectStandardPreset").checked==true){
+          var tempWrite = fso.OpenTextFile("./Config/presetString.txt", 2, true);
+          tempWrite.WriteLine("-Z \""+document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text+"\"");
+          tempWrite.Close();
+        }
+
+
+        if(document.getElementById("selectCustomPreset").checked==true){
+          var tempWrite = fso.OpenTextFile("./Config/presetString.txt", 2, true);
+          tempWrite.WriteLine(document.getElementById("customPresets").value);
+          tempWrite.Close();
+        }
+
+
+
+
+        var tempWrite = fso.OpenTextFile("./Config/instanceNumber.txt", 2, true);
+        tempWrite.WriteLine(document.getElementById("instanceNumber").value);
+        tempWrite.Close();
+
+      }
+
+
+      function openURL()
+      {
+        var shell = new ActiveXObject("WScript.Shell");
+        shell.run("https://github.com/HaveAGitGat");
+      }
+
+      function cbChange1(obj) {
+       if (obj.checked == false) {
+         obj.checked = false;
+       } else if (obj.checked == true) {
+         var cbs = document.getElementsByClassName("cb1");
+         for (var i = 0; i < cbs.length; i++) {
+           cbs[i].checked = false;
          }
+         obj.checked = true;
+       }
 
-          if(document.getElementById("selectCustomPreset").checked==true){
-        
-          document.getElementById("customPresetDiv").style.display = 'block';
-         }
+       document.getElementById("standardPresetDiv").style.display = 'none';
+       document.getElementById("customPresetDiv").style.display = 'none';
+
+       if(document.getElementById("selectStandardPreset").checked==true){
+        document.getElementById("standardPresetDiv").style.display = 'block';
+      }
+
+      if(document.getElementById("selectCustomPreset").checked==true){
+
+        document.getElementById("customPresetDiv").style.display = 'block';
+      }
 
 
-     }
+    }
 
-      function cbChange2() {
+    function cbChange2() {
 
-         if(document.getElementById("selectTemporaryConversionFolder").checked==true){
+     if(document.getElementById("selectTemporaryConversionFolder").checked==true){
 
-          document.getElementById("tempConversionFolderDiv").style.display = 'block';
-           document.getElementById("ShowHide1").style.display = 'none';
-           document.getElementById("ShowHide2").style.display = 'block';
+      document.getElementById("tempConversionFolderDiv").style.display = 'block';
+      document.getElementById("ShowHide1").style.display = 'none';
+      document.getElementById("ShowHide2").style.display = 'block';
 
-         
 
-}else{
-document.getElementById("tempConversionFolderDiv").style.display = 'none';
-          document.getElementById("ShowHide1").style.display = 'block';
-           document.getElementById("ShowHide2").style.display = 'none';
-}
-}
 
-     function showAlert(message){
+    }else{
+      document.getElementById("tempConversionFolderDiv").style.display = 'none';
+      document.getElementById("ShowHide1").style.display = 'block';
+      document.getElementById("ShowHide2").style.display = 'none';
+    }
+  }
 
-if(document.getElementById("deleteSourceFiles").checked==true){
-  alert(message);
-}
+  function showAlert(message){
 
-     }
+    if(document.getElementById("deleteSourceFiles").checked==true){
+      alert(message);
+    }
+
+  }
 
 </script>
 
@@ -1257,7 +1275,7 @@ p {
   <input type="button" onclick="openURL()" value="by HaveAGitGat">
 
 
-
+<p>Want to monitor 2 or more folders at once? Create copies of the HBBatchBeast folder (each folder works indepedentyly) and then run the respective HBBatchBeast.hta files from those folders</p>
 
 
   <p>Source folder path:(e.g "\\Server\share\Videos" or "C:\Videos" (without quotes and no last slash))</p><textarea type="text"  class="folderPaths"   id="sourcePath"></textarea>
@@ -1282,100 +1300,100 @@ p {
   <p>Custom preset:<input type="checkbox" id="selectCustomPreset" class="cb1"  onchange="cbChange1(this)"></p>
 
 
- <div style="display: none;" id="standardPresetDiv">
+  <div style="display: none;" id="standardPresetDiv">
 
-  <p>Select standard preset:</p>
-  <select name="preset" class="selectbox" id="preset">
-    <option value="0"></option>
-    <option value="1">Very Fast 1080p30</option>
-    <option value="2">Very Fast 720p30</option>
-    <option value="3">Very Fast 576p25</option>
-    <option value="4">Very Fast 480p30</option>
-    <option value="5">Fast 1080p30</option>
-    <option value="6">Fast 720p30</option>
-    <option value="7">Fast 576p25</option>
-    <option value="8">Fast 480p30</option>
-    <option value="9">HQ 1080p30 Surround</option>
-    <option value="10">HQ 720p30 Surround</option>
-    <option value="11">HQ 576p25 Surround</option>
-    <option value="12">HQ 480p30 Surround</option>
-    <option value="13">Super HQ 1080p30 Surround</option>
-    <option value="14">Super HQ 720p30 Surround</option>
-    <option value="15">Super HQ 576p25 Surround</option>
-    <option value="16">Super HQ 480p30 Surround</option>
-    <option value="17">Gmail Large 3 Minutes 720p30</option>
-    <option value="18">Gmail Medium 5 Minutes 480p30</option>
-    <option value="19">Gmail Small 10 Minutes 288p30</option>
-    <option value="20">Vimeo YouTube HQ 2160p60 4K</option>
-    <option value="21">Vimeo YouTube HQ 1440p60 2.5K</option>
-    <option value="22">Vimeo YouTube HQ 1080p60</option>
-    <option value="23">Vimeo YouTube HQ 720p60</option>
-    <option value="24">Vimeo YouTube 720p30</option>
-    <option value="25">Android 1080p30</option>
-    <option value="26">Android 720p30</option>
-    <option value="27">Android 576p25</option>
-    <option value="28">Android 480p30</option>
-    <option value="29">Apple 2160p60 4K HEVC Surround</option>
-    <option value="30">Apple 1080p60 Surround</option>
-    <option value="31">Apple 1080p30 Surround</option>
-    <option value="32">Apple 720p30 Surround</option>
-    <option value="33">Apple 540p30 Surround</option>
-    <option value="34">Apple 240p30</option>
-    <option value="35">Chromecast 2160p60 4K HEVC Surround</option>
-    <option value="36">Chromecast 1080p60 Surround</option>
-    <option value="37">Chromecast 1080p30 Surround</option>
-    <option value="38">Amazon Fire 2160p60 4K HEVC Surround</option>
-    <option value="39">Amazon Fire 1080p30 Surround</option>
-    <option value="40">Amazon Fire 720p30</option>
-    <option value="41">Playstation 1080p30 Surround</option>
-    <option value="42">Playstation 720p30</option>
-    <option value="43">Playstation 540p30</option>
-    <option value="44">Roku 2160p60 4K HEVC Surround</option>
-    <option value="45">Roku 1080p30 Surround</option>
-    <option value="46">Roku 720p30 Surround</option>
-    <option value="47">Roku 576p25</option>
-    <option value="48">Roku 480p30</option>
-    <option value="49">Windows Mobile 1080p30</option>
-    <option value="50">Windows Mobile 720p30</option>
-    <option value="51">Windows Mobile 540p30</option>
-    <option value="52">Windows Mobile 480p30</option>
-    <option value="53">Xbox 1080p30 Surround</option>
-    <option value="54">Xbox Legacy 1080p30 Surround</option>
-    <option value="55">H.265 MKV 2160p60</option>
-    <option value="56">H.265 MKV 1080p30</option>
-    <option value="57">H.265 MKV 720p30</option>
-    <option value="58">H.265 MKV 576p25</option>
-    <option value="59">H.265 MKV 480p30</option>
-    <option value="60">H.264 MKV 2160p60</option>
-    <option value="61">H.264 MKV 1080p30</option>
-    <option value="62">H.264 MKV 720p30</option>
-    <option value="63">H.264 MKV 576p25</option>
-    <option value="64">H.264 MKV 480p30</option>
-    <option value="65">VP9 MKV 2160p60</option>
-    <option value="66">VP9 MKV 1080p30</option>
-    <option value="67">VP9 MKV 720p30</option>
-    <option value="68">VP9 MKV 576p25</option>
-    <option value="69">VP9 MKV 480p30</option>
-    <option value="70">VP8 MKV 1080p30</option>
-    <option value="71">VP8 MKV 720p30</option>
-    <option value="72">VP8 MKV 576p25</option>
-    <option value="73">VP8 MKV 480p30</option>
-    <option value="74">Production Max</option>
-    <option value="75">Production Standard</option>
-    <option value="76">Production Proxy 1080p</option>
-    <option value="77">Production Proxy 540p</option>
+    <p>Select standard preset:</p>
+    <select name="preset" class="selectbox" id="preset">
+      <option value="0"></option>
+      <option value="1">Very Fast 1080p30</option>
+      <option value="2">Very Fast 720p30</option>
+      <option value="3">Very Fast 576p25</option>
+      <option value="4">Very Fast 480p30</option>
+      <option value="5">Fast 1080p30</option>
+      <option value="6">Fast 720p30</option>
+      <option value="7">Fast 576p25</option>
+      <option value="8">Fast 480p30</option>
+      <option value="9">HQ 1080p30 Surround</option>
+      <option value="10">HQ 720p30 Surround</option>
+      <option value="11">HQ 576p25 Surround</option>
+      <option value="12">HQ 480p30 Surround</option>
+      <option value="13">Super HQ 1080p30 Surround</option>
+      <option value="14">Super HQ 720p30 Surround</option>
+      <option value="15">Super HQ 576p25 Surround</option>
+      <option value="16">Super HQ 480p30 Surround</option>
+      <option value="17">Gmail Large 3 Minutes 720p30</option>
+      <option value="18">Gmail Medium 5 Minutes 480p30</option>
+      <option value="19">Gmail Small 10 Minutes 288p30</option>
+      <option value="20">Vimeo YouTube HQ 2160p60 4K</option>
+      <option value="21">Vimeo YouTube HQ 1440p60 2.5K</option>
+      <option value="22">Vimeo YouTube HQ 1080p60</option>
+      <option value="23">Vimeo YouTube HQ 720p60</option>
+      <option value="24">Vimeo YouTube 720p30</option>
+      <option value="25">Android 1080p30</option>
+      <option value="26">Android 720p30</option>
+      <option value="27">Android 576p25</option>
+      <option value="28">Android 480p30</option>
+      <option value="29">Apple 2160p60 4K HEVC Surround</option>
+      <option value="30">Apple 1080p60 Surround</option>
+      <option value="31">Apple 1080p30 Surround</option>
+      <option value="32">Apple 720p30 Surround</option>
+      <option value="33">Apple 540p30 Surround</option>
+      <option value="34">Apple 240p30</option>
+      <option value="35">Chromecast 2160p60 4K HEVC Surround</option>
+      <option value="36">Chromecast 1080p60 Surround</option>
+      <option value="37">Chromecast 1080p30 Surround</option>
+      <option value="38">Amazon Fire 2160p60 4K HEVC Surround</option>
+      <option value="39">Amazon Fire 1080p30 Surround</option>
+      <option value="40">Amazon Fire 720p30</option>
+      <option value="41">Playstation 1080p30 Surround</option>
+      <option value="42">Playstation 720p30</option>
+      <option value="43">Playstation 540p30</option>
+      <option value="44">Roku 2160p60 4K HEVC Surround</option>
+      <option value="45">Roku 1080p30 Surround</option>
+      <option value="46">Roku 720p30 Surround</option>
+      <option value="47">Roku 576p25</option>
+      <option value="48">Roku 480p30</option>
+      <option value="49">Windows Mobile 1080p30</option>
+      <option value="50">Windows Mobile 720p30</option>
+      <option value="51">Windows Mobile 540p30</option>
+      <option value="52">Windows Mobile 480p30</option>
+      <option value="53">Xbox 1080p30 Surround</option>
+      <option value="54">Xbox Legacy 1080p30 Surround</option>
+      <option value="55">H.265 MKV 2160p60</option>
+      <option value="56">H.265 MKV 1080p30</option>
+      <option value="57">H.265 MKV 720p30</option>
+      <option value="58">H.265 MKV 576p25</option>
+      <option value="59">H.265 MKV 480p30</option>
+      <option value="60">H.264 MKV 2160p60</option>
+      <option value="61">H.264 MKV 1080p30</option>
+      <option value="62">H.264 MKV 720p30</option>
+      <option value="63">H.264 MKV 576p25</option>
+      <option value="64">H.264 MKV 480p30</option>
+      <option value="65">VP9 MKV 2160p60</option>
+      <option value="66">VP9 MKV 1080p30</option>
+      <option value="67">VP9 MKV 720p30</option>
+      <option value="68">VP9 MKV 576p25</option>
+      <option value="69">VP9 MKV 480p30</option>
+      <option value="70">VP8 MKV 1080p30</option>
+      <option value="71">VP8 MKV 720p30</option>
+      <option value="72">VP8 MKV 576p25</option>
+      <option value="73">VP8 MKV 480p30</option>
+      <option value="74">Production Max</option>
+      <option value="75">Production Standard</option>
+      <option value="76">Production Proxy 1080p</option>
+      <option value="77">Production Proxy 540p</option>
 
 
-  </select>
- </div>
+    </select>
+  </div>
 
   <div style="display: none;" id="customPresetDiv">
     <p>Write custom presets or link to a json preset exported from handbrake. For example:</p>
 
-     <p>-e x264 -q 20 -B 160</p>
+    <p>-e x264 -q 20 -B 160</p>
 
-     <p>or</p>
-<p>--preset-import-file "C:\Users\HaveAGitGat\Desktop\testpreset.json" -Z "My Preset"</p>
+    <p>or</p>
+    <p>--preset-import-file "C:\Users\HaveAGitGat\Desktop\testpreset.json" -Z "My Preset"</p>
     <textarea type="text" class="customPresetBox"  id="customPresets"></textarea>
 
   </div>
@@ -1385,7 +1403,7 @@ p {
     <option value="0">.mp4</option> 
     <option value="1">.m4v</option>
     <option value="2">.mkv</option>
-     
+
   </select>
 
   <br>
@@ -1411,17 +1429,17 @@ p {
   <p>Scanning for new files in:<input type="text"  id="countdown">seconds</p>
 
 
- <p>---------------------------------------------------------------------------------------</p>
+  <p>---------------------------------------------------------------------------------------</p>
 
- 
 
-                  <p>Total number of media files found:<input type="text"  id="totalFilesFound" ></p>
-                <p>Number of unconverted media files found(files which don't exist in destination folders):<input type="text"  id="unconvertedFilesFound" ></p>
 
-                <div id="worker1"/>  </div>
-                <div id="worker2"/>  </div>
-                <div id="worker3"/>  </div>
-                <div id="worker4"/>  </div>
+  <p>Total number of media files found:<input type="text"  id="totalFilesFound" ></p>
+  <p>Number of unconverted media files found(files which don't exist in destination folders):<input type="text"  id="unconvertedFilesFound" ></p>
+
+  <div id="worker1"/>  </div>
+  <div id="worker2"/>  </div>
+  <div id="worker3"/>  </div>
+  <div id="worker4"/>  </div>
 
 
   <div id="files"></div>
