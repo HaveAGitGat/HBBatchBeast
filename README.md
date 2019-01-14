@@ -7,8 +7,6 @@ You'll need to add the HandbrakeCLI.exe to the root folder (Place it alongside "
 
 You can download HandbrakeCLI.exe from https://handbrake.fr/downloads2.php
 
-Make sure to keep the main config window up and the status window up (this pops up when a scan is performed) to prevent errors.
-
 If you're converting a large folder (say 100 files or more), you may find it useful to run the "AddIETimeOutRegKey.bat" file. This will add a key to the registry which will prevent the "This page is unresponsive" messages from appearing while the program is running. 
 
 The registry fix mentioned above is based on the following:
