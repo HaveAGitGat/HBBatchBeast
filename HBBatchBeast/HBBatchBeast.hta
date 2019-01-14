@@ -876,10 +876,16 @@ window.onload = function() {
 
 
 
-  //try{
+  try{
+
+    if(fso.FileExists("./Recent/scanInterval.txt")){
+
     var tempRead = fso.OpenTextFile("./Recent/scanInterval.txt", 1, true);
     document.getElementById("timer").value = tempRead.ReadLine();
     tempRead.Close();
+    }
+
+    if(fso.FileExists("./Recent/periodicScanningOnOff.txt")){
 
     var tempRead = fso.OpenTextFile("./Recent/periodicScanningOnOff.txt", 1, true);
     var scanningOnOff = tempRead.ReadLine();
@@ -891,8 +897,9 @@ window.onload = function() {
       document.getElementById("scanOnOff").checked=false;
 
     }
+  }
 
-
+if(fso.FileExists("./Config/viewCMDOnOff.txt")){
     var tempRead = fso.OpenTextFile("./Config/viewCMDOnOff.txt", 1, true);
     var viewCMDOnOff = tempRead.ReadLine();
     tempRead.Close();
@@ -902,23 +909,30 @@ window.onload = function() {
     }else{
       document.getElementById("viewCMDOnOff").checked=false;
 
-    }                     
+    }     
+    }                
 
+if(fso.FileExists("./Recent/recentDestination.txt")){
     var tempRead = fso.OpenTextFile("./Recent/recentDestination.txt", 1, true);
     document.getElementById("destinationPath").value = tempRead.ReadLine();
     tempRead.Close();
+  }
 
+if(fso.FileExists("./Recent/recentSource.txt")){
     var tempRead = fso.OpenTextFile("./Recent/recentSource.txt", 1, true);
     document.getElementById("sourcePath").value = tempRead.ReadLine();
     tempRead.Close();
+  }
 
     
-
+if(fso.FileExists("./Recent/tempDestinationPath.txt")){
      var tempRead = fso.OpenTextFile("./Recent/tempDestinationPath.txt", 1, true);
     document.getElementById("tempDestinationPath").value = tempRead.ReadLine();
     tempRead.Close();
+  }
 
 
+if(fso.FileExists("./Recent/tempDestinationOnOff.txt")){
     var tempRead = fso.OpenTextFile("./Recent/tempDestinationOnOff.txt", 1, true);
     var temp = tempRead.ReadLine();
     tempRead.Close();
@@ -931,20 +945,26 @@ window.onload = function() {
       document.getElementById("selectTemporaryConversionFolder").checked=false;
 
     } 
+  }
 
 
 
-
+if(fso.FileExists("./Config/preset.txt")){
     var tempRead = fso.OpenTextFile("./Config/preset.txt", 1, true);
     var selectedIndex = tempRead.ReadLine();
 
     document.getElementById("preset").selectedIndex = selectedIndex;
     tempRead.Close();
+  }
 
 
+if(fso.FileExists("./Config/customPreset.txt")){
     var tempRead = fso.OpenTextFile("./Config/customPreset.txt", 1, true);
    document.getElementById("customPresets").selectedIndex = tempRead.ReadLine();
     tempRead.Close();
+  }
+
+  if(fso.FileExists("./Config/customPresetOnOff.txt")){
 
     var tempRead = fso.OpenTextFile("./Config/customPresetOnOff.txt", 1, true);
    var temp = tempRead.ReadLine();
@@ -960,25 +980,32 @@ document.getElementById("customPresetDiv").style.display = 'block';
 
   }
     tempRead.Close();
+  }
   
 
-
+if(fso.FileExists("./Config/container.txt")){
     var tempRead = fso.OpenTextFile("./Config/container.txt", 1, true);
     var selectedIndex = tempRead.ReadLine();
 
     document.getElementById("container").selectedIndex = selectedIndex;
     tempRead.Close();
+  }
 
+if(fso.FileExists("./config/customPreset.txt")){
 
     var tempRead = fso.OpenTextFile("./config/customPreset.txt", 1, true);
     document.getElementById("customPresets").value = tempRead.ReadLine();
     tempRead.Close();
+  }
+
+  if(fso.FileExists("./config/instanceNumber.txt")){
 
      var tempRead = fso.OpenTextFile("./config/instanceNumber.txt", 1, true);
     document.getElementById("instanceNumber").value = tempRead.ReadLine();
     tempRead.Close();
+  }
 
- // }catch(err){}
+  }catch(err){}
 
   
   
