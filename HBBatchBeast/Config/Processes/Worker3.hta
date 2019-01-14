@@ -137,6 +137,33 @@
                                       WshShell = new ActiveXObject("WScript.Shell");
                                       WshShell.Run('"' + rootdir + path + '"', viewCMDOnOff, true);
 
+
+                  var today = new Date();
+                  var dd = today.getDate();
+                  var mm = today.getMonth() + 1; 
+                  var yyyy = today.getFullYear();
+                  if (dd < 10) {
+                   dd = '0' + dd
+                 }
+                 if (mm < 10) {
+                   mm = '0' + mm
+                 }
+                 today = dd + '/' + mm + '/' + yyyy;
+                 today2 = dd + '-' + mm + '-' + yyyy;
+
+                 var d = new Date(),
+                 h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
+                 m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+                 s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
+                 timenow = h + '-' + m + '-' + s;
+
+
+
+                var tempWrite = fso.OpenTextFile("./Logs/fileConversionLog.txt", 8, true);
+           
+                
+
+
  if(tempFolderSected=="1"){
 
 try{
@@ -149,7 +176,19 @@ try{
 
                                       }
 
-                                    }
+
+      tempWrite.WriteLine(today2+"-"+timenow+"--------Converted----------"+currentSourceLine+"------------to----------"+currentDestinationFinalLine+"----------using preset----------:"+ preset);
+                            }else{
+
+
+      tempWrite.WriteLine(today2+"-"+timenow+"--------Converted----------"+currentSourceLine+"------------to----------"+currentDestinationLine+"----------using preset----------:"+ preset);
+                            }
+
+                             tempWrite.Close();
+
+
+
+
 
                                     }else{  }
 
@@ -202,7 +241,6 @@ try{
 
 
                             </center>
-                            
                             
                             
                             </html>
