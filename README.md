@@ -5,6 +5,7 @@ This is a standalone program that is based on HTAs (HTML Applications) while als
 
 -------------------------------------------------------------
 INSTALLATION:
+
 Step 1:Download this repository
 
 Step 2:Add the HandbrakeCLI.exe to the root folder (Place it alongside "HBBatchBeast.hta".)
