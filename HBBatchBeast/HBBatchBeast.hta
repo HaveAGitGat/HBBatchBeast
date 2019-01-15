@@ -3,7 +3,7 @@
 
 <title>HBBatchBeast</title>
 <meta http-equiv="x-ua-compatible" content="IE=9" />
-<HTA:APPLICATION ID="HBBatchBeast" APPLICATIONNAME="HBBatchBeast" BORDER="DIALOG" BORDERSTYLE="normal" CAPTION="yes" ICON="HBBB.ico" MAXIMIZEBUTTON="yes" MINIMIZEBUTTON="yes" SCROLL="auto" scrollFlat="yes" SHOWINTASKBAR="yes" SINGLEINSTANCE="no" SYSMENU="yes" VERSION="1.0" Navigable="yes" WINDOWSTATE="normal" /> 
+<HTA:APPLICATION ID="HBBatchBeast" APPLICATIONNAME="HBBatchBeast" BORDER="DIALOG" BORDERSTYLE="normal" CAPTION="yes" ICON="HBBB.ico" MAXIMIZEBUTTON="yes" MINIMIZEBUTTON="yes" SCROLL="auto" scrollFlat="yes" SHOWINTASKBAR="yes" SINGLEINSTANCE="no" SYSMENU="yes" VERSION="1.51" Navigable="yes" WINDOWSTATE="normal" /> 
 
 
 <script type="text/javascript"> 
@@ -26,7 +26,10 @@
   function ShowFolderFileList(folderspec){
 
     var s = "";
+
     var f = fso.GetFolder(folderspec);
+
+
     
         // recurse subfolders
         var subfolders = new Enumerator(f.SubFolders);
@@ -283,6 +286,80 @@ var topFolderCharLength
 var programPath=""
 
 function convertFiles(){
+
+//validate config inputs
+validationSection:
+{
+
+
+if(fso.FolderExists(document.getElementById("sourcePath").value)==false){
+
+   alert("The source folder does not exist!");
+   break validationSection;
+}
+
+
+if(document.getElementById("selectTemporaryConversionFolder").checked==true){
+
+  if(fso.FolderExists(document.getElementById("destinationPath").value)==false){
+
+   alert("The temporay conversion folder does not exist!");
+   break validationSection;
+}
+
+
+
+}else{
+
+    if(fso.FolderExists(document.getElementById("destinationPath").value)==false){
+
+   alert("The destination folder does not exist!");
+   break validationSection;
+}
+
+
+}
+
+if(document.getElementById("selectTemporaryConversionFolder").checked==true){
+
+
+      if(fso.FolderExists(document.getElementById("tempDestinationPath").value)==false){
+
+   alert("The destination folder does not exist!");
+   break validationSection;
+}
+
+
+
+}
+
+if(document.getElementById("selectStandardPreset").checked==false && document.getElementById("selectCustomPreset").checked==false){
+
+ alert("Please select a standard preset or input a custom one!");
+   break validationSection;
+}
+
+
+var scanIntervalVal = document.getElementById("timer").value
+
+if( scanIntervalVal<5){
+
+ alert("Please select a scan interval of 5 seconds or greater!");
+   break validationSection;
+}
+
+var instanceNumberVal = document.getElementById("instanceNumber").value
+if( instanceNumberVal<1 ||  instanceNumberVal>4){
+
+ alert("Please type the number of simulataneous Handbrake instances to use (1-4)!");
+   break validationSection;
+}
+
+
+
+
+
+
 
   saveConfig();
 
@@ -604,7 +681,7 @@ runEndSection();
 
 
 
-
+}// end validation label
 
 }
 
@@ -644,6 +721,8 @@ document.getElementById("worker4").innerHTML = "<p>Worker 4 processing queue ite
 document.getElementById("worker4").innerHTML += "<p>File:-<\p>";
 var elmnt = document.getElementById("worker4");
 elmnt.scrollIntoView()
+
+
 
 }
 
@@ -889,6 +968,7 @@ function runScan() {
 
                 }
               }
+
 
 
 
@@ -1422,7 +1502,7 @@ p {
   </div>
 
   <div style="display: none;" id="customPresetDiv">
-    <p>Write custom presets or link to a json preset exported from handbrake. For example:</p>
+    <p>Write custom presets or link to a json preset exported from Handbrake. For example:</p>
 
     <p>-e x264 -q 20 -B 160</p>
 
@@ -1443,14 +1523,14 @@ p {
   <br>
 
   <p>Enable periodic scanning?:<input type="checkbox" id="scanOnOff" ></p>
-  <p>Scan interval (seconds):<input type="text"  id="timer"></p>
+  <p>Scan interval (minimum 5):<input type="text"  id="timer">seconds</p>
 
 
   <p>Show Handbrake CMD windows when conversion is running?:<input type="checkbox" id="viewCMDOnOff" ></p>
 
   <p  style="color:red;">Delete source files after conversion?:<input type="checkbox" id="deleteSourceFiles" onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')" ></p>
 
-  <p>Number simulataneous Handbrake instances to use?(1-4):<input type="text"  id="instanceNumber"></p>
+  <p>Number of simulataneous Handbrake instances to use?(1-4):<input type="text"  id="instanceNumber"></p>
 
   <input type='button' class="button1" value='Save config'  onclick='saveConfig()'/>
 
