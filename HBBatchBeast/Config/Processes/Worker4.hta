@@ -72,7 +72,7 @@
 
       while (!iStreamSource.AtEndOfStream) {
 
-       sleep((2000*Math.random()));
+      sleep(((1000*Math.random())+1000));
 
        var currentSourceLine = iStreamSource.ReadLine(); 
        var currentDestinationLine = iStreamDestination.ReadLine(); 
@@ -167,7 +167,7 @@
 
                     }catch(err){
 
-                      sleep((2000*Math.random()));
+                      sleep(((1000*Math.random())+1000));
 
                         var tempWrite = fso.OpenTextFile("./Logs/fileConversionLog.txt", 8, true);
 
@@ -184,6 +184,8 @@ try{
                               
          }catch(err){
                                     //     fso.DeleteFile(currentDestinationLine)
+                                    sleep(((1000*Math.random())+1000));
+                                       fso.MoveFile(currentDestinationLine,currentDestinationFinalLine)
 
 
                                       }
