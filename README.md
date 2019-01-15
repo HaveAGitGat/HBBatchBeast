@@ -26,7 +26,6 @@ Screenshot - https://imgur.com/a/rV9zJEK
 
 Demo video - https://sendvid.com/lmzaikh0
 
-Full ready to go zip download (including HandbrakeCLI.exe)(updated to v1.5 07:48 14/01/2019 ) -https://drive.google.com/file/d/1F01iYhGoDkCkbOk_9x2voKFFI8uFBbWd/view?usp=sharing
 
 After it a bit more testing it seems that weird things can happen if you monitor a folder which is being downloaded to. It seems sometimes conversions start before a file has fully downloaded. To solve this, I recommend using a temporary download folder before moving completed files into your HBBB source folder.
 
