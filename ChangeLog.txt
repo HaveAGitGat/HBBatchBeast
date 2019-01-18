@@ -1,4 +1,8 @@
 
+v1.7 00:19 18/01/2019: Added option to customise enabled file types to scan for
+
+v1.6:Forgotton what I added
+
 v1.5: 07:48 14/01/2019: Added scan log button and conversion (log +button)
 
 v1.4: 00:59 14/01/2019: Added the option for temporary conversion folder, deleting files after conversion and setting how many Handbrake instances to run (1-4).
