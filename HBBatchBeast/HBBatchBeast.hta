@@ -319,6 +319,18 @@ if(document.getElementById("selectStandardPreset").checked==false && document.ge
 }
 
 
+
+
+
+var includedFileTypes = document.getElementById("includedFileTypes").value
+
+if( includedFileTypes==""){
+
+ alert("Please type in file types to scan for! e.g. iso,wmv, ");
+   break validationSection;
+}
+
+
 var scanIntervalVal = document.getElementById("timer").value
 
 if( scanIntervalVal<5){
