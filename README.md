@@ -12,6 +12,8 @@ Step 2:Add the HandbrakeCLI.exe to the root folder (Place it alongside "HBBatchB
 
 You can download HandbrakeCLI.exe from https://handbrake.fr/downloads2.php
 
+Step 3:Run HBBatchBeast.hta in the root folder
+
 -------------------------------------------------------------
 
 If you're converting a large folder (say 100 files or more), you may find it useful to run the "AddIETimeOutRegKey.bat" file. This will add a key to the registry which will prevent the "This page is unresponsive" messages from appearing while the program is running. 
