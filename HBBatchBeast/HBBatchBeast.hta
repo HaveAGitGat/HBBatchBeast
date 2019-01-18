@@ -56,34 +56,11 @@
 
        // document.getElementById("files2").innerHTML += "<p>"+ fileType+"<\p>";
 
+//Here we get supported file types
+var supportedFileTypeArray =document.getElementById("includedFileTypes").value
 
+supportedFileTypeArray= supportedFileTypeArray.split(',');
 
-//Here we define supported file types
-       var supportedFileTypeArray = [
-
-       "mp4",
-       "mkv",
-       "mov",
-       "m4v",
-       "mpg",
-       "mpeg",
-       "avi",
-
-
-       "flv",
-       "webm",
-       "wmv",
-       "vob",
-       "evo",
-       "mts",
-       "m2ts",
-       "ts",
-       
-        "iso",
-
-
-
-       ];
 
 
 //Here we check to see if the current file being analysed contains a valid file type
@@ -1038,6 +1015,21 @@ function runScan() {
 
               try{
 
+
+
+                      if(fso.FileExists("./Config/includedFileTypes.txt")){
+
+                  var tempRead = fso.OpenTextFile("./Config/includedFileTypes.txt", 1, true);
+                  document.getElementById("includedFileTypes").value = tempRead.ReadLine();
+                  tempRead.Close();
+                }
+
+
+
+
+
+
+
                 if(fso.FileExists("./Recent/scanInterval.txt")){
 
                   var tempRead = fso.OpenTextFile("./Recent/scanInterval.txt", 1, true);
@@ -1175,6 +1167,14 @@ function runScan() {
 
 
          function saveConfig(){
+
+
+       
+
+           var tempWrite = fso.OpenTextFile("./Config/includedFileTypes.txt", 2, true);
+          tempWrite.WriteLine(document.getElementById("includedFileTypes").value);
+          tempWrite.Close();
+
 
 
           var tempWrite = fso.OpenTextFile("./Recent/scanInterval.txt", 2, true);
@@ -1588,6 +1588,8 @@ table.outputTable{
   </select>
 
   <br>
+
+    <p>File types to scan for -separate with comma (e.g. iso,wmv, )</p><textarea type="text" class="folderPaths"  id="includedFileTypes"></textarea> 
 
   <p>Enable periodic scanning?:<input type="checkbox" id="scanOnOff" ></p>
   <p>Scan interval (minimum 5):<input type="text"  id="timer">seconds</p>
