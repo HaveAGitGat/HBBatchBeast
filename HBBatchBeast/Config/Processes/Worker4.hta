@@ -108,6 +108,8 @@
         tempWrite.Close(); 
 
 
+
+
         
 
         
@@ -127,6 +129,7 @@
 
                                       var t = fso.OpenTextFile("./Config/Processes/BatchFiles/HandbrakeCLIBatchTemp"+workerNumber+".bat", 2, true);
                                       t.WriteLine("\"" + handBrakeCLIPath +"\" -i \"" +currentSourceLine+"\" -o \""+currentDestinationLine+"\" "+preset);
+                                      t.WriteLine("\"" + handBrakeCLIPath +"\" -i \"" +currentSourceLine+"\" -o \""+currentDestinationLine+"\" "+preset);
 
                                       t.Close();
 
@@ -136,6 +139,29 @@
                                       var rootdir = shell.currentDirectory;
                                       WshShell = new ActiveXObject("WScript.Shell");
                                       WshShell.Run('"' + rootdir + path + '"', viewCMDOnOff, true);
+
+
+
+     
+             if(fso.FileExists("./Config/customBatPath.txt")){
+
+                  var tempRead = fso.OpenTextFile("./Config/customBatPath.txt", 1, true);
+                    var tempPath =tempRead.ReadLine();
+              
+                  tempRead.Close();
+
+                  if(tempPath != ""){
+
+                    var path = tempPath;
+                                      var shell = new ActiveXObject("WScript.Shell");
+                                      var rootdir = shell.currentDirectory;
+                                      WshShell = new ActiveXObject("WScript.Shell");
+                                      WshShell.Run('"' + path+ '"', viewCMDOnOff, true);
+
+
+
+                  }
+                }
 
 
                   var today = new Date();
