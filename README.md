@@ -38,4 +38,19 @@ Demo video - https://sendvid.com/lmzaikh0
 
 After it a bit more testing it seems that weird things can happen if you monitor a folder which is being downloaded to. It seems sometimes conversions start before a file has fully downloaded. To solve this, I recommend using a temporary download folder before moving completed files into your HBBB source folder.
 
-If you use a download program which has an 'incomplete downloads' folder etc, do not put that folder inside your main source folder else you'll end up converting each file twice.
+If you use a download program which has an 'incomplete downloads' folder etc, do not put that folder inside your main source folder else you may end up converting each file twice.
+
+The program won't work properly if you put the destination folder in a folder inside the source folder because the program is recreating the source folder structure inside the destination folder structure. It will cause an infinite loop of creating more and more sub-folders each time you run the program. So it will NOT work properly if you do this:
+
+Source:
+D:\Videos
+
+Destination:
+D:\Videos\Converted
+
+It will work properly if you do this etc:
+Source:
+D:\Videos
+
+Destination:
+D:\Converted
