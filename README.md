@@ -43,9 +43,11 @@ If you use a download program which has an 'incomplete downloads' folder etc, do
 The program won't work properly if you put the destination folder in a folder inside the source folder because the program is recreating the source folder structure inside the destination folder structure. It will cause an infinite loop of creating more and more sub-folders each time you run the program. So it will NOT work properly if you do this:
 
 Source:
+
 D:\Videos
 
 Destination:
+
 D:\Videos\Converted
 
 It will work properly if you do this etc:
@@ -55,4 +57,5 @@ Source:
 D:\Videos
 
 Destination:
+
 D:\Converted
