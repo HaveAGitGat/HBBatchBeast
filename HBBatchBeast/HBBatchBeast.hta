@@ -1029,6 +1029,18 @@ function runScan() {
 
 
 
+                
+
+
+                     if(fso.FileExists("./Config/customBatPath.txt")){
+
+                  var tempRead = fso.OpenTextFile("./Config/customBatPath.txt", 1, true);
+                  document.getElementById("customBatPath").value = tempRead.ReadLine();
+                  tempRead.Close();
+                }
+
+
+
                       if(fso.FileExists("./Config/includedFileTypes.txt")){
 
                   var tempRead = fso.OpenTextFile("./Config/includedFileTypes.txt", 1, true);
@@ -1181,7 +1193,9 @@ function runScan() {
          function saveConfig(){
 
 
-       
+        var tempWrite = fso.OpenTextFile("./Config/customBatPath.txt", 2, true);
+          tempWrite.WriteLine(document.getElementById("customBatPath").value);
+          tempWrite.Close();
 
            var tempWrite = fso.OpenTextFile("./Config/includedFileTypes.txt", 2, true);
           tempWrite.WriteLine(document.getElementById("includedFileTypes").value);
@@ -1603,11 +1617,15 @@ table.outputTable{
 
     <p>File types to scan for -separate with comma (e.g. iso,wmv, )</p><textarea type="text" class="folderPaths"  id="includedFileTypes"></textarea> 
 
+
+
+   <p>Custom bat path to run after each conversion (leave blank if not using) e.g. C:\Users\Test.bat :</p><textarea type="text" class="folderPaths"  id="customBatPath"></textarea>
+
   <p>Enable periodic scanning?:<input type="checkbox" id="scanOnOff" ></p>
   <p>Scan interval (minimum 5):<input type="text"  id="timer">seconds</p>
 
 
-  <p>Show Handbrake CMD windows when conversion is running?:<input type="checkbox" id="viewCMDOnOff" ></p>
+  <p>Show Handbrake CMD/Bat windows when conversion is running?:<input type="checkbox" id="viewCMDOnOff" ></p>
 
   <p  style="color:red;">Delete source files after conversion?:<input type="checkbox" id="deleteSourceFiles" onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')" ></p>
 
