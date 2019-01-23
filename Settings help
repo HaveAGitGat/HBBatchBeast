@@ -1,1 +1,68 @@
 
+Folder paths, entered with no trailing slash - e.g:
+
+Windows:
+C:\Users\HaveAGitGat\Desktop\Input
+
+Linux:
+/home/HaveAGitGat/Desktop/Input
+
+Standard preset:
+Select one of the standard Handbrake presets
+
+Custom preset:
+Write custom presets or link to a json preset exported from Handbrake. For example:
+-e x264 -q 20 -B 160
+or
+--preset-import-file "C:\Users\HaveAGitGat\Desktop\testpreset.json" -Z "My Preset"
+
+Container:
+Select the output file container type.
+
+Enable periodic scanning:
+Select this to automatically scan and convert files at a set interval (default 300 seconds). 
+Scan interval can be modified in the advanced settings section.
+
+Delete source files after conversion:
+If checked, source files will be deleted once the queue has completed.
+
+Valid file types:
+File types which the program will scan for.
+Separate with comma (e.g. iso,wmv, )
+Default:mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,
+
+Number of simulataneous Handbrake instances:
+Set how many Handbrake simulatatnoues conversions to carry out (1-4). Default:4
+
+Custom bat path to run after each conversion:
+Input a bat file path to run after each file has finished being converted. 
+Bat files with timeout statements won't work (more on this here https://comm.support.ca.com/kb/the-timeout-command-in-batch-script-job-results-in-error-input-redirection-is-not-supported-exiting-the-process-immediately/kb000029524)
+Leave box completely empty if you do not wish to use this option (make sure there are no hidden characters in the box).
+
+Save config:
+Save current configuration
+
+Scan only:
+Scan for files to be converted given current configuration. 
+No files will be converted. Pressing this will only run it once (regardless of whether 'periodic scanning' is checked.
+
+Scan and convert:
+Scan for files and convert any valid ones. 
+If 'periodic scanning' is checked, then the program will scan and convert repeatedly at the specified interval.
+
+View scan/conversion summary log:
+Show historic scan/conversion information
+
+View individual file conversion log:
+
+
+Total number of media files found:
+Number of valid files found based on valid file types option.
+
+Number of unconverted media files found:
+Files which don't exist in the destination folder structure when compared to the source folder structure.
+
+
+
+
+
