@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+<script>
+
+    //SET ENV
+       process.env.NODE_ENV = "production";
+
+
+    //var lockFile = require('lockFile');
+
+    window.onload = function () {
+
+        var fs = require('fs');
+
+        //create program folders
+
+
+        if (!fs.existsSync("./Config")) {
+            fs.mkdirSync("./Config");
+            //  alert('Directory created!')
+
+        }
+
+
+        if (!fs.existsSync("./Config/Processes")) {
+            fs.mkdirSync("./Config/Processes");
+
+        }
+
+        if (!fs.existsSync("./Config/Processes/BatchFiles")) {
+            fs.mkdirSync("./Config/Processes/BatchFiles");
+
+        }
+
+        if (!fs.existsSync("./Config/Processes/WorkerStatus")) {
+            fs.mkdirSync("./Config/Processes/WorkerStatus");
+
+        }
+
+        if (!fs.existsSync("./Logs")) {
+            fs.mkdirSync("./Logs");
+
+        }
+
+
+        //read scan interval
+        if (fs.existsSync("./Config/scanInterval.txt")) {
+
+            document.getElementById("timer").value = fs.readFileSync("./Config/scanInterval.txt", 'utf8');
+
+
+
+        } else {
+
+            document.getElementById("timer").value = 300;
+        }
+
+
+        // read periodic scanning on/off
+
+        if (fs.existsSync("./Config/periodicScanningOnOff.txt")) {
+
+            var f = fs.readFileSync("./Config/periodicScanningOnOff.txt", 'utf8');
+            if (f == "1") {
+                document.getElementById("scanOnOff").checked = true;
+            } else {
+                document.getElementById("scanOnOff").checked = false;
+
+            }
+
+        }
+
+        //read CMD view on/off
+
+
+
+        if (fs.existsSync("./Config/viewCMDOnOff.txt")) {
+
+
+            var f = fs.readFileSync("./Config/viewCMDOnOff.txt", 'utf8');
+
+
+            if (f == "1") {
+                document.getElementById("viewCMDOnOff").checked = true;
+            } else {
+                document.getElementById("viewCMDOnOff").checked = false;
+
+            }
+
+        }
+
+
+
+        // read recent destination path
+
+        if (fs.existsSync("./Config/recentDestination.txt")) {
+
+            document.getElementById("destinationPath").value = fs.readFileSync("./Config/recentDestination.txt", 'utf8');
+
+
+        }
+
+
+        // read recent source path
+
+        if (fs.existsSync("./Config/recentSource.txt")) {
+
+            document.getElementById("sourcePath").value = fs.readFileSync("./Config/recentSource.txt", 'utf8');
+        }
+
+        //read temp destination path
+
+        if (fs.existsSync("./Config/tempDestinationPath.txt")) {
+
+            document.getElementById("tempDestinationPath").value = fs.readFileSync("./Config/tempDestinationPath.txt", 'utf8');
+
+
+        }
+
+        //set temp destination path on/off
+
+
+        if (fs.existsSync("./Config/tempDestinationOnOff.txt")) {
+
+            var f = fs.readFileSync("./Config/tempDestinationOnOff.txt", 'utf8');
+
+
+            if (f == "1") {
+                document.getElementById("selectTemporaryConversionFolder").checked = true;
+                document.getElementById("tempConversionFolderDiv").style.display = 'block';
+            } else {
+                document.getElementById("selectTemporaryConversionFolder").checked = false;
+
+            }
+
+        }
+
+
+        //read preset  and set select menu value
+
+
+        if (fs.existsSync("./Config/preset.txt")) {
+
+            document.getElementById("preset").selectedIndex = fs.readFileSync("./Config/preset.txt", 'utf8');
+        }
+
+        // read custom preset
+
+        if (fs.existsSync("./Config/customPreset.txt")) {
+
+            document.getElementById("customPresets").value = fs.readFileSync("./Config/customPreset.txt", 'utf8');
+
+        }
+
+        //read if custom preset is on or off
+
+
+        if (fs.existsSync("./Config/customPresetOnOff.txt")) {
+
+            var f = fs.readFileSync("./Config/customPresetOnOff.txt", 'utf8');
+
+
+            if (f == 0) {
+                document.getElementById("selectStandardPreset").checked = true;
+                document.getElementById("selectCustomPreset").checked = false;
+                document.getElementById("customPresetDiv").style.display = 'none';
+                document.getElementById("standardPresetDiv").style.display = 'block';
+            } else {
+                document.getElementById("selectCustomPreset").checked = true
+                document.getElementById("selectStandardPreset").checked = false;
+                document.getElementById("customPresetDiv").style.display = 'block';
+                document.getElementById("standardPresetDiv").style.display = 'none';
+
+            }
+
+        }
+
+
+        //read container value
+
+
+        if (fs.existsSync("./Config/container.txt")) {
+
+            document.getElementById("container").selectedIndex = fs.readFileSync("./Config/container.txt", 'utf8');
+
+
+        }
+
+
+        // read whether to delete source files or not
+
+
+        if (fs.existsSync("./Config/deleteSourceFilesOnOff.txt")) {
+
+            var f = fs.readFileSync("./Config/deleteSourceFilesOnOff.txt", 'utf8');
+
+
+            if (f == "1") {
+                document.getElementById("deleteSourceFiles").checked = true;
+
+            } else {
+                document.getElementById("deleteSourceFiles").checked = false;
+
+            }
+        }
+
+
+
+
+        //read file types to scan for
+
+
+
+        if (fs.existsSync("./Config/includedFileTypes.txt")) {
+
+            document.getElementById("includedFileTypes").value = fs.readFileSync("./Config/includedFileTypes.txt", 'utf8');
+
+
+        } else {
+
+            fs.writeFileSync('./Config/includedFileTypes.txt', "mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,", 'utf8');
+
+            document.getElementById("includedFileTypes").value = fs.readFileSync("./Config/includedFileTypes.txt", 'utf8');
+
+
+        }
+
+
+        //read number of instances 
+
+        if (fs.existsSync("./Config/instanceNumber.txt")) {
+
+            document.getElementById("instanceNumber").value = fs.readFileSync("./Config/instanceNumber.txt", 'utf8');
+
+
+        } else {
+            document.getElementById("instanceNumber").value = 4;
+
+        }
+
+
+        // read bat file path
+
+
+        if (fs.existsSync("./Config/customBatPath.txt")) {
+
+            document.getElementById("customBatPath").value = fs.readFileSync("./Config/customBatPath.txt", 'utf8');
+
+
+        }
+
+
+
+
+
+        /* read multiple lines of text file
+        
+        var fs = require('fs');
+        var array = fs.readFileSync('file.txt').toString().split("\n");
+        for(i in array) {
+            console.log(array[i]);
+        }
+        
+        
+        */
+
+
+        //document.getElementById("timer").value= "6";
+
+
+
+
+
+        cbChange2();
+    }
+
+
+
+    function cbChange1(obj) {
+        if (obj.checked == false) {
+            obj.checked = false;
+        } else if (obj.checked == true) {
+            var cbs = document.getElementsByClassName("cb1");
+            for (var i = 0; i < cbs.length; i++) {
+                cbs[i].checked = false;
+            }
+            obj.checked = true;
+        }
+
+        document.getElementById("standardPresetDiv").style.display = 'none';
+        document.getElementById("customPresetDiv").style.display = 'none';
+
+        if (document.getElementById("selectStandardPreset").checked == true) {
+            document.getElementById("standardPresetDiv").style.display = 'block';
+        }
+
+        if (document.getElementById("selectCustomPreset").checked == true) {
+
+            document.getElementById("customPresetDiv").style.display = 'block';
+        }
+
+
+    }
+
+
+
+
+    function cbChange2() {
+
+        if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+            document.getElementById("tempConversionFolderDiv").style.display = 'block';
+            document.getElementById("ShowHide1").style.display = 'none';
+            document.getElementById("ShowHide2").style.display = 'block';
+
+
+
+        } else {
+            document.getElementById("tempConversionFolderDiv").style.display = 'none';
+            document.getElementById("ShowHide1").style.display = 'block';
+            document.getElementById("ShowHide2").style.display = 'none';
+        }
+    }
+
+
+    function cbChange3() {
+        if (document.getElementById("advancedSettings").style.display == 'block') {
+            document.getElementById("advancedSettings").style.display = 'none';
+        } else {
+
+            document.getElementById("advancedSettings").style.display = 'block'
+        }
+    }
+
+    function showAlert(message) {
+
+        if (document.getElementById("deleteSourceFiles").checked == true) {
+            alert(message);
+        }
+
+    }
+
+
+    function saveConfig() {
+
+        var fs = require('fs');
+
+
+
+
+
+
+
+
+        /* var dir = './Config';
+        
+        if (!fs.existsSync(dir)){
+            fs.mkdirSync(dir);
+            alert('Directory created!')
+        }
+        */
+
+
+        // save scan interval
+        fs.writeFileSync('./Config/scanInterval.txt', document.getElementById("timer").value, 'utf8');
+
+
+
+        //periodic scanning
+
+        if (document.getElementById("scanOnOff").checked == true) {
+
+            fs.writeFileSync('./Config/periodicScanningOnOff.txt', 1, 'utf8');
+        } else {
+            fs.writeFileSync('./Config/periodicScanningOnOff.txt', 0, 'utf8');
+
+        }
+
+        //view CMD On/Off
+        if (document.getElementById("viewCMDOnOff").checked == true) {
+
+            fs.writeFileSync('./Config/viewCMDOnOff.txt', 1, 'utf8');
+        } else {
+            fs.writeFileSync('./Config/viewCMDOnOff.txt', 0, 'utf8');
+
+        }
+
+        //save source destination
+
+        fs.writeFileSync('./Config/recentSource.txt', document.getElementById("sourcePath").value, 'utf8');
+
+        //save destination path
+
+        fs.writeFileSync('./Config/recentDestination.txt', document.getElementById("destinationPath").value, 'utf8');
+
+        //save tempdestination path
+
+        fs.writeFileSync('./Config/tempDestinationPath.txt', document.getElementById("tempDestinationPath").value, 'utf8');
+
+        //save enable/disble temporary destination
+
+
+        if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+            fs.writeFileSync('./Config/tempDestinationOnOff.txt', 1, 'utf8');
+        } else {
+            fs.writeFileSync('./Config/tempDestinationOnOff.txt', 0, 'utf8');
+
+        }
+
+        //save preset     
+        fs.writeFileSync('./Config/preset.txt', document.getElementById("preset").value, 'utf8');
+
+
+        //save custom preset enable/disable
+
+        if (document.getElementById("selectStandardPreset").checked == true) {
+
+            fs.writeFileSync('./Config/customPresetOnOff.txt', 0, 'utf8');
+        } else {
+            fs.writeFileSync('./Config/customPresetOnOff.txt', 1, 'utf8');
+
+        }
+
+
+        //save custom preset string
+        fs.writeFileSync('./Config/customPreset.txt', document.getElementById("customPresets").value, 'utf8');
+
+
+        // save container selection
+        fs.writeFileSync('./Config/container.txt', document.getElementById("container").value, 'utf8');
+
+
+
+        // define what preset string for conversion will be
+
+        if (document.getElementById("selectStandardPreset").checked == true) {
+
+            fs.writeFileSync('./Config/presetString.txt', "-Z \"" + document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text + "\"", 'utf8');
+
+        }
+
+        // define what preset string for conversion will be
+
+
+        if (document.getElementById("selectCustomPreset").checked == true) {
+
+            fs.writeFileSync('./Config/presetString.txt', document.getElementById("customPresets").value, 'utf8');
+
+        }
+
+
+        // save delete soure files
+
+
+        if (document.getElementById("deleteSourceFiles").checked == true) {
+
+            fs.writeFileSync('./Config/deleteSourceFilesOnOff.txt', 1, 'utf8');
+        } else {
+            fs.writeFileSync('./Config/deleteSourceFilesOnOff.txt', 0, 'utf8');
+
+        }
+
+
+
+
+
+
+        //define included file types
+
+        fs.writeFileSync('./Config/includedFileTypes.txt', document.getElementById("includedFileTypes").value, 'utf8');
+
+
+        // save number of instances to use 
+
+        fs.writeFileSync('./Config/instanceNumber.txt', document.getElementById("instanceNumber").value, 'utf8');
+
+
+        // save custom bat path
+
+
+        fs.writeFileSync("./Config/customBatPath.txt", document.getElementById("customBatPath").value, 'utf8');
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+    function sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+            if ((new Date().getTime() - start) > milliseconds) {
+                break;
+            }
+        }
+    }
+
+
+    var fileNotExistsCounter = 0;
+    var totalFileFoundCounter = 0;
+
+    var inputPathArray
+    var outputPathArray
+
+    var sourceQueueArray
+
+    function convertFiles(mode) {
+
+
+
+
+        inputPathArray = [];
+        outputPathArray = [];
+        sourceQueueArray = [];
+        var outputPathArrayFinal = [];
+
+
+        var inputPathArrayCounter = 0;
+        var outputFolderPathold = "";
+        var outputFolderPathFinalold = "";
+
+        fileNotExistsCounter = 0;
+        totalFileFoundCounter = 0;
+
+        var g;
+
+        var outPutPathStem
+        var outPutPathStemFinal
+
+        var inputPathStem
+        var inputPathStemSplit
+        var topFolder
+        var topFolderCharLength
+        var programPath = ""
+
+
+
+
+
+
+
+
+
+
+
+
+
+        var fs = require('fs');
+
+        if (process.platform == 'win32') {
+
+            var validationSlash = "\\";
+        }
+
+        if (process.platform == 'linux') {
+
+            var validationSlash = "";
+        }
+
+
+
+        //validate config inputs
+        validationSection:
+        {
+
+
+            if (fs.existsSync(document.getElementById("sourcePath").value + validationSlash) == false) {
+
+                alert("The source folder does not exist!");
+                break validationSection;
+            }
+
+
+            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+                if (fs.existsSync(document.getElementById("destinationPath").value + validationSlash) == false) {
+
+                    alert("The temporary conversion folder does not exist!");
+                    break validationSection;
+                }
+
+
+
+            } else {
+
+                if (fs.existsSync(document.getElementById("destinationPath").value + validationSlash) == false) {
+
+                    alert("The destination folder does not exist!");
+                    break validationSection;
+                }
+
+
+            }
+
+            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+
+                if (fs.existsSync(document.getElementById("tempDestinationPath").value + validationSlash) == false) {
+
+                    alert("The destination folder does not exist!");
+                    break validationSection;
+                }
+
+
+
+            }
+
+            if (document.getElementById("selectStandardPreset").checked == false && document.getElementById("selectCustomPreset").checked == false) {
+
+                alert("Please select a standard preset or input a custom one!");
+                break validationSection;
+            }
+
+
+            var scanIntervalVal = document.getElementById("timer").value
+
+            if (scanIntervalVal < 5) {
+
+                alert("Please select a scan interval of 5 seconds or greater!");
+                break validationSection;
+            }
+
+            var instanceNumberVal = document.getElementById("instanceNumber").value
+            if (instanceNumberVal < 1 || instanceNumberVal > 20) {
+
+                alert("Please type the number of simulataneous Handbrake instances to use (1-4)!");
+                break validationSection;
+            }
+
+
+            saveConfig();
+
+
+
+
+            //Reset counters before processing
+
+
+            fs.writeFileSync('./Config/totalFilesFound.txt', 0, 'utf8');
+
+            fs.writeFileSync('./Config/unconvertedFilesFound.txt', 0, 'utf8');
+
+            fs.writeFileSync('./Config/convertedFiles.txt', 0, 'utf8');
+
+
+
+            //initiate counters
+            fileNotExistsCounter = 0;
+            totalFileFoundCounter = 0;
+
+
+            inputPathStem = document.getElementById("sourcePath").value;
+
+            inputPathStemSplit = inputPathStem.split(',');
+
+
+
+            topFolder = inputPathStemSplit[inputPathStemSplit.length - 1]
+
+            topFolderCharLength = topFolder.length
+
+
+
+            outPutPathStem = document.getElementById("destinationPath").value;
+            outPutPathStemFinal = document.getElementById("tempDestinationPath").value;
+
+
+
+            inputPathArrayCounter = 0
+
+            inputPathArray = [];
+            outputPathArray = [];
+
+
+
+
+            var fs = require('fs');
+            var path = require('path');
+
+
+            traverseDir(inputPathStem);
+
+            function traverseDir(inputPathStem) {
+                fs.readdirSync(inputPathStem).forEach(file => {
+                    let fullPath = path.join(inputPathStem, file);
+                    if (fs.lstatSync(fullPath).isDirectory()) {
+                        //  console.log(fullPath);
+                        traverseDir(fullPath);
+                    } else {
+                        //    console.log(fullPath);
+
+
+                        var thisFile = fullPath + ""
+
+                        fileTypeSplit = thisFile.split('.');
+                        fileType = fileTypeSplit[fileTypeSplit.length - 1]
+
+
+                        //Here we define supported file types
+                        var supportedFileTypeArray = document.getElementById("includedFileTypes").value
+
+                        supportedFileTypeArray = supportedFileTypeArray.split(',');
+
+                        //Here we check to see if the current file being analysed contains a valid file type
+                        var supportedFileSwitch = 0;
+
+
+                        for (var j = 0; j < supportedFileTypeArray.length; j++) {
+
+                            if (fileType == supportedFileTypeArray[j]) {
+                                supportedFileSwitch = 1;
+                            }
+
+                        }
+
+                        //If the file type is valid, then process it
+
+                        if (supportedFileSwitch == 1) {
+
+                            //document.getElementById("files2").innerHTML += "<p>"+ thisFile+"<\p>";
+
+
+
+                            //Here add the full file path to the inputPathArray
+                            inputPathArray[inputPathArrayCounter] = thisFile + "";
+
+
+
+                            //Write to file to state that file with valid format has been found
+
+                            fs.writeFileSync('./Config/totalFilesFound.txt', (totalFileFoundCounter + 1), 'utf8');
+
+                            totalFileFoundCounter++
+
+
+                            var str = inputPathArray[inputPathArrayCounter];
+
+
+                            str = str.substring(str.indexOf("topFolder") + topFolderCharLength + 1);
+
+
+                            if (process.platform == 'win32') {
+
+                                var stringProcessingSlash = "\\";
+                            }
+
+                            if (process.platform == 'linux') {
+                                var stringProcessingSlash = "/";
+                            }
+
+                            pointer = str.split(stringProcessingSlash);
+
+                            filePathEnd = pointer[pointer.length - 1]
+
+                            filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));
+
+                            subfilePath = filePathEndFileType + document.getElementById("container").options[document.getElementById("container").selectedIndex].text;
+
+                            LongsubfilePath = str.slice(0, str.lastIndexOf(stringProcessingSlash));
+
+                            newsubfilePath = LongsubfilePath + stringProcessingSlash + subfilePath;
+
+
+                            outputPathArray[inputPathArrayCounter] = outPutPathStem + newsubfilePath;
+                            var outputFolderPath = outputPathArray[inputPathArrayCounter].substring(0, outputPathArray[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
+
+
+                            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+                                outputPathArrayFinal[inputPathArrayCounter] = outPutPathStemFinal + newsubfilePath;
+                                var outputFolderPathFinal = outputPathArrayFinal[inputPathArrayCounter].substring(0, outputPathArrayFinal[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
+
+                            }
+
+
+                            //if temp folder unchcked
+
+
+                            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+
+
+
+
+
+
+
+
+                                if (fs.existsSync(outputPathArrayFinal[inputPathArrayCounter])) {
+
+
+                                } else {
+
+
+                                    fs.writeFileSync('./Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
+
+
+                                    fileNotExistsCounter++
+                                }
+
+
+
+
+                                //ELSE if temp folder checked
+                            } else {
+
+                                //
+                                if (fs.existsSync(outputPathArray[inputPathArrayCounter])) {
+
+
+                                } else {
+
+                                    fs.writeFileSync('./Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
+
+                                    fileNotExistsCounter++
+
+                                }
+                                //
+
+                            }
+
+
+                            var shell = require('shelljs');
+
+
+
+                            if (fs.existsSync(outputFolderPath)) {
+
+
+                            } else {
+
+                                if (outputFolderPath != outputFolderPathold) {
+                                    // fs.mkdirSync(outputFolderPath);
+
+                                    shell.mkdir('-p', outputFolderPath);
+
+                                    outputFolderPathold = outputFolderPath;
+                                }
+
+                            }
+
+
+                            //AND if tempfolderchecked
+
+                            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+
+                                if (fs.existsSync(outputFolderPathFinal)) {
+
+                                } else {
+
+                                    if (outputFolderPathFinal != outputFolderPathFinalold) {
+
+                                        //fs.mkdirSync(outputFolderPathFinal);
+
+                                        shell.mkdir('-p', outputFolderPathFinal);
+
+                                        outputFolderPathFinalold = outputFolderPathFinal;
+
+                                    }
+                                }
+                            }
+
+
+                            inputPathArrayCounter++;
+
+
+
+
+
+                        } //end supported file switch
+
+
+
+
+                    }  //end current file, go to next
+                });
+            }
+
+
+
+
+
+            //var currentWindowPath = window.location.pathname;
+            //var currentFolderPath = currentWindowPath.substring(0, currentWindowPath.lastIndexOf('/'));
+
+            var currentWindowPath = __filename;
+            var currentFolderPath = __dirname;
+
+            // console.log(__dirname);
+            // console.log(currentFolderPath);
+
+            // var handBrakeCLIPath = fso.GetAbsolutePathName('./HandBrakeCLI.exe');
+
+            //var handBrakeCLIPath = fso.GetAbsolutePathName('./HandBrakeCLI.exe');
+
+
+
+
+            //console.log(handBrakeCLIPath);
+
+
+            fs.writeFileSync('./Config/Processes/sourceQueue.txt', "", 'utf8');
+
+            fs.writeFileSync('./Config/Processes/destinationQueue.txt', "", 'utf8');
+
+            fs.writeFileSync('./Config/Processes/destinationFinalQueue.txt', "", 'utf8');
+
+            fs.writeFileSync('./Config/Processes/queueNumberPath.txt', "0", 'utf8');
+
+            var LocalStorage = require('node-localstorage').LocalStorage;
+            queueNumberPathStorage = new LocalStorage('./Config/Processes/queueNumberPath');
+            queueNumberPathStorage.setItem('myFirstKey', '0');
+
+
+            // var temp = (parseInt(queueNumberPathStorage.getItem('myFirstKey'))+1)
+            // temp++;
+            // queueNumberPathStorage.setItem('myFirstKey', temp);
+            // console.log(queueNumberPathStorage.getItem('myFirstKey'));
+
+
+
+
+            fs.writeFileSync("./Config/Processes/WorkerStatus/completedQueue.txt", "", 'utf8');
+
+
+            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker1QueueNumber.txt', "-", 'utf8');
+            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker2QueueNumber.txt', "-", 'utf8');
+            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker3QueueNumber.txt', "-", 'utf8');
+            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker4QueueNumber.txt', "-", 'utf8');
+
+            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker1FileName.txt', "-", 'utf8');
+            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker2FileName.txt', "-", 'utf8');
+            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker3FileName.txt', "-", 'utf8');
+            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker4FileName.txt', "-", 'utf8');
+
+            fs.writeFileSync('./Config/Processes/WorkerStatus/AllComplete.txt', "0", 'utf8');
+
+
+
+
+
+            var writeNumber = 0;
+            var sourceQueueArrayCounter = 0;
+
+
+            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+                for (var i = 0; i < outputPathArray.length; i++) {
+
+                    if (fs.existsSync(outputPathArrayFinal[i])) {
+
+                    } else {
+
+
+                        fs.appendFileSync('./Config/Processes/sourceQueue.txt', inputPathArray[i] + "\n", 'utf8');
+                        sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
+                        sourceQueueArrayCounter++
+
+
+                        fs.appendFileSync('./Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
+
+
+                        fs.appendFileSync('./Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
+
+
+                        writeNumber++;
+
+                    }
+
+
+                }
+
+
+
+            } else {
+
+
+                for (var i = 0; i < outputPathArray.length; i++) {
+
+                    if (fs.existsSync(outputPathArray[i])) {
+
+                    } else {
+
+                        fs.appendFileSync('./Config/Processes/sourceQueue.txt', inputPathArray[i] + "\n", 'utf8');
+                        sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
+                        sourceQueueArrayCounter++
+
+
+
+                        fs.appendFileSync('./Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
+
+
+
+                        fs.appendFileSync('./Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
+
+
+
+                        writeNumber++;
+
+                    }
+
+
+                }
+
+
+
+            }
+
+
+
+            // Run all worker modules
+
+
+            if (mode == "scanandconvert") {
+
+
+                for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
+
+                    var workerPath = "worker" + i + ".js"
+                    var childProcess = require("child_process");
+                    var path = require("path");
+                    var cp = childProcess.fork(path.join(__dirname, workerPath));
+                    cp.on("exit", function (code, signal) {
+                        console.log("Exited", { code: code, signal: signal });
+                    });
+                    cp.on("error", console.error.bind(console));
+
+                    sleep(500);
+
+
+
+                }
+            }
+
+            /*  var workerpath = __dirname + "\\worker1.js";  OLD - not needed
+          
+               require('child_process').execSync( workerpath , function (err, stdout, stderr) {
+              if (err) {
+                  // Ooops.
+                  // console.log(stderr);
+                  return console.log(err);
+              }
+          
+              // Done.
+              runEndSection();
+              runScan();
+              console.log(stdout);
+          });
+          
+          */
+
+
+
+            // worker module start
+
+
+
+
+            //worker end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            runEndSection();
+
+
+
+
+
+
+
+        }// end validation section
+
+
+
+
+    }//end convertfiles function
+
+
+
+    function runEndSection() {
+        var fs = require('fs');
+
+        //load conversion queue into table
+
+
+        var queuePath = "./Config/Processes/sourceQueue.txt";
+
+        var tableHTML = "";
+        var tableQueueNumber = 1;
+
+
+
+
+
+
+
+        /* fs.readFile("./Config/scanInterval.txt", function(err, f){
+document.getElementById("timer").value= f
+}); */
+
+        if (sourceQueueArray.length >= 1) {
+
+            /* var array = fs.readFileSync(queuePath).toString().split("\n");
+             console.log(array)
+*/
+
+
+
+
+            //console.log((sourceQueueArray)
+
+
+
+            tableHTML += "<table class=\"outputTable\" id=\"queueTable\">"
+
+                + "<col width=\"70%\">"
+                + "<col width=\"10%\">"
+                + "<col width=\"10%\">"
+                + "<col width=\"10%\">"
+                + "<tr>"
+
+                + "<th class=\"headcol\">Source file</th>"
+                + "<th class=\"headcol\">Queue number</th>"
+                + "<th class=\"headcol\">Active Worker</th>"
+                + "<th class=\"headcol\">Status</th>"
+
+                + "</tr>"
+
+            for (var i = 0; i < (sourceQueueArray.length); i++) {
+
+                var currentSourceLine = (sourceQueueArray[i]);
+                tableHTML += "<tr>"
+                    + "<td>" + currentSourceLine + "</td>"
+                    + "<td>" + tableQueueNumber + "</td>"
+                    + "<td > - </td>"
+                    + "<td > - </td>"
+
+                    + "</tr>"
+
+                tableQueueNumber++;
+
+
+            }
+
+            tableHTML += "</table>";
+
+            document.getElementById("fullQueue").innerHTML = tableHTML;
+
+
+        }
+
+
+
+
+
+        //check to see if periodic scanning should be set to run on completion
+
+        if (document.getElementById("scanOnOff").checked == true) {
+
+
+            countDownOn = 1;
+            document.getElementById("countdown").value = document.getElementById("timer").value
+
+
+
+        } else {
+
+            countDownOn = 0;
+
+            document.getElementById("countdown").value = "Disabled";
+        }
+
+
+
+        scanCompleted2 = 1;
+        scanCompleted = 0;
+        updateInfo = 1;
+
+
+        // document.getElementById("worker1").innerHTML = "<p>Worker 1 processing queue item number:-<\p>";
+        // document.getElementById("worker1").innerHTML += "<p>File:-<\p>";
+        // document.getElementById("worker2").innerHTML = "<p>Worker 2 processing queue item number:-<\p>";
+        // document.getElementById("worker2").innerHTML += "<p>File:-<\p>";
+        // document.getElementById("worker3").innerHTML = "<p>Worker 3 processing queue item number:-<\p>";
+        // document.getElementById("worker3").innerHTML += "<p>File:-<\p>";
+        // document.getElementById("worker4").innerHTML = "<p>Worker 4 processing queue item number:-<\p>";
+        // document.getElementById("worker4").innerHTML += "<p>File:-<\p>";
+        var elmnt = document.getElementById("fullQueue");
+        elmnt.scrollIntoView()
+
+
+
+    }
+
+
+    var scanCompleted = 0;
+    var scanCompleted2 = 0;
+
+    window.setInterval("runScan();", 1000);
+
+
+    var updateInfo = 0;
+
+    var countDownOn = 0;
+
+    var QueueNumber1Old
+
+    var colourSwitch = 0
+
+    function runScan() {
+
+
+
+        // if(document.getElementById("deleteSourceFiles").checked == true){
+
+        //     if(colourSwitch==0){
+        //         document.getElementById("deleteSourceFilesdiv").style.color = "#ff2121";
+        //         colourSwitch=1;
+
+        //     }else{
+        //         document.getElementById("deleteSourceFilesdiv").style.color = "#505050";
+        //         colourSwitch=0;
+        //     }
+
+
+
+
+
+
+        //  }
+
+
+
+        var fs = require('fs');
+
+        if (updateInfo == 1) {
+
+
+
+            // lockFile.lockSync("./Config/totalFilesFound.txt.lock",10000,100,10000,1000,100)
+            document.getElementById("totalFilesFound").value = fs.readFileSync("./Config/totalFilesFound.txt", 'utf8');
+            // lockFile.unlockSync("./Config/totalFilesFound.txt.lock",10000,100,10000,1000,100)
+
+
+
+            document.getElementById("unconvertedFilesFound").value = fs.readFileSync("./Config/unconvertedFilesFound.txt", 'utf8');
+
+
+
+
+            //worker 1
+            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker1QueueNumber.txt.lock",10000,100,10000,1000,100)
+            var QueueNumber1 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker1QueueNumber.txt", 'utf8');
+            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker1QueueNumber.txt.lock",10000,100,10000,1000,100)
+
+
+            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker1FileName.txt.lock",10000,100,10000,1000,100)
+            var FileName1 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker1FileName.txt", 'utf8');
+            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker1FileName.txt.lock",10000,100,10000,1000,100)
+
+
+            //worker 2
+
+            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker2QueueNumber.txt.lock",10000,100,10000,1000,100)
+            var QueueNumber2 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker2QueueNumber.txt", 'utf8');
+            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker2QueueNumber.txt.lock",10000,100,10000,1000,100)
+
+
+            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker2FileName.txt.lock",10000,100,10000,1000,100)
+            var FileName2 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker2FileName.txt", 'utf8');
+            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker2FileName.txt.lock",10000,100,10000,1000,100)
+
+
+
+
+            //worker 3
+
+            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker3QueueNumber.txt.lock",10000,100,10000,1000,100)
+            var QueueNumber3 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker3QueueNumber.txt", 'utf8');
+            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker3QueueNumber.txt.lock",10000,100,10000,1000,100)
+
+
+            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker3FileName.txt.lock",10000,100,10000,1000,100)
+            var FileName3 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker3FileName.txt", 'utf8');
+            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker3FileName.txt.lock",10000,100,10000,1000,100)
+
+
+
+
+            //worker 4
+
+            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker4QueueNumber.txt.lock",10000,100,10000,1000,100)
+            var QueueNumber4 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker4QueueNumber.txt", 'utf8');
+            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker4QueueNumber.txt.lock",10000,100,10000,1000,100)
+
+
+            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker4FileName.txt.lock",10000,100,10000,1000,100)
+            var FileName4 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker4FileName.txt", 'utf8');
+            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker4FileName.txt.lock",10000,100,10000,1000,100)
+
+
+
+
+
+            // workertableHTML = "";
+
+            // workertableHTML += "<table class=\"outputTable\">"
+            //     + "<tr>"
+
+            //     + "<th class=\"headcol\"Worker</th>"
+            //     + "<th class=\"headcol\"> Source File</th>"
+            //     + "<th class=\"headcol\">Queue number</th>"
+
+            //     + "</tr>"
+
+            //     + "<tr>"
+            //     + "<td>" + "1" + "</td>"
+            //     + "<td>" + FileName1 + "</td>"
+            //     + "<td>" + QueueNumber1 + "</td>"
+            //     + "</tr>"
+
+            //     + "<tr>"
+            //     + "<td>" + "2" + "</td>"
+            //     + "<td>" + FileName2 + "</td>"
+            //     + "<td>" + QueueNumber2 + "</td>"
+            //     + "</tr>"
+
+            //     + "<tr>"
+            //     + "<td>" + "3" + "</td>"
+            //     + "<td>" + FileName3 + "</td>"
+            //     + "<td>" + QueueNumber3 + "</td>"
+            //     + "</tr>"
+
+            //     + "<tr>"
+            //     + "<td>" + "4" + "</td>"
+            //     + "<td>" + FileName4 + "</td>"
+            //     + "<td>" + QueueNumber4 + "</td>"
+            //     + "</tr>"
+
+            //     + "</table>";
+
+
+
+            // document.getElementById("worker1").innerHTML = workertableHTML;
+
+
+            if (sourceQueueArray.length >= 1) {
+
+
+                for (var i = 0; i < sourceQueueArray.length - 1; i++) {
+
+                    queueTable.rows[i + 1].cells[2].innerHTML = "";
+
+
+                }
+
+
+
+                queueNumberPath = "./Config/Processes/queueNumberPath.txt";
+
+                if (fs.existsSync(queueNumberPath)) {
+
+
+                    // lockFile.lockSync(queueNumberPath+".lock",10000,100,10000,1000,100)
+                    var globalQueueNumber = fs.readFileSync(queueNumberPath, 'utf8');
+                    // lockFile.unlockSync(queueNumberPath+".lock",10000,100,10000,1000,100)
+
+
+                    if (inputPathArray.length >= 1) {
+                        for (var i = 0; i < inputPathArray.length; i++) {
+
+                            if (i == QueueNumber1 - 1) {
+
+                                queueTable.rows[i + 1].cells[2].innerHTML = 'Worker 1';
+                                queueTable.rows[i + 1].cells[3].innerHTML = 'Converting';
+                                queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
+
+                            }
+
+                            if (i == QueueNumber2 - 1) {
+
+                                queueTable.rows[i + 1].cells[2].innerHTML = 'Worker 2';
+                                queueTable.rows[i + 1].cells[3].innerHTML = 'Converting';
+                                queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
+
+                            }
+
+                            if (i == QueueNumber3 - 1) {
+
+                                queueTable.rows[i + 1].cells[2].innerHTML = 'Worker 3';
+                                queueTable.rows[i + 1].cells[3].innerHTML = 'Converting';
+                                queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
+
+                            }
+
+                            if (i == QueueNumber4 - 1) {
+
+                                queueTable.rows[i + 1].cells[2].innerHTML = 'Worker 4';
+                                queueTable.rows[i + 1].cells[3].innerHTML = 'Converting';
+                                queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
+
+                            }
+
+
+                        }
+                    }
+                }
+
+
+
+                var completedQueuePath = "./Config/Processes/WorkerStatus/completedQueue.txt"
+
+                if (fs.existsSync(completedQueuePath)) {
+
+
+                    /* var array = fs.readFileSync(queuePath).toString().split("\n");
+                     console.log(array)
+                    */
+                    var readArray = "";
+
+                    // lockFile.lockSync(completedQueuePath+".lock",10000,100,10000,1000,100)
+                    readArray = fs.readFileSync(completedQueuePath, 'utf8');
+                    // lockFile.unlockSync(completedQueuePath+".lock",10000,100,10000,1000,100)
+
+
+                    var currentLine = 0;
+                    readArray = readArray.toString().split("\n");
+                    if (readArray.length >= 1) {
+
+                        for (var i = 0; i < readArray.length - 1; i++) {
+
+                            var currentLine = readArray[i];
+
+                            console.log(currentLine)
+
+                            queueTable.rows[currentLine].cells[3].innerHTML = "Completed"
+                            queueTable.rows[currentLine].style.backgroundColor = "#59ff74";
+
+
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            var instanceNumberSetting = document.getElementById("instanceNumber").value;
+
+
+            if (instanceNumberSetting == 1 && QueueNumber1 == "Complete!") {
+
+                AllComplete();
+
+            }
+
+            if (instanceNumberSetting == 2 && QueueNumber1 == "Complete!" && QueueNumber2 == "Complete!") {
+
+                AllComplete();
+
+            }
+
+            if (instanceNumberSetting == 3 && QueueNumber1 == "Complete!" && QueueNumber2 == "Complete!" && QueueNumber3 == "Complete!") {
+
+                AllComplete();
+
+            }
+
+            if (instanceNumberSetting == 4 && QueueNumber1 == "Complete!" && QueueNumber2 == "Complete!" && QueueNumber3 == "Complete!" && QueueNumber4 == "Complete!") {
+
+                AllComplete();
+
+            }
+
+            function AllComplete() {
+
+                // lockFile.lockSync("./Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
+
+                fs.writeFileSync('./Config/Processes/WorkerStatus/AllComplete.txt', "1", 'utf8');
+                // lockFile.unlockSync("./Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
+
+                document.getElementById("fullQueue").innerHTML = "";
+
+                if (sourceQueueArray.length >= 1) {
+
+                    if (sourceQueueArray.length >= 1) {
+
+
+
+                        for (var i = 0; i < sourceQueueArray.length; i++) {
+
+                            var newRow = document.getElementById('sessionConversionsTable').insertRow();
+
+                            var currentSourceLine = sourceQueueArray[i];
+                            newRow.innerHTML = "<tr>"
+                                + "<td>" + currentSourceLine + "</td>"
+                                + "<td>" + "</td>"
+                                + "<td > - </td>"
+                                + "<td > Completed </td>"
+
+                                + "</tr>"
+
+
+
+
+                        }
+
+
+                    }
+                }
+
+            }
+
+
+
+        }
+
+
+        if (scanCompleted == 1 && scanCompleted2 == 1) {
+
+
+
+
+            sourceQueueArray = [];
+
+            //    fs.unlinkSync(queuePath)
+
+
+
+            if (document.getElementById("deleteSourceFiles").checked == true) {
+                for (var i = 0; i < inputPathArray.length; i++) {
+                    if (fs.existsSync(inputPathArray[i])) {
+
+                        console.log("Here")
+                        fs.unlinkSync(inputPathArray[i])
+
+
+                    }
+
+                }
+            }
+
+            updateInfo = 0;
+
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1;
+            var yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            today = dd + '/' + mm + '/' + yyyy;
+            today2 = dd + '-' + mm + '-' + yyyy;
+
+            var d = new Date(),
+                h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
+                m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+            s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
+            timenow = h + '-' + m + '-' + s;
+
+
+            // lockFile.lockSync("./Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
+            var convertedFiles1 = fs.readFileSync("./Config/unconvertedFilesFound.txt", 'utf8');
+            // lockFile.unlockSync("./Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
+
+            // lockFile.lockSync("./Config/Processes/queueNumberPath.txt.lock",10000,100,10000,1000,100)
+            var convertedFiles = fs.readFileSync("./Config/Processes/queueNumberPath.txt", 'utf8');
+            // lockFile.unlockSync("./Config/Processes/queueNumberPath.txt.lock",10000,100,10000,1000,100)
+
+            // lockFile.lockSync("./Config/presetString.txt.lock",10000,100,10000,1000,100)
+            var preset = fs.readFileSync("./Config/presetString.txt", 'utf8');
+            // lockFile.unlockSync("./Config/presetString.txt.lock",10000,100,10000,1000,100)
+
+            // lockFile.lockSync("./Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
+            var unConvertedFiles = fs.readFileSync("./Config/unconvertedFilesFound.txt", 'utf8');
+            // lockFile.unlockSync("./Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
+
+
+
+            //  document.getElementById("files").innerHTML += "<p>Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + convertedFiles1 + "-------Preset:" + preset + ".<\p>";
+
+
+            // lockFile.lockSync("./Logs/Scans.txt.lock",10000,100,10000,1000,100)
+            fs.appendFileSync("./Logs/Scans.txt", "Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + convertedFiles1 + "-------Preset:" + preset + ". \r\n", 'utf8');
+            // lockFile.unlockSync("./Logs/Scans.txt.lock",10000,100,10000,1000,100)
+
+            scanCompleted2 = 0;
+
+
+        }
+
+        var fs = require('fs');
+
+        if (fs.existsSync("./Config/Processes/WorkerStatus/AllComplete.txt")) {
+
+
+
+            try {
+
+                // lockFile.lockSync("./Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
+                var AllComplete = fs.readFileSync("./Config/Processes/WorkerStatus/AllComplete.txt", 'utf8');
+                // lockFile.unlockSync("./Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
+
+            } catch (err) {
+                var AllComplete = "0";
+
+            }
+
+        }
+
+
+
+
+
+        if (countDownOn == 1 && AllComplete == "1") {
+            scanCompleted = 1;
+
+            var timerSeconds = document.getElementById("countdown").value
+
+            timerSeconds--;
+
+            document.getElementById("countdown").value = timerSeconds;
+
+
+            if (timerSeconds == 0) {
+
+                convertFiles('scanandconvert');
+
+                document.getElementById("countdown").value = document.getElementById("timer").value
+
+
+            }
+        }
+
+
+
+
+
+    }
+
+
+    function selectFolder(folder) {
+
+
+        var folderPaths
+        var app = require('electron').remote;
+        var dialog = app.dialog;
+
+        dialog.showOpenDialog({
+            title: "Select a folder",
+            properties: ["openDirectory"]
+        }, (folderPaths) => {
+            // folderPaths is an array that contains all the selected paths
+            if (folderPaths === undefined) {
+                console.log("No destination folder selected");
+                return;
+            } else {
+                console.log(folderPaths);
+                document.getElementById(folder).value = folderPaths;
+            }
+        });
+
+
+
+
+    }
+
+
+    function viewLogs(logType) {
+
+        if (process.platform == 'win32') {
+
+            var stringProcessingSlash = "\\";
+        }
+
+        if (process.platform == 'linux') {
+            var stringProcessingSlash = "/";
+        }
+
+
+
+        //view logs
+
+        var fullPath = __dirname;
+
+        console.log(fullPath)
+        fullPath = fullPath.slice(0, fullPath.lastIndexOf(stringProcessingSlash));
+        console.log(fullPath)
+
+        fullPath = fullPath.slice(0, fullPath.lastIndexOf(stringProcessingSlash));
+        console.log(fullPath)
+
+        if (process.platform == 'win32') {
+
+            if (process.env.NODE_ENV == 'production') {
+
+                //production
+                var logPath = fullPath + "\\Logs\\" + logType + ".txt";
+
+            } else {
+
+                //development
+                var logPath = __dirname + "\\Logs\\" + logType + ".txt";
+
+            }
+
+
+        }
+
+        if (process.platform == 'linux') {
+
+            if (process.env.NODE_ENV == 'production') {
+
+                //production
+                var logPath = fullPath + "/Logs/" + logType + ".txt";
+
+            } else {
+
+                //development
+                var logPath = __dirname + "/Logs/" + logType + ".txt";
+
+
+            }
+        }
+
+
+
+        logPath = "\"" + logPath + "\"";
+
+
+        require('child_process').execSync(logPath, function (err, stdout, stderr) {
+            if (err) {
+                // Ooops.
+                //console.log(stderr);
+                //console.log("Error with worker number:"+workerNumber);
+                return console.log(err);
+            }
+
+            // Done.
+            //runEndSection();
+            //runScan();
+            console.log(stdout);
+        });
+
+
+
+
+    }
+
+
+    function openURL(link) {
+
+        var opn = require('opn');
+
+        opn(link);
+
+    }
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+<style>
+
+    body {
+                  background-color:#505050;
+                  display: inline;
+                }
+                
+                
+                
+                .main {
+                
+                  height: 20em;
+                
+                  width: 70em;
+                
+                }
+                
+                .folderPaths {
+                
+                  height: 2em;
+                
+                  width: 70%;
+                  border-radius: 25px;
+                
+                }
+                
+                .customPresetBox {
+                
+                  height: 10em;
+                
+                  width: 100em;
+                  border-radius: 25px;
+                
+                }
+                
+                .dropdown1 {
+                
+                
+                
+                }
+                
+                
+                .button1 {
+                  background-color: #66ccff; /* Green */
+                  border: none;
+                  color: white;
+                  padding: 15px 32px;
+                  text-align: center;
+                  text-decoration: none;
+                  display: inline-block;
+                  font-size: 16px;
+                  border-radius: 25px;
+                }
+
+                     
+                .button2one{
+                  background-color: #88fc80;
+                  border: none;
+                  color: white;
+                  padding: 15px 32px;
+                  text-align: center;
+                  text-decoration: none;
+                  display: inline-block;
+                  font-size: 16px;
+                  border-radius: 25px;
+                }
+                
+                
+                .button2{
+                  background-color: #4CAF50;
+                  border: none;
+                  color: white;
+                  padding: 15px 32px;
+                  text-align: center;
+                  text-decoration: none;
+                  display: inline-block;
+                  font-size: 16px;
+                  border-radius: 25px;
+                }
+
+                .button3 {
+                  background-color:  #66ccff; /* Green */
+                  border: none;
+                  color: white;
+             
+                  text-align: left;
+                  text-decoration: none;
+                  display: block;
+                  font-size: 20px;
+                  border-radius: 25px;
+                  margin-top: 1px;
+                    margin-bottom: 15px;
+                    margin-right: 1px;
+                margin-left: 1px;
+                }
+
+                .rounded{
+
+                    border-radius: 10px;
+                }
+                
+                p {
+
+                    color: white;
+                
+                  text-align: center;
+                  text-decoration: none;
+                
+                  font-size: 16px;
+                  font-family:verdana;
+                }
+
+                h1 {
+                    color: white;
+
+                }
+                
+                .selectbox{
+                
+                  width: 30em;
+                  border-radius: 5px;
+                
+                }
+                .infoBox{
+                    width: 5em;
+                  border-radius: 5px;
+
+
+                }
+
+                .infoButton{
+                  
+                  border-radius: 5px;
+                  background-color:#ffda6d;
+                  color: black;
+
+
+                }
+                
+                
+                          table.outputTable th {
+                    background-color: #0088cc;
+                    color: black;
+                }
+                 
+                 table.outputTable tr:nth-child(even) {background-color: #f2f2f2;}
+                 table.outputTable tr:nth-child(odd) {background-color: #c4feff;}
+                 table.outputTable tr:hover {background-color: #66ccff;}       
+                  
+                table.outputTable{
+                    border-radius: 5px;
+                    width: 100%;
+                   
+                 }
+
+                 table.historicTable th {
+                    background-color: #0088cc;
+                    color: black;
+                }
+                 
+                 table.historicTable tr:nth-child(even) {background-color: #f2f2f2;}
+                 table.historicTable tr:nth-child(odd) {background-color: #c4feff;}
+                 table.historicTable tr:hover {background-color: #66ccff;}       
+                  
+                table.historicTable{
+                    border-radius: 5px;
+                    width: 100%;
+                   
+                 }
+
+              
+
+.box {
+  display: none;
+  background: #ccc;
+  width: 200px;
+  height: 100px;
+}
+#trigger:checked + .box {
+  display: block;
+}
+1
+2
+3
+4
+5
+6
+7
+8
+9
+.box {
+  display: none;
+  background: #ccc;
+  width: 200px;
+  height: 100px;
+}
+#trigger:checked + .box {
+  display: block;
+}
+
+
+                
+                </style>
+
+
+
+
+
+
+
+<head>
+
+
+
+<body>
+
+    <center>
+
+        <img src="paypaldonateimage.jpg" alt="Italian Trulli" style="width:50x;height:25px;" onclick="openURL('https://www.paypal.me/HaveAGitGat')">
+
+        <center>
+            <h1 style="font-family:verdana;">HBBatchBeast</h1>
+        </center>
+
+        <input type="button" onclick="openURL('https://github.com/HaveAGitGat')" value="by HaveAGitGat">
+
+
+
+
+
+
+        <p>Source folder</p>
+        <textarea type="text" class="folderPaths" id="sourcePath"></textarea><input type='button' class="button3" value='Select folder'
+            onclick="selectFolder('sourcePath')" />
+
+
+
+
+
+
+        <p>Temporary conversion folder?<input type="checkbox" class="rounded" id="selectTemporaryConversionFolder"
+                onchange="cbChange2()"></p>
+
+
+        <div id="ShowHide1">
+            <p>Destination folder</p>
+        </div>
+        <div id="ShowHide2">
+
+        </div>
+
+        <textarea type="text" class="folderPaths" id="destinationPath"> </textarea><input type='button' class="button3"
+            value='Select folder' onclick="selectFolder('destinationPath')" />
+
+
+        <div style="display: none;" id="tempConversionFolderDiv">
+            <p>Destination folder:</p><textarea type="text" class="folderPaths" id="tempDestinationPath"></textarea>
+            <input type='button' class="button3" value='Select folder' onclick="selectFolder('tempDestinationPath')" />
+        </div>
+
+
+
+        <p>Standard preset:<input type="checkbox" id="selectStandardPreset" class="cb1" onchange="cbChange1(this)">
+            Custom preset:<input type="checkbox" id="selectCustomPreset" class="cb1" onchange="cbChange1(this)"></p>
+
+
+        <div style="display: none;" id="standardPresetDiv">
+
+            <p>Select standard preset:</p>
+            <select name="preset" class="selectbox" id="preset">
+                <option value="0">Very Fast 1080p30</option>
+                <option value="1">Very Fast 720p30</option>
+                <option value="2">Very Fast 576p25</option>
+                <option value="3">Very Fast 480p30</option>
+                <option value="4">Fast 1080p30</option>
+                <option value="5">Fast 720p30</option>
+                <option value="6">Fast 576p25</option>
+                <option value="7">Fast 480p30</option>
+                <option value="8">HQ 1080p30 Surround</option>
+                <option value="9">HQ 720p30 Surround</option>
+                <option value="10">HQ 576p25 Surround</option>
+                <option value="11">HQ 480p30 Surround</option>
+                <option value="12">Super HQ 1080p30 Surround</option>
+                <option value="13">Super HQ 720p30 Surround</option>
+                <option value="14">Super HQ 576p25 Surround</option>
+                <option value="15">Super HQ 480p30 Surround</option>
+                <option value="16">Gmail Large 3 Minutes 720p30</option>
+                <option value="17">Gmail Medium 5 Minutes 480p30</option>
+                <option value="18">Gmail Small 10 Minutes 288p30</option>
+                <option value="19">Vimeo YouTube HQ 2160p60 4K</option>
+                <option value="20">Vimeo YouTube HQ 1440p60 2.5K</option>
+                <option value="21">Vimeo YouTube HQ 1080p60</option>
+                <option value="22">Vimeo YouTube HQ 720p60</option>
+                <option value="23">Vimeo YouTube 720p30</option>
+                <option value="24">Android 1080p30</option>
+                <option value="25">Android 720p30</option>
+                <option value="26">Android 576p25</option>
+                <option value="27">Android 480p30</option>
+                <option value="28">Apple 2160p60 4K HEVC Surround</option>
+                <option value="29">Apple 1080p60 Surround</option>
+                <option value="30">Apple 1080p30 Surround</option>
+                <option value="31">Apple 720p30 Surround</option>
+                <option value="32">Apple 540p30 Surround</option>
+                <option value="33">Apple 240p30</option>
+                <option value="34">Chromecast 2160p60 4K HEVC Surround</option>
+                <option value="35">Chromecast 1080p60 Surround</option>
+                <option value="36">Chromecast 1080p30 Surround</option>
+                <option value="37">Amazon Fire 2160p60 4K HEVC Surround</option>
+                <option value="38">Amazon Fire 1080p30 Surround</option>
+                <option value="39">Amazon Fire 720p30</option>
+                <option value="40">Playstation 1080p30 Surround</option>
+                <option value="41">Playstation 720p30</option>
+                <option value="42">Playstation 540p30</option>
+                <option value="43">Roku 2160p60 4K HEVC Surround</option>
+                <option value="44">Roku 1080p30 Surround</option>
+                <option value="45">Roku 720p30 Surround</option>
+                <option value="46">Roku 576p25</option>
+                <option value="47">Roku 480p30</option>
+                <option value="48">Windows Mobile 1080p30</option>
+                <option value="49">Windows Mobile 720p30</option>
+                <option value="50">Windows Mobile 540p30</option>
+                <option value="51">Windows Mobile 480p30</option>
+                <option value="52">Xbox 1080p30 Surround</option>
+                <option value="53">Xbox Legacy 1080p30 Surround</option>
+                <option value="54">H.265 MKV 2160p60</option>
+                <option value="55">H.265 MKV 1080p30</option>
+                <option value="56">H.265 MKV 720p30</option>
+                <option value="57">H.265 MKV 576p25</option>
+                <option value="58">H.265 MKV 480p30</option>
+                <option value="59">H.264 MKV 2160p60</option>
+                <option value="60">H.264 MKV 1080p30</option>
+                <option value="61">H.264 MKV 720p30</option>
+                <option value="62">H.264 MKV 576p25</option>
+                <option value="63">H.264 MKV 480p30</option>
+                <option value="64">VP9 MKV 2160p60</option>
+                <option value="65">VP9 MKV 1080p30</option>
+                <option value="66">VP9 MKV 720p30</option>
+                <option value="67">VP9 MKV 576p25</option>
+                <option value="68">VP9 MKV 480p30</option>
+                <option value="69">VP8 MKV 1080p30</option>
+                <option value="70">VP8 MKV 720p30</option>
+                <option value="71">VP8 MKV 576p25</option>
+                <option value="72">VP8 MKV 480p30</option>
+                <option value="73">Production Max</option>
+                <option value="74">Production Standard</option>
+                <option value="75">Production Proxy 1080p</option>
+                <option value="76">Production Proxy 540p</option>
+
+
+
+            </select>
+        </div>
+
+        <div style="display: none;" id="customPresetDiv">
+
+            <textarea type="text" class="customPresetBox" id="customPresets"></textarea>
+
+        </div>
+
+        <p>Container:</p>
+        <select name="container" class="selectbox" id="container">
+            <option value="0">.mp4</option>
+            <option value="1">.m4v</option>
+            <option value="2">.mkv</option>
+
+        </select>
+
+        <br>
+
+        <p>Enable periodic scanning?:<input type="checkbox" id="scanOnOff"></p>
+
+
+        <p>Show/hide advanced<input id="showHideAdvanced" type="checkbox" onchange="cbChange3()"></p>
+        <div id="advancedSettings" style="display: none;">
+
+
+
+            <p>Scan interval (minimum 5):<input type="text" class="infoBox" id="timer">seconds</p>
+
+
+            <p>Show Handbrake CMD windows when conversion is running?:<input type="checkbox" id="viewCMDOnOff"></p>
+
+            <p id="deleteSourceFilesdiv" style="color:#87001b;">Delete source files after conversion?:<input type="checkbox"
+                    id="deleteSourceFiles" onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')"></p>
+
+
+            <p>Valid file types:</p><textarea type="text" class="folderPaths" id="includedFileTypes"></textarea>
+
+            <p>Number of simulataneous Handbrake instances to use?(1-4):<input type="text" class="infoBox" id="instanceNumber"></p>
+
+            <p>Custom bat path to run after each conversion (leave blank if not using):</p><textarea type="text" class="folderPaths"
+                id="customBatPath"></textarea>
+
+        </div>
+
+        <input type='button' class="button1" value='Save config' onclick='saveConfig()' />
+
+
+        <input type='button' class="button2one" value='Scan only' onclick='convertFiles()' />
+        <input type='button' class="button2" value='Scan and convert' onclick='convertFiles("scanandconvert")' />
+
+        <div id="conversionInfo"></div>
+        <p>Scanning for new files in:<input type="text" id="countdown" class="infoBox">seconds</p>
+
+
+        <p>---------------------------------------------------------------------------------------</p>
+
+        <input type="button" onclick="viewLogs('Scans')" value="View scan log" class="infoButton">
+        <input type="button" onclick="viewLogs('fileConversionLog')" value="View file conversion log" class="infoButton">
+
+
+
+        <p>Total number of media files found:<input type="text" id="totalFilesFound" class="infoBox">
+            Number of unconverted media files found:<input type="text" id="unconvertedFilesFound" class="infoBox"></p>
+
+        <div id="worker1"> </div>
+        <div id="worker1progress"> </div>
+        <div id="worker2"> </div>
+        <div id="worker3"> </div>
+        <div id="worker4"> </div>
+
+        <br>
+        <br>
+
+        <p>Queue</p>
+        <div id="fullQueue"></div>
+
+
+        <div id="files"></div>
+        <div id="files2"></div>
+
+
+        <p>Conversions this session</p>
+        <div id="sessionConversions">
+            <table id="sessionConversionsTable" class="outputTable">
+                <col width="70%">
+                <col width="10%">
+                <col width="10%">
+                <col width="10%">
+
+                <th class="headcol">Source file</th>
+                <th class="headcol"></th>
+                <th class="headcol"></th>
+                <th class="headcol">Status</th>
+
+
+            </table>
+
+
+
+        </div>
+
+
+
+    </center>
+
+
+
+
+
+
+</body>
+
+</html>
