@@ -13,6 +13,8 @@ Step 1:Download (Link will be posted today) (HandbrakeCLI.exe is included)
 
 Step 2:Run HBBatchBeast.exe
 
+Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
+
 -------------------------------------------------------------
 
 
