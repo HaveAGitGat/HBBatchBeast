@@ -9,7 +9,7 @@ This is a standalone program.
 -------------------------------------------------------------
 INSTALLATION:
 
-Step 1:Download https://drive.google.com/open?id=1A8qdw-pcBCCBehZgjI4l3KK_Yh_kqbwL (HandbrakeCLI.exe is included)
+Step 1:Download (Link will be posted today) (HandbrakeCLI.exe is included)
 
 Step 2:Run HBBatchBeast.exe
 
