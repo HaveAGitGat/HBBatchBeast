@@ -1,35 +1,24 @@
 # HBBatchBeast
+
+Now written in nodejs (old HTA version can be downloaded here:https://drive.google.com/open?id=1u_o6wYVGWaUx2FNqTyLob3bylbELJzop)
+
 A simple GUI application for Handbrake on Windows with an emphasis on batch conversion (including recursive folder scans and folder watching). The destination folder structure is kept the same as the source folder structure. Media in subfolders is also converted.
 
-This is a standalone program that is based on HTAs (HTML Applications) while also making use of batch files and the Handbrake CLI. 
+This is a standalone program. 
 
 -------------------------------------------------------------
 INSTALLATION:
 
-Step 1:Download this repository
+Step 1:Download https://drive.google.com/open?id=1A8qdw-pcBCCBehZgjI4l3KK_Yh_kqbwL (HandbrakeCLI.exe is included)
 
-Step 2:Add the HandbrakeCLI.exe to the root folder (Place it alongside "HBBatchBeast.hta".)
-
-You can download HandbrakeCLI.exe from https://handbrake.fr/downloads2.php
-
-Step 3:Run HBBatchBeast.hta in the root folder
+Step 2:Run HBBatchBeast.exe
 
 -------------------------------------------------------------
 
-If you're converting a large folder (say 100 files or more), you may find it useful to run the "AddIETimeOutRegKey.bat" file. This will add a key to the registry which will prevent the "This page is unresponsive" messages from appearing while the program is scanning for large amounts of files.
 
-The registry fix mentioned above is based on the following:
-https://support.microsoft.com/en-us/help/175500/error-message-a-script-on-this-page-is-causing-internet-explorer-to-ru#FixItForMeAlways
-
-
-The program makes use of 6 HTA's altogther:
- -Config HTA
- -Status HTA
- -4 'Worker' HTAs
+The program scans the source folder for all files. It then compares the source folder files with the destination folder files to see if any of the source files exist in the destination folder already. If not, the program queues the files for conversion.
  
- The program scans the source folder for all files. It then compares the source folder files with the destination folder files to see if any of the source files exist in the destination folder already. If not, the program queues the files for conversion.
- 
-The 4 worker HTAs then work through the conversion queue. If periodic scanning is enabled then the program will run at the chosen interval.
+The 4 worker modules then work through the conversion queue. If periodic scanning is enabled then the program will run at the chosen interval.
 
 Screenshot - https://imgur.com/a/rV9zJEK
 
