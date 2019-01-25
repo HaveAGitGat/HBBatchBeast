@@ -16,7 +16,6 @@ process.env.NODE_ENV = "production";
 
 
 var fs = require('fs');
-
 var workerNumber = "2";
 
 var preset = fs.readFileSync("./Config/presetString.txt", 'utf8');
