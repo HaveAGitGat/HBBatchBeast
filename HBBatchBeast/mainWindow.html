@@ -318,6 +318,27 @@
 
         //document.getElementById("timer").value= "6";
 
+        if(process.platform=='win32'){
+
+    var stringProcessingSlash ="\\";
+            }
+    
+            if(process.platform=='linux'){
+                var stringProcessingSlash ="/";
+            }
+    
+
+        var fullPath=__dirname;
+
+console.log(fullPath)
+
+//fullPath = fullPath.slice(0,fullPath.lastIndexOf('\\'));
+//fullPath = fullPath.slice(0,fullPath.lastIndexOf('\\'));
+fullPath = fullPath.slice(0,fullPath.lastIndexOf(stringProcessingSlash));
+fullPath = fullPath.slice(0,fullPath.lastIndexOf(stringProcessingSlash));
+
+var fullPath2 = fullPath+ "\\HandBrakeCLI.exe"
+
 
         if(process.platform=='win32'){
 
@@ -1674,6 +1695,18 @@ document.getElementById("timer").value= f
             // lockFile.unlockSync("./HBBatchBeast/Logs/Scans.txt.lock",10000,100,10000,1000,100)
 
 
+            if (document.getElementById("deleteSourceFiles").checked == true) {
+                for (var i = 0; i < inputPathArray.length; i++) {
+                    if (fs.existsSync(inputPathArray[i])) {
+
+                        console.log("Here")
+                        fs.unlinkSync(inputPathArray[i])
+
+
+                    }
+
+                }
+            }
 
 
 
@@ -1703,18 +1736,7 @@ document.getElementById("timer").value= f
 
 
 
-            if (document.getElementById("deleteSourceFiles").checked == true) {
-                for (var i = 0; i < inputPathArray.length; i++) {
-                    if (fs.existsSync(inputPathArray[i])) {
 
-                        console.log("Here")
-                        fs.unlinkSync(inputPathArray[i])
-
-
-                    }
-
-                }
-            }
 
             updateInfo = 0;
 
@@ -2310,8 +2332,7 @@ opn(logPath);
 
 
 
-            <p id="deleteSourceFilesdiv" style="color:#87001b;">Delete source files after conversion?:<input type="checkbox"
-                    id="deleteSourceFiles" onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')"></p>
+          
 
 
             <p>Valid file types:</p><textarea type="text" class="folderPaths" id="includedFileTypes"></textarea>
@@ -2322,6 +2343,9 @@ opn(logPath);
                 id="customBatPath"></textarea>
 
         </div>
+
+          <p id="deleteSourceFilesdiv" style="color:#87001b;">Delete source files after conversion?:<input type="checkbox"
+                    id="deleteSourceFiles" onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')"></p>
 
         <input type='button' class="button1" value='Save config' onclick='saveConfig()' />
 
