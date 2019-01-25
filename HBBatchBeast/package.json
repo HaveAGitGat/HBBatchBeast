@@ -1,0 +1,35 @@
+{
+  "name": "electron-tutorial-app",
+  "productName": "Electron tutorial app",
+  "description": "Application for electron tutorials",
+  "version": "0.1.5",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "package-mac": "electron-packager . --overwrite --asar=true --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds --darwinDarkModeSupport=true",
+    "package-win": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Electron Tutorial App\"",
+    "package-linux": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds",
+    "create-installer-mac": "electron-installer-dmg ./release-builds/Electron\\ tutorial\\ app-darwin-x64/Electron\\ tutorial\\ app.app electron-tutorial-app --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns",
+    "create-installer-win": "node installers/windows/createinstaller.js",
+    "create-debian-installer": "electron-installer-debian --src release-builds/electron-tutorial-app-linux-x64/ --arch amd64 --config debian.json"
+  },
+  "author": "HaveAGitGat",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.6.1",
+    "glob": "^7.1.3",
+    "inquirer-select-directory": "^1.2.0",
+    "lockfile": "^1.0.4",
+    "node-localstorage": "^1.3.1",
+    "opn": "^5.4.0",
+    "proper-lockfile": "^3.2.0",
+    "retry": "^0.12.0",
+    "shelljs": "^0.8.3"
+  },
+  "devDependencies": {
+    "electron": "^3.0.5",
+    "electron-installer-dmg": "^2.0.0",
+    "electron-packager": "^12.2.0",
+    "electron-winstaller": "^2.7.0"
+  }
+}

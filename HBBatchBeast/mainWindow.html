@@ -7,7 +7,7 @@
 <script>
 
     //SET ENV
-       process.env.NODE_ENV = "production";
+ process.env.NODE_ENV = "production";
 
 
     //var lockFile = require('lockFile');
@@ -74,24 +74,6 @@
 
         }
 
-        //read CMD view on/off
-
-
-
-        if (fs.existsSync("./Config/viewCMDOnOff.txt")) {
-
-
-            var f = fs.readFileSync("./Config/viewCMDOnOff.txt", 'utf8');
-
-
-            if (f == "1") {
-                document.getElementById("viewCMDOnOff").checked = true;
-            } else {
-                document.getElementById("viewCMDOnOff").checked = false;
-
-            }
-
-        }
 
 
 
@@ -272,6 +254,35 @@
         //document.getElementById("timer").value= "6";
 
 
+        if(process.platform=='win32'){
+
+if(process.env.NODE_ENV == 'production'){
+
+    //production
+var handBrakeCLIPath = "\"" +fullPath2+"\"" ;
+
+}else{
+
+    //development
+var handBrakeCLIPath =   __dirname + "\\HandBrakeCLI.exe";
+
+}
+
+console.log(handBrakeCLIPath)
+
+if(fs.existsSync(handBrakeCLIPath)){
+
+document.getElementById("HBCLIStatus").innerHTML = "<p>HandbrakeCLI located<\p>";
+
+}else{
+
+document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
+
+
+}
+
+}
+
 
 
 
@@ -380,14 +391,7 @@
 
         }
 
-        //view CMD On/Off
-        if (document.getElementById("viewCMDOnOff").checked == true) {
 
-            fs.writeFileSync('./Config/viewCMDOnOff.txt', 1, 'utf8');
-        } else {
-            fs.writeFileSync('./Config/viewCMDOnOff.txt', 0, 'utf8');
-
-        }
 
         //save source destination
 
@@ -1240,6 +1244,12 @@ document.getElementById("timer").value= f
 
 
 
+
+
+
+
+
+
         // if(document.getElementById("deleteSourceFiles").checked == true){
 
         //     if(colourSwitch==0){
@@ -1551,40 +1561,9 @@ document.getElementById("timer").value= f
                     }
                 }
 
-            }
 
 
-
-        }
-
-
-        if (scanCompleted == 1 && scanCompleted2 == 1) {
-
-
-
-
-            sourceQueueArray = [];
-
-            //    fs.unlinkSync(queuePath)
-
-
-
-            if (document.getElementById("deleteSourceFiles").checked == true) {
-                for (var i = 0; i < inputPathArray.length; i++) {
-                    if (fs.existsSync(inputPathArray[i])) {
-
-                        console.log("Here")
-                        fs.unlinkSync(inputPathArray[i])
-
-
-                    }
-
-                }
-            }
-
-            updateInfo = 0;
-
-            var today = new Date();
+                var today = new Date();
             var dd = today.getDate();
             var mm = today.getMonth() + 1;
             var yyyy = today.getFullYear();
@@ -1628,6 +1607,53 @@ document.getElementById("timer").value= f
             // lockFile.lockSync("./Logs/Scans.txt.lock",10000,100,10000,1000,100)
             fs.appendFileSync("./Logs/Scans.txt", "Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + convertedFiles1 + "-------Preset:" + preset + ". \r\n", 'utf8');
             // lockFile.unlockSync("./Logs/Scans.txt.lock",10000,100,10000,1000,100)
+
+
+
+
+
+
+
+
+            sourceQueueArray = [];
+
+
+
+
+            }
+
+
+
+        }
+
+
+        if (scanCompleted == 1 && scanCompleted2 == 1) {
+
+
+
+
+           
+
+            //    fs.unlinkSync(queuePath)
+
+
+
+            if (document.getElementById("deleteSourceFiles").checked == true) {
+                for (var i = 0; i < inputPathArray.length; i++) {
+                    if (fs.existsSync(inputPathArray[i])) {
+
+                        console.log("Here")
+                        fs.unlinkSync(inputPathArray[i])
+
+
+                    }
+
+                }
+            }
+
+            updateInfo = 0;
+
+
 
             scanCompleted2 = 0;
 
@@ -1757,8 +1783,10 @@ document.getElementById("timer").value= f
             if (process.env.NODE_ENV == 'production') {
 
                 //production
-                var logPath = fullPath + "/Logs/" + logType + ".txt";
-
+                
+               // var logPath = fullPath + "/Logs/" + logType + ".txt";
+             //   var logPath = "./Logs/"+ logType + ".txt";
+             var logPath = __dirname + "/Logs/" + logType + ".txt";
             } else {
 
                 //development
@@ -1769,23 +1797,46 @@ document.getElementById("timer").value= f
         }
 
 
+        
+  if(process.platform=='win32'){
 
-        logPath = "\"" + logPath + "\"";
+    logPath = logPath 
+
+}
+
+if (process.platform == 'linux') {
+
+//  logPath = "\"" + logPath + "\"";
+
+ logPath = logPath 
 
 
-        require('child_process').execSync(logPath, function (err, stdout, stderr) {
-            if (err) {
-                // Ooops.
-                //console.log(stderr);
-                //console.log("Error with worker number:"+workerNumber);
-                return console.log(err);
-            }
+}
 
-            // Done.
-            //runEndSection();
-            //runScan();
-            console.log(stdout);
-        });
+logPath ="/home/roy/Logs/Scans.txt"
+
+var opn = require('opn');
+
+console.log(logPath);
+
+opn(logPath);
+
+
+
+
+        // require('child_process').execSync(logPath, function (err, stdout, stderr) {
+        //     if (err) {
+        //         // Ooops.
+        //         //console.log(stderr);
+        //         //console.log("Error with worker number:"+workerNumber);
+        //         return console.log(err);
+        //     }
+
+        //     // Done.
+        //     //runEndSection();
+        //     //runScan();
+        //     console.log(stdout);
+        // });
 
 
 
@@ -2038,7 +2089,7 @@ document.getElementById("timer").value= f
             <h1 style="font-family:verdana;">HBBatchBeast</h1>
         </center>
 
-        <input type="button" onclick="openURL('https://github.com/HaveAGitGat')" value="by HaveAGitGat">
+        <input type="button" onclick="openURL('https://github.com/HaveAGitGat')" value="by HaveAGitGat"> <input type="button" onclick="openURL('https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help')" value="Settings help">
 
 
 
@@ -2194,7 +2245,6 @@ document.getElementById("timer").value= f
             <p>Scan interval (minimum 5):<input type="text" class="infoBox" id="timer">seconds</p>
 
 
-            <p>Show Handbrake CMD windows when conversion is running?:<input type="checkbox" id="viewCMDOnOff"></p>
 
             <p id="deleteSourceFilesdiv" style="color:#87001b;">Delete source files after conversion?:<input type="checkbox"
                     id="deleteSourceFiles" onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')"></p>
@@ -2215,14 +2265,18 @@ document.getElementById("timer").value= f
         <input type='button' class="button2one" value='Scan only' onclick='convertFiles()' />
         <input type='button' class="button2" value='Scan and convert' onclick='convertFiles("scanandconvert")' />
 
+
+        <div id="HBCLIStatus"></div>
+
         <div id="conversionInfo"></div>
-        <p>Scanning for new files in:<input type="text" id="countdown" class="infoBox">seconds</p>
+      
 
 
         <p>---------------------------------------------------------------------------------------</p>
+        <p>Scanning for new files in:<input type="text" id="countdown" class="infoBox">seconds</p>
 
-        <input type="button" onclick="viewLogs('Scans')" value="View scan log" class="infoButton">
-        <input type="button" onclick="viewLogs('fileConversionLog')" value="View file conversion log" class="infoButton">
+        <input type="button" onclick="viewLogs('Scans')" value="View scan/conversion summary log" class="infoButton">
+        <input type="button" onclick="viewLogs('fileConversionLog')" value="View individual file conversion log" class="infoButton">
 
 
 

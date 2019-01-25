@@ -101,8 +101,6 @@ var currentLineNumber = 0;
 
 
 
-var viewCMDOnOff = fs.readFileSync("./Config/viewCMDOnOff.txt", 'utf8');
-
 
 var iStreamSource = fs.readFileSync(sourcePath, 'utf8')
 iStreamSource = iStreamSource.toString().split("\n");
