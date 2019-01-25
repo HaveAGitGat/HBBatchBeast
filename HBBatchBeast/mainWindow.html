@@ -18,39 +18,104 @@
 
         //create program folders
 
-
-        if (!fs.existsSync("./Config")) {
-            fs.mkdirSync("./Config");
+               if (!fs.existsSync("./HBBatchBeast")) {
+            fs.mkdirSync("./HBBatchBeast");
             //  alert('Directory created!')
 
         }
 
 
-        if (!fs.existsSync("./Config/Processes")) {
-            fs.mkdirSync("./Config/Processes");
+        if (!fs.existsSync("./HBBatchBeast/Config")) {
+            fs.mkdirSync("./HBBatchBeast/Config");
+            //  alert('Directory created!')
 
         }
 
-        if (!fs.existsSync("./Config/Processes/BatchFiles")) {
-            fs.mkdirSync("./Config/Processes/BatchFiles");
+
+        if (!fs.existsSync("./HBBatchBeast/Config/Processes")) {
+            fs.mkdirSync("./HBBatchBeast/Config/Processes");
 
         }
 
-        if (!fs.existsSync("./Config/Processes/WorkerStatus")) {
-            fs.mkdirSync("./Config/Processes/WorkerStatus");
+        if (!fs.existsSync("./HBBatchBeast/Config/Processes/BatchFiles")) {
+            fs.mkdirSync("./HBBatchBeast/Config/Processes/BatchFiles");
 
         }
 
-        if (!fs.existsSync("./Logs")) {
-            fs.mkdirSync("./Logs");
+
+
+                 if (process.platform == 'win32') {
+
+                           if(!fs.existsSync("./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1.bat")){
+
+                                fs.writeFileSync('./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1.bat', "", 'utf8');
+                            }
+
+                                                   if(!fs.existsSync("./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2.bat")){
+
+                                fs.writeFileSync('./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2.bat', "", 'utf8');
+                            }
+
+
+                       if(!fs.existsSync("./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3.bat")){
+
+                                fs.writeFileSync('./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3.bat', "", 'utf8');
+                            }
+
+
+                       if(!fs.existsSync("./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.bat")){
+
+                                fs.writeFileSync('./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.bat', "", 'utf8');
+                            }
+
+
+                            }
+
+                            if (process.platform == 'linux') {
+
+                           if(!fs.existsSync("./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1.sh")){
+
+                                fs.writeFileSync('./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1.sh', "", 'utf8');
+                            }
+
+                                                       if(!fs.existsSync("./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2.sh")){
+
+                                fs.writeFileSync('./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2.sh', "", 'utf8');
+                            }
+
+                                                       if(!fs.existsSync("./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3.sh")){
+
+                                fs.writeFileSync('./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3.sh', "", 'utf8');
+                            }
+
+                                                       if(!fs.existsSync("./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.sh")){
+
+                                fs.writeFileSync('./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.sh', "", 'utf8');
+                            }
+                            
+                            }
+
+
+  
+
+
+
+
+        if (!fs.existsSync("./HBBatchBeast/Config/Processes/WorkerStatus")) {
+            fs.mkdirSync("./HBBatchBeast/Config/Processes/WorkerStatus");
+
+        }
+
+        if (!fs.existsSync("./HBBatchBeast/Logs")) {
+            fs.mkdirSync("./HBBatchBeast/Logs");
 
         }
 
 
         //read scan interval
-        if (fs.existsSync("./Config/scanInterval.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/scanInterval.txt")) {
 
-            document.getElementById("timer").value = fs.readFileSync("./Config/scanInterval.txt", 'utf8');
+            document.getElementById("timer").value = fs.readFileSync("./HBBatchBeast/Config/scanInterval.txt", 'utf8');
 
 
 
@@ -62,9 +127,9 @@
 
         // read periodic scanning on/off
 
-        if (fs.existsSync("./Config/periodicScanningOnOff.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/periodicScanningOnOff.txt")) {
 
-            var f = fs.readFileSync("./Config/periodicScanningOnOff.txt", 'utf8');
+            var f = fs.readFileSync("./HBBatchBeast/Config/periodicScanningOnOff.txt", 'utf8');
             if (f == "1") {
                 document.getElementById("scanOnOff").checked = true;
             } else {
@@ -79,9 +144,9 @@
 
         // read recent destination path
 
-        if (fs.existsSync("./Config/recentDestination.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/recentDestination.txt")) {
 
-            document.getElementById("destinationPath").value = fs.readFileSync("./Config/recentDestination.txt", 'utf8');
+            document.getElementById("destinationPath").value = fs.readFileSync("./HBBatchBeast/Config/recentDestination.txt", 'utf8');
 
 
         }
@@ -89,16 +154,16 @@
 
         // read recent source path
 
-        if (fs.existsSync("./Config/recentSource.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/recentSource.txt")) {
 
-            document.getElementById("sourcePath").value = fs.readFileSync("./Config/recentSource.txt", 'utf8');
+            document.getElementById("sourcePath").value = fs.readFileSync("./HBBatchBeast/Config/recentSource.txt", 'utf8');
         }
 
         //read temp destination path
 
-        if (fs.existsSync("./Config/tempDestinationPath.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/tempDestinationPath.txt")) {
 
-            document.getElementById("tempDestinationPath").value = fs.readFileSync("./Config/tempDestinationPath.txt", 'utf8');
+            document.getElementById("tempDestinationPath").value = fs.readFileSync("./HBBatchBeast/Config/tempDestinationPath.txt", 'utf8');
 
 
         }
@@ -106,9 +171,9 @@
         //set temp destination path on/off
 
 
-        if (fs.existsSync("./Config/tempDestinationOnOff.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/tempDestinationOnOff.txt")) {
 
-            var f = fs.readFileSync("./Config/tempDestinationOnOff.txt", 'utf8');
+            var f = fs.readFileSync("./HBBatchBeast/Config/tempDestinationOnOff.txt", 'utf8');
 
 
             if (f == "1") {
@@ -125,25 +190,25 @@
         //read preset  and set select menu value
 
 
-        if (fs.existsSync("./Config/preset.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/preset.txt")) {
 
-            document.getElementById("preset").selectedIndex = fs.readFileSync("./Config/preset.txt", 'utf8');
+            document.getElementById("preset").selectedIndex = fs.readFileSync("./HBBatchBeast/Config/preset.txt", 'utf8');
         }
 
         // read custom preset
 
-        if (fs.existsSync("./Config/customPreset.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/customPreset.txt")) {
 
-            document.getElementById("customPresets").value = fs.readFileSync("./Config/customPreset.txt", 'utf8');
+            document.getElementById("customPresets").value = fs.readFileSync("./HBBatchBeast/Config/customPreset.txt", 'utf8');
 
         }
 
         //read if custom preset is on or off
 
 
-        if (fs.existsSync("./Config/customPresetOnOff.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/customPresetOnOff.txt")) {
 
-            var f = fs.readFileSync("./Config/customPresetOnOff.txt", 'utf8');
+            var f = fs.readFileSync("./HBBatchBeast/Config/customPresetOnOff.txt", 'utf8');
 
 
             if (f == 0) {
@@ -165,9 +230,9 @@
         //read container value
 
 
-        if (fs.existsSync("./Config/container.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/container.txt")) {
 
-            document.getElementById("container").selectedIndex = fs.readFileSync("./Config/container.txt", 'utf8');
+            document.getElementById("container").selectedIndex = fs.readFileSync("./HBBatchBeast/Config/container.txt", 'utf8');
 
 
         }
@@ -176,9 +241,9 @@
         // read whether to delete source files or not
 
 
-        if (fs.existsSync("./Config/deleteSourceFilesOnOff.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/deleteSourceFilesOnOff.txt")) {
 
-            var f = fs.readFileSync("./Config/deleteSourceFilesOnOff.txt", 'utf8');
+            var f = fs.readFileSync("./HBBatchBeast/Config/deleteSourceFilesOnOff.txt", 'utf8');
 
 
             if (f == "1") {
@@ -197,16 +262,16 @@
 
 
 
-        if (fs.existsSync("./Config/includedFileTypes.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/includedFileTypes.txt")) {
 
-            document.getElementById("includedFileTypes").value = fs.readFileSync("./Config/includedFileTypes.txt", 'utf8');
+            document.getElementById("includedFileTypes").value = fs.readFileSync("./HBBatchBeast/Config/includedFileTypes.txt", 'utf8');
 
 
         } else {
 
-            fs.writeFileSync('./Config/includedFileTypes.txt', "mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/includedFileTypes.txt', "mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,", 'utf8');
 
-            document.getElementById("includedFileTypes").value = fs.readFileSync("./Config/includedFileTypes.txt", 'utf8');
+            document.getElementById("includedFileTypes").value = fs.readFileSync("./HBBatchBeast/Config/includedFileTypes.txt", 'utf8');
 
 
         }
@@ -214,9 +279,9 @@
 
         //read number of instances 
 
-        if (fs.existsSync("./Config/instanceNumber.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/instanceNumber.txt")) {
 
-            document.getElementById("instanceNumber").value = fs.readFileSync("./Config/instanceNumber.txt", 'utf8');
+            document.getElementById("instanceNumber").value = fs.readFileSync("./HBBatchBeast/Config/instanceNumber.txt", 'utf8');
 
 
         } else {
@@ -228,9 +293,9 @@
         // read bat file path
 
 
-        if (fs.existsSync("./Config/customBatPath.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/customBatPath.txt")) {
 
-            document.getElementById("customBatPath").value = fs.readFileSync("./Config/customBatPath.txt", 'utf8');
+            document.getElementById("customBatPath").value = fs.readFileSync("./HBBatchBeast/Config/customBatPath.txt", 'utf8');
 
 
         }
@@ -367,7 +432,7 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
 
 
-        /* var dir = './Config';
+        /* var dir = './HBBatchBeast/Config';
         
         if (!fs.existsSync(dir)){
             fs.mkdirSync(dir);
@@ -377,7 +442,7 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
 
         // save scan interval
-        fs.writeFileSync('./Config/scanInterval.txt', document.getElementById("timer").value, 'utf8');
+        fs.writeFileSync('./HBBatchBeast/Config/scanInterval.txt', document.getElementById("timer").value, 'utf8');
 
 
 
@@ -385,9 +450,9 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
         if (document.getElementById("scanOnOff").checked == true) {
 
-            fs.writeFileSync('./Config/periodicScanningOnOff.txt', 1, 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/periodicScanningOnOff.txt', 1, 'utf8');
         } else {
-            fs.writeFileSync('./Config/periodicScanningOnOff.txt', 0, 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/periodicScanningOnOff.txt', 0, 'utf8');
 
         }
 
@@ -395,48 +460,48 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
         //save source destination
 
-        fs.writeFileSync('./Config/recentSource.txt', document.getElementById("sourcePath").value, 'utf8');
+        fs.writeFileSync('./HBBatchBeast/Config/recentSource.txt', document.getElementById("sourcePath").value, 'utf8');
 
         //save destination path
 
-        fs.writeFileSync('./Config/recentDestination.txt', document.getElementById("destinationPath").value, 'utf8');
+        fs.writeFileSync('./HBBatchBeast/Config/recentDestination.txt', document.getElementById("destinationPath").value, 'utf8');
 
         //save tempdestination path
 
-        fs.writeFileSync('./Config/tempDestinationPath.txt', document.getElementById("tempDestinationPath").value, 'utf8');
+        fs.writeFileSync('./HBBatchBeast/Config/tempDestinationPath.txt', document.getElementById("tempDestinationPath").value, 'utf8');
 
         //save enable/disble temporary destination
 
 
         if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
 
-            fs.writeFileSync('./Config/tempDestinationOnOff.txt', 1, 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/tempDestinationOnOff.txt', 1, 'utf8');
         } else {
-            fs.writeFileSync('./Config/tempDestinationOnOff.txt', 0, 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/tempDestinationOnOff.txt', 0, 'utf8');
 
         }
 
         //save preset     
-        fs.writeFileSync('./Config/preset.txt', document.getElementById("preset").value, 'utf8');
+        fs.writeFileSync('./HBBatchBeast/Config/preset.txt', document.getElementById("preset").value, 'utf8');
 
 
         //save custom preset enable/disable
 
         if (document.getElementById("selectStandardPreset").checked == true) {
 
-            fs.writeFileSync('./Config/customPresetOnOff.txt', 0, 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/customPresetOnOff.txt', 0, 'utf8');
         } else {
-            fs.writeFileSync('./Config/customPresetOnOff.txt', 1, 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/customPresetOnOff.txt', 1, 'utf8');
 
         }
 
 
         //save custom preset string
-        fs.writeFileSync('./Config/customPreset.txt', document.getElementById("customPresets").value, 'utf8');
+        fs.writeFileSync('./HBBatchBeast/Config/customPreset.txt', document.getElementById("customPresets").value, 'utf8');
 
 
         // save container selection
-        fs.writeFileSync('./Config/container.txt', document.getElementById("container").value, 'utf8');
+        fs.writeFileSync('./HBBatchBeast/Config/container.txt', document.getElementById("container").value, 'utf8');
 
 
 
@@ -444,7 +509,7 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
         if (document.getElementById("selectStandardPreset").checked == true) {
 
-            fs.writeFileSync('./Config/presetString.txt', "-Z \"" + document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text + "\"", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/presetString.txt', "-Z \"" + document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text + "\"", 'utf8');
 
         }
 
@@ -453,7 +518,7 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
         if (document.getElementById("selectCustomPreset").checked == true) {
 
-            fs.writeFileSync('./Config/presetString.txt', document.getElementById("customPresets").value, 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/presetString.txt', document.getElementById("customPresets").value, 'utf8');
 
         }
 
@@ -463,9 +528,9 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
         if (document.getElementById("deleteSourceFiles").checked == true) {
 
-            fs.writeFileSync('./Config/deleteSourceFilesOnOff.txt', 1, 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/deleteSourceFilesOnOff.txt', 1, 'utf8');
         } else {
-            fs.writeFileSync('./Config/deleteSourceFilesOnOff.txt', 0, 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/deleteSourceFilesOnOff.txt', 0, 'utf8');
 
         }
 
@@ -476,18 +541,18 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
         //define included file types
 
-        fs.writeFileSync('./Config/includedFileTypes.txt', document.getElementById("includedFileTypes").value, 'utf8');
+        fs.writeFileSync('./HBBatchBeast/Config/includedFileTypes.txt', document.getElementById("includedFileTypes").value, 'utf8');
 
 
         // save number of instances to use 
 
-        fs.writeFileSync('./Config/instanceNumber.txt', document.getElementById("instanceNumber").value, 'utf8');
+        fs.writeFileSync('./HBBatchBeast/Config/instanceNumber.txt', document.getElementById("instanceNumber").value, 'utf8');
 
 
         // save custom bat path
 
 
-        fs.writeFileSync("./Config/customBatPath.txt", document.getElementById("customBatPath").value, 'utf8');
+        fs.writeFileSync("./HBBatchBeast/Config/customBatPath.txt", document.getElementById("customBatPath").value, 'utf8');
 
 
 
@@ -581,7 +646,7 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
             if (fs.existsSync(document.getElementById("sourcePath").value + validationSlash) == false) {
 
-                alert("The source folder does not exist!");
+                alert("The source folder does not exist! Please make sure there are no spaces before/after the path");
                 break validationSection;
             }
 
@@ -590,7 +655,7 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
                 if (fs.existsSync(document.getElementById("destinationPath").value + validationSlash) == false) {
 
-                    alert("The temporary conversion folder does not exist!");
+                    alert("The temporary conversion folder does not exist! Please make sure there are no spaces before/after the path");
                     break validationSection;
                 }
 
@@ -600,7 +665,7 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
                 if (fs.existsSync(document.getElementById("destinationPath").value + validationSlash) == false) {
 
-                    alert("The destination folder does not exist!");
+                    alert("The destination folder does not exist! Please make sure there are no spaces before/after the path");
                     break validationSection;
                 }
 
@@ -612,7 +677,7 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
                 if (fs.existsSync(document.getElementById("tempDestinationPath").value + validationSlash) == false) {
 
-                    alert("The destination folder does not exist!");
+                    alert("The destination folder does not exist! Please make sure there are no spaces before/after the path");
                     break validationSection;
                 }
 
@@ -651,11 +716,11 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
             //Reset counters before processing
 
 
-            fs.writeFileSync('./Config/totalFilesFound.txt', 0, 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/totalFilesFound.txt', 0, 'utf8');
 
-            fs.writeFileSync('./Config/unconvertedFilesFound.txt', 0, 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/unconvertedFilesFound.txt', 0, 'utf8');
 
-            fs.writeFileSync('./Config/convertedFiles.txt', 0, 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/convertedFiles.txt', 0, 'utf8');
 
 
 
@@ -743,7 +808,7 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
                             //Write to file to state that file with valid format has been found
 
-                            fs.writeFileSync('./Config/totalFilesFound.txt', (totalFileFoundCounter + 1), 'utf8');
+                            fs.writeFileSync('./HBBatchBeast/Config/totalFilesFound.txt', (totalFileFoundCounter + 1), 'utf8');
 
                             totalFileFoundCounter++
 
@@ -807,7 +872,7 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
                                 } else {
 
 
-                                    fs.writeFileSync('./Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
+                                    fs.writeFileSync('./HBBatchBeast/Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
 
 
                                     fileNotExistsCounter++
@@ -825,7 +890,7 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
                                 } else {
 
-                                    fs.writeFileSync('./Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
+                                    fs.writeFileSync('./HBBatchBeast/Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
 
                                     fileNotExistsCounter++
 
@@ -915,16 +980,16 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
             //console.log(handBrakeCLIPath);
 
 
-            fs.writeFileSync('./Config/Processes/sourceQueue.txt', "", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/Processes/sourceQueue.txt', "", 'utf8');
 
-            fs.writeFileSync('./Config/Processes/destinationQueue.txt', "", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/Processes/destinationQueue.txt', "", 'utf8');
 
-            fs.writeFileSync('./Config/Processes/destinationFinalQueue.txt', "", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/Processes/destinationFinalQueue.txt', "", 'utf8');
 
-            fs.writeFileSync('./Config/Processes/queueNumberPath.txt', "0", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/Processes/queueNumberPath.txt', "0", 'utf8');
 
             var LocalStorage = require('node-localstorage').LocalStorage;
-            queueNumberPathStorage = new LocalStorage('./Config/Processes/queueNumberPath');
+            queueNumberPathStorage = new LocalStorage('./HBBatchBeast/Config/Processes/queueNumberPath');
             queueNumberPathStorage.setItem('myFirstKey', '0');
 
 
@@ -936,20 +1001,20 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
 
 
-            fs.writeFileSync("./Config/Processes/WorkerStatus/completedQueue.txt", "", 'utf8');
+            fs.writeFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt", "", 'utf8');
 
 
-            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker1QueueNumber.txt', "-", 'utf8');
-            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker2QueueNumber.txt', "-", 'utf8');
-            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker3QueueNumber.txt', "-", 'utf8');
-            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker4QueueNumber.txt', "-", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/Processes/WorkerStatus/Worker1QueueNumber.txt', "-", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/Processes/WorkerStatus/Worker2QueueNumber.txt', "-", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/Processes/WorkerStatus/Worker3QueueNumber.txt', "-", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/Processes/WorkerStatus/Worker4QueueNumber.txt', "-", 'utf8');
 
-            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker1FileName.txt', "-", 'utf8');
-            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker2FileName.txt', "-", 'utf8');
-            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker3FileName.txt', "-", 'utf8');
-            fs.writeFileSync('./Config/Processes/WorkerStatus/Worker4FileName.txt', "-", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/Processes/WorkerStatus/Worker1FileName.txt', "-", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/Processes/WorkerStatus/Worker2FileName.txt', "-", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/Processes/WorkerStatus/Worker3FileName.txt', "-", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/Processes/WorkerStatus/Worker4FileName.txt', "-", 'utf8');
 
-            fs.writeFileSync('./Config/Processes/WorkerStatus/AllComplete.txt', "0", 'utf8');
+            fs.writeFileSync('./HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt', "0", 'utf8');
 
 
 
@@ -968,15 +1033,15 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
                     } else {
 
 
-                        fs.appendFileSync('./Config/Processes/sourceQueue.txt', inputPathArray[i] + "\n", 'utf8');
+                        fs.appendFileSync('./HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + "\n", 'utf8');
                         sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
                         sourceQueueArrayCounter++
 
 
-                        fs.appendFileSync('./Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
+                        fs.appendFileSync('./HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
 
 
-                        fs.appendFileSync('./Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
+                        fs.appendFileSync('./HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
 
 
                         writeNumber++;
@@ -997,17 +1062,17 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
                     } else {
 
-                        fs.appendFileSync('./Config/Processes/sourceQueue.txt', inputPathArray[i] + "\n", 'utf8');
+                        fs.appendFileSync('./HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + "\n", 'utf8');
                         sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
                         sourceQueueArrayCounter++
 
 
 
-                        fs.appendFileSync('./Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
+                        fs.appendFileSync('./HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
 
 
 
-                        fs.appendFileSync('./Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
+                        fs.appendFileSync('./HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
 
 
 
@@ -1116,7 +1181,7 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
         //load conversion queue into table
 
 
-        var queuePath = "./Config/Processes/sourceQueue.txt";
+        var queuePath = "./HBBatchBeast/Config/Processes/sourceQueue.txt";
 
         var tableHTML = "";
         var tableQueueNumber = 1;
@@ -1127,7 +1192,7 @@ document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
 
 
 
-        /* fs.readFile("./Config/scanInterval.txt", function(err, f){
+        /* fs.readFile("./HBBatchBeast/Config/scanInterval.txt", function(err, f){
 document.getElementById("timer").value= f
 }); */
 
@@ -1276,66 +1341,66 @@ document.getElementById("timer").value= f
 
 
 
-            // lockFile.lockSync("./Config/totalFilesFound.txt.lock",10000,100,10000,1000,100)
-            document.getElementById("totalFilesFound").value = fs.readFileSync("./Config/totalFilesFound.txt", 'utf8');
-            // lockFile.unlockSync("./Config/totalFilesFound.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Config/totalFilesFound.txt.lock",10000,100,10000,1000,100)
+            document.getElementById("totalFilesFound").value = fs.readFileSync("./HBBatchBeast/Config/totalFilesFound.txt", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Config/totalFilesFound.txt.lock",10000,100,10000,1000,100)
 
 
 
-            document.getElementById("unconvertedFilesFound").value = fs.readFileSync("./Config/unconvertedFilesFound.txt", 'utf8');
+            document.getElementById("unconvertedFilesFound").value = fs.readFileSync("./HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
 
 
 
 
             //worker 1
-            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker1QueueNumber.txt.lock",10000,100,10000,1000,100)
-            var QueueNumber1 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker1QueueNumber.txt", 'utf8');
-            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker1QueueNumber.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker1QueueNumber.txt.lock",10000,100,10000,1000,100)
+            var QueueNumber1 = fs.readFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker1QueueNumber.txt", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker1QueueNumber.txt.lock",10000,100,10000,1000,100)
 
 
-            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker1FileName.txt.lock",10000,100,10000,1000,100)
-            var FileName1 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker1FileName.txt", 'utf8');
-            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker1FileName.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker1FileName.txt.lock",10000,100,10000,1000,100)
+            var FileName1 = fs.readFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker1FileName.txt", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker1FileName.txt.lock",10000,100,10000,1000,100)
 
 
             //worker 2
 
-            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker2QueueNumber.txt.lock",10000,100,10000,1000,100)
-            var QueueNumber2 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker2QueueNumber.txt", 'utf8');
-            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker2QueueNumber.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker2QueueNumber.txt.lock",10000,100,10000,1000,100)
+            var QueueNumber2 = fs.readFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker2QueueNumber.txt", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker2QueueNumber.txt.lock",10000,100,10000,1000,100)
 
 
-            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker2FileName.txt.lock",10000,100,10000,1000,100)
-            var FileName2 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker2FileName.txt", 'utf8');
-            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker2FileName.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker2FileName.txt.lock",10000,100,10000,1000,100)
+            var FileName2 = fs.readFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker2FileName.txt", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker2FileName.txt.lock",10000,100,10000,1000,100)
 
 
 
 
             //worker 3
 
-            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker3QueueNumber.txt.lock",10000,100,10000,1000,100)
-            var QueueNumber3 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker3QueueNumber.txt", 'utf8');
-            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker3QueueNumber.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker3QueueNumber.txt.lock",10000,100,10000,1000,100)
+            var QueueNumber3 = fs.readFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker3QueueNumber.txt", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker3QueueNumber.txt.lock",10000,100,10000,1000,100)
 
 
-            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker3FileName.txt.lock",10000,100,10000,1000,100)
-            var FileName3 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker3FileName.txt", 'utf8');
-            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker3FileName.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker3FileName.txt.lock",10000,100,10000,1000,100)
+            var FileName3 = fs.readFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker3FileName.txt", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker3FileName.txt.lock",10000,100,10000,1000,100)
 
 
 
 
             //worker 4
 
-            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker4QueueNumber.txt.lock",10000,100,10000,1000,100)
-            var QueueNumber4 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker4QueueNumber.txt", 'utf8');
-            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker4QueueNumber.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker4QueueNumber.txt.lock",10000,100,10000,1000,100)
+            var QueueNumber4 = fs.readFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker4QueueNumber.txt", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker4QueueNumber.txt.lock",10000,100,10000,1000,100)
 
 
-            // lockFile.lockSync("./Config/Processes/WorkerStatus/Worker4FileName.txt.lock",10000,100,10000,1000,100)
-            var FileName4 = fs.readFileSync("./Config/Processes/WorkerStatus/Worker4FileName.txt", 'utf8');
-            // lockFile.unlockSync("./Config/Processes/WorkerStatus/Worker4FileName.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker4FileName.txt.lock",10000,100,10000,1000,100)
+            var FileName4 = fs.readFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker4FileName.txt", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker4FileName.txt.lock",10000,100,10000,1000,100)
 
 
 
@@ -1395,7 +1460,7 @@ document.getElementById("timer").value= f
 
 
 
-                queueNumberPath = "./Config/Processes/queueNumberPath.txt";
+                queueNumberPath = "./HBBatchBeast/Config/Processes/queueNumberPath.txt";
 
                 if (fs.existsSync(queueNumberPath)) {
 
@@ -1447,7 +1512,7 @@ document.getElementById("timer").value= f
 
 
 
-                var completedQueuePath = "./Config/Processes/WorkerStatus/completedQueue.txt"
+                var completedQueuePath = "./HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
 
                 if (fs.existsSync(completedQueuePath)) {
 
@@ -1526,10 +1591,10 @@ document.getElementById("timer").value= f
 
             function AllComplete() {
 
-                // lockFile.lockSync("./Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
+                // lockFile.lockSync("./HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
 
-                fs.writeFileSync('./Config/Processes/WorkerStatus/AllComplete.txt', "1", 'utf8');
-                // lockFile.unlockSync("./Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
+                fs.writeFileSync('./HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt', "1", 'utf8');
+                // lockFile.unlockSync("./HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
 
                 document.getElementById("fullQueue").innerHTML = "";
 
@@ -1583,30 +1648,30 @@ document.getElementById("timer").value= f
             timenow = h + '-' + m + '-' + s;
 
 
-            // lockFile.lockSync("./Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
-            var convertedFiles1 = fs.readFileSync("./Config/unconvertedFilesFound.txt", 'utf8');
-            // lockFile.unlockSync("./Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
+            var convertedFiles1 = fs.readFileSync("./HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
 
-            // lockFile.lockSync("./Config/Processes/queueNumberPath.txt.lock",10000,100,10000,1000,100)
-            var convertedFiles = fs.readFileSync("./Config/Processes/queueNumberPath.txt", 'utf8');
-            // lockFile.unlockSync("./Config/Processes/queueNumberPath.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Config/Processes/queueNumberPath.txt.lock",10000,100,10000,1000,100)
+            var convertedFiles = fs.readFileSync("./HBBatchBeast/Config/Processes/queueNumberPath.txt", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Config/Processes/queueNumberPath.txt.lock",10000,100,10000,1000,100)
 
-            // lockFile.lockSync("./Config/presetString.txt.lock",10000,100,10000,1000,100)
-            var preset = fs.readFileSync("./Config/presetString.txt", 'utf8');
-            // lockFile.unlockSync("./Config/presetString.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Config/presetString.txt.lock",10000,100,10000,1000,100)
+            var preset = fs.readFileSync("./HBBatchBeast/Config/presetString.txt", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Config/presetString.txt.lock",10000,100,10000,1000,100)
 
-            // lockFile.lockSync("./Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
-            var unConvertedFiles = fs.readFileSync("./Config/unconvertedFilesFound.txt", 'utf8');
-            // lockFile.unlockSync("./Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
+            var unConvertedFiles = fs.readFileSync("./HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
 
 
 
             //  document.getElementById("files").innerHTML += "<p>Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + convertedFiles1 + "-------Preset:" + preset + ".<\p>";
 
 
-            // lockFile.lockSync("./Logs/Scans.txt.lock",10000,100,10000,1000,100)
-            fs.appendFileSync("./Logs/Scans.txt", "Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + convertedFiles1 + "-------Preset:" + preset + ". \r\n", 'utf8');
-            // lockFile.unlockSync("./Logs/Scans.txt.lock",10000,100,10000,1000,100)
+            // lockFile.lockSync("./HBBatchBeast/Logs/Scans.txt.lock",10000,100,10000,1000,100)
+            fs.appendFileSync("./HBBatchBeast/Logs/Scans.txt", "Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + convertedFiles1 + "-------Preset:" + preset + ". \r\n", 'utf8');
+            // lockFile.unlockSync("./HBBatchBeast/Logs/Scans.txt.lock",10000,100,10000,1000,100)
 
 
 
@@ -1662,15 +1727,15 @@ document.getElementById("timer").value= f
 
         var fs = require('fs');
 
-        if (fs.existsSync("./Config/Processes/WorkerStatus/AllComplete.txt")) {
+        if (fs.existsSync("./HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt")) {
 
 
 
             try {
 
-                // lockFile.lockSync("./Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
-                var AllComplete = fs.readFileSync("./Config/Processes/WorkerStatus/AllComplete.txt", 'utf8');
-                // lockFile.unlockSync("./Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
+                // lockFile.lockSync("./HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
+                var AllComplete = fs.readFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt", 'utf8');
+                // lockFile.unlockSync("./HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
 
             } catch (err) {
                 var AllComplete = "0";
@@ -1784,13 +1849,13 @@ document.getElementById("timer").value= f
 
                 //production
                 
-               // var logPath = fullPath + "/Logs/" + logType + ".txt";
-             //   var logPath = "./Logs/"+ logType + ".txt";
-             var logPath = __dirname + "/Logs/" + logType + ".txt";
+               // var logPath = fullPath + "/HBBatchBeast/Logs/" + logType + ".txt";
+             //   var logPath = "./HBBatchBeast/Logs/"+ logType + ".txt";
+             var logPath = __dirname + "/HBBatchBeast/Logs/" + logType + ".txt";
             } else {
 
                 //development
-                var logPath = __dirname + "/Logs/" + logType + ".txt";
+                var logPath = __dirname + "/HBBatchBeast/Logs/" + logType + ".txt";
 
 
             }
