@@ -195,7 +195,7 @@ var workerpath = __dirname + "/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp
 
                     //production
 //var workerpath = fullPath+ "/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".sh";
-var workerpath = __dirname + "/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".sh";
+var workerpath = "./Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".sh";
 
         }else{
 
