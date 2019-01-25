@@ -9,7 +9,7 @@ This is a standalone program.
 -------------------------------------------------------------
 INSTALLATION:
 
-Step 1:Download (Link will be posted today) (HandbrakeCLI.exe is included)
+Step 1:Download (Link will be posted once program finished - please use old HTA working link above for demo) (HandbrakeCLI.exe is included)
 
 Step 2:Run HBBatchBeast.exe
 
