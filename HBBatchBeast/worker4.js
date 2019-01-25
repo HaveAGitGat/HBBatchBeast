@@ -216,7 +216,7 @@ var workerpath = "./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTe
 
 
 
-
+try{
 require('child_process').execSync( workerpath , function (err, stdout, stderr) {
 if (err) {
 // Ooops.
@@ -231,6 +231,14 @@ return console.log(err);
 console.log(stdout);
 });
 
+
+}catch(err){}
+
+
+
+
+
+
 console.log(workerpath)
 
 
@@ -241,6 +249,8 @@ console.log(batOnOff)
       var path = batOnOff;
       path = "\""+path+"\""
 
+
+      try{
       require('child_process').execSync( path , function (err, stdout, stderr) {
         if (err) {
         // Ooops.
@@ -254,6 +264,7 @@ console.log(batOnOff)
         //runScan();
         console.log(stdout);
         });
+    }catch(err){}
 
     }
 
@@ -302,8 +313,9 @@ var today = new Date();
                 //     fso.DeleteFile(currentDestinationLine)
               //  sleep(((1000 * Math.random()) + 1000));
         
-
+              try{
                 fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
+            }catch(err){}
 
 
             }

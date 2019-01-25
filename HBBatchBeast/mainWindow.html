@@ -1853,12 +1853,12 @@ document.getElementById("timer").value= f
             if (process.env.NODE_ENV == 'production') {
 
                 //production
-                var logPath = fullPath + "\\Logs\\" + logType + ".txt";
+                var logPath = fullPath + "\\HBBatchBeast\\Logs\\" + logType + ".txt";
 
             } else {
 
                 //development
-                var logPath = __dirname + "\\Logs\\" + logType + ".txt";
+                var logPath = __dirname + "\\HBBatchBeast\\Logs\\" + logType + ".txt";
 
             }
 
@@ -2107,12 +2107,12 @@ opn(logPath);
                  }
 
                  table.historicTable th {
-                    background-color: #0088cc;
+                    background-color: #9b9b9b;
                     color: black;
                 }
                  
-                 table.historicTable tr:nth-child(even) {background-color: #f2f2f2;}
-                 table.historicTable tr:nth-child(odd) {background-color: #c4feff;}
+                 table.historicTable tr:nth-child(even) {background-color: #828282;}
+                 table.historicTable tr:nth-child(odd) {background-color: #545454;}
                  table.historicTable tr:hover {background-color: #66ccff;}       
                   
                 table.historicTable{
@@ -2390,7 +2390,7 @@ opn(logPath);
 
         <p>Conversions this session</p>
         <div id="sessionConversions">
-            <table id="sessionConversionsTable" class="outputTable">
+            <table id="sessionConversionsTable" class="historicTable">
                 <col width="70%">
                 <col width="10%">
                 <col width="10%">
