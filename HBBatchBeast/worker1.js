@@ -9,7 +9,7 @@ function sleep(milliseconds) {
 
 
 //SET ENV
-process.env.NODE_ENV = "production";
+//process.env.NODE_ENV = "production";
 
 
 
@@ -215,6 +215,28 @@ var workerpath = "./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTe
   }
 
 
+  var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        today = dd + '/' + mm + '/' + yyyy;
+        today2 = dd + '-' + mm + '-' + yyyy;
+
+        var d = new Date(),
+            h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
+            m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+        s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
+        timenow = h + '-' + m + '-' + s;
+
+
+
+  var errorSwitch=0;
 
 try{
 require('child_process').execSync( workerpath , function (err, stdout, stderr) {
@@ -232,7 +254,38 @@ console.log(stdout);
 });
 
 
-}catch(err){}
+}catch(err){
+
+    fs.appendFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",currentSourceLine+" ConversionError\n", 'utf8');
+
+
+    if (tempFolderSected == "1") {
+        fs.appendFileSync("./HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
+      
+
+    }else{
+
+        fs.appendFileSync("./HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');
+        
+
+
+
+    }
+
+    errorSwitch=1;
+
+
+}
+
+
+//fs.appendFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",globalQueueNumber+"\n", 'utf8');
+
+
+if(errorSwitch==0){
+
+    fs.appendFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",currentSourceLine+" Success\n", 'utf8');
+}
+
 
 
 
@@ -273,29 +326,13 @@ console.log(batOnOff)
 
 
 
-fs.appendFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",globalQueueNumber+"\n", 'utf8');
+
+
+
 
 
 
 ///
-var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth() + 1;
-        var yyyy = today.getFullYear();
-        if (dd < 10) {
-            dd = '0' + dd
-        }
-        if (mm < 10) {
-            mm = '0' + mm
-        }
-        today = dd + '/' + mm + '/' + yyyy;
-        today2 = dd + '-' + mm + '-' + yyyy;
-
-        var d = new Date(),
-            h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
-            m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
-        s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
-        timenow = h + '-' + m + '-' + s;
 
 
 
@@ -320,13 +357,18 @@ var today = new Date();
 
             }
 
-            fs.appendFileSync("./HBBatchBeast/Logs/fileConversionLog.txt", today2 + "-" + timenow + "--------Converted----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
-      
+            if(errorSwitch==0){
 
+            fs.appendFileSync("./HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Converted----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
+      
+            }
            
 
         }else{
-            fs.appendFileSync("./HBBatchBeast/Logs/fileConversionLog.txt", today2 + "-" + timenow + "--------Converted----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');
+
+            if(errorSwitch==0){
+            fs.appendFileSync("./HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Converted----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');
+            }
         }
 
 

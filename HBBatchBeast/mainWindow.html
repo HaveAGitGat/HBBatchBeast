@@ -7,7 +7,7 @@
 <script>
 
     //SET ENV
- process.env.NODE_ENV = "production";
+// process.env.NODE_ENV = "production";
 
 
     //var lockFile = require('lockFile');
@@ -1547,24 +1547,59 @@ document.getElementById("timer").value= f
                     readArray = fs.readFileSync(completedQueuePath, 'utf8');
                     // lockFile.unlockSync(completedQueuePath+".lock",10000,100,10000,1000,100)
 
-
-                    var currentLine = 0;
+                     
                     readArray = readArray.toString().split("\n");
-                    if (readArray.length >= 1) {
 
-                        for (var i = 0; i < readArray.length - 1; i++) {
+                      if (readArray.length >= 1) {
 
-                            var currentLine = readArray[i];
+for (var i = 0; i < sourceQueueArray.length; i++) {
 
-                            console.log(currentLine)
 
-                            queueTable.rows[currentLine].cells[3].innerHTML = "Completed"
-                            queueTable.rows[currentLine].style.backgroundColor = "#59ff74";
+
+              for (var j = 0; j < readArray.length ; j++) {
+
+                     
+
+                       
+
+                         if(readArray[j].includes(sourceQueueArray[i])){
+
+                             if(readArray[j].includes("Success")){
+
+                            queueTable.rows[i+1].cells[3].innerHTML = "Completed"
+                            queueTable.rows[i+1].style.backgroundColor = "#59ff74";
+
+
+
+                         }else{
+
+                             queueTable.rows[i+1].cells[3].innerHTML = "Error"
+                            queueTable.rows[i+1].style.backgroundColor = "#ff2d2d";
+
+                                
+
+                         }
+
+
+                               console.log(i)
 
 
                         }
-                    }
+
+
+
+
+}
+
+}
+
+                
+                  
+
+              
+                    
                 }
+            } //end of function
             }
 
 
@@ -1619,19 +1654,52 @@ document.getElementById("timer").value= f
 
                 document.getElementById("fullQueue").innerHTML = "";
 
-                if (sourceQueueArray.length >= 1) {
-
-                    if (sourceQueueArray.length >= 1) {
+                
 
 
 
-                        for (var i = 0; i < sourceQueueArray.length; i++) {
 
-                            var newRow = document.getElementById('sessionConversionsTable').insertRow();
+        //sessionConversions
 
-                            var currentSourceLine = sourceQueueArray[i];
+
+
+                var completedQueuePath = "./HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
+
+                if (fs.existsSync(completedQueuePath)) {
+
+
+                    /* var array = fs.readFileSync(queuePath).toString().split("\n");
+                     console.log(array)
+                    */
+                    var readArray = "";
+
+                    // lockFile.lockSync(completedQueuePath+".lock",10000,100,10000,1000,100)
+                    readArray = fs.readFileSync(completedQueuePath, 'utf8');
+                    // lockFile.unlockSync(completedQueuePath+".lock",10000,100,10000,1000,100)
+
+                     
+                    readArray = readArray.toString().split("\n");
+
+                      if (readArray.length >= 1) {
+
+for (var i = 0; i < sourceQueueArray.length; i++) {
+
+
+
+              for (var j = 0; j < readArray.length ; j++) {
+
+                     
+
+                       
+
+                         if(readArray[j].includes(sourceQueueArray[i])){
+
+                             if(readArray[j].includes("Success")){
+
+        var newRow = document.getElementById('sessionConversionsTable').insertRow();
+                
                             newRow.innerHTML = "<tr>"
-                                + "<td>" + currentSourceLine + "</td>"
+                                + "<td>" + sourceQueueArray[i] + "</td>"
                                 + "<td>" + "</td>"
                                 + "<td > - </td>"
                                 + "<td > Completed </td>"
@@ -1640,12 +1708,41 @@ document.getElementById("timer").value= f
 
 
 
+                         }else{
+
+                                    var newRow = document.getElementById('sessionConversionsTable').insertRow();
+                
+                            newRow.innerHTML = "<tr>"
+                                + "<td>" + sourceQueueArray[i] + "</td>"
+                                + "<td>" + "</td>"
+                                + "<td > - </td>"
+                                + "<td > Error </td>"
+
+                                + "</tr>"
+
+
+                         }
+
+
+                               console.log(i)
+
 
                         }
 
 
-                    }
+
+
+}
+
+}
+
+                
+                  
+
+              
+                    
                 }
+            } //end of function
 
 
 
