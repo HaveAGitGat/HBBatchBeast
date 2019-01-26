@@ -35,10 +35,10 @@ var home = require("os").homedir();
 
         //create program folders
 console.log(__dirname)
+if (process.platform == 'win32'||process.platform == 'linux') {
 
-
-        if (!fs.existsSync(home +"./HBBatchBeast")) {
-            fs.mkdirSync(home +"./HBBatchBeast");
+        if (!fs.existsSync("./HBBatchBeast")) {
+            fs.mkdirSync("./HBBatchBeast");
             //  alert('Directory created!')
 
         }
@@ -60,6 +60,15 @@ console.log(__dirname)
             fs.mkdirSync("./HBBatchBeast/Config/Processes/BatchFiles");
 
         }
+}
+
+if (process.platform == 'darwin') {
+if (!fs.existsSync(home +"/HBBatchBeast")) {
+            fs.mkdirSync(home +"/HBBatchBeast");
+            //  alert('Directory created!')
+
+        }
+}
 
 
 
