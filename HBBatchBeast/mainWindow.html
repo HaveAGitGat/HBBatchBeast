@@ -16,6 +16,21 @@
 
         var fs = require('fs');
 
+        //show custom bat path div if on Windows
+
+        if (process.platform == 'win32') {
+
+            document.getElementById("customBatPathDiv").style.display = 'block';
+       
+           
+
+        }
+
+
+       
+
+
+
         //create program folders
 
         if (!fs.existsSync("./HBBatchBeast")) {
@@ -2292,15 +2307,7 @@ document.getElementById("timer").value= f
 #trigger:checked + .box {
   display: block;
 }
-1
-2
-3
-4
-5
-6
-7
-8
-9
+
 .box {
   display: none;
   background: #ccc;
@@ -2309,6 +2316,11 @@ document.getElementById("timer").value= f
 }
 #trigger:checked + .box {
   display: block;
+}
+
+.alert {
+  background-color: #ff9800;
+  padding: 0px;
 }
 
 
@@ -2336,7 +2348,7 @@ document.getElementById("timer").value= f
         </center>
 
         <input type="button" onclick="openURL('https://github.com/HaveAGitGat')" value="by HaveAGitGat"> <input type="button"
-            onclick="openURL('https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help')" value="Settings help">
+            onclick="openURL('https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help')" value="Help">
 
 
 
@@ -2500,13 +2512,19 @@ document.getElementById("timer").value= f
 
             <p>Number of simulataneous Handbrake instances to use?(1-4):<input type="text" class="infoBox" id="instanceNumber"></p>
 
-            <p>Custom bat path to run after each conversion (leave blank if not using):</p><textarea type="text" class="folderPaths"
-                id="customBatPath"></textarea>
+            <div id="customBatPathDiv" style="display: none;"><p>Custom bat path to run after each conversion (leave blank if not using):</p><textarea type="text" class="folderPaths"
+                id="customBatPath"></textarea> </div>
 
         </div>
 
+
+<div class="alert">
+ 
+
         <p id="deleteSourceFilesdiv" style="color:#87001b;">Delete source files after conversion?:<input type="checkbox"
                 id="deleteSourceFiles" onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')"></p>
+
+            </div>
 
         <input type='button' class="button1" value='Save config' onclick='saveConfig()' />
 
