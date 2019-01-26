@@ -2082,9 +2082,12 @@ document.getElementById("timer").value= f
 
     function openURL(link) {
 
-        var opn = require('opn');
+        var opener = require("opener");
+        opener(link);
 
-        opn(link);
+        // var opn = require('opn');
+
+        // opn(link);
 
     }
 
