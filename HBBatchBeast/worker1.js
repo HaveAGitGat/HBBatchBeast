@@ -225,7 +225,7 @@ var workerpath = homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCL
 
   //  workerpath=  workerpath.replace(/ /g, '\\');
 
-  if(process.platform=='win32'){
+  if(process.platform=='win32'  || process.platform == 'darwin'){
 
   workerpath= "\""+ workerpath+"\"";
 
