@@ -60,9 +60,9 @@ The program scans the source folder for all files. It then compares the source f
  
 The 4 worker modules then work through the conversion queue. If periodic scanning is enabled then the program will run at the chosen interval.
 
-Screenshot -https://imgur.com/a/Xzu1T5O
+Screenshot -https://imgur.com/a/hKxlp82
 
-Demo video - http://sendvid.com/v0vkqv2f
+Demo video - https://sendvid.com/g2b94i8j
 
 
 After it a bit more testing it seems that weird things can happen if you monitor a folder which is being downloaded to. It seems sometimes conversions start before a file has fully downloaded. To solve this, I recommend using a temporary download folder before moving completed files into your HBBB source folder.
