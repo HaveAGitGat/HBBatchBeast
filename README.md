@@ -24,8 +24,11 @@ INSTALLATION - Linux:
 Step 1: Make sure you have Handbrake installed:
 
 sudo add-apt-repository ppa:stebbins/handbrake-releases
+
 sudo apt-get update
+
 sudo apt-get install handbrake-cli handbrake-gtk
+
 
 
 Step 2:Download hbbatchbeast-Linux-v2.0.deb from the release page:
