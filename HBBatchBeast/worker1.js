@@ -175,11 +175,24 @@ if(process.platform=='win32'){
 
     }
     
-    if(process.platform == 'linux' || process.platform == 'darwin'){
+    if(process.platform == 'linux' ){
 
         fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".sh", "HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset, 'utf8');        
 
     }
+
+
+      if( process.platform == 'darwin'){
+
+
+
+fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".sh",'PATH=$PATH:$HOME/bin' , 'utf8');        
+
+ fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".sh", "HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset, 'utf8');        
+
+
+
+      }
     
 
 
@@ -256,6 +269,7 @@ var workerpath = homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCL
   var errorSwitch=0;
 
  fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/temp.txt",workerpath+" \n", 'utf8');  
+
 
 try{
 require('child_process').execSync( workerpath , function (err, stdout, stderr) {
