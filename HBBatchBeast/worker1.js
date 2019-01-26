@@ -255,6 +255,8 @@ var workerpath = homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCL
 
   var errorSwitch=0;
 
+ fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/temp.txt",workerpath+" \n", 'utf8');  
+
 try{
 require('child_process').execSync( workerpath , function (err, stdout, stderr) {
 if (err) {
