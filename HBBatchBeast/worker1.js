@@ -9,7 +9,7 @@ function sleep(milliseconds) {
 
 
 //SET ENV
-process.env.NODE_ENV = "production";
+//process.env.NODE_ENV = "production";
 
 
 
@@ -38,7 +38,7 @@ if(process.platform=='win32'){
     var stringProcessingSlash ="\\";
             }
     
-            if(process.platform=='linux'){
+            if(process.platform == 'linux' || process.platform == 'darwin'){
                 var stringProcessingSlash ="/";
             }
     
@@ -79,7 +79,7 @@ var handBrakeCLIPath = "\"" +  __dirname + "/HandBrakeCLI.exe\"";
 
 }
 
-if(process.platform=='linux'){
+if(process.platform == 'linux' || process.platform == 'darwin'){
     //development && //production
 var handBrakeCLIPath = "HandBrakeCLI -i \""
 
@@ -158,7 +158,7 @@ if(process.platform=='win32'){
 
     }
     
-    if(process.platform=='linux'){
+    if(process.platform == 'linux' || process.platform == 'darwin'){
 
         fs.writeFileSync("./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".sh", "HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset, 'utf8');        
 
@@ -188,7 +188,7 @@ var workerpath = __dirname + "/HBBatchBeast/Config/Processes/BatchFiles/Handbrak
 
     }
     
-    if(process.platform=='linux'){
+    if(process.platform == 'linux' || process.platform == 'darwin'){
 
         if(process.env.NODE_ENV == 'production'){
 

@@ -7,7 +7,7 @@
 <script>
 
     //SET ENV
-    process.env.NODE_ENV = "production";
+   // process.env.NODE_ENV = "production";
 
 
     //var lockFile = require('lockFile');
@@ -86,7 +86,7 @@
 
         }
 
-        if (process.platform == 'linux') {
+        if (process.platform == 'linux' || process.platform == 'darwin') {
 
             if (!fs.existsSync("./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1.sh")) {
 
@@ -338,7 +338,7 @@
             var stringProcessingSlash = "\\";
         }
 
-        if (process.platform == 'linux') {
+        if (process.platform == 'linux' || process.platform == 'darwin') {
             var stringProcessingSlash = "/";
         }
 
@@ -668,7 +668,7 @@
             var validationSlash = "\\";
         }
 
-        if (process.platform == 'linux') {
+        if (process.platform == 'linux' || process.platform == 'darwin') {
 
             var validationSlash = "";
         }
@@ -919,7 +919,7 @@
                                     var stringProcessingSlash = "\\";
                                 }
 
-                                if (process.platform == 'linux') {
+                                if (process.platform == 'linux' || process.platform == 'darwin') {
                                     var stringProcessingSlash = "/";
                                 }
 
@@ -2050,7 +2050,7 @@ document.getElementById("timer").value= f
             var stringProcessingSlash = "\\";
         }
 
-        if (process.platform == 'linux') {
+        if (process.platform == 'linux' || process.platform == 'darwin') {
             var stringProcessingSlash = "/";
         }
 
@@ -2084,7 +2084,7 @@ document.getElementById("timer").value= f
 
         }
 
-        if (process.platform == 'linux') {
+        if (process.platform == 'linux' || process.platform == 'darwin') {
 
             if (process.env.NODE_ENV == 'production') {
 
@@ -2110,7 +2110,7 @@ document.getElementById("timer").value= f
 
         }
 
-        if (process.platform == 'linux') {
+        if (process.platform == 'linux' || process.platform == 'darwin') {
 
             //  logPath = "\"" + logPath + "\"";
 
