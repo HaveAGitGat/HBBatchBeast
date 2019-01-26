@@ -63,6 +63,10 @@ Number of unconverted media files found:
 Files which don't exist in the destination folder structure when compared to the source folder structure.
 
 
+If an item in the queue comes out with "Error", this means that the HandbrakeCLI had trouble converting the 
+file, most likely due to it being corrupt/partially corrupt. Else it may be a file type which Handbrake does
+not support. Try converting the file normally in Handbrake to see what error it throws.
+
 
 
 
