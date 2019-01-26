@@ -175,12 +175,20 @@ if(process.platform=='win32'){
 
     }
     
-    if(process.platform == 'linux' || process.platform == 'darwin'){
+    if(process.platform == 'linux' ){
 
         fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".sh", "HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset, 'utf8');        
 
     }
     
+
+     if( process.platform == 'darwin'){
+
+
+ fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".command", "HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset, 'utf8');        
+
+
+     }
 
 
 
@@ -205,7 +213,7 @@ var workerpath = __dirname + "/HBBatchBeast/Config/Processes/BatchFiles/Handbrak
 
     }
     
-    if(process.platform == 'linux' || process.platform == 'darwin'){
+    if(process.platform == 'linux' ){
 
         if(process.env.NODE_ENV == 'production'){
 
@@ -221,6 +229,30 @@ var workerpath = homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCL
 
         }
     }
+
+
+   if( process.platform == 'darwin'){
+
+               if(process.env.NODE_ENV == 'production'){
+
+                    //production
+//var workerpath = fullPath+ "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".sh";
+var workerpath = homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".command";
+
+        }else{
+
+            //development
+        var workerpath = __dirname + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".command";
+
+
+        }
+
+
+
+
+   } 
+   
+   
 
 
   //  workerpath=  workerpath.replace(/ /g, '\\');
