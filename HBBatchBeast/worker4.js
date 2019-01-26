@@ -12,21 +12,38 @@ function sleep(milliseconds) {
 process.env.NODE_ENV = "production";
 
 
+var home = require("os").homedir();
+
+if (process.platform == 'win32'||process.platform == 'linux') {
+
+var homePath = "."
+
+    
+}
+
+if (process.platform == 'darwin'){
+
+    var homePath = home
+
+}
+
+
+
 
 
 
 var fs = require('fs');
 var workerNumber = "4";
 
-var preset = fs.readFileSync("./HBBatchBeast/Config/presetString.txt", 'utf8');
+var preset = fs.readFileSync(homePath+"/HBBatchBeast/Config/presetString.txt", 'utf8');
 
-var customPresets = fs.readFileSync("./HBBatchBeast/Config/customPreset.txt", 'utf8');
+var customPresets = fs.readFileSync(homePath+"/HBBatchBeast/Config/customPreset.txt", 'utf8');
 
 
-queueNumberPath = "./HBBatchBeast/Config/Processes/queueNumberPath.txt";
-sourcePath = "./HBBatchBeast/Config/Processes/sourceQueue.txt";
-destinationPath = "./HBBatchBeast/Config/Processes/destinationQueue.txt"
-destinationPathFinal = "./HBBatchBeast/Config/Processes/destinationFinalQueue.txt"
+queueNumberPath = homePath+"/HBBatchBeast/Config/Processes/queueNumberPath.txt";
+sourcePath = homePath+"/HBBatchBeast/Config/Processes/sourceQueue.txt";
+destinationPath = homePath+"/HBBatchBeast/Config/Processes/destinationQueue.txt"
+destinationPathFinal = homePath+"/HBBatchBeast/Config/Processes/destinationFinalQueue.txt"
 
 
 //var handBrakeCLIPath = __dirname + "\\HandBrakeCLI.exe";
@@ -38,7 +55,7 @@ if(process.platform=='win32'){
     var stringProcessingSlash ="\\";
             }
     
-            if(process.platform=='linux'){
+            if(process.platform == 'linux' || process.platform == 'darwin'){
                 var stringProcessingSlash ="/";
             }
     
@@ -79,7 +96,7 @@ var handBrakeCLIPath = "\"" +  __dirname + "/HandBrakeCLI.exe\"";
 
 }
 
-if(process.platform=='linux'){
+if(process.platform == 'linux' || process.platform == 'darwin'){
     //development && //production
 var handBrakeCLIPath = "HandBrakeCLI -i \""
 
@@ -88,9 +105,9 @@ var handBrakeCLIPath = "HandBrakeCLI -i \""
 
 
 //check to see if bat option enabled
-if(fs.existsSync("./HBBatchBeast/Config/customBatPath.txt")){
+if(fs.existsSync(homePath+"/HBBatchBeast/Config/customBatPath.txt")){
 
-    var batOnOff  = fs.readFileSync("./HBBatchBeast/Config/customBatPath.txt", 'utf8');
+    var batOnOff  = fs.readFileSync(homePath+"/HBBatchBeast/Config/customBatPath.txt", 'utf8');
 
 }
 
@@ -106,7 +123,7 @@ iStreamSource = iStreamSource.toString().split("\n");
 var iStreamDestination = fs.readFileSync(destinationPath, 'utf8')
 iStreamDestination = iStreamDestination.toString().split("\n");
 
-var tempFolderSected = fs.readFileSync("./HBBatchBeast/Config/tempDestinationOnOff.txt", 'utf8');
+var tempFolderSected = fs.readFileSync(homePath+"/HBBatchBeast/Config/tempDestinationOnOff.txt", 'utf8');
 
 
 
@@ -144,25 +161,38 @@ globalQueueNumber++;
 
 fs.writeFileSync(queueNumberPath, globalQueueNumber, 'utf8');
 
-fs.writeFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"FileName.txt", currentDestinationLine, 'utf8');
+fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"FileName.txt", currentDestinationLine, 'utf8');
 
 
-fs.writeFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"QueueNumber.txt", globalQueueNumber, 'utf8');
+fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"QueueNumber.txt", globalQueueNumber, 'utf8');
 
 
 
 
 if(process.platform=='win32'){
 
-    fs.writeFileSync("./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".bat",  handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset, 'utf8');
+    fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".bat",  handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset, 'utf8');
 
     }
     
-    if(process.platform=='linux'){
+    if(process.platform == 'linux' ){
 
-        fs.writeFileSync("./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".sh", "HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset, 'utf8');        
+        fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".sh", "HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset, 'utf8');        
 
     }
+
+
+      if( process.platform == 'darwin'){
+
+
+
+      
+
+ fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".sh", "/usr/local/Cellar/handbrake/1.2.0/bin/HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset, 'utf8');        
+
+
+
+      }
     
 
 
@@ -188,13 +218,13 @@ var workerpath = __dirname + "/HBBatchBeast/Config/Processes/BatchFiles/Handbrak
 
     }
     
-    if(process.platform=='linux'){
+    if(process.platform == 'linux' || process.platform == 'darwin'){
 
         if(process.env.NODE_ENV == 'production'){
 
                     //production
 //var workerpath = fullPath+ "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".sh";
-var workerpath = "./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".sh";
+var workerpath = homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".sh";
 
         }else{
 
@@ -208,7 +238,7 @@ var workerpath = "./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTe
 
   //  workerpath=  workerpath.replace(/ /g, '\\');
 
-  if(process.platform=='win32'){
+  if(process.platform=='win32'  || process.platform == 'darwin'){
 
   workerpath= "\""+ workerpath+"\"";
 
@@ -238,6 +268,9 @@ var workerpath = "./HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTe
 
   var errorSwitch=0;
 
+ fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/temp.txt",workerpath+" \n", 'utf8');  
+
+
 try{
 require('child_process').execSync( workerpath , function (err, stdout, stderr) {
 if (err) {
@@ -256,16 +289,18 @@ console.log(stdout);
 
 }catch(err){
 
-    fs.appendFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",currentSourceLine+" ConversionError\n", 'utf8');
+    fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",currentSourceLine+" ConversionError\n", 'utf8');
+
+     fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/temp.txt",err+" \n", 'utf8');
 
 
     if (tempFolderSected == "1") {
-        fs.appendFileSync("./HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
+        fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
       
 
     }else{
 
-        fs.appendFileSync("./HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');
+        fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');
         
 
 
@@ -278,12 +313,12 @@ console.log(stdout);
 }
 
 
-//fs.appendFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",globalQueueNumber+"\n", 'utf8');
+//fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",globalQueueNumber+"\n", 'utf8');
 
 
 if(errorSwitch==0){
 
-    fs.appendFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",currentSourceLine+" Success\n", 'utf8');
+    fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",currentSourceLine+" Success\n", 'utf8');
 }
 
 
@@ -359,7 +394,7 @@ console.log(batOnOff)
 
             if(errorSwitch==0){
 
-            fs.appendFileSync("./HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Converted----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
+            fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Converted----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
       
             }
            
@@ -367,7 +402,7 @@ console.log(batOnOff)
         }else{
 
             if(errorSwitch==0){
-            fs.appendFileSync("./HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Converted----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');
+            fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Converted----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');
             }
         }
 
@@ -386,6 +421,6 @@ currentLineNumber++;
 }//end for istreamsource length
 
 
-fs.writeFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker" + workerNumber + "FileName.txt", "Complete!", 'utf8');
-fs.writeFileSync("./HBBatchBeast/Config/Processes/WorkerStatus/Worker" + workerNumber + "QueueNumber.txt", "Complete!", 'utf8');
+fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + workerNumber + "FileName.txt", "Complete!", 'utf8');
+fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + workerNumber + "QueueNumber.txt", "Complete!", 'utf8');
 
