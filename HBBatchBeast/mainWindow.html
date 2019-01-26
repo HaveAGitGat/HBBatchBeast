@@ -21,13 +21,13 @@
         if (process.platform == 'win32') {
 
             document.getElementById("customBatPathDiv").style.display = 'block';
-       
-           
+
+
 
         }
 
 
-       
+
 
 
 
@@ -679,6 +679,60 @@
         validationSection:
         {
 
+            //make sure there are no trailing slashes on file paths
+
+
+
+            if (document.getElementById("sourcePath").value.charAt(document.getElementById("sourcePath").value.length - 1) == "\\" || document.getElementById("sourcePath").value.charAt(document.getElementById("sourcePath").value.length - 1) == "/") {
+
+                alert("Please remove trailing slashes from the source folder path!");
+                break validationSection;
+            }
+
+
+
+
+            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+                if (document.getElementById("destinationPath").value.charAt(document.getElementById("destinationPath").value.length - 1) == "\\" || document.getElementById("destinationPath").value.charAt(document.getElementById("destinationPath").value.length - 1) == "/") {
+
+
+                    alert("Please remove trailing slashes from the temporary folder path!");
+                    break validationSection;
+
+
+                }
+            } else {
+
+
+
+
+                if (document.getElementById("destinationPath").value.charAt(document.getElementById("destinationPath").value.length - 1) == "\\" || document.getElementById("destinationPath").value.charAt(document.getElementById("destinationPath").value.length - 1) == "/") {
+
+
+                    alert("Please remove trailing slashes from the destination folder path!");
+                    break validationSection;
+
+
+                }
+
+            }
+
+            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+                if (document.getElementById("tempDestinationPath").value.charAt(document.getElementById("tempDestinationPath").value.length - 1) == "\\" || document.getElementById("tempDestinationPath").value.charAt(document.getElementById("tempDestinationPath").value.length - 1) == "/") {
+
+
+                    alert("Please remove trailing slashes from the destination folder path!");
+                    break validationSection;
+
+
+                }
+
+            }
+
+
+            //check folders exist
 
             if (fs.existsSync(document.getElementById("sourcePath").value + validationSlash) == false) {
 
@@ -1618,7 +1672,7 @@ document.getElementById("timer").value= f
                                     }
 
 
-                               
+
 
 
                                 }
@@ -1762,7 +1816,7 @@ document.getElementById("timer").value= f
                                     }
 
 
-                                    
+
 
 
                                 }
@@ -1786,7 +1840,7 @@ document.getElementById("timer").value= f
 
                     for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
 
-                     
+
 
                         if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Completed")) {
                             sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
@@ -1864,7 +1918,7 @@ document.getElementById("timer").value= f
                     for (var i = 0; i < inputPathArray.length; i++) {
                         if (fs.existsSync(inputPathArray[i])) {
 
-                            
+
                             fs.unlinkSync(inputPathArray[i])
 
 
@@ -2512,19 +2566,21 @@ document.getElementById("timer").value= f
 
             <p>Number of simulataneous Handbrake instances to use?(1-4):<input type="text" class="infoBox" id="instanceNumber"></p>
 
-            <div id="customBatPathDiv" style="display: none;"><p>Custom bat path to run after each conversion (leave blank if not using):</p><textarea type="text" class="folderPaths"
-                id="customBatPath"></textarea> </div>
+            <div id="customBatPathDiv" style="display: none;">
+                <p>Custom bat path to run after each conversion (leave blank if not using):</p><textarea type="text"
+                    class="folderPaths" id="customBatPath"></textarea>
+            </div>
 
         </div>
 
 
-<div class="alert">
- 
+        <div class="alert">
 
-        <p id="deleteSourceFilesdiv" style="color:#87001b;">Delete source files after conversion?:<input type="checkbox"
-                id="deleteSourceFiles" onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')"></p>
 
-            </div>
+            <p id="deleteSourceFilesdiv" style="color:#87001b;">Delete source files after conversion?:<input type="checkbox"
+                    id="deleteSourceFiles" onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')"></p>
+
+        </div>
 
         <input type='button' class="button1" value='Save config' onclick='saveConfig()' />
 
