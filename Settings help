@@ -34,7 +34,7 @@ Default:mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,
 Number of simulataneous Handbrake instances:
 Set how many Handbrake simulatatnoues conversions to carry out (1-4). Default:4
 
-Custom bat path to run after each conversion:
+Custom bat path to run after each conversion (Windows):
 Input a bat file path to run after each file has finished being converted. 
 Bat files with timeout statements won't work (more on this here https://comm.support.ca.com/kb/the-timeout-command-in-batch-script-job-results-in-error-input-redirection-is-not-supported-exiting-the-process-immediately/kb000029524)
 Leave box completely empty if you do not wish to use this option (make sure there are no hidden characters in the box).
