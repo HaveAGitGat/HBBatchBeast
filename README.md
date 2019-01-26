@@ -1,10 +1,10 @@
-# HBBatchBeast
+# HBBatchBeast (Windows, Mac and Linux)
 
 Now written in nodejs (old HTA version can be downloaded here:https://drive.google.com/open?id=1u_o6wYVGWaUx2FNqTyLob3bylbELJzop)
 
 A simple GUI application for Handbrake on Windows with an emphasis on batch conversion (including recursive folder scans and folder watching). The destination folder structure is kept the same as the source folder structure. Media in subfolders is also converted.
 
-This is a standalone program on Windows but requires Handbrake to be installed on Linux. 
+This is a standalone program on Windows but requires Handbrake to be installed on Linux and Mac. 
 
 -------------------------------------------------------------
 INSTALLATION - Windows:
