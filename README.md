@@ -19,7 +19,6 @@ Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%2
 
 -----------------------------------------------------------------------------
 
------------------------------------------------------------------------------
 
 INSTALLATION - Mac:
 
@@ -55,6 +54,8 @@ chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatch
 Replace 'user' with your username.
 
 Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
+
+-----------------------------------------------------------------------------
 
 INSTALLATION - Linux:
 
