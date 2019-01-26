@@ -186,7 +186,7 @@ if(process.platform=='win32'){
 
 
 
-fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".sh",'PATH=$PATH:$HOME/bin \n' , 'utf8');        
+fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".sh",'PATH=$PATH:$HOME/bin \r\n' , 'utf8');        
 
  fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".sh", "HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset, 'utf8');        
 
