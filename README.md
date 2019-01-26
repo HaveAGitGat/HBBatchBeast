@@ -4,14 +4,43 @@ Now written in nodejs (old HTA version can be downloaded here:https://drive.goog
 
 A simple GUI application for Handbrake on Windows with an emphasis on batch conversion (including recursive folder scans and folder watching). The destination folder structure is kept the same as the source folder structure. Media in subfolders is also converted.
 
-This is a standalone program. 
+This is a standalone program on Windows but requires Handbrake to be installed on Linux. 
 
 -------------------------------------------------------------
-INSTALLATION:
+INSTALLATION - Windows:
 
-Step 1:Download (Link will be posted once program finished - please use old HTA working link above for demo) 
+Step 1:Download hbbatchbeast-Windows-v2.0.7z from the release page:
+https://github.com/HaveAGitGat/HBBatchBeast/releases
 
 Step 2:Run HBBatchBeast.exe
+Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
+
+-----------------------------------------------------------------------------
+
+INSTALLATION - Linux:
+
+Step 1: Make sure you have Handbrake installed:
+
+sudo add-apt-repository ppa:stebbins/handbrake-releases
+sudo apt-get update
+sudo apt-get install handbrake-cli handbrake-gtk
+
+
+Step 2:Download hbbatchbeast-Linux-v2.0.deb from the release page:
+https://github.com/HaveAGitGat/HBBatchBeast/releases
+
+Step 3:Install the package
+
+Step 4:Run hbbatchbeast - this will create 4 worker scripts
+
+Step 5:Open up a terminal and give execution rights to the 4 worker scripts:
+
+chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1.sh
+chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2.sh
+chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3.sh
+chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.sh
+
+Replace 'user' with your username.
 
 Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
 
