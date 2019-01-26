@@ -10,9 +10,11 @@ This is a standalone program on Windows but requires Handbrake to be installed o
 INSTALLATION - Windows:
 
 Step 1:Download hbbatchbeast-Windows-v2.0.7z from the release page:
+
 https://github.com/HaveAGitGat/HBBatchBeast/releases
 
 Step 2:Run HBBatchBeast.exe
+
 Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
 
 -----------------------------------------------------------------------------
@@ -27,6 +29,7 @@ sudo apt-get install handbrake-cli handbrake-gtk
 
 
 Step 2:Download hbbatchbeast-Linux-v2.0.deb from the release page:
+
 https://github.com/HaveAGitGat/HBBatchBeast/releases
 
 Step 3:Install the package
@@ -36,8 +39,11 @@ Step 4:Run hbbatchbeast - this will create 4 worker scripts
 Step 5:Open up a terminal and give execution rights to the 4 worker scripts:
 
 chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1.sh
+
 chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2.sh
+
 chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3.sh
+
 chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.sh
 
 Replace 'user' with your username.
