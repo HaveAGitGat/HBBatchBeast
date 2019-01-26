@@ -9,7 +9,7 @@ This is a standalone program on Windows but requires Handbrake to be installed o
 -------------------------------------------------------------
 INSTALLATION - Windows:
 
-Step 1:Download hbbatchbeast-Windows-v2.0.7z from the release page:
+Step 1:Download hbbatchbeast-Windows-v2.0.7z from the release page and extract  it:
 
 https://github.com/HaveAGitGat/HBBatchBeast/releases
 
@@ -18,6 +18,43 @@ Step 2:Run HBBatchBeast.exe
 Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
 
 -----------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------
+
+INSTALLATION - Mac:
+
+Step 1: Make sure you have Handbrake installed:
+
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+brew install handbrake
+
+
+Step 2:Download hbbatchbeast-Mac-v2.0.dmg from the release page:
+
+https://github.com/HaveAGitGat/HBBatchBeast/releases
+
+Step 3:Install the package
+
+Step 4:Run hbbatchbeast - this will create 4 worker scripts
+
+Step 5:Open up a terminal and give execution rights to the 4 worker scripts:
+
+chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1.sh
+
+
+chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2.sh
+
+
+chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3.sh
+
+
+chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.sh
+
+
+Replace 'user' with your username.
+
+Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
 
 INSTALLATION - Linux:
 
