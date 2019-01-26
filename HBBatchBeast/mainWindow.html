@@ -2,9 +2,11 @@
 <html lang="en">
 
 
-
+  
 
 <script>
+
+var home = require("os").homedir();
 
     //SET ENV
     process.env.NODE_ENV = "production";
@@ -28,15 +30,15 @@
 
 
 
-
+        //var logpath = home + '/Documents/somefolderwhichexists/' + title + '.txt';
 
 
         //create program folders
 console.log(__dirname)
 
 
-        if (!fs.existsSync("./HBBatchBeast")) {
-            fs.mkdirSync("./HBBatchBeast");
+        if (!fs.existsSync(home +"./HBBatchBeast")) {
+            fs.mkdirSync(home +"./HBBatchBeast");
             //  alert('Directory created!')
 
         }
