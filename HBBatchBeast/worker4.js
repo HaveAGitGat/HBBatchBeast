@@ -9,7 +9,7 @@ function sleep(milliseconds) {
 
 
 //SET ENV
-//process.env.NODE_ENV = "production";
+process.env.NODE_ENV = "production";
 
 
 
