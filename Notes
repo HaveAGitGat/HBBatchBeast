@@ -1,0 +1,163 @@
+node js notes
+
+
+// clone repository
+git clone https://github.com/HaveAGitGat/HBBatchBeast
+
+
+
+//update folder and overwrite any changes (open main program folder in terminal,not root)
+git reset --hard HEAD
+git pull
+ 
+
+//create program
+npn init
+
+
+
+//install electron
+
+npm install --save electron
+
+//install local storage
+
+npm install node-localstorage
+
+
+//install glob (for recursive file section) NO LONGER NEEDED
+npm install --save glob
+
+
+//install shell for creating full folder paths in one go
+
+npm install --save shelljs
+
+
+//install aync to run function in parallel
+
+npm install  --save async
+
+
+//install windows shell objects
+npm install --save win32ole
+				
+
+
+//run program
+
+npm start
+
+
+
+// properlock
+
+npm install --save proper-lockfile
+
+//normal lock
+
+npm install --save lockfile
+npm install --g lockfile
+
+//local storage
+npm install --save node-localstorage
+
+
+// retry locks
+
+npm install --save retry
+
+
+
+// install package installer
+
+
+npm install electron-packager --save-dev
+
+
+//install all dependencies
+npm install
+
+//compile package
+
+npm run package-win
+
+
+
+npm run package-linux
+npm run create-debian-installer
+
+
+npm install electron-installer-dmg --save-dev
+
+npm run package-mac
+npm run create-installer-mac
+
+//remove app linux
+sudo apt-get --purge remove electron-tutorial-app
+
+//win installer
+npm run create-installer-win
+
+//linux installer
+npm run create-debian-installer
+
+
+//Install handbrake on linux
+
+sudo add-apt-repository ppa:stebbins/handbrake-releases
+sudo apt-get update
+
+//CLI
+
+sudo apt-get install handbrake-cli handbrake-gtk
+
+
+//example working script on linux
+// works with path slashes either way
+
+
+
+
+//need to allow sh scripts to be executed
+
+chmod +x  /home/haveagitgat/Desktop/HBBatchBeast/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1.sh
+chmod +x  /home/haveagitgat/Desktop/HBBatchBeast/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2.sh
+chmod +x  /home/haveagitgat/Desktop/HBBatchBeast/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3.sh
+chmod +x  /home/haveagitgat/Desktop/HBBatchBeast/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.sh
+
+
+chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1.sh
+chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2.sh
+chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3.sh
+chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.sh
+
+
+
+
+
+// linux differences
+
+1. remove slashes from validation
+2. change all \\ to //
+3. change handbrake cli path
+4. change bat to sh
+
+
+
+//packaging for linux
+
+npm install -g electron-installer-debian
+
+
+
+// exec sync needed for worker sync launching
+npm install --save sync-exec
+
+
+//
+npm install --save inquirer-select-directory
+
+
+//for opening link in default browser
+npm install --save opn
