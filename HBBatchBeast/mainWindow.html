@@ -2051,8 +2051,11 @@ document.getElementById("timer").value= f
         }
 
 
-        const opn = require('opn');
-        opn(logPath);
+        var opener = require("opener");
+        opener(logPath);
+
+        // const opn = require('opn');
+        // opn(logPath);
 
 
 
