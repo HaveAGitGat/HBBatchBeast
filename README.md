@@ -22,7 +22,8 @@ Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%2
 
 INSTALLATION - macOS:
 
-Step 1: Make sure you have HandbrakeCLI installed:
+Step 1: Make sure you have HandbrakeCLI installed. The easiest way is using Hombrew,
+paste the following into a terminal:
 
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
@@ -59,7 +60,7 @@ Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%2
 
 INSTALLATION - Linux:
 
-Step 1: Make sure you have HandbrakeCLI installed:
+Step 1: Make sure you have HandbrakeCLI installed - paste the following into a terminal:
 
 sudo add-apt-repository ppa:stebbins/handbrake-releases
 
