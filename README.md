@@ -2,14 +2,14 @@
 
 Now written in nodejs (old HTA version can be downloaded here:https://drive.google.com/open?id=1u_o6wYVGWaUx2FNqTyLob3bylbELJzop)
 
-A simple GUI application for Handbrake on Windows with an emphasis on batch conversion (including recursive folder scans and folder watching). The destination folder structure is kept the same as the source folder structure. Media in subfolders is also converted.
+A simple GUI application for Handbrake on Windows with an emphasis on batch conversion (including recursive folder scans and folder watching). The destination folder structure is kept the same as the source folder structure. Media in subfolders is also converted. Multiple folders can be monitored and different conversion presets can be specified for each folder.
 
 This is a standalone program on Windows but requires Handbrake to be installed on Linux and Mac. 
 
 -------------------------------------------------------------
 INSTALLATION - Windows:
 
-Step 1:Download hbbatchbeast-Windows-v2.0.7z from the release page and extract  it:
+Step 1:Download hbbatchbeast-Windows.7z from the release page and extract  it:
 
 https://github.com/HaveAGitGat/HBBatchBeast/releases
 
@@ -29,7 +29,7 @@ Step 1: Make sure you have HandbrakeCLI installed:
 brew install handbrake
 
 
-Step 2:Download hbbatchbeast-Mac-v2.0.dmg from the release page:
+Step 2:Download hbbatchbeast-Mac.dmg from the release page:
 
 https://github.com/HaveAGitGat/HBBatchBeast/releases
 
@@ -69,7 +69,7 @@ sudo apt-get install handbrake-cli handbrake-gtk
 
 
 
-Step 2:Download hbbatchbeast-Linux-v2.0.deb from the release page:
+Step 2:Download hbbatchbeast-Linux.deb from the release page:
 
 https://github.com/HaveAGitGat/HBBatchBeast/releases
 
