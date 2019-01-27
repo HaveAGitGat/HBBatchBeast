@@ -7,6 +7,13 @@ C:\Users\HaveAGitGat\Desktop\Input
 Linux:
 /home/HaveAGitGat/Desktop/Input
 
+If monitoring multiple folders, you need to specify a temporary folder (if option checked) and destination folder for each source folder. 
+Each folder entry must be on a new line. If 'Standard preset' is selected, then all source folders will be converted with the
+selected standard preset. If 'Custom preset is selected', then you must enter a preset for each source folder. Each preset must be
+on a new line. See the following image for guidance:
+
+https://imgur.com/a/yEqb6eR
+
 Standard preset:
 Select one of the standard Handbrake presets
 
