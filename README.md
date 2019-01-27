@@ -1,15 +1,15 @@
-# HBBatchBeast
+# HBBatchBeast (Windows, Mac and Linux)
 
 Now written in nodejs (old HTA version can be downloaded here:https://drive.google.com/open?id=1u_o6wYVGWaUx2FNqTyLob3bylbELJzop)
 
 A simple GUI application for Handbrake on Windows with an emphasis on batch conversion (including recursive folder scans and folder watching). The destination folder structure is kept the same as the source folder structure. Media in subfolders is also converted.
 
-This is a standalone program on Windows but requires Handbrake to be installed on Linux. 
+This is a standalone program on Windows but requires Handbrake to be installed on Linux and Mac. 
 
 -------------------------------------------------------------
 INSTALLATION - Windows:
 
-Step 1:Download hbbatchbeast-Windows-v2.0.7z from the release page:
+Step 1:Download hbbatchbeast-Windows-v2.0.7z from the release page and extract  it:
 
 https://github.com/HaveAGitGat/HBBatchBeast/releases
 
@@ -19,9 +19,47 @@ Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%2
 
 -----------------------------------------------------------------------------
 
+
+INSTALLATION - Mac:
+
+Step 1: Make sure you have HandbrakeCLI installed:
+
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+brew install handbrake
+
+
+Step 2:Download hbbatchbeast-Mac-v2.0.dmg from the release page:
+
+https://github.com/HaveAGitGat/HBBatchBeast/releases
+
+Step 3:Install the package
+
+Step 4:Run hbbatchbeast - this will create 4 worker scripts
+
+Step 5:Open up a terminal and give execution rights to the 4 worker scripts:
+
+chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1.sh
+
+
+chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2.sh
+
+
+chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3.sh
+
+
+chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.sh
+
+
+Replace 'user' with your username.
+
+Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
+
+-----------------------------------------------------------------------------
+
 INSTALLATION - Linux:
 
-Step 1: Make sure you have Handbrake installed:
+Step 1: Make sure you have HandbrakeCLI installed:
 
 sudo add-apt-repository ppa:stebbins/handbrake-releases
 
