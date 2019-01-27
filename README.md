@@ -1,4 +1,4 @@
-# HBBatchBeast (Windows, Mac and Linux)
+# HBBatchBeast (Windows, macOS and Linux)
 
 Now written in nodejs (old HTA version can be downloaded here:https://drive.google.com/open?id=1u_o6wYVGWaUx2FNqTyLob3bylbELJzop)
 
@@ -20,7 +20,7 @@ Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%2
 -----------------------------------------------------------------------------
 
 
-INSTALLATION - Mac:
+INSTALLATION - macOS:
 
 Step 1: Make sure you have HandbrakeCLI installed:
 
