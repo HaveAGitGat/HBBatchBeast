@@ -6,6 +6,10 @@ A simple GUI application for Handbrake on Windows with an emphasis on batch conv
 
 This is a standalone program on Windows but requires Handbrake to be installed on Linux and Mac. 
 
+Screenshot -https://imgur.com/a/hKxlp82
+
+Demo video - https://sendvid.com/g2b94i8j
+
 -------------------------------------------------------------
 INSTALLATION - Windows:
 
@@ -98,11 +102,6 @@ Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%2
 The program scans the source folder for all files. It then compares the source folder files with the destination folder files to see if any of the source files exist in the destination folder already. If not, the program queues the files for conversion.
  
 The 4 worker modules then work through the conversion queue. If periodic scanning is enabled then the program will run at the chosen interval.
-
-Screenshot -https://imgur.com/a/hKxlp82
-
-Demo video - https://sendvid.com/g2b94i8j
-
 
 After it a bit more testing it seems that weird things can happen if you monitor a folder which is being downloaded to. It seems sometimes conversions start before a file has fully downloaded. To solve this, I recommend using a temporary download folder before moving completed files into your HBBB source folder.
 
