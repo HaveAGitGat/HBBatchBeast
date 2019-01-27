@@ -29,7 +29,22 @@ if (process.platform == 'darwin'){
 
     //var lockFile = require('lockFile');
 
+    function textAreaHeight(){
+        //auto height text boxes
+        var tx = document.getElementsByTagName('textarea');
+for (var i = 0; i < tx.length; i++) {
+  tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+  tx[i].addEventListener("input", OnInput, false);
+}
+
+
+    }
+
     window.onload = function () {
+
+        textAreaHeight();
+
+
 
         var fs = require('fs');
 
@@ -370,39 +385,42 @@ var scriptType="sh"
         var fullPath2 = fullPath + "\\HandBrakeCLI.exe"
 
 
-        if (process.platform == 'win32') {
+        // if (process.platform == 'win32') {
 
-            if (process.env.NODE_ENV == 'production') {
+        //     if (process.env.NODE_ENV == 'production') {
 
-                //production
-                var handBrakeCLIPath = "\"" + fullPath2 + "\"";
+        //         //production
+        //         var handBrakeCLIPath = "\"" + fullPath2 + "\"";
 
-            } else {
+        //     } else {
 
-                //development
-                var handBrakeCLIPath = __dirname + "\\HandBrakeCLI.exe";
+        //         //development
+        //         var handBrakeCLIPath = __dirname + "\\HandBrakeCLI.exe";
 
-            }
+        //     }
 
-            // console.log(handBrakeCLIPath)
+        //     // console.log(handBrakeCLIPath)
 
-            if (fs.existsSync(handBrakeCLIPath)) {
+        //     if (fs.existsSync(handBrakeCLIPath)) {
 
-                document.getElementById("HBCLIStatus").innerHTML = "<p>HandbrakeCLI located<\p>";
+        //         document.getElementById("HBCLIStatus").innerHTML = "<p>HandbrakeCLI located<\p>";
 
-            } else {
+        //     } else {
 
-                document.getElementById("HBCLIStatus").innerHTML = "<p>Not found<\p>";
+        //         document.getElementById("HBCLIStatus").innerHTML = "<p>HandbrakeCLI Not found<\p>";
 
 
-            }
+        //     }
 
-        }
+        // }
 
 
 
 
         cbChange2();
+
+ 
+    
     }
 
 
@@ -430,7 +448,7 @@ var scriptType="sh"
             document.getElementById("customPresetDiv").style.display = 'block';
         }
 
-
+        textAreaHeight()
     }
 
 
@@ -451,6 +469,8 @@ var scriptType="sh"
             document.getElementById("ShowHide1").style.display = 'block';
             document.getElementById("ShowHide2").style.display = 'none';
         }
+
+        textAreaHeight()
     }
 
 
@@ -461,6 +481,7 @@ var scriptType="sh"
 
             document.getElementById("advancedSettings").style.display = 'block'
         }
+        textAreaHeight()
     }
 
     function showAlert(message) {
@@ -634,6 +655,7 @@ var scriptType="sh"
     var outputPathArray
 
     var sourceQueueArray
+    var presetArray2
 
     function convertFiles(mode) {
 
@@ -694,13 +716,91 @@ var scriptType="sh"
         validationSection:
         {
 
-            //make sure there are no trailing slashes on file paths
+        
+// //check to see if there's a line break at the end of each folder
+// if(document.getElementById("sourcePath").value.charAt(document.getElementById("sourcePath").value.length-1 !="n")){
+
+//     document.getElementById("sourcePath").value+="\n"
+// }
+
+// if(document.getElementById("destinationPath").value.charAt(document.getElementById("destinationPath").value.length-1 !="n")){
+
+// document.getElementById("destinationPath").value+="\n"
+// }
+
+// if(document.getElementById("tempDestinationPath").value.charAt(document.getElementById("tempDestinationPath").value.length-1 !="n")){
+
+// document.getElementById("tempDestinationPath").value+="\n"
+// }
+
+            var inputPathStemArray = "";
+inputPathStemArray = document.getElementById("sourcePath").value;
+inputPathStemArray = inputPathStemArray.toString().split("\n");
+
+var outPutPathStemArray = "";
+outPutPathStemArray = document.getElementById("destinationPath").value;
+outPutPathStemArray = outPutPathStemArray.toString().split("\n");
+
+var outPutPathStemFinalArray = "";
+
+if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+outPutPathStemFinalArray = document.getElementById("tempDestinationPath").value;
+outPutPathStemFinalArray = outPutPathStemFinalArray.toString().split("\n");
+}
+
+if (document.getElementById("selectCustomPreset").checked == true) {
+
+    var presetArray =[];
+                presetArray = document.getElementById("customPresets").value;
+                presetArray = presetArray.toString().split("\n");
+
+if(inputPathStemArray.length !=presetArray.length){
+
+alert("The number of custom presets does not match the number of source folders!Please make sure each custom preset is separated with a line break!");
+            break validationSection;
+
+}
+}
+
+//check number of source/dest/temp folders matches
+
+if (document.getElementById("selectTemporaryConversionFolder").checked == false) {
+if(inputPathStemArray.length !=outPutPathStemArray.length){
+
+    alert("The number of source folders does not match the number of destination folders!");
+                break validationSection;
+
+}
+}
+
+if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+    if(inputPathStemArray.length !=outPutPathStemArray.length){
+
+alert("The number of source folders does not match the number of temporary conversion folders!");
+            break validationSection;
+
+}
+
+if(inputPathStemArray.length !=outPutPathStemFinalArray.length){
+
+    alert("The number of source folders does not match the number of destination folders!");
+            break validationSection;
+
+}
+
+}
 
 
 
-            if (document.getElementById("sourcePath").value.charAt(document.getElementById("sourcePath").value.length - 1) == "\\" || document.getElementById("sourcePath").value.charAt(document.getElementById("sourcePath").value.length - 1) == "/") {
+for (var y= 0; y < inputPathStemArray.length; y++) {
 
-                alert("Please remove trailing slashes from the source folder path!");
+
+    //make sure there are no trailing slashes on file paths
+
+            if (inputPathStemArray[y].charAt(inputPathStemArray[y].length - 1) == "\\" || inputPathStemArray[y].charAt(inputPathStemArray[y].length - 1) == "/") {
+
+                alert("Please remove trailing slashes from source folder path "+inputPathStemArray[y]+"!");
                 break validationSection;
             }
 
@@ -709,10 +809,10 @@ var scriptType="sh"
 
             if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
 
-                if (document.getElementById("destinationPath").value.charAt(document.getElementById("destinationPath").value.length - 1) == "\\" || document.getElementById("destinationPath").value.charAt(document.getElementById("destinationPath").value.length - 1) == "/") {
+                if (outPutPathStemArray[y].charAt(outPutPathStemArray[y].length - 1) == "\\" || outPutPathStemArray[y].charAt(outPutPathStemArray[y].length - 1) == "/") {
 
 
-                    alert("Please remove trailing slashes from the temporary folder path!");
+                    alert("Please remove trailing slashes from the temporary folder path "+outPutPathStemArray[y]+"!");
                     break validationSection;
 
 
@@ -722,10 +822,10 @@ var scriptType="sh"
 
 
 
-                if (document.getElementById("destinationPath").value.charAt(document.getElementById("destinationPath").value.length - 1) == "\\" || document.getElementById("destinationPath").value.charAt(document.getElementById("destinationPath").value.length - 1) == "/") {
+                if (outPutPathStemArray[y].charAt(outPutPathStemArray[y].length - 1) == "\\" || outPutPathStemArray[y].charAt(outPutPathStemArray[y].length - 1) == "/") {
 
 
-                    alert("Please remove trailing slashes from the destination folder path!");
+                    alert("Please remove trailing slashes from the destination folder path "+outPutPathStemArray[y]+"!");
                     break validationSection;
 
 
@@ -735,10 +835,10 @@ var scriptType="sh"
 
             if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
 
-                if (document.getElementById("tempDestinationPath").value.charAt(document.getElementById("tempDestinationPath").value.length - 1) == "\\" || document.getElementById("tempDestinationPath").value.charAt(document.getElementById("tempDestinationPath").value.length - 1) == "/") {
+                if (outPutPathStemFinalArray[y].charAt(outPutPathStemFinalArray[y].length - 1) == "\\" || outPutPathStemFinalArray[y].charAt(outPutPathStemFinalArray[y].length - 1) == "/") {
 
 
-                    alert("Please remove trailing slashes from the destination folder path!");
+                    alert("Please remove trailing slashes from the destination folder path "+outPutPathStemFinalArray[y]+"!");
                     break validationSection;
 
 
@@ -749,18 +849,18 @@ var scriptType="sh"
 
             //check folders exist
 
-            if (fs.existsSync(document.getElementById("sourcePath").value + validationSlash) == false) {
+            if (fs.existsSync(inputPathStemArray[y] + validationSlash) == false) {
 
-                alert("The source folder does not exist! Please make sure there are no spaces before/after the path");
+                alert("Source folder "+inputPathStemArray[y]+" does not exist! Please make sure there are no spaces or hidden charachters before/after the path");
                 break validationSection;
             }
 
 
             if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
 
-                if (fs.existsSync(document.getElementById("destinationPath").value + validationSlash) == false) {
+                if (fs.existsSync(outPutPathStemArray[y] + validationSlash) == false) {
 
-                    alert("The temporary conversion folder does not exist! Please make sure there are no spaces before/after the path");
+                    alert("Temporary conversion folder "+outPutPathStemArray[y]+" does not exist! Please make sure there are no spaces or hidden charachters before/after the path");
                     break validationSection;
                 }
 
@@ -768,9 +868,9 @@ var scriptType="sh"
 
             } else {
 
-                if (fs.existsSync(document.getElementById("destinationPath").value + validationSlash) == false) {
+                if (fs.existsSync(outPutPathStemArray[y] + validationSlash) == false) {
 
-                    alert("The destination folder does not exist! Please make sure there are no spaces before/after the path");
+                    alert("Destination folder "+outPutPathStemArray[y]+" does not exist! Please make sure there are no spaces or hidden charachters before/after the path");
                     break validationSection;
                 }
 
@@ -780,15 +880,18 @@ var scriptType="sh"
             if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
 
 
-                if (fs.existsSync(document.getElementById("tempDestinationPath").value + validationSlash) == false) {
+                if (fs.existsSync(outPutPathStemFinalArray[y] + validationSlash) == false) {
 
-                    alert("The destination folder does not exist! Please make sure there are no spaces before/after the path");
+                    alert("Destination folder "+outPutPathStemFinalArray[y]+" does not exist! Please make sure there are no spaces or hidden charachters before/after the path");
                     break validationSection;
                 }
 
 
 
-            }
+           }
+
+
+}
 
             if (document.getElementById("selectStandardPreset").checked == false && document.getElementById("selectCustomPreset").checked == false) {
 
@@ -834,7 +937,92 @@ var scriptType="sh"
             totalFileFoundCounter = 0;
 
 
-            inputPathStem = document.getElementById("sourcePath").value;
+            inputPathArrayCounter = 0
+
+            inputPathArray = [];
+            outputPathArray = [];
+
+
+            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/sourceQueue.txt', "", 'utf8');
+
+fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/destinationQueue.txt', "", 'utf8');
+
+fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', "", 'utf8');
+
+fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/queueNumberPath.txt', "0", 'utf8');
+
+var LocalStorage = require('node-localstorage').LocalStorage;
+queueNumberPathStorage = new LocalStorage(homePath+'/HBBatchBeast/Config/Processes/queueNumberPath');
+queueNumberPathStorage.setItem('myFirstKey', '0');
+
+
+// var temp = (parseInt(queueNumberPathStorage.getItem('myFirstKey'))+1)
+// temp++;
+// queueNumberPathStorage.setItem('myFirstKey', temp);
+// // console.log(queueNumberPathStorage.getItem('myFirstKey'));
+
+
+
+
+fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt", "", 'utf8');
+
+
+fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker1QueueNumber.txt', "-", 'utf8');
+fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker2QueueNumber.txt', "-", 'utf8');
+fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker3QueueNumber.txt', "-", 'utf8');
+fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker4QueueNumber.txt', "-", 'utf8');
+
+fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker1FileName.txt', "-", 'utf8');
+fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker2FileName.txt', "-", 'utf8');
+fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker3FileName.txt', "-", 'utf8');
+fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker4FileName.txt', "-", 'utf8');
+
+fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt', "0", 'utf8');
+
+var writeNumber = 0;
+var sourceQueueArrayCounter = 0;
+
+
+         
+//reset preset arrays
+var presetArray =[];
+ presetArray2 =[];
+
+            if (document.getElementById("selectStandardPreset").checked == true) {
+
+                for (var y= 0; y < inputPathStemArray.length; y++) {
+                    presetArray[y] = "-Z \"" + document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text + "\"";
+                }
+
+            }else{
+
+                var presetArray =[];
+                presetArray = document.getElementById("customPresets").value;
+                presetArray = presetArray.toString().split("\n");
+
+
+
+            }
+
+
+console.log(presetArray[1])
+
+
+   // folder loop begin 
+for (var y= 0; y < inputPathStemArray.length; y++) {
+
+
+
+
+
+
+
+            inputPathStem = inputPathStemArray[y]
+            outPutPathStem =  outPutPathStemArray[y]
+
+            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+            outPutPathStemFinal = outPutPathStemFinalArray[y]
+            }
 
             inputPathStemSplit = inputPathStem.split(',');
 
@@ -846,15 +1034,11 @@ var scriptType="sh"
 
 
 
-            outPutPathStem = document.getElementById("destinationPath").value;
-            outPutPathStemFinal = document.getElementById("tempDestinationPath").value;
+        
 
 
 
-            inputPathArrayCounter = 0
-
-            inputPathArray = [];
-            outputPathArray = [];
+        
 
 
 
@@ -862,8 +1046,9 @@ var scriptType="sh"
             var fs = require('fs');
             var path = require('path');
 
-
+            try {
             traverseDir(inputPathStem);
+        } catch (err) {}
 
             function traverseDir(inputPathStem) {
                 fs.readdirSync(inputPathStem).forEach(file => {
@@ -953,6 +1138,10 @@ var scriptType="sh"
 
                                 outputPathArray[inputPathArrayCounter] = outPutPathStem + newsubfilePath;
                                 var outputFolderPath = outputPathArray[inputPathArrayCounter].substring(0, outputPathArray[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
+
+                                //
+
+                                presetArray2[inputPathArrayCounter]= presetArray[y]
 
 
                                 if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
@@ -1083,6 +1272,7 @@ var scriptType="sh"
                     } catch (err) {}
                 });
             }
+}//end source folder loop
 
 
 
@@ -1107,48 +1297,6 @@ var scriptType="sh"
             //// console.log(handBrakeCLIPath);
 
 
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/sourceQueue.txt', "", 'utf8');
-
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/destinationQueue.txt', "", 'utf8');
-
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', "", 'utf8');
-
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/queueNumberPath.txt', "0", 'utf8');
-
-            var LocalStorage = require('node-localstorage').LocalStorage;
-            queueNumberPathStorage = new LocalStorage(homePath+'/HBBatchBeast/Config/Processes/queueNumberPath');
-            queueNumberPathStorage.setItem('myFirstKey', '0');
-
-
-            // var temp = (parseInt(queueNumberPathStorage.getItem('myFirstKey'))+1)
-            // temp++;
-            // queueNumberPathStorage.setItem('myFirstKey', temp);
-            // // console.log(queueNumberPathStorage.getItem('myFirstKey'));
-
-
-
-
-            fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt", "", 'utf8');
-
-
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker1QueueNumber.txt', "-", 'utf8');
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker2QueueNumber.txt', "-", 'utf8');
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker3QueueNumber.txt', "-", 'utf8');
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker4QueueNumber.txt', "-", 'utf8');
-
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker1FileName.txt', "-", 'utf8');
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker2FileName.txt', "-", 'utf8');
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker3FileName.txt', "-", 'utf8');
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/Worker4FileName.txt', "-", 'utf8');
-
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt', "0", 'utf8');
-
-
-
-
-
-            var writeNumber = 0;
-            var sourceQueueArrayCounter = 0;
 
 
             if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
@@ -1160,9 +1308,10 @@ var scriptType="sh"
                     } else {
 
 
-                        fs.appendFileSync(homePath+'/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + "\n", 'utf8');
+                        fs.appendFileSync(homePath+'/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] +",,,"+presetArray2[i]+ "\n", 'utf8');
                         sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
                         sourceQueueArrayCounter++
+                        y++;
 
 
                         fs.appendFileSync(homePath+'/HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
@@ -1189,9 +1338,10 @@ var scriptType="sh"
 
                     } else {
 
-                        fs.appendFileSync(homePath+'/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + "\n", 'utf8');
+                        fs.appendFileSync(homePath+'/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i]+",,,"+presetArray2[i]+ "\n", 'utf8');
                         sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
                         sourceQueueArrayCounter++
+                   
 
 
 
@@ -1339,14 +1489,16 @@ document.getElementById("timer").value= f
             tableHTML += "<table class=\"outputTable\" id=\"queueTable\">"
 
                 + "<col width=\"70%\">"
-                + "<col width=\"10%\">"
-                + "<col width=\"10%\">"
-                + "<col width=\"10%\">"
+                + "<col width=\"auto\">"
+                + "<col width=\"auto\">"
+                + "<col width=\"auto\">"
+                + "<col width=\"auto\">"
                 + "<tr>"
 
                 + "<th class=\"headcol\">Source file</th>"
-                + "<th class=\"headcol\">Queue number</th>"
-                + "<th class=\"headcol\">Active Worker</th>"
+                + "<th class=\"headcol\">Queue no.</th>"
+                + "<th class=\"headcol\">Preset</th>"
+                + "<th class=\"headcol\">Worker</th>"
                 + "<th class=\"headcol\">Status</th>"
 
                 + "</tr>"
@@ -1357,6 +1509,7 @@ document.getElementById("timer").value= f
                 tableHTML += "<tr>"
                     + "<td>" + currentSourceLine + "</td>"
                     + "<td>" + tableQueueNumber + "</td>"
+                    + "<td > "+presetArray2[i]+"</td>"
                     + "<td > - </td>"
                     + "<td > - </td>"
 
@@ -1580,7 +1733,7 @@ document.getElementById("timer").value= f
 
                 for (var i = 0; i < sourceQueueArray.length - 1; i++) {
 
-                    queueTable.rows[i + 1].cells[2].innerHTML = "";
+                    queueTable.rows[i + 1].cells[3].innerHTML = "";
 
 
                 }
@@ -1602,32 +1755,32 @@ document.getElementById("timer").value= f
 
                             if (i == QueueNumber1 - 1) {
 
-                                queueTable.rows[i + 1].cells[2].innerHTML = 'Worker 1';
-                                queueTable.rows[i + 1].cells[3].innerHTML = 'Converting';
+                                queueTable.rows[i + 1].cells[3].innerHTML = 'Worker 1';
+                                queueTable.rows[i + 1].cells[4].innerHTML = 'Converting';
                                 queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
 
                             }
 
                             if (i == QueueNumber2 - 1) {
 
-                                queueTable.rows[i + 1].cells[2].innerHTML = 'Worker 2';
-                                queueTable.rows[i + 1].cells[3].innerHTML = 'Converting';
+                                queueTable.rows[i + 1].cells[3].innerHTML = 'Worker 2';
+                                queueTable.rows[i + 1].cells[4].innerHTML = 'Converting';
                                 queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
 
                             }
 
                             if (i == QueueNumber3 - 1) {
 
-                                queueTable.rows[i + 1].cells[2].innerHTML = 'Worker 3';
-                                queueTable.rows[i + 1].cells[3].innerHTML = 'Converting';
+                                queueTable.rows[i + 1].cells[3].innerHTML = 'Worker 3';
+                                queueTable.rows[i + 1].cells[4].innerHTML = 'Converting';
                                 queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
 
                             }
 
                             if (i == QueueNumber4 - 1) {
 
-                                queueTable.rows[i + 1].cells[2].innerHTML = 'Worker 4';
-                                queueTable.rows[i + 1].cells[3].innerHTML = 'Converting';
+                                queueTable.rows[i + 1].cells[3].innerHTML = 'Worker 4';
+                                queueTable.rows[i + 1].cells[4].innerHTML = 'Converting';
                                 queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
 
                             }
@@ -1648,6 +1801,7 @@ document.getElementById("timer").value= f
                      // console.log(array)
                     */
                     var readArray = "";
+                   
 
                     // lockFile.lockSync(completedQueuePath+".lock",10000,100,10000,1000,100)
                     readArray = fs.readFileSync(completedQueuePath, 'utf8');
@@ -1672,15 +1826,22 @@ document.getElementById("timer").value= f
 
                                     if (readArray[j].includes("Success")) {
 
-                                        queueTable.rows[i + 1].cells[3].innerHTML = "Completed"
+                                        queueTable.rows[i + 1].cells[4].innerHTML = "Completed"
+                                        queueTable.rows[i + 1].cells[2].innerHTML = presetArray2[i]
+
+                                
+
                                         queueTable.rows[i + 1].style.backgroundColor = "#59ff74";
 
 
 
                                     } else {
 
-                                        queueTable.rows[i + 1].cells[3].innerHTML = "Error"
+                                        queueTable.rows[i + 1].cells[4].innerHTML = "Error"
+                                        queueTable.rows[i + 1].cells[2].innerHTML = presetArray2[i]
+
                                         queueTable.rows[i + 1].style.backgroundColor = "#ff2d2d";
+                                        
 
 
 
@@ -1807,8 +1968,8 @@ document.getElementById("timer").value= f
 
                                         newRow.innerHTML = "<tr >"
                                             + "<td>" + sourceQueueArray[i] + "</td>"
-                                            + "<td>" + "</td>"
-                                            + "<td > - </td>"
+                                            + "<td>" + presetArray2[i]+"</td>"
+                                         
                                             + "<td > Completed </td>"
 
                                             + "</tr>"
@@ -1821,8 +1982,8 @@ document.getElementById("timer").value= f
 
                                         newRow.innerHTML = "<tr>"
                                             + "<td>" + sourceQueueArray[i] + "</td>"
-                                            + "<td>" + "</td>"
-                                            + "<td > - </td>"
+                                            + "<td>" + presetArray2[i]+ "</td>"
+                                      
                                             + "<td > Error </td>"
 
                                             + "</tr>"
@@ -1857,12 +2018,12 @@ document.getElementById("timer").value= f
 
 
 
-                        if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Completed")) {
+                        if ((sessionConversionsTable.rows[i].cells[2].innerHTML).toString().includes("Completed")) {
                             sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
 
 
 
-                        } else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Error")) {
+                        } else if ((sessionConversionsTable.rows[i].cells[2].innerHTML).toString().includes("Error")) {
 
                             sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
 
@@ -1929,18 +2090,6 @@ document.getElementById("timer").value= f
                 // lockFile.unlockSync(homePath+"/HBBatchBeast/Logs/Scans.txt.lock",10000,100,10000,1000,100)
 
 
-                if (document.getElementById("deleteSourceFiles").checked == true) {
-                    for (var i = 0; i < inputPathArray.length; i++) {
-                        if (fs.existsSync(inputPathArray[i])) {
-
-
-                            fs.unlinkSync(inputPathArray[i])
-
-
-                        }
-
-                    }
-                }
 
 
 
@@ -2177,6 +2326,15 @@ document.getElementById("timer").value= f
 
 
 
+
+function OnInput() {
+  this.style.height = 'auto';
+  this.style.height = (this.scrollHeight) + 'px';
+}
+
+
+
+
 </script>
 
 
@@ -2207,10 +2365,9 @@ document.getElementById("timer").value= f
                 
                 .folderPaths {
                 
-                  height: 2em;
                 
                   width: 70%;
-                  border-radius: 25px;
+                  border-radius: 2px;
                 
                 }
                 
@@ -2219,7 +2376,7 @@ document.getElementById("timer").value= f
                   height: 10em;
                 
                   width: 100em;
-                  border-radius: 25px;
+                  border-radius: 2px;
                 
                 }
                 
@@ -2393,6 +2550,15 @@ document.getElementById("timer").value= f
 }
 
 
+textarea {
+    border: 0 none white;
+    overflow: hidden;
+    padding: 0;
+    outline: none;
+    background-color: #D0D0D0;
+}
+
+
                 
                 </style>
 
@@ -2424,8 +2590,8 @@ document.getElementById("timer").value= f
 
 
 
-        <p>Source folder</p>
-        <textarea type="text" class="folderPaths" id="sourcePath"></textarea><input type='button' class="button3" value='Select folder'
+        <p>Source folder  (Please see help page^ for monitoring several folders)</p>
+        <textarea type="text" class="folderPaths" id="sourcePath"  ></textarea><input type='button' class="button3" value='Select folder'
             onclick="selectFolder('sourcePath')" />
 
 
@@ -2642,13 +2808,12 @@ document.getElementById("timer").value= f
         <div id="sessionConversions">
             <table id="sessionConversionsTable" class="historicTable">
                 <col width="70%">
-                <col width="10%">
-                <col width="10%">
+                <col width="20%">
                 <col width="10%">
 
                 <th class="headcol">Source file</th>
-                <th class="headcol"></th>
-                <th class="headcol"></th>
+                <th class="headcol">Preset</th>
+
                 <th class="headcol">Status</th>
 
 

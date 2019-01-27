@@ -35,7 +35,9 @@ if (process.platform == 'darwin'){
 var fs = require('fs');
 var workerNumber = "3";
 
-var preset = fs.readFileSync(homePath+"/HBBatchBeast/Config/presetString.txt", 'utf8');
+//var preset = fs.readFileSync(homePath+"/HBBatchBeast/Config/presetString.txt", 'utf8');
+
+var preset="";
 
 var customPresets = fs.readFileSync(homePath+"/HBBatchBeast/Config/customPreset.txt", 'utf8');
 
@@ -75,9 +77,18 @@ var fullPath2 = fullPath+ "\\HandBrakeCLI.exe"
 
 console.log(fullPath2)
 
+        // read whether to delete source files or not
+ var deleteSourceFilesOnOff ="";
+
+        if (fs.existsSync(homePath+"/HBBatchBeast/Config/deleteSourceFilesOnOff.txt")) {
+
+         deleteSourceFilesOnOff = fs.readFileSync(homePath+"/HBBatchBeast/Config/deleteSourceFilesOnOff.txt", 'utf8');
+  
+        }
 
 
 
+//handbrake CLI path
 
 
 if(process.platform=='win32'){
@@ -142,7 +153,12 @@ for (var i = 0; i < iStreamSource.length - 1; i++) {
 
 // 
 
-var currentSourceLine = iStreamSource[i];
+var currentSourceLine = iStreamSource[i].split(",,,");
+currentSourceLine=currentSourceLine[0];
+preset=iStreamSource[i].split(",,,");
+preset = preset[1];
+
+
 var currentDestinationLine = iStreamDestination[i];
 
 if (tempFolderSected == "1") {
@@ -188,7 +204,7 @@ if(process.platform=='win32'){
 
       
 
- fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".sh", "/usr/local/Cellar/handbrake/1.2.0/bin/HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset, 'utf8');        
+ fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber +".sh", "/usr/local/bin/HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset, 'utf8');        
 
 
 
@@ -405,6 +421,20 @@ console.log(batOnOff)
             fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Converted----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');
             }
         }
+
+
+ 
+  if (deleteSourceFilesOnOff == "1") {
+                
+if(errorSwitch==0){
+           if (fs.existsSync(currentSourceLine)) {
+
+fs.unlinkSync(currentSourceLine)
+
+
+                        }
+}
+  } 
 
 
         currentLineNumber++;
