@@ -7,6 +7,20 @@ C:\Users\HaveAGitGat\Desktop\Input
 Linux:
 /home/HaveAGitGat/Desktop/Input
 
+If monitoring multiple folders, you need to specify a temporary folder (if option checked) and destination folder for each source folder. 
+Each folder entry must be on a new line. If 'Standard preset' is selected, then all source folders will be converted with the
+selected standard preset. If 'Custom preset is selected', then you must enter a preset for each source folder. Each preset must be
+on a new line. See the following image for guidance:
+
+https://imgur.com/a/2tl8dIw
+
+For example, if you're wanting to use two standard presets for two different folders, you should put the following in the custom preset box:
+
+-Z "Very Fast 1080p30"
+-Z "Very Fast 480p30"
+
+
+
 Standard preset:
 Select one of the standard Handbrake presets
 
