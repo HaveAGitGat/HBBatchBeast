@@ -58,6 +58,10 @@ chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatch
 
 Replace 'user' with your username.
 
+If you input more than '4' worker modules in the user interface you'll then need to give execution rights to those worker scripts
+similar to the above
+
+
 Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
 
 -----------------------------------------------------------------------------
@@ -93,6 +97,9 @@ chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTe
 chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.sh
 
 Replace 'user' with your username.
+
+If you input more than '4' worker modules in the user interface you'll then need to give execution rights to those worker scripts
+similar to the above.
 
 Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
 
