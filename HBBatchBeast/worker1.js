@@ -33,7 +33,11 @@ if (process.platform == 'darwin'){
 
 
 var fs = require('fs');
-var workerNumber = "1";
+
+
+var workerNumber = fs.readFileSync(homePath+"/HBBatchBeast/Config/workerLaunch.txt", 'utf8');
+
+
 
 //var preset = fs.readFileSync(homePath+"/HBBatchBeast/Config/presetString.txt", 'utf8');
 
