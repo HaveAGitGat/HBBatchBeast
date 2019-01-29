@@ -24,7 +24,7 @@ if (process.platform == 'darwin'){
 
 
     //SET ENV
-  process.env.NODE_ENV = "production";
+  //process.env.NODE_ENV = "production";
 
 
     //var lockFile = require('lockFile');
@@ -775,7 +775,7 @@ if (document.getElementById("selectCustomPreset").checked == true) {
               
 if(inputPathStemArray.length !=presetArray.length){
 
-alert("The number of custom presets does not match the number of source folders!Please make sure each custom preset is separated with a line break!");
+    alert("The number of custom presets does not match the number of source folders! "+inputPathStemArray.length+" source folders have been detected. "+presetArray.length+" custom preset lines have been detected. Please double check for invisible line breaks. There should be one folder path or preset per line. Make sure you haven't accidentally created a blank line." );
             break validationSection;
 
 }
@@ -793,7 +793,7 @@ if (mode != "healthCheck") {
 if (document.getElementById("selectTemporaryConversionFolder").checked == false) {
 if(inputPathStemArray.length !=outPutPathStemArray.length){
 
-    alert("The number of source folders does not match the number of destination folders!");
+    alert("The number of source folders does not match the number of destination folders! "+inputPathStemArray.length+" source folders have been detected. "+outPutPathStemArray.length+" destination folders have been detected. Please double check for invisible line breaks. There should be one folder path per line. Make sure you haven't accidentally created a blank line." );
                 break validationSection;
 
 }
@@ -803,14 +803,14 @@ if (document.getElementById("selectTemporaryConversionFolder").checked == true) 
 
     if(inputPathStemArray.length !=outPutPathStemArray.length){
 
-alert("The number of source folders does not match the number of temporary conversion folders!");
+        alert("The number of source folders does not match the number of temporary conversion folders! "+inputPathStemArray.length+" source folders have been detected. "+outPutPathStemArray.length+" temporary conversion folders have been detected. Please double check for invisible line breaks. There should be one folder path per line. Make sure you haven't accidentally created a blank line." );
             break validationSection;
 
 }
 
 if(inputPathStemArray.length !=outPutPathStemFinalArray.length){
 
-    alert("The number of source folders does not match the number of destination folders!");
+    alert("The number of source folders does not match the number of destination folders! "+inputPathStemArray.length+" source folders have been detected. "+outPutPathStemFinalArray.length+" destination folders have been detected. Please double check for invisible line breaks. There should be one folder path per line. Make sure you haven't accidentally created a blank line." );
             break validationSection;
 
 }
@@ -1980,22 +1980,41 @@ queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
 
 
             if (sourceQueueArray.length >= 1) {
-var CompletedSwitch=0;
+var CompletedSwitch=1;
 
 
-            for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
+            // for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
 
 
-                if(workerStatusArray[j-1] != "Complete!"){
-                    CompletedSwitch=0;
+            //     if(workerStatusArray[j-1] != "Complete!"){
+            //         CompletedSwitch=0;
 
-                }else{
-                    CompletedSwitch=1;
+            //     }else{
+            //         CompletedSwitch=1;
 
-                }
+            //     }
 
 
-            }
+            // }
+
+for (var j = 1; j < queueTable.rows.length; j++) {
+
+console.log((queueTable.rows[j].cells[4].innerHTML).toString())
+
+if ((queueTable.rows[j].cells[4].innerHTML).toString().includes("Completed") || (queueTable.rows[j].cells[4].innerHTML).toString().includes("Error")) {
+
+
+
+
+} else{
+CompletedSwitch=0;
+
+}
+}
+
+
+
+
 
 
 if(CompletedSwitch==1){
