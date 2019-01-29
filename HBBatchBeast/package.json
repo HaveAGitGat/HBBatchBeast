@@ -18,7 +18,6 @@
   "dependencies": {
     "async": "^2.6.1",
     "bluebird": "^3.5.3",
-    "chilkat_node10_win32": "^9.50.76",
     "ffprobe": "^1.1.0",
     "get-video-duration": "^1.0.3",
     "glob": "^7.1.3",
