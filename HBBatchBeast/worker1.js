@@ -322,7 +322,7 @@ if (shell.exec(workerCommand).code !== 0) {
 
 
   shell.echo('Failed');
-  shell.exit(1);
+  //shell.exit(1);
 }
 
 
