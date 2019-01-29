@@ -41,27 +41,7 @@ https://github.com/HaveAGitGat/HBBatchBeast/releases
 
 Step 3:Install the package
 
-Step 4:Run hbbatchbeast - this will create 4 worker scripts
-
-Step 5:Open up a terminal and give execution rights to the 4 worker scripts:
-
-chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1.sh
-
-
-chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2.sh
-
-
-chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3.sh
-
-
-chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.sh
-
-
-Replace 'user' with your username.
-
-If you input more than '4' Handbrake instances in the user interface you'll then need to give execution rights to those worker scripts
-similar to the above.
-
+Step 4:Run hbbatchbeast from Launchpad
 
 Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
 
@@ -85,22 +65,7 @@ https://github.com/HaveAGitGat/HBBatchBeast/releases
 
 Step 3:Install the package
 
-Step 4:Run hbbatchbeast - this will create 4 worker scripts
-
-Step 5:Open up a terminal and give execution rights to the 4 worker scripts:
-
-chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1.sh
-
-chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2.sh
-
-chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3.sh
-
-chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.sh
-
-Replace 'user' with your username.
-
-If you input more than '4' Handbrake instances in the user interface you'll then need to give execution rights to those worker scripts
-similar to the above.
+Step 4:Run hbbatchbeast from application menu
 
 Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
 
