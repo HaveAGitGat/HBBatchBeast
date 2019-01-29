@@ -321,7 +321,7 @@ if (shell.exec(workerCommand).code !== 0) {
     errorSwitch=1;
 
 
-  shell.echo('Error: Git commit failed');
+  shell.echo('Failed');
   shell.exit(1);
 }
 
