@@ -24,7 +24,7 @@ if (process.platform == 'darwin'){
 
 
     //SET ENV
-  process.env.NODE_ENV = "production";
+ // process.env.NODE_ENV = "production";
 
 
     //var lockFile = require('lockFile');
@@ -878,9 +878,11 @@ for (var y= 0; y < inputPathStemArray.length; y++) {
 
             //check folders exist
 
-            if (fs.existsSync(inputPathStemArray[y] + validationSlash) == false) {
 
-                alert("Source folder "+inputPathStemArray[y]+" does not exist! Please make sure there are no spaces or hidden characters before/after the path");
+
+            if (fs.existsSync(inputPathStemArray[y] + validationSlash) == false ||inputPathStemArray[y]=="") {
+
+                alert("Source folder "+(y+1)+" "+inputPathStemArray[y]+" does not exist! Please make sure there are no spaces or hidden characters before/after the path");
                 break validationSection;
             }
 
@@ -888,9 +890,9 @@ for (var y= 0; y < inputPathStemArray.length; y++) {
 
             if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
 
-                if (fs.existsSync(outPutPathStemArray[y] + validationSlash) == false) {
+                if (fs.existsSync(outPutPathStemArray[y] + validationSlash) == false ||outPutPathStemArray[y]=="") {
 
-                    alert("Temporary conversion folder "+outPutPathStemArray[y]+" does not exist! Please make sure there are no spaces or hidden characters before/after the path");
+                    alert("Temporary conversion folder "+(y+1)+" "+outPutPathStemArray[y]+" does not exist! Please make sure there are no spaces or hidden characters before/after the path");
                     break validationSection;
                 }
 
@@ -898,27 +900,33 @@ for (var y= 0; y < inputPathStemArray.length; y++) {
 
             } else {
 
-                if (fs.existsSync(outPutPathStemArray[y] + validationSlash) == false) {
+                if (fs.existsSync(outPutPathStemArray[y] + validationSlash) == false||outPutPathStemArray[y]=="") {
 
-                    alert("Destination folder "+outPutPathStemArray[y]+" does not exist! Please make sure there are no spaces or hidden characters before/after the path");
+                    alert("Destination folder "+(y+1)+" "+outPutPathStemArray[y]+" does not exist! Please make sure there are no spaces or hidden characters before/after the path");
                     break validationSection;
                 }
 
 
             }
 
-            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+            if (document.getElementById("selectTemporaryConversionFolder").checked == true ) {
 
 
-                if (fs.existsSync(outPutPathStemFinalArray[y] + validationSlash) == false) {
+                if (fs.existsSync(outPutPathStemFinalArray[y] + validationSlash) == false||outPutPathStemFinalArray[y]=="") {
 
-                    alert("Destination folder "+outPutPathStemFinalArray[y]+" does not exist! Please make sure there are no spaces or hidden characters before/after the path");
+                    alert("Destination folder "+(y+1)+" "+outPutPathStemFinalArray[y]+" does not exist! Please make sure there are no spaces or hidden characters before/after the path");
                     break validationSection;
                 }
 
 
 
            }
+            }else{
+                outPutPathStemArray[y]="";
+                outPutPathStemFinalArray[y]="";
+
+
+
             }
 
 
