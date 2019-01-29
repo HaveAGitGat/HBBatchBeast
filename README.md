@@ -1,4 +1,4 @@
-# HBBatchBeast for Handbrake (Windows, macOS and Linux)
+# HBBatchBeast for HandBrake (Windows, macOS and Linux)
 
 Now written in nodejs (old HTA version can be downloaded here:https://drive.google.com/open?id=1u_o6wYVGWaUx2FNqTyLob3bylbELJzop)
 
