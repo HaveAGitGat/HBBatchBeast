@@ -56,6 +56,10 @@ Leave box completely empty if you do not wish to use this option (make sure ther
 Save config:
 Save current configuration
 
+Health check:
+This uses Handbrakes inbuilt '--scan' feature to try and determine if a file is corrupt or not. It is not 100% accurate so should only be
+used as guidance.
+
 Scan only:
 Scan for files to be converted given current configuration. 
 No files will be converted. Pressing this will only run it once (regardless of whether 'periodic scanning' is checked.

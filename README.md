@@ -2,7 +2,8 @@
 
 Now written in nodejs (old HTA version can be downloaded here:https://drive.google.com/open?id=1u_o6wYVGWaUx2FNqTyLob3bylbELJzop)
 
-A simple GUI application for Handbrake on Windows with an emphasis on batch conversion (including recursive folder scans and folder watching). The destination folder structure is kept the same as the source folder structure. Media in subfolders is also converted. Multiple folders can be monitored and different conversion presets can be specified for each folder.
+A simple GUI application for Handbrake on Windows with an emphasis on batch conversion (including recursive folder scans and folder watching). The destination folder structure is kept the same as the source folder structure. Media in subfolders is also converted. Multiple folders can be monitored and different conversion presets can be specified for each folder. There is also a health check feature which can scan for corrupt video files using Handbrakes's '--scan' feature, although this
+is not always accurate.
 
 This is a standalone program on Windows but requires Handbrake to be installed on Linux and Mac. 
 
@@ -58,6 +59,10 @@ chmod a+x /Users/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatch
 
 Replace 'user' with your username.
 
+If you input more than '4' Handbrake instances in the user interface you'll then need to give execution rights to those worker scripts
+similar to the above.
+
+
 Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
 
 -----------------------------------------------------------------------------
@@ -93,6 +98,9 @@ chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTe
 chmod +x /home/user/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4.sh
 
 Replace 'user' with your username.
+
+If you input more than '4' Handbrake instances in the user interface you'll then need to give execution rights to those worker scripts
+similar to the above.
 
 Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
 
