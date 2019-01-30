@@ -9,7 +9,7 @@ Linux:
 
 If monitoring multiple folders, you need to specify a temporary folder (if option checked) and destination folder for each source folder. 
 Each folder entry must be on a new line. If 'Standard preset' is selected, then all source folders will be converted with the
-selected standard preset. If 'Custom preset is selected', then you must enter a preset for each source folder. Each preset must be
+selected standard preset. If 'Custom preset' is selected, then you must enter a preset for each source folder. Each preset must be
 on a new line. See the following image for guidance:
 
 https://imgur.com/a/2tl8dIw
