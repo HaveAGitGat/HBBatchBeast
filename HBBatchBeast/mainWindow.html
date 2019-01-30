@@ -681,6 +681,7 @@ var scriptType="sh"
         outputPathArray = [];
         sourceQueueArray = [];
         var outputPathArrayFinal = [];
+        CompletedSwitch2 =0;
 
 
         var inputPathArrayCounter = 0;
@@ -1646,6 +1647,8 @@ document.getElementById("timer").value= f
 
     var readArrayLowerBound =0;
 
+    var CompletedSwitch2 =0;
+
     function runScan() {
 
 
@@ -1980,49 +1983,46 @@ queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
 
 
             if (sourceQueueArray.length >= 1) {
-var CompletedSwitch=1;
+
+                console.log(CompletedSwitch)
+console.log(CompletedSwitch2)
+
+var CompletedSwitch = 1;
+
+                for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
+
+                    console.log("Worker status:"+workerStatusArray[j - 1])
+
+                    if (workerStatusArray[j - 1] != "Complete!") {
+                        CompletedSwitch = 0;
+
+                    } else {
+                     
+
+                    }
 
 
-            // for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
+                }
 
+                if (CompletedSwitch == 1) {
+                    CompletedSwitch2++;
 
-            //     if(workerStatusArray[j-1] != "Complete!"){
-            //         CompletedSwitch=0;
+                }
 
-            //     }else{
-            //         CompletedSwitch=1;
+      
+                if (CompletedSwitch2 == 5) {
 
-            //     }
-
-
-            // }
-
-for (var j = 1; j < queueTable.rows.length; j++) {
-
-console.log((queueTable.rows[j].cells[4].innerHTML).toString())
-
-if ((queueTable.rows[j].cells[4].innerHTML).toString().includes("Completed") || (queueTable.rows[j].cells[4].innerHTML).toString().includes("Error")) {
-
-
-
-
-} else{
-CompletedSwitch=0;
-
-}
-}
-
-
-
-
-
-
-if(CompletedSwitch==1){
-
-    AllComplete();
+AllComplete();
 }
 
-            }  
+}
+
+if(sourceQueueArray.length==0){
+
+AllComplete();
+
+}
+
 
 
 
