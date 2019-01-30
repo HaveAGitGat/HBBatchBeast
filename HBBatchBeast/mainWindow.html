@@ -1979,6 +1979,12 @@ queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
 
             }
 
+            if(sourceQueueArray.length==0){
+
+AllComplete();
+
+}
+
 
 
 
@@ -2009,19 +2015,18 @@ var CompletedSwitch = 1;
 
                 }
 
+
+
       
                 if (CompletedSwitch2 == 5) {
 
 AllComplete();
-}
 
 }
 
-if(sourceQueueArray.length==0){
-
-AllComplete();
-
 }
+
+ 
 
 
 
@@ -2076,6 +2081,10 @@ AllComplete();
 
 
                             for (var j = 0; j < readArray.length; j++) {
+
+
+console.log(readArray[j]);
+console.log(sourceQueueArray[i]);
 
 
 
@@ -2141,6 +2150,8 @@ AllComplete();
                         if (mode == "healthCheck") {
 
                         var healthPercentage = ((healthyFiles/(corruptFiles+healthyFiles))*100).toFixed(2);
+
+                        console.log(healthyFiles);
 
                         document.getElementById('healthCheckDiv').innerHTML ="<h1>Healthy files:<font color=\"green\">"+healthyFiles+"</font> Corrupt files:<font color=\"red\">"+corruptFiles+"</font> Health:"+healthPercentage+"%<\h1>"
 
@@ -2234,9 +2245,9 @@ AllComplete();
 
 
 
+                updateInfo = 0;
 
-
-                sourceQueueArray = [];
+               sourceQueueArray = [];
 
 
 
@@ -2247,6 +2258,8 @@ AllComplete();
 
         }
 
+
+//end update info
 
         if (scanCompleted == 1 && scanCompleted2 == 1) {
 
@@ -2261,7 +2274,7 @@ AllComplete();
 
 
 
-            updateInfo = 0;
+            
 
 
 
