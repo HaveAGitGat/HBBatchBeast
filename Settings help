@@ -9,7 +9,7 @@ Linux:
 
 If monitoring multiple folders, you need to specify a temporary folder (if option checked) and destination folder for each source folder. 
 Each folder entry must be on a new line. If 'Standard preset' is selected, then all source folders will be converted with the
-selected standard preset. If 'Custom preset' is selected, then you must enter a preset for each source folder. Each preset must be
+selected standard preset. If 'Custom preset is selected', then you must enter a preset for each source folder. Each preset must be
 on a new line. See the following image for guidance:
 
 https://imgur.com/a/2tl8dIw
@@ -45,8 +45,8 @@ File types which the program will scan for.
 Separate with comma (e.g. iso,wmv, )
 Default:mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,
 
-Number of simultaneous Handbrake instances:
-Set how many Handbrake simultaneous conversions to carry out (1-4). Default:4
+Number of simulataneous Handbrake instances:
+Set how many Handbrake simulatatnoues conversions to carry out (1-4). Default:4
 
 Custom bat path to run after each conversion (Windows):
 Input a bat file path to run after each file has finished being converted. 
@@ -57,8 +57,8 @@ Save config:
 Save current configuration
 
 Health check:
-This uses Handbrakes inbuilt '--scan' feature it uses to scan a video for information. If an error is thrown during this process, the file my be corrupt. 
-It is not 100% accurate so should only be used as guidance.
+This uses Handbrakes inbuilt '--scan' feature to try and determine if a file is corrupt or not. It is not 100% accurate so should only be
+used as guidance.
 
 Scan only:
 Scan for files to be converted given current configuration. 
@@ -73,8 +73,6 @@ Show historic scan/conversion information
 
 View individual file conversion log:
 
-Um
-
 
 Total number of media files found:
 Number of valid files found based on valid file types option.
@@ -86,6 +84,7 @@ Files which don't exist in the destination folder structure when compared to the
 If an item in the queue comes out with "Error", this means that the HandbrakeCLI had trouble converting the 
 file, most likely due to it being corrupt/partially corrupt. Else it may be a file type which Handbrake does
 not support. Try converting the file normally in Handbrake to see what error it throws.
+
 
 
 

@@ -1,46 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-  
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+<script>		    zingchart.MODULESDIR = "https://cdn.zingchart.com/modules/";
+    ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "ee6b7db5b51705a13dc2339db3edaf6d"];</script>
 
 <script>
 
-var home = require("os").homedir();
-
-if (process.platform == 'win32'||process.platform == 'linux') {
-
-var homePath = "."
-
-    
-}
-
-if (process.platform == 'darwin'){
-
-    var homePath = home
-
-}
-
-
 
     //SET ENV
-  process.env.NODE_ENV = "production";
+ process.env.NODE_ENV = "production";
+
+    var home = require("os").homedir();
 
 
-    //var lockFile = require('lockFile');
+    if (process.platform == 'win32' || process.platform == 'linux') {
 
-    function textAreaHeight(){
-        //auto height text boxes
-        var tx = document.getElementsByTagName('textarea');
-for (var i = 0; i < tx.length; i++) {
-  tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
-  tx[i].addEventListener("input", OnInput, false);
-}
+        var homePath = "."
 
 
     }
 
+    if (process.platform == 'darwin') {
+
+        var homePath = home
+
+    }
+
+
+
+    //timenow
+
+    function getTimeNow() {
+
+        var d = new Date(),
+            h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
+            m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+        s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
+        timenow = h + ':' + m + ':' + s;
+
+        return timenow
+
+
+    }
+
+
+
+
+ 
+
+    function textAreaHeight() {
+        //auto height text boxes
+        var tx = document.getElementsByTagName('textarea');
+        for (var i = 0; i < tx.length; i++) {
+            tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+            tx[i].addEventListener("input", OnInput, false);
+        }
+
+
+    }
+
+
+    //create scan number window
+    const electron = require('electron')
+    const url = require('url');
+    const path = require('path');
+    const BrowserWindow = electron.remote.BrowserWindow;
+
+
+  
+     
+
+
+
+    
+
+
+
+    const electron2 = require('electron');
+      const {ipcRenderer}=electron2;
+
+
+   
+
+    function createscanWindow() {
+
+        //create new window
+
+        scanWindow = new BrowserWindow({
+            width: 400,
+            height: 200,
+            frame: false,
+            title: 'Scan Window'
+
+        });
+
+        //Load html into window
+
+        scanWindow.loadURL(url.format({
+            pathname: path.join(__dirname, 'scanWindow.html'),
+            protocol: 'file:',
+            slashes: true
+
+        }));
+
+
+
+        //Garbage collection handle
+        scanWindow.on('close', function () {
+            scanWindow = null;
+
+        });
+
+    }
+
+
     window.onload = function () {
+
+
+        ipcRenderer.send('item:add','icon'); 
+
+
+
+
+
+
+
+
+        //   createscanWindow();
+
+
+
+
+
 
         textAreaHeight();
 
@@ -64,32 +161,32 @@ for (var i = 0; i < tx.length; i++) {
 
 
         //create program folders
-console.log(__dirname)
 
 
-        if (!fs.existsSync(homePath+"/HBBatchBeast")) {
-            fs.mkdirSync(homePath+"/HBBatchBeast");
-            //  alert('Directory created!')
 
-        }
-
-        console.log(homePath+"/HBBatchBeast")
-
-
-        if (!fs.existsSync(homePath+"/HBBatchBeast/Config")) {
-            fs.mkdirSync(homePath+"/HBBatchBeast/Config");
+        if (!fs.existsSync(homePath + "/HBBatchBeast")) {
+            fs.mkdirSync(homePath + "/HBBatchBeast");
             //  alert('Directory created!')
 
         }
 
 
-        if (!fs.existsSync(homePath+"/HBBatchBeast/Config/Processes")) {
-            fs.mkdirSync(homePath+"/HBBatchBeast/Config/Processes");
+
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Config")) {
+            fs.mkdirSync(homePath + "/HBBatchBeast/Config");
+            //  alert('Directory created!')
 
         }
 
-        if (!fs.existsSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles")) {
-            fs.mkdirSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles");
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes")) {
+            fs.mkdirSync(homePath + "/HBBatchBeast/Config/Processes");
+
+        }
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles")) {
+            fs.mkdirSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles");
 
         }
 
@@ -97,70 +194,70 @@ console.log(__dirname)
 
 
 
-if (process.platform == 'win32') {
+        if (process.platform == 'win32') {
 
-    var scriptType="bat"
-
-}
-
-
-if (process.platform == 'linux' || process.platform == 'darwin' ) {
-
-var scriptType="sh"
-}
-
-
-            if (!fs.existsSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1."+scriptType)) {
-
-                fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1."+scriptType, "", 'utf8');
-            }
-
-            if (!fs.existsSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2."+scriptType)) {
-
-                fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2."+scriptType, "", 'utf8');
-            }
-
-
-            if (!fs.existsSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3."+scriptType)) {
-
-                fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3."+scriptType, "", 'utf8');
-            }
-
-
-            if (!fs.existsSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4."+scriptType)) {
-
-                fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4."+scriptType, "", 'utf8');
-            }
-
-
-       
-
- 
-
-
- 
-
-
-
-
-
-
-
-        if (!fs.existsSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus")) {
-            fs.mkdirSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus");
+            var scriptType = "bat"
 
         }
 
-        if (!fs.existsSync(homePath+"/HBBatchBeast/Logs")) {
-            fs.mkdirSync(homePath+"/HBBatchBeast/Logs");
+
+        if (process.platform == 'linux' || process.platform == 'darwin') {
+
+            var scriptType = "sh"
+        }
+
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1." + scriptType)) {
+
+            fs.writeFileSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1." + scriptType, "", 'utf8');
+        }
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2." + scriptType)) {
+
+            fs.writeFileSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2." + scriptType, "", 'utf8');
+        }
+
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3." + scriptType)) {
+
+            fs.writeFileSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3." + scriptType, "", 'utf8');
+        }
+
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4." + scriptType)) {
+
+            fs.writeFileSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4." + scriptType, "", 'utf8');
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus")) {
+            fs.mkdirSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus");
+
+        }
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Logs")) {
+            fs.mkdirSync(homePath + "/HBBatchBeast/Logs");
 
         }
 
 
         //read scan interval
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/scanInterval.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/scanInterval.txt")) {
 
-            document.getElementById("timer").value = fs.readFileSync(homePath+"/HBBatchBeast/Config/scanInterval.txt", 'utf8');
+            document.getElementById("timer").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/scanInterval.txt", 'utf8');
 
 
 
@@ -172,9 +269,9 @@ var scriptType="sh"
 
         // read periodic scanning on/off
 
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/periodicScanningOnOff.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/periodicScanningOnOff.txt")) {
 
-            var f = fs.readFileSync(homePath+"/HBBatchBeast/Config/periodicScanningOnOff.txt", 'utf8');
+            var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/periodicScanningOnOff.txt", 'utf8');
             if (f == "1") {
                 document.getElementById("scanOnOff").checked = true;
             } else {
@@ -189,9 +286,9 @@ var scriptType="sh"
 
         // read recent destination path
 
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/recentDestination.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/recentDestination.txt")) {
 
-            document.getElementById("destinationPath").value = fs.readFileSync(homePath+"/HBBatchBeast/Config/recentDestination.txt", 'utf8');
+            document.getElementById("destinationPath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/recentDestination.txt", 'utf8');
 
 
         }
@@ -199,16 +296,16 @@ var scriptType="sh"
 
         // read recent source path
 
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/recentSource.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/recentSource.txt")) {
 
-            document.getElementById("sourcePath").value = fs.readFileSync(homePath+"/HBBatchBeast/Config/recentSource.txt", 'utf8');
+            document.getElementById("sourcePath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/recentSource.txt", 'utf8');
         }
 
         //read temp destination path
 
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/tempDestinationPath.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/tempDestinationPath.txt")) {
 
-            document.getElementById("tempDestinationPath").value = fs.readFileSync(homePath+"/HBBatchBeast/Config/tempDestinationPath.txt", 'utf8');
+            document.getElementById("tempDestinationPath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/tempDestinationPath.txt", 'utf8');
 
 
         }
@@ -216,9 +313,9 @@ var scriptType="sh"
         //set temp destination path on/off
 
 
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/tempDestinationOnOff.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/tempDestinationOnOff.txt")) {
 
-            var f = fs.readFileSync(homePath+"/HBBatchBeast/Config/tempDestinationOnOff.txt", 'utf8');
+            var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/tempDestinationOnOff.txt", 'utf8');
 
 
             if (f == "1") {
@@ -235,25 +332,25 @@ var scriptType="sh"
         //read preset  and set select menu value
 
 
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/preset.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/preset.txt")) {
 
-            document.getElementById("preset").selectedIndex = fs.readFileSync(homePath+"/HBBatchBeast/Config/preset.txt", 'utf8');
+            document.getElementById("preset").selectedIndex = fs.readFileSync(homePath + "/HBBatchBeast/Config/preset.txt", 'utf8');
         }
 
         // read custom preset
 
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/customPreset.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/customPreset.txt")) {
 
-            document.getElementById("customPresets").value = fs.readFileSync(homePath+"/HBBatchBeast/Config/customPreset.txt", 'utf8');
+            document.getElementById("customPresets").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/customPreset.txt", 'utf8');
 
         }
 
         //read if custom preset is on or off
 
 
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/customPresetOnOff.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/customPresetOnOff.txt")) {
 
-            var f = fs.readFileSync(homePath+"/HBBatchBeast/Config/customPresetOnOff.txt", 'utf8');
+            var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/customPresetOnOff.txt", 'utf8');
 
 
             if (f == 0) {
@@ -275,9 +372,9 @@ var scriptType="sh"
         //read container value
 
 
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/container.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/container.txt")) {
 
-            document.getElementById("container").selectedIndex = fs.readFileSync(homePath+"/HBBatchBeast/Config/container.txt", 'utf8');
+            document.getElementById("container").selectedIndex = fs.readFileSync(homePath + "/HBBatchBeast/Config/container.txt", 'utf8');
 
 
         }
@@ -286,9 +383,9 @@ var scriptType="sh"
         // read whether to delete source files or not
 
 
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/deleteSourceFilesOnOff.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/deleteSourceFilesOnOff.txt")) {
 
-            var f = fs.readFileSync(homePath+"/HBBatchBeast/Config/deleteSourceFilesOnOff.txt", 'utf8');
+            var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/deleteSourceFilesOnOff.txt", 'utf8');
 
 
             if (f == "1") {
@@ -307,16 +404,16 @@ var scriptType="sh"
 
 
 
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/includedFileTypes.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/includedFileTypes.txt")) {
 
-            document.getElementById("includedFileTypes").value = fs.readFileSync(homePath+"/HBBatchBeast/Config/includedFileTypes.txt", 'utf8');
+            document.getElementById("includedFileTypes").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/includedFileTypes.txt", 'utf8');
 
 
         } else {
 
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/includedFileTypes.txt', "mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,", 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/includedFileTypes.txt', "mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,", 'utf8');
 
-            document.getElementById("includedFileTypes").value = fs.readFileSync(homePath+"/HBBatchBeast/Config/includedFileTypes.txt", 'utf8');
+            document.getElementById("includedFileTypes").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/includedFileTypes.txt", 'utf8');
 
 
         }
@@ -324,9 +421,9 @@ var scriptType="sh"
 
         //read number of instances 
 
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/instanceNumber.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/instanceNumber.txt")) {
 
-            document.getElementById("instanceNumber").value = fs.readFileSync(homePath+"/HBBatchBeast/Config/instanceNumber.txt", 'utf8');
+            document.getElementById("instanceNumber").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/instanceNumber.txt", 'utf8');
 
 
         } else {
@@ -338,9 +435,9 @@ var scriptType="sh"
         // read bat file path
 
 
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/customBatPath.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/customBatPath.txt")) {
 
-            document.getElementById("customBatPath").value = fs.readFileSync(homePath+"/HBBatchBeast/Config/customBatPath.txt", 'utf8');
+            document.getElementById("customBatPath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/customBatPath.txt", 'utf8');
 
 
         }
@@ -354,7 +451,7 @@ var scriptType="sh"
         var fs = require('fs');
         var array = fs.readFileSync('file.txt').toString().split("\n");
         for(i in array) {
-            // console.log(array[i]);
+         
         }
         
         
@@ -375,7 +472,7 @@ var scriptType="sh"
 
         var fullPath = __dirname;
 
-        // console.log(fullPath)
+
 
         //fullPath = fullPath.slice(0,fullPath.lastIndexOf('\\'));
         //fullPath = fullPath.slice(0,fullPath.lastIndexOf('\\'));
@@ -399,7 +496,7 @@ var scriptType="sh"
 
         //     }
 
-        //     // console.log(handBrakeCLIPath)
+
 
         //     if (fs.existsSync(handBrakeCLIPath)) {
 
@@ -415,12 +512,48 @@ var scriptType="sh"
         // }
 
 
+        var checkboxDelete = document.querySelector("input[name=deleteSourceFilesname]");
+
+checkboxDelete.addEventListener('change', function () {
+    if (this.checked) {
+
+
+        //document.getElementById("deleteItemDiv2").style.backgroundColor = '#ef435d';
+
+
+        document.getElementById("deleteSourceFilesdiv").style.color = '#ef435d';
+
+
+
+
+
+
+    } else {
+
+        document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,0.4)';
+
+    }
+});
+
+
+
+
+
 
 
         cbChange2();
 
- 
-    
+if (document.getElementById("deleteSourceFiles").checked==true) {
+
+document.getElementById("deleteSourceFilesdiv").style.color = '#ef435d';
+} else {
+
+document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,0.4)';
+
+}
+
+
+
     }
 
 
@@ -514,7 +647,7 @@ var scriptType="sh"
 
 
         // save scan interval
-        fs.writeFileSync(homePath+'/HBBatchBeast/Config/scanInterval.txt', document.getElementById("timer").value, 'utf8');
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/scanInterval.txt', document.getElementById("timer").value, 'utf8');
 
 
 
@@ -522,9 +655,9 @@ var scriptType="sh"
 
         if (document.getElementById("scanOnOff").checked == true) {
 
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/periodicScanningOnOff.txt', 1, 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/periodicScanningOnOff.txt', 1, 'utf8');
         } else {
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/periodicScanningOnOff.txt', 0, 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/periodicScanningOnOff.txt', 0, 'utf8');
 
         }
 
@@ -532,48 +665,48 @@ var scriptType="sh"
 
         //save source destination
 
-        fs.writeFileSync(homePath+'/HBBatchBeast/Config/recentSource.txt', document.getElementById("sourcePath").value, 'utf8');
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/recentSource.txt', document.getElementById("sourcePath").value, 'utf8');
 
         //save destination path
 
-        fs.writeFileSync(homePath+'/HBBatchBeast/Config/recentDestination.txt', document.getElementById("destinationPath").value, 'utf8');
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/recentDestination.txt', document.getElementById("destinationPath").value, 'utf8');
 
         //save tempdestination path
 
-        fs.writeFileSync(homePath+'/HBBatchBeast/Config/tempDestinationPath.txt', document.getElementById("tempDestinationPath").value, 'utf8');
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/tempDestinationPath.txt', document.getElementById("tempDestinationPath").value, 'utf8');
 
         //save enable/disble temporary destination
 
 
         if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
 
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/tempDestinationOnOff.txt', 1, 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/tempDestinationOnOff.txt', 1, 'utf8');
         } else {
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/tempDestinationOnOff.txt', 0, 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/tempDestinationOnOff.txt', 0, 'utf8');
 
         }
 
         //save preset     
-        fs.writeFileSync(homePath+'/HBBatchBeast/Config/preset.txt', document.getElementById("preset").value, 'utf8');
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/preset.txt', document.getElementById("preset").value, 'utf8');
 
 
         //save custom preset enable/disable
 
         if (document.getElementById("selectStandardPreset").checked == true) {
 
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/customPresetOnOff.txt', 0, 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/customPresetOnOff.txt', 0, 'utf8');
         } else {
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/customPresetOnOff.txt', 1, 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/customPresetOnOff.txt', 1, 'utf8');
 
         }
 
 
         //save custom preset string
-        fs.writeFileSync(homePath+'/HBBatchBeast/Config/customPreset.txt', document.getElementById("customPresets").value, 'utf8');
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/customPreset.txt', document.getElementById("customPresets").value, 'utf8');
 
 
         // save container selection
-        fs.writeFileSync(homePath+'/HBBatchBeast/Config/container.txt', document.getElementById("container").value, 'utf8');
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/container.txt', document.getElementById("container").value, 'utf8');
 
 
 
@@ -581,7 +714,7 @@ var scriptType="sh"
 
         if (document.getElementById("selectStandardPreset").checked == true) {
 
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/presetString.txt', "-Z \"" + document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text + "\"", 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/presetString.txt', "-Z \"" + document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text + "\"", 'utf8');
 
         }
 
@@ -590,21 +723,28 @@ var scriptType="sh"
 
         if (document.getElementById("selectCustomPreset").checked == true) {
 
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/presetString.txt', document.getElementById("customPresets").value, 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/presetString.txt', document.getElementById("customPresets").value, 'utf8');
 
         }
 
 
         // save delete soure files
-    
 
 
-        if (document.getElementById("deleteSourceFiles").checked == true) {
+        if (mode == "healthCheck") {
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/deleteSourceFilesOnOff.txt', 0, 'utf8');
 
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/deleteSourceFilesOnOff.txt', 1, 'utf8');
         } else {
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/deleteSourceFilesOnOff.txt', 0, 'utf8');
 
+
+
+            if (document.getElementById("deleteSourceFiles").checked == true) {
+
+                fs.writeFileSync(homePath + '/HBBatchBeast/Config/deleteSourceFilesOnOff.txt', 1, 'utf8');
+            } else {
+                fs.writeFileSync(homePath + '/HBBatchBeast/Config/deleteSourceFilesOnOff.txt', 0, 'utf8');
+
+            }
         }
 
 
@@ -614,18 +754,18 @@ var scriptType="sh"
 
         //define included file types
 
-        fs.writeFileSync(homePath+'/HBBatchBeast/Config/includedFileTypes.txt', document.getElementById("includedFileTypes").value, 'utf8');
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/includedFileTypes.txt', document.getElementById("includedFileTypes").value, 'utf8');
 
 
         // save number of instances to use 
 
-        fs.writeFileSync(homePath+'/HBBatchBeast/Config/instanceNumber.txt', document.getElementById("instanceNumber").value, 'utf8');
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/instanceNumber.txt', document.getElementById("instanceNumber").value, 'utf8');
 
 
         // save custom bat path
 
 
-        fs.writeFileSync(homePath+"/HBBatchBeast/Config/customBatPath.txt", document.getElementById("customBatPath").value, 'utf8');
+        fs.writeFileSync(homePath + "/HBBatchBeast/Config/customBatPath.txt", document.getElementById("customBatPath").value, 'utf8');
 
 
 
@@ -649,39 +789,62 @@ var scriptType="sh"
     }
 
 
-    var fileNotExistsCounter = 0;
-    var totalFileFoundCounter = 0;
 
-    var inputPathArray
-    var outputPathArray
-
-    var sourceQueueArray
-    var presetArray2
-
-    var mode="";
 
     function convertFiles(processMode) {
 
-        document.getElementById('healthCheckDiv').innerHTML ="";
+
+
+
+        //reset divs
+
+        document.getElementById("totalFilesDiv").innerHTML = ""
+        document.getElementById("totalUnconvertedFilesDiv").innerHTML = ""
+        document.getElementById("startTimeDiv").innerHTML = ""
+        document.getElementById("durationDiv").innerHTML = ""
+        document.getElementById("endTimeDiv").innerHTML = ""
+        document.getElementById("viewStatus").innerHTML = "";
+        document.getElementById("timerDiv").innerHTML = "";
+
+
+        //set countdown timer
+
+        timerSeconds = document.getElementById("timer").value
 
 
         mode = processMode;
 
-        
-        if (mode == "healthCheck") {
-            document.getElementById("deleteSourceFiles").checked = false
+        startDate = new Date();
+
+        if (mode == "scanandconvert" || mode == "healthCheck") {
+
+            document.getElementById("startTimeDiv").innerHTML = "<p>Start time: " + getTimeNow() + "<\p>";
 
         }
 
-        upToLine =1;
-        readArrayLowerBound =0;
+
+
+
+        document.getElementById('healthCheckDiv').innerHTML = "";
+
+
+
+
+
+
+
+        AllCompleted =0;
+
+        CompletedSwitch2 = 0;
+        upToLine = 1;
+        readArrayLowerBound = 0;
 
 
         inputPathArray = [];
         outputPathArray = [];
         sourceQueueArray = [];
+        sourceQueueFileSizeArray=[]
         var outputPathArrayFinal = [];
-        CompletedSwitch2 =0;
 
 
         var inputPathArrayCounter = 0;
@@ -690,6 +853,9 @@ var scriptType="sh"
 
         fileNotExistsCounter = 0;
         totalFileFoundCounter = 0;
+        totalFileSize = 0;
+
+        errorCount=0;
 
         var g;
 
@@ -732,227 +898,227 @@ var scriptType="sh"
         validationSection:
         {
 
-        
-// //check to see if there's a line break at the end of each folder
-// if(document.getElementById("sourcePath").value.charAt(document.getElementById("sourcePath").value.length-1 !="n")){
 
-//     document.getElementById("sourcePath").value+="\n"
-// }
+            // //check to see if there's a line break at the end of each folder
+            // if(document.getElementById("sourcePath").value.charAt(document.getElementById("sourcePath").value.length-1 !="n")){
 
-// if(document.getElementById("destinationPath").value.charAt(document.getElementById("destinationPath").value.length-1 !="n")){
+            //     document.getElementById("sourcePath").value+="\n"
+            // }
 
-// document.getElementById("destinationPath").value+="\n"
-// }
+            // if(document.getElementById("destinationPath").value.charAt(document.getElementById("destinationPath").value.length-1 !="n")){
 
-// if(document.getElementById("tempDestinationPath").value.charAt(document.getElementById("tempDestinationPath").value.length-1 !="n")){
+            // document.getElementById("destinationPath").value+="\n"
+            // }
 
-// document.getElementById("tempDestinationPath").value+="\n"
-// }
+            // if(document.getElementById("tempDestinationPath").value.charAt(document.getElementById("tempDestinationPath").value.length-1 !="n")){
+
+            // document.getElementById("tempDestinationPath").value+="\n"
+            // }
 
             var inputPathStemArray = "";
-inputPathStemArray = document.getElementById("sourcePath").value;
-inputPathStemArray = inputPathStemArray.toString().split("\n");
+            inputPathStemArray = document.getElementById("sourcePath").value;
+            inputPathStemArray = inputPathStemArray.toString().split("\n");
 
-var outPutPathStemArray = "";
-outPutPathStemArray = document.getElementById("destinationPath").value;
-outPutPathStemArray = outPutPathStemArray.toString().split("\n");
+            var outPutPathStemArray = "";
+            outPutPathStemArray = document.getElementById("destinationPath").value;
+            outPutPathStemArray = outPutPathStemArray.toString().split("\n");
 
-var outPutPathStemFinalArray = "";
+            var outPutPathStemFinalArray = "";
 
-if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-outPutPathStemFinalArray = document.getElementById("tempDestinationPath").value;
-outPutPathStemFinalArray = outPutPathStemFinalArray.toString().split("\n");
-}
-
-
-if (mode != "healthCheck") {
-if (document.getElementById("selectCustomPreset").checked == true) {
-
-    var presetArray =[];
-                presetArray = document.getElementById("customPresets").value;
-                presetArray = presetArray.toString().split("\n");
-
-
-              
-if(inputPathStemArray.length !=presetArray.length){
-
-    alert("The number of custom presets does not match the number of source folders! "+inputPathStemArray.length+" source folders have been detected. "+presetArray.length+" custom preset lines have been detected. Please double check for invisible line breaks. There should be one folder path or preset per line. Make sure you haven't accidentally created a blank line." );
-            break validationSection;
-
-}
-                }
-
-
-
-}
-
-//check number of source/dest/temp folders matches
-
-
-if (mode != "healthCheck") {
-
-if (document.getElementById("selectTemporaryConversionFolder").checked == false) {
-if(inputPathStemArray.length !=outPutPathStemArray.length){
-
-    alert("The number of source folders does not match the number of destination folders! "+inputPathStemArray.length+" source folders have been detected. "+outPutPathStemArray.length+" destination folders have been detected. Please double check for invisible line breaks. There should be one folder path per line. Make sure you haven't accidentally created a blank line." );
-                break validationSection;
-
-}
-}
-
-if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-
-    if(inputPathStemArray.length !=outPutPathStemArray.length){
-
-        alert("The number of source folders does not match the number of temporary conversion folders! "+inputPathStemArray.length+" source folders have been detected. "+outPutPathStemArray.length+" temporary conversion folders have been detected. Please double check for invisible line breaks. There should be one folder path per line. Make sure you haven't accidentally created a blank line." );
-            break validationSection;
-
-}
-
-if(inputPathStemArray.length !=outPutPathStemFinalArray.length){
-
-    alert("The number of source folders does not match the number of destination folders! "+inputPathStemArray.length+" source folders have been detected. "+outPutPathStemFinalArray.length+" destination folders have been detected. Please double check for invisible line breaks. There should be one folder path per line. Make sure you haven't accidentally created a blank line." );
-            break validationSection;
-
-}
-
-}
-}
-
-
-
-for (var y= 0; y < inputPathStemArray.length; y++) {
-
-
-    //make sure there are no trailing slashes on file paths
-
-            if (inputPathStemArray[y].charAt(inputPathStemArray[y].length - 1) == "\\" || inputPathStemArray[y].charAt(inputPathStemArray[y].length - 1) == "/") {
-
-                alert("Please remove trailing slashes from source folder path "+inputPathStemArray[y]+"!");
-                break validationSection;
+            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+                outPutPathStemFinalArray = document.getElementById("tempDestinationPath").value;
+                outPutPathStemFinalArray = outPutPathStemFinalArray.toString().split("\n");
             }
 
 
             if (mode != "healthCheck") {
+                if (document.getElementById("selectCustomPreset").checked == true) {
 
-            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-
-                if (outPutPathStemArray[y].charAt(outPutPathStemArray[y].length - 1) == "\\" || outPutPathStemArray[y].charAt(outPutPathStemArray[y].length - 1) == "/") {
-
-
-                    alert("Please remove trailing slashes from the temporary folder path "+outPutPathStemArray[y]+"!");
-                    break validationSection;
+                    var presetArray = [];
+                    presetArray = document.getElementById("customPresets").value;
+                    presetArray = presetArray.toString().split("\n");
 
 
+
+                    if (inputPathStemArray.length != presetArray.length) {
+
+                        alert("The number of custom presets does not match the number of source folders! " + inputPathStemArray.length + " source folders have been detected. " + presetArray.length + " custom preset lines have been detected. Please double check for invisible line breaks. There should be one folder path or preset per line. Make sure you haven't accidentally created a blank line.");
+                        break validationSection;
+
+                    }
                 }
-            } else {
 
 
-
-
-                if (outPutPathStemArray[y].charAt(outPutPathStemArray[y].length - 1) == "\\" || outPutPathStemArray[y].charAt(outPutPathStemArray[y].length - 1) == "/") {
-
-
-                    alert("Please remove trailing slashes from the destination folder path "+outPutPathStemArray[y]+"!");
-                    break validationSection;
-
-
-                }
 
             }
 
-            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+            //check number of source/dest/temp folders matches
 
-                if (outPutPathStemFinalArray[y].charAt(outPutPathStemFinalArray[y].length - 1) == "\\" || outPutPathStemFinalArray[y].charAt(outPutPathStemFinalArray[y].length - 1) == "/") {
-
-
-                    alert("Please remove trailing slashes from the destination folder path "+outPutPathStemFinalArray[y]+"!");
-                    break validationSection;
-
-
-                }
-
-            }
-
-}
-
-
-            //check folders exist
-
-
-
-            if (fs.existsSync(inputPathStemArray[y] + validationSlash) == false ||inputPathStemArray[y]=="") {
-
-                alert("Source folder "+(y+1)+" "+inputPathStemArray[y]+" does not exist! Please make sure there are no spaces or hidden characters before/after the path");
-                break validationSection;
-            }
 
             if (mode != "healthCheck") {
 
-            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+                if (document.getElementById("selectTemporaryConversionFolder").checked == false) {
+                    if (inputPathStemArray.length != outPutPathStemArray.length) {
 
-                if (fs.existsSync(outPutPathStemArray[y] + validationSlash) == false ||outPutPathStemArray[y]=="") {
+                        alert("The number of source folders does not match the number of destination folders! " + inputPathStemArray.length + " source folders have been detected. " + outPutPathStemArray.length + " destination folders have been detected. Please double check for invisible line breaks. There should be one folder path per line. Make sure you haven't accidentally created a blank line.");
+                        break validationSection;
 
-                    alert("Temporary conversion folder "+(y+1)+" "+outPutPathStemArray[y]+" does not exist! Please make sure there are no spaces or hidden characters before/after the path");
+                    }
+                }
+
+                if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+                    if (inputPathStemArray.length != outPutPathStemArray.length) {
+
+                        alert("The number of source folders does not match the number of temporary conversion folders! " + inputPathStemArray.length + " source folders have been detected. " + outPutPathStemArray.length + " temporary conversion folders have been detected. Please double check for invisible line breaks. There should be one folder path per line. Make sure you haven't accidentally created a blank line.");
+                        break validationSection;
+
+                    }
+
+                    if (inputPathStemArray.length != outPutPathStemFinalArray.length) {
+
+                        alert("The number of source folders does not match the number of destination folders! " + inputPathStemArray.length + " source folders have been detected. " + outPutPathStemFinalArray.length + " destination folders have been detected. Please double check for invisible line breaks. There should be one folder path per line. Make sure you haven't accidentally created a blank line.");
+                        break validationSection;
+
+                    }
+
+                }
+            }
+
+
+
+            for (var y = 0; y < inputPathStemArray.length; y++) {
+
+
+                //make sure there are no trailing slashes on file paths
+
+                if (inputPathStemArray[y].charAt(inputPathStemArray[y].length - 1) == "\\" || inputPathStemArray[y].charAt(inputPathStemArray[y].length - 1) == "/") {
+
+                    alert("Please remove trailing slashes from source folder path " + inputPathStemArray[y] + "!");
                     break validationSection;
                 }
 
 
+                if (mode != "healthCheck") {
 
-            } else {
+                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
 
-                if (fs.existsSync(outPutPathStemArray[y] + validationSlash) == false||outPutPathStemArray[y]=="") {
+                        if (outPutPathStemArray[y].charAt(outPutPathStemArray[y].length - 1) == "\\" || outPutPathStemArray[y].charAt(outPutPathStemArray[y].length - 1) == "/") {
 
-                    alert("Destination folder "+(y+1)+" "+outPutPathStemArray[y]+" does not exist! Please make sure there are no spaces or hidden characters before/after the path");
+
+                            alert("Please remove trailing slashes from the temporary folder path " + outPutPathStemArray[y] + "!");
+                            break validationSection;
+
+
+                        }
+                    } else {
+
+
+
+
+                        if (outPutPathStemArray[y].charAt(outPutPathStemArray[y].length - 1) == "\\" || outPutPathStemArray[y].charAt(outPutPathStemArray[y].length - 1) == "/") {
+
+
+                            alert("Please remove trailing slashes from the destination folder path " + outPutPathStemArray[y] + "!");
+                            break validationSection;
+
+
+                        }
+
+                    }
+
+                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+                        if (outPutPathStemFinalArray[y].charAt(outPutPathStemFinalArray[y].length - 1) == "\\" || outPutPathStemFinalArray[y].charAt(outPutPathStemFinalArray[y].length - 1) == "/") {
+
+
+                            alert("Please remove trailing slashes from the destination folder path " + outPutPathStemFinalArray[y] + "!");
+                            break validationSection;
+
+
+                        }
+
+                    }
+
+                }
+
+
+                //check folders exist
+
+
+
+                if (fs.existsSync(inputPathStemArray[y] + validationSlash) == false || inputPathStemArray[y] == "") {
+
+                    alert("Source folder " + (y + 1) + " " + inputPathStemArray[y] + " does not exist! Please make sure there are no spaces or hidden characters before/after the path");
                     break validationSection;
+                }
+
+                if (mode != "healthCheck") {
+
+                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+                        if (fs.existsSync(outPutPathStemArray[y] + validationSlash) == false || outPutPathStemArray[y] == "") {
+
+                            alert("Temporary conversion folder " + (y + 1) + " " + outPutPathStemArray[y] + " does not exist! Please make sure there are no spaces or hidden characters before/after the path");
+                            break validationSection;
+                        }
+
+
+
+                    } else {
+
+                        if (fs.existsSync(outPutPathStemArray[y] + validationSlash) == false || outPutPathStemArray[y] == "") {
+
+                            alert("Destination folder " + (y + 1) + " " + outPutPathStemArray[y] + " does not exist! Please make sure there are no spaces or hidden characters before/after the path");
+                            break validationSection;
+                        }
+
+
+                    }
+
+                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+
+                        if (fs.existsSync(outPutPathStemFinalArray[y] + validationSlash) == false || outPutPathStemFinalArray[y] == "") {
+
+                            alert("Destination folder " + (y + 1) + " " + outPutPathStemFinalArray[y] + " does not exist! Please make sure there are no spaces or hidden characters before/after the path");
+                            break validationSection;
+                        }
+
+
+
+                    }
+                } else {
+                    outPutPathStemArray[y] = "";
+                    outPutPathStemFinalArray[y] = "";
+
+
+
                 }
 
 
             }
 
-            if (document.getElementById("selectTemporaryConversionFolder").checked == true ) {
+            if (mode != "healthCheck") {
+                if (document.getElementById("selectStandardPreset").checked == false && document.getElementById("selectCustomPreset").checked == false) {
 
-
-                if (fs.existsSync(outPutPathStemFinalArray[y] + validationSlash) == false||outPutPathStemFinalArray[y]=="") {
-
-                    alert("Destination folder "+(y+1)+" "+outPutPathStemFinalArray[y]+" does not exist! Please make sure there are no spaces or hidden characters before/after the path");
+                    alert("Please select a standard preset or input a custom one!");
                     break validationSection;
                 }
 
 
+                var scanIntervalVal = document.getElementById("timer").value
 
-           }
-            }else{
-                outPutPathStemArray[y]="";
-                outPutPathStemFinalArray[y]="";
+                if (scanIntervalVal < 5) {
 
-
+                    alert("Please select a scan interval of 5 seconds or greater!");
+                    break validationSection;
+                }
 
             }
-
-
-}
-
-if (mode != "healthCheck") {
-            if (document.getElementById("selectStandardPreset").checked == false && document.getElementById("selectCustomPreset").checked == false) {
-
-                alert("Please select a standard preset or input a custom one!");
-                break validationSection;
-            }
-
-
-            var scanIntervalVal = document.getElementById("timer").value
-
-            if (scanIntervalVal < 5) {
-
-                alert("Please select a scan interval of 5 seconds or greater!");
-                break validationSection;
-            }
-
-}
 
             var instanceNumberVal = document.getElementById("instanceNumber").value
-            if (instanceNumberVal < 1 ) {
+            if (instanceNumberVal < 1) {
 
                 alert("Please make sure the number of simulataneous Handbrake instances to use is one or greater!");
                 break validationSection;
@@ -960,6 +1126,7 @@ if (mode != "healthCheck") {
 
 
             saveConfig();
+            createscanWindow();
 
 
 
@@ -967,11 +1134,12 @@ if (mode != "healthCheck") {
             //Reset counters before processing
 
 
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/totalFilesFound.txt', 0, 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFound.txt', 0, 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFoundSize.txt', "-", 'utf8');
 
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/unconvertedFilesFound.txt', 0, 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/unconvertedFilesFound.txt', 0, 'utf8');
 
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/convertedFiles.txt', 0, 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/convertedFiles.txt', 0, 'utf8');
 
 
 
@@ -986,56 +1154,58 @@ if (mode != "healthCheck") {
             outputPathArray = [];
 
 
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/sourceQueue.txt', "", 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/Processes/sourceQueue.txt', "", 'utf8');
 
-fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/destinationQueue.txt', "", 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationQueue.txt', "", 'utf8');
 
-fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', "", 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', "", 'utf8');
 
-fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/queueNumberPath.txt', "0", 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/Processes/queueNumberPath.txt', "0", 'utf8');
 
-var LocalStorage = require('node-localstorage').LocalStorage;
-queueNumberPathStorage = new LocalStorage(homePath+'/HBBatchBeast/Config/Processes/queueNumberPath');
-queueNumberPathStorage.setItem('myFirstKey', '0');
+            var LocalStorage = require('node-localstorage').LocalStorage;
+            queueNumberPathStorage = new LocalStorage(homePath + '/HBBatchBeast/Config/Processes/queueNumberPath');
+            queueNumberPathStorage.setItem('myFirstKey', '0');
 
 
-// var temp = (parseInt(queueNumberPathStorage.getItem('myFirstKey'))+1)
-// temp++;
-// queueNumberPathStorage.setItem('myFirstKey', temp);
-// // console.log(queueNumberPathStorage.getItem('myFirstKey'));
-
+            // var temp = (parseInt(queueNumberPathStorage.getItem('myFirstKey'))+1)
+            // temp++;
+            // queueNumberPathStorage.setItem('myFirstKey', temp);
 
 
 
-fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt", "", 'utf8');
 
 
-for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
-    fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+i+"QueueNumber.txt", "-", "utf8");
-    fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+i+"FileName.txt", "-", "utf8");
-}
+            fs.writeFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt", "", 'utf8');
+            fs.writeFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueSuccess.txt", "", 'utf8');
+            fs.writeFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueError.txt", "", 'utf8');
 
 
-fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt', "0", 'utf8');
+            for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
+                fs.writeFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + i + "QueueNumber.txt", "0", "utf8");
+                fs.writeFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + i + "FileName.txt", "-", "utf8");
+            }
 
-var writeNumber = 0;
-var sourceQueueArrayCounter = 0;
+
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt', "0", 'utf8');
+
+            var writeNumber = 0;
+            var sourceQueueArrayCounter = 0;
 
 
-         
-//reset preset arrays
-var presetArray =[];
- presetArray2 =[];
+
+            //reset preset arrays
+            var presetArray = [];
+            presetArray2 = [];
 
             if (document.getElementById("selectStandardPreset").checked == true) {
 
-                for (var y= 0; y < inputPathStemArray.length; y++) {
+                for (var y = 0; y < inputPathStemArray.length; y++) {
                     presetArray[y] = "-Z \"" + document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text + "\"";
                 }
 
-            }else{
+            } else {
 
-                var presetArray =[];
+                var presetArray = [];
                 presetArray = document.getElementById("customPresets").value;
                 presetArray = presetArray.toString().split("\n");
 
@@ -1046,281 +1216,284 @@ var presetArray =[];
 
             if (mode == "healthCheck") {
 
-                for (var y= 0; y < inputPathStemArray.length; y++) {
+                for (var y = 0; y < inputPathStemArray.length; y++) {
                     presetArray[y] = "--scan";
                 }
 
             }
 
 
-console.log(presetArray[1])
 
 
-   // folder loop begin 
-for (var y= 0; y < inputPathStemArray.length; y++) {
 
+            // folder loop begin 
+            for (var y = 0; y < inputPathStemArray.length; y++) {
 
 
 
 
 
 
-            inputPathStem = inputPathStemArray[y]
-            outPutPathStem =  outPutPathStemArray[y]
 
-            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-            outPutPathStemFinal = outPutPathStemFinalArray[y]
-            }
+                inputPathStem = inputPathStemArray[y]
+                outPutPathStem = outPutPathStemArray[y]
 
-            inputPathStemSplit = inputPathStem.split(',');
+                if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+                    outPutPathStemFinal = outPutPathStemFinalArray[y]
+                }
 
+                inputPathStemSplit = inputPathStem.split(',');
 
 
-            topFolder = inputPathStemSplit[inputPathStemSplit.length - 1]
 
-            topFolderCharLength = topFolder.length
+                topFolder = inputPathStemSplit[inputPathStemSplit.length - 1]
 
+                topFolderCharLength = topFolder.length
 
 
-        
 
 
 
-        
 
 
 
 
-            var fs = require('fs');
-            var path = require('path');
 
-            try {
-            traverseDir(inputPathStem);
-        } catch (err) {}
 
-            function traverseDir(inputPathStem) {
-                fs.readdirSync(inputPathStem).forEach(file => {
-                    let fullPath = path.join(inputPathStem, file);
 
-                    try {
-                        if (fs.lstatSync(fullPath).isDirectory()) {
-                            //  // console.log(fullPath);
+                var fs = require('fs');
+                var path = require('path');
 
-                            try {
-                                traverseDir(fullPath);
-                            } catch (err) {}
-                        } else {
-                            //    // console.log(fullPath);
+                try {
+                    traverseDir(inputPathStem);
+                } catch (err) {}
 
+                function traverseDir(inputPathStem) {
+                    fs.readdirSync(inputPathStem).forEach(file => {
+                        let fullPath = path.join(inputPathStem, file);
 
-                            var thisFile = fullPath + ""
+                        try {
+                            if (fs.lstatSync(fullPath).isDirectory()) {
 
-                            fileTypeSplit = thisFile.split('.');
-                            fileType = fileTypeSplit[fileTypeSplit.length - 1]
+                                try {
+                                    traverseDir(fullPath);
+                                } catch (err) {}
+                            } else {
 
 
-                            //Here we define supported file types
-                            var supportedFileTypeArray = document.getElementById("includedFileTypes").value
 
-                            supportedFileTypeArray = supportedFileTypeArray.split(',');
+                                var thisFile = fullPath + ""
 
-                            //Here we check to see if the current file being analysed contains a valid file type
-                            var supportedFileSwitch = 0;
+                                fileTypeSplit = thisFile.split('.');
+                                fileType = fileTypeSplit[fileTypeSplit.length - 1]
 
 
-                            for (var j = 0; j < supportedFileTypeArray.length; j++) {
+                                //Here we define supported file types
+                                var supportedFileTypeArray = document.getElementById("includedFileTypes").value
 
-                                if (fileType == supportedFileTypeArray[j]) {
-                                    supportedFileSwitch = 1;
-                                }
+                                supportedFileTypeArray = supportedFileTypeArray.split(',');
 
-                            }
+                                //Here we check to see if the current file being analysed contains a valid file type
+                                var supportedFileSwitch = 0;
 
-                            //If the file type is valid, then process it
 
-                            if (supportedFileSwitch == 1) {
+                                for (var j = 0; j < supportedFileTypeArray.length; j++) {
 
-                                //document.getElementById("files2").innerHTML += "<p>"+ thisFile+"<\p>";
-
-
-
-                                //Here add the full file path to the inputPathArray
-                                inputPathArray[inputPathArrayCounter] = thisFile + "";
-
-
-
-                                //Write to file to state that file with valid format has been found
-
-                                fs.writeFileSync(homePath+'/HBBatchBeast/Config/totalFilesFound.txt', (totalFileFoundCounter + 1), 'utf8');
-
-                                totalFileFoundCounter++
-
-
-                                var str = inputPathArray[inputPathArrayCounter];
-
-
-                                str = str.substring(str.indexOf("topFolder") + topFolderCharLength + 1);
-
-
-                                if (process.platform == 'win32') {
-
-                                    var stringProcessingSlash = "\\";
-                                }
-
-                                if (process.platform == 'linux' || process.platform == 'darwin') {
-                                    var stringProcessingSlash = "/";
-                                }
-
-                                pointer = str.split(stringProcessingSlash);
-
-                                filePathEnd = pointer[pointer.length - 1]
-
-                                filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));
-
-                                subfilePath = filePathEndFileType + document.getElementById("container").options[document.getElementById("container").selectedIndex].text;
-
-                                LongsubfilePath = str.slice(0, str.lastIndexOf(stringProcessingSlash));
-
-                                newsubfilePath = LongsubfilePath + stringProcessingSlash + subfilePath;
-
-
-                                outputPathArray[inputPathArrayCounter] = outPutPathStem + newsubfilePath;
-                                var outputFolderPath = outputPathArray[inputPathArrayCounter].substring(0, outputPathArray[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
-
-                                //
-
-                                presetArray2[inputPathArrayCounter]= presetArray[y]
-
-
-                                if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-
-                                    outputPathArrayFinal[inputPathArrayCounter] = outPutPathStemFinal + newsubfilePath;
-                                    var outputFolderPathFinal = outputPathArrayFinal[inputPathArrayCounter].substring(0, outputPathArrayFinal[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
-
-                                }
-
-
-                                //if temp folder unchcked
-
-
-                                if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-
-
-
-
-
-
-
-
-
-                                    if (fs.existsSync(outputPathArrayFinal[inputPathArrayCounter])) {
-
-
-                                    } else {
-
-
-                                        fs.writeFileSync(homePath+'/HBBatchBeast/Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
-
-
-                                        fileNotExistsCounter++
+                                    if (fileType == supportedFileTypeArray[j]) {
+                                        supportedFileSwitch = 1;
                                     }
 
+                                }
+
+                                //If the file type is valid, then process it
+
+                                if (supportedFileSwitch == 1) {
+
+                                    //document.getElementById("files2").innerHTML += "<p>"+ thisFile+"<\p>";
 
 
 
-                                    //ELSE if temp folder checked
-                                } else {
+                                    //Here add the full file path to the inputPathArray
+                                    inputPathArray[inputPathArrayCounter] = thisFile + "";
+
+
+
+                                    //Write to file to state that file with valid format has been found
+
+                                    fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFound.txt', (totalFileFoundCounter + 1), 'utf8');
+                                    totalFileFoundCounter++
+
+
+
+
+
+
+
+                                    var str = inputPathArray[inputPathArrayCounter];
+
+
+                                    str = str.substring(str.indexOf("topFolder") + topFolderCharLength + 1);
+
+
+                                    if (process.platform == 'win32') {
+
+                                        var stringProcessingSlash = "\\";
+                                    }
+
+                                    if (process.platform == 'linux' || process.platform == 'darwin') {
+                                        var stringProcessingSlash = "/";
+                                    }
+
+                                    pointer = str.split(stringProcessingSlash);
+
+                                    filePathEnd = pointer[pointer.length - 1]
+
+                                    filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));
+
+                                    subfilePath = filePathEndFileType + document.getElementById("container").options[document.getElementById("container").selectedIndex].text;
+
+                                    LongsubfilePath = str.slice(0, str.lastIndexOf(stringProcessingSlash));
+
+                                    newsubfilePath = LongsubfilePath + stringProcessingSlash + subfilePath;
+
+
+                                    outputPathArray[inputPathArrayCounter] = outPutPathStem + newsubfilePath;
+                                    var outputFolderPath = outputPathArray[inputPathArrayCounter].substring(0, outputPathArray[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
 
                                     //
-                                    if (fs.existsSync(outputPathArray[inputPathArrayCounter])) {
+
+                                    presetArray2[inputPathArrayCounter] = presetArray[y]
+
+
+                                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+                                        outputPathArrayFinal[inputPathArrayCounter] = outPutPathStemFinal + newsubfilePath;
+                                        var outputFolderPathFinal = outputPathArrayFinal[inputPathArrayCounter].substring(0, outputPathArrayFinal[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
+
+                                    }
+
+
+                                    //if temp folder unchcked
+
+
+                                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+
+
+
+
+
+
+
+
+                                        if (fs.existsSync(outputPathArrayFinal[inputPathArrayCounter])) {
+
+
+                                        } else {
+
+
+                                            fs.writeFileSync(homePath + '/HBBatchBeast/Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
+
+
+                                            fileNotExistsCounter++
+                                        }
+
+
+
+
+                                        //ELSE if temp folder checked
+                                    } else {
+
+                                        //
+                                        if (fs.existsSync(outputPathArray[inputPathArrayCounter])) {
+
+
+                                        } else {
+
+                                            fs.writeFileSync(homePath + '/HBBatchBeast/Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
+
+                                            fileNotExistsCounter++
+
+                                        }
+                                        //
+
+                                    }
+
+
+                                    var shell = require('shelljs');
+
+
+
+                                    if (fs.existsSync(outputFolderPath)) {
 
 
                                     } else {
 
-                                        fs.writeFileSync(homePath+'/HBBatchBeast/Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
+                                        if (outputFolderPath != outputFolderPathold) {
+                                            // fs.mkdirSync(outputFolderPath);
 
-                                        fileNotExistsCounter++
-
-                                    }
-                                    //
-
-                                }
-
-
-                                var shell = require('shelljs');
-
-
-
-                                if (fs.existsSync(outputFolderPath)) {
-
-
-                                } else {
-
-                                    if (outputFolderPath != outputFolderPathold) {
-                                        // fs.mkdirSync(outputFolderPath);
-
-
-                                        try {
-
-                                            if (mode == "scanandconvert") {
-                                                shell.mkdir('-p', outputFolderPath);
-                                            }
-
-                                        } catch (err) {}
-
-                                        outputFolderPathold = outputFolderPath;
-                                    }
-
-                                }
-
-
-                                //AND if tempfolderchecked
-
-                                if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-
-
-                                    if (fs.existsSync(outputFolderPathFinal)) {
-
-                                    } else {
-
-                                        if (outputFolderPathFinal != outputFolderPathFinalold) {
-
-                                            //fs.mkdirSync(outputFolderPathFinal);
 
                                             try {
 
                                                 if (mode == "scanandconvert") {
-                                                    shell.mkdir('-p', outputFolderPathFinal);
-
+                                                    shell.mkdir('-p', outputFolderPath);
                                                 }
 
                                             } catch (err) {}
 
+                                            outputFolderPathold = outputFolderPath;
+                                        }
 
-                                            outputFolderPathFinalold = outputFolderPathFinal;
+                                    }
 
+
+                                    //AND if tempfolderchecked
+
+                                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+
+                                        if (fs.existsSync(outputFolderPathFinal)) {
+
+                                        } else {
+
+                                            if (outputFolderPathFinal != outputFolderPathFinalold) {
+
+                                                //fs.mkdirSync(outputFolderPathFinal);
+
+                                                try {
+
+                                                    if (mode == "scanandconvert") {
+                                                        shell.mkdir('-p', outputFolderPathFinal);
+
+                                                    }
+
+                                                } catch (err) {}
+
+
+                                                outputFolderPathFinalold = outputFolderPathFinal;
+
+                                            }
                                         }
                                     }
-                                }
 
 
-                                inputPathArrayCounter++;
-
-
-
-
-
-                            } //end supported file switch
+                                    inputPathArrayCounter++;
 
 
 
 
-                        }  //end current file, go to next
 
-                    } catch (err) {}
-                });
-            }
-}//end source folder loop
+                                } //end supported file switch
+
+
+
+
+                            }  //end current file, go to next
+
+                        } catch (err) {}
+                    });
+                }
+            }//end source folder loop
 
 
 
@@ -1332,8 +1505,7 @@ for (var y= 0; y < inputPathStemArray.length; y++) {
             var currentWindowPath = __filename;
             var currentFolderPath = __dirname;
 
-            // // console.log(__dirname);
-            // // console.log(currentFolderPath);
+
 
             // var handBrakeCLIPath = fso.GetAbsolutePathName(homePath+'/HandBrakeCLI.exe');
 
@@ -1342,7 +1514,7 @@ for (var y= 0; y < inputPathStemArray.length; y++) {
 
 
 
-            //// console.log(handBrakeCLIPath);
+
 
 
 
@@ -1351,21 +1523,45 @@ for (var y= 0; y < inputPathStemArray.length; y++) {
 
                 for (var i = 0; i < outputPathArray.length; i++) {
 
+
+
+
                     if (fs.existsSync(outputPathArrayFinal[i])) {
 
                     } else {
 
 
-                        fs.appendFileSync(homePath+'/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] +",,,"+presetArray2[i]+ "\n", 'utf8');
+                        fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + ",,," + presetArray2[i] + "\n", 'utf8');
                         sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
-                        sourceQueueArrayCounter++
-                        y++;
+                       
 
 
-                        fs.appendFileSync(homePath+'/HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
+//write to file to specify size of all files found so far
+var singleFileSize = fs.statSync(sourceQueueArray[sourceQueueArrayCounter])
+
+totalFileSize = totalFileSize + singleFileSize.size
 
 
-                        fs.appendFileSync(homePath+'/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
+
+var fileSizeInGbytes = totalFileSize / 1000000000.0;
+
+fileSizeInGbytes = parseFloat(fileSizeInGbytes).toFixed(2);
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFoundSize.txt', "Building queue:"+(sourceQueueArrayCounter+1)+"("+fileSizeInGbytes+"GB)", 'utf8');
+
+
+sourceQueueFileSizeArray[sourceQueueArrayCounter]= singleFileSize.size/ 1000000000.0;
+
+
+
+sourceQueueArrayCounter++
+
+            
+
+
+                        fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
+
+
+                        fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
 
 
                         writeNumber++;
@@ -1386,18 +1582,35 @@ for (var y= 0; y < inputPathStemArray.length; y++) {
 
                     } else {
 
-                        fs.appendFileSync(homePath+'/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i]+",,,"+presetArray2[i]+ "\n", 'utf8');
+                        fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + ",,," + presetArray2[i] + "\n", 'utf8');
                         sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
-                        sourceQueueArrayCounter++
-                   
+                       
+
+
+                        //write to file to specify size of all files found so far
+var singleFileSize = fs.statSync(sourceQueueArray[sourceQueueArrayCounter])
+
+totalFileSize = totalFileSize + singleFileSize.size
 
 
 
-                        fs.appendFileSync(homePath+'/HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
+var fileSizeInGbytes = totalFileSize / 1000000000.0;
+
+
+fileSizeInGbytes = parseFloat(fileSizeInGbytes).toFixed(2);
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFoundSize.txt', "Building queue:"+(sourceQueueArrayCounter+1)+"("+fileSizeInGbytes+"GB)", 'utf8');
+
+
+sourceQueueFileSizeArray[sourceQueueArrayCounter]= singleFileSize.size/ 1000000000.0;
 
 
 
-                        fs.appendFileSync(homePath+'/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
+
+sourceQueueArrayCounter++
+
+                        fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
+
+                        fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
 
 
 
@@ -1412,13 +1625,17 @@ for (var y= 0; y < inputPathStemArray.length; y++) {
 
             }
 
+            //Close scan Window
 
+            try {
+                scanWindow.close();
+            } catch (err) {}
 
             // Run all worker modules
 
             var workLaunchNumber = 1;
 
-            fs.writeFileSync(homePath+'/HBBatchBeast/Config/workerLaunch.txt', workLaunchNumber , 'utf8');
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/workerLaunch.txt', workLaunchNumber, 'utf8');
 
 
             if (mode == "scanandconvert" || mode == "healthCheck") {
@@ -1433,44 +1650,19 @@ for (var y= 0; y < inputPathStemArray.length; y++) {
                     var path = require("path");
                     var cp = childProcess.fork(path.join(__dirname, workerPath));
                     cp.on("exit", function (code, signal) {
-                        // console.log("Exited", {code: code, signal: signal});
+
                     });
                     cp.on("error", console.error.bind(console));
 
                     sleep(500);
 
                     workLaunchNumber++;
-                    fs.writeFileSync(homePath+'/HBBatchBeast/Config/workerLaunch.txt', workLaunchNumber , 'utf8');
+                    fs.writeFileSync(homePath + '/HBBatchBeast/Config/workerLaunch.txt', workLaunchNumber, 'utf8');
 
 
                 }
             }
 
-            /*  var workerpath = __dirname + "\\worker1.js";  OLD - not needed
-          
-               require('child_process').execSync( workerpath , function (err, stdout, stderr) {
-              if (err) {
-                  // Ooops.
-                  // // console.log(stderr);
-                  return // console.log(err);
-              }
-          
-              // Done.
-              runEndSection();
-              runScan();
-              // console.log(stdout);
-          });
-          
-          */
-
-
-
-            // worker module start
-
-
-
-
-            //worker end
 
 
 
@@ -1486,6 +1678,7 @@ for (var y= 0; y < inputPathStemArray.length; y++) {
 
 
 
+            
 
 
 
@@ -1494,6 +1687,35 @@ for (var y= 0; y < inputPathStemArray.length; y++) {
             runEndSection();
 
 
+            clearInterval(windowRefresh);
+            document.getElementById("queueButton").style.display = 'block';
+            document.getElementById("outputButton").style.display = 'block';
+
+var refreshRate = totalFileFoundCounter/10
+
+            if (refreshRate < 1000) {
+
+                refreshRate=1000
+            }
+
+            if (totalFileFoundCounter >= 1000) {
+                document.getElementById("fullQueueDiv").style.display = 'none';
+                document.getElementById("viewStatus").innerHTML = "<p style=\"color:red\">Large number of items in the queue! For best performance keep tables hidden while running. Refresh rate reduced to "+(refreshRate/1000)+" secs<\p>";
+                 windowRefresh = window.setInterval("runScan();", refreshRate);
+            } else {
+
+                document.getElementById("fullQueueDiv").style.display = 'block';
+                 windowRefresh = window.setInterval("runScan();", refreshRate);
+
+
+            }
+            document.getElementById("sessionConversions").style.display = 'none';
+
+
+            
+
+
+           
 
 
 
@@ -1501,20 +1723,35 @@ for (var y= 0; y < inputPathStemArray.length; y++) {
 
         }// end validation section
 
+        document.getElementById("totalFilesDiv").innerHTML = "<p>Total files found: " + totalFileFoundCounter + ". Size: " + parseFloat(totalFileSize / 1000000000).toFixed(2) + "GB<\p>";
+
+        if (mode != "healthCheck") {
+            unConvertedFiles = fs.readFileSync(homePath + "/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
+            document.getElementById("totalUnconvertedFilesDiv").innerHTML = "<p>Unconverted files found: " + unConvertedFiles + "<\p>";
+        }
+
+        if (mode == "healthCheck") {
+
+            document.getElementById("viewStatus").innerHTML += "<p > <font color=\"red\">Corrupt</font> items will be shown in the output section once finished.<\p>";
+
+
+        }
+
 
 
 
     }//end convertfiles function
 
-
-
     function runEndSection() {
         var fs = require('fs');
+
+
+        ipcRenderer.send('item:add','iconrunning');
 
         //load conversion queue into table
 
 
-        var queuePath = homePath+"/HBBatchBeast/Config/Processes/sourceQueue.txt";
+        var queuePath = homePath + "/HBBatchBeast/Config/Processes/sourceQueue.txt";
 
         var tableHTML = "";
         var tableQueueNumber = 1;
@@ -1525,20 +1762,16 @@ for (var y= 0; y < inputPathStemArray.length; y++) {
 
 
 
-        /* fs.readFile(homePath+"/HBBatchBeast/Config/scanInterval.txt", function(err, f){
-document.getElementById("timer").value= f
-}); */
-
         if (sourceQueueArray.length >= 1) {
 
-            /* var array = fs.readFileSync(queuePath).toString().split("\n");
-             // console.log(array)
-*/
 
 
 
 
-            //// console.log((sourceQueueArray)
+
+
+
+
 
 
 
@@ -1546,12 +1779,15 @@ document.getElementById("timer").value= f
 
                 + "<col width=\"70%\">"
                 + "<col width=\"auto\">"
+               
+                + "<col width=\"auto\">"
                 + "<col width=\"auto\">"
                 + "<col width=\"auto\">"
                 + "<col width=\"auto\">"
                 + "<tr>"
 
                 + "<th class=\"headcol\">Source file</th>"
+                + "<th class=\"headcol\">Size</th>"
                 + "<th class=\"headcol\">Queue no.</th>"
                 + "<th class=\"headcol\">Preset</th>"
                 + "<th class=\"headcol\">Worker</th>"
@@ -1561,11 +1797,26 @@ document.getElementById("timer").value= f
 
             for (var i = 0; i < (sourceQueueArray.length); i++) {
 
+                if(sourceQueueFileSizeArray[i]>=1){
+                    var itemSize = parseFloat(sourceQueueFileSizeArray[i]).toFixed(2)+"GB"
+
+                }else{
+
+                    var itemSize =  sourceQueueFileSizeArray[i]*1000;
+                     itemSize = parseFloat(itemSize).toFixed(2)+"MB"
+
+
+                }
+
                 var currentSourceLine = (sourceQueueArray[i]);
                 tableHTML += "<tr>"
                     + "<td>" + currentSourceLine + "</td>"
+                    + "<td>" +  itemSize+ "</td>"
+
+       
+                    
                     + "<td>" + tableQueueNumber + "</td>"
-                    + "<td > "+presetArray2[i]+"</td>"
+                    + "<td > " + presetArray2[i] + "</td>"
                     + "<td > - </td>"
                     + "<td > - </td>"
 
@@ -1587,53 +1838,102 @@ document.getElementById("timer").value= f
 
 
 
-        //check to see if periodic scanning should be set to run on completion
 
-        if (document.getElementById("scanOnOff").checked == true) {
-
-
-            countDownOn = 1;
-            document.getElementById("countdown").value = document.getElementById("timer").value
-
-
-
-        } else {
-
-            countDownOn = 0;
-
-            document.getElementById("countdown").value = "Disabled";
-        }
 
 
 
         scanCompleted2 = 1;
         scanCompleted = 0;
-        updateInfo = 1;
+
+      
+
+            updateInfo = 1;
+
+   
+
+        if (mode == "scanandconvert" && document.getElementById("scanOnOff").checked == true) {
+
+            document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\">Time until next scan: <font color=\"#66ccff\">Running</font></p>";
+
+            countDownOn = 1;
+
+        } else {
+            countDownOn = 0;
+
+        }
 
 
-        // document.getElementById("worker1").innerHTML = "<p>Worker 1 processing queue item number:-<\p>";
-        // document.getElementById("worker1").innerHTML += "<p>File:-<\p>";
-        // document.getElementById("worker2").innerHTML = "<p>Worker 2 processing queue item number:-<\p>";
-        // document.getElementById("worker2").innerHTML += "<p>File:-<\p>";
-        // document.getElementById("worker3").innerHTML = "<p>Worker 3 processing queue item number:-<\p>";
-        // document.getElementById("worker3").innerHTML += "<p>File:-<\p>";
-        // document.getElementById("worker4").innerHTML = "<p>Worker 4 processing queue item number:-<\p>";
-        // document.getElementById("worker4").innerHTML += "<p>File:-<\p>";
-        var elmnt = document.getElementById("fullQueue");
-        elmnt.scrollIntoView()
+      //  var elmnt = document.getElementById("worker4");
+      //  elmnt.scrollIntoView()
+
+
+ var i, tabcontent, tablinks;
+
+// Get all elements with class="tabcontent" and hide them
+tabcontent = document.getElementsByClassName("tabcontent");
+for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+}
 
 
 
     }
 
 
+    function fancyTimeFormat(time) {
+        // Hours, minutes and seconds
+        var hrs = ~~(time / 3600);
+        var mins = ~~((time % 3600) / 60);
+        var secs = ~~time % 60;
+
+        // Output like "1:01" or "4:03:59" or "123:03:59"
+        var ret = "";
+
+        if (hrs > 0) {
+            ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+        }
+
+        ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+        ret += "" + secs;
+        return ret;
+    }
+
+   
+
+    //Global variables
+
+    var fileNotExistsCounter = 0;
+    var totalFileFoundCounter = 0;
+    var totalFileSize = 0;
+
+    var inputPathArray =[];
+    var outputPathArray =[];
+
+    var sourceQueueArray =[];
+    var sourceQueueFileSizeArray=[]
+    var presetArray2 =[];
+
+    var mode = "";
+
+    var startDate
+    var unConvertedFiles;
+
+
+    //
+
+
     var scanCompleted = 0;
     var scanCompleted2 = 0;
 
-    window.setInterval("runScan();", 1000);
+    var windowRefresh = window.setInterval("runScan();", 1000);
+
+  
 
 
     var updateInfo = 0;
+
+    var CompletedSwitch = 1;
+    var CompletedSwitch2 = 0;
 
     var countDownOn = 0;
 
@@ -1641,172 +1941,81 @@ document.getElementById("timer").value= f
 
     var colourSwitch = 0
 
-    var sessionNumber =1;
+    var sessionNumber = 1;
 
-    var upToLine =1;
+    var upToLine = 1;
 
-    var readArrayLowerBound =0;
+    var readArrayLowerBound = 0;
 
-    var CompletedSwitch2 =0;
+    var AllCompleted =0;
+
+
+    var timerSeconds
+
+    var errorCount;
 
     function runScan() {
 
 
 
-
-
-
-
-
-
-        // if(document.getElementById("deleteSourceFiles").checked == true){
-
-        //     if(colourSwitch==0){
-        //         document.getElementById("deleteSourceFilesdiv").style.color = "#ff2121";
-        //         colourSwitch=1;
-
-        //     }else{
-        //         document.getElementById("deleteSourceFilesdiv").style.color = "#505050";
-        //         colourSwitch=0;
-        //     }
-
-
-
-
-
-
-        //  }
-
-
-
+    
         var fs = require('fs');
 
         if (updateInfo == 1) {
 
 
+         
 
-            // lockFile.lockSync(homePath+"/HBBatchBeast/Config/totalFilesFound.txt.lock",10000,100,10000,1000,100)
-            document.getElementById("totalFilesFound").value = fs.readFileSync(homePath+"/HBBatchBeast/Config/totalFilesFound.txt", 'utf8');
-            // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/totalFilesFound.txt.lock",10000,100,10000,1000,100)
+           
 
+            if (mode == "scanandconvert" || mode == "healthCheck") {
+                var endDate = new Date();
+                var seconds2 = (endDate.getTime() - startDate.getTime()) / 1000;
 
-
-            document.getElementById("unconvertedFilesFound").value = fs.readFileSync(homePath+"/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
-
-
-
-
-            // worker 1
-            // lockFile.lockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker1QueueNumber.txt.lock",10000,100,10000,1000,100)
-            // var QueueNumber1 = fs.readFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker1QueueNumber.txt", 'utf8');
-            // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker1QueueNumber.txt.lock",10000,100,10000,1000,100)
-
-
-            // lockFile.lockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker1FileName.txt.lock",10000,100,10000,1000,100)
-            // var FileName1 = fs.readFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker1FileName.txt", 'utf8');
-            // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker1FileName.txt.lock",10000,100,10000,1000,100)
-
-
-            // worker 2
-
-            // lockFile.lockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker2QueueNumber.txt.lock",10000,100,10000,1000,100)
-            // var QueueNumber2 = fs.readFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker2QueueNumber.txt", 'utf8');
-            // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker2QueueNumber.txt.lock",10000,100,10000,1000,100)
-
-
-            // lockFile.lockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker2FileName.txt.lock",10000,100,10000,1000,100)
-            // var FileName2 = fs.readFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker2FileName.txt", 'utf8');
-            // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker2FileName.txt.lock",10000,100,10000,1000,100)
+                var time = Math.round(seconds2);
 
 
 
+                document.getElementById("durationDiv").innerHTML = "<p>Duration: " + fancyTimeFormat(time) + "<\p>";
 
-            // worker 3
-
-            // lockFile.lockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker3QueueNumber.txt.lock",10000,100,10000,1000,100)
-            // var QueueNumber3 = fs.readFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker3QueueNumber.txt", 'utf8');
-            // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker3QueueNumber.txt.lock",10000,100,10000,1000,100)
-
-
-            // lockFile.lockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker3FileName.txt.lock",10000,100,10000,1000,100)
-            // var FileName3 = fs.readFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker3FileName.txt", 'utf8');
-            // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker3FileName.txt.lock",10000,100,10000,1000,100)
+            }
 
 
 
+            if  (mode != "healthCheck" && mode != "scanandconvert") {
 
-            //worker 4
+                updateInfo =0;      
 
-            // // lockFile.lockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker4QueueNumber.txt.lock",10000,100,10000,1000,100)
-            // var QueueNumber4 = fs.readFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker4QueueNumber.txt", 'utf8');
-            // // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker4QueueNumber.txt.lock",10000,100,10000,1000,100)
-
-
-            // // lockFile.lockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker4FileName.txt.lock",10000,100,10000,1000,100)
-            // var FileName4 = fs.readFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker4FileName.txt", 'utf8');
-            // // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker4FileName.txt.lock",10000,100,10000,1000,100)
+                                        }
 
 
 
 
 
-            // workertableHTML = "";
-
-            // workertableHTML += "<table class=\"outputTable\">"
-            //     + "<tr>"
-
-            //     + "<th class=\"headcol\"Worker</th>"
-            //     + "<th class=\"headcol\"> Source File</th>"
-            //     + "<th class=\"headcol\">Queue number</th>"
-
-            //     + "</tr>"
-
-            //     + "<tr>"
-            //     + "<td>" + "1" + "</td>"
-            //     + "<td>" + FileName1 + "</td>"
-            //     + "<td>" + QueueNumber1 + "</td>"
-            //     + "</tr>"
-
-            //     + "<tr>"
-            //     + "<td>" + "2" + "</td>"
-            //     + "<td>" + FileName2 + "</td>"
-            //     + "<td>" + QueueNumber2 + "</td>"
-            //     + "</tr>"
-
-            //     + "<tr>"
-            //     + "<td>" + "3" + "</td>"
-            //     + "<td>" + FileName3 + "</td>"
-            //     + "<td>" + QueueNumber3 + "</td>"
-            //     + "</tr>"
-
-            //     + "<tr>"
-            //     + "<td>" + "4" + "</td>"
-            //     + "<td>" + FileName4 + "</td>"
-            //     + "<td>" + QueueNumber4 + "</td>"
-            //     + "</tr>"
-
-            //     + "</table>";
 
 
 
-            // document.getElementById("worker1").innerHTML = workertableHTML;
 
 
-//lower bound switches for arrays to prevent unnecessarystring comparisons
-            var continueCountingSwitch =1;
-            var readArrayLowerBoundSwitch =1;
+  
+            var continueCountingSwitch = 1;
+            var readArrayLowerBoundSwitch = 1;
 
-//upperbound limit to prevent to prevent unnecessary string comparisons
-            queueNumberPath = homePath+"/HBBatchBeast/Config/Processes/queueNumberPath.txt";
-                var globalQueueNumber = fs.readFileSync(queueNumberPath, 'utf8');
 
+            queueNumberPath = homePath + "/HBBatchBeast/Config/Processes/queueNumberPath.txt";
+            var globalQueueNumber = fs.readFileSync(queueNumberPath, 'utf8');
+
+
+console.log("upToLine:"+upToLine)
+
+console.log("globalQueueNumber:"+globalQueueNumber)
 
             if (sourceQueueArray.length >= 1) {
 
 
-                for (var i = upToLine-1; i < globalQueueNumber; i++) {
+                for (var i = readArrayLowerBound; i < globalQueueNumber; i++) {
 
-                    queueTable.rows[i + 1].cells[3].innerHTML = "";
+                    queueTable.rows[i + 1].cells[4].innerHTML = "";
 
 
                 }
@@ -1819,33 +2028,315 @@ document.getElementById("timer").value= f
 
 
 
-                var completedQueuePath = homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
+                var completedQueuePath = homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
 
 
 
                 if (fs.existsSync(completedQueuePath)) {
 
 
-                    /* var array = fs.readFileSync(queuePath).toString().split("\n");
-                     // console.log(array)
-                    */
+                  
+                  
                     var readArray = "";
-                   
 
-                    // lockFile.lockSync(completedQueuePath+".lock",10000,100,10000,1000,100)
+
+
                     readArray = fs.readFileSync(completedQueuePath, 'utf8');
-                    // lockFile.unlockSync(completedQueuePath+".lock",10000,100,10000,1000,100)
+              
 
 
                     readArray = readArray.toString().split("\n");
 
+
+
                     if (readArray.length >= 1) {
 
-                        for (var i = upToLine-1; i < globalQueueNumber; i++) {
+
+
+                        //render graph
+
+                        var successfulCount = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueSuccess.txt", 'utf8');
 
 
 
-                            for (var j = readArrayLowerBound; j < readArray.length; j++) {
+                        successfulCount = successfulCount.split("\n");
+
+                         errorCount = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueError.txt", 'utf8');
+
+                        errorCount = errorCount.split("\n");
+
+
+
+               
+
+
+
+                        // var myConfig = {
+                        //     backgroundColor:  "#1A2933",
+                        //     type: "ring",
+                        //     title: {
+                        //         text: "",
+                        //         fontFamily: 'Lato',
+                        //         fontSize: 14,
+                        //         // border: "1px solid black",
+                        //         padding: "15",
+                        //         fontColor: "#1E5D9E",
+                        //     },
+                        //     subtitle: {
+                        //         text: "",
+                        //         fontFamily: 'Lato',
+                        //         fontSize: 12,
+                        //         fontColor: "#777",
+                        //         padding: "5"
+                        //     },
+                        //     plot: {
+                        //         slice: '50%',
+                        //         borderWidth: 0,
+                        //         backgroundColor: '#FBFCFE',
+                        //         animation: {
+                        //             effect: 0,
+                        //             sequence: 0
+                        //         },
+                        //         valueBox: [
+                        //             {
+                        //                 type: 'all',
+                        //                 text: '%t',
+                        //                 placement: 'out'
+                        //             },
+                        //             {
+                        //                 type: 'all',
+                        //                 text: '%npv%',
+                        //                 placement: 'in'
+                        //             }
+                        //         ]
+                        //     },
+                        //     tooltip: {
+                        //         fontSize: 16,
+                        //         anchor: 'c',
+                        //         x: '50%',
+                        //         y: '50%',
+                        //         sticky: true,
+                        //         backgroundColor: 'none',
+                        //         borderWidth: 0,
+                        //         thousandsSeparator: ',',
+                        //         text: '<span style="color:%color">Page Url: %t</span><br><span style="color:%color">Pageviews: %v</span>',
+                        //         mediaRules: [
+                        //             {
+                        //                 maxWidth: 500,
+                        //                 y: '54%',
+                        //             }
+                        //         ]
+                        //     },
+                        //     plotarea: {
+                        //         backgroundColor: 'transparent',
+                        //         borderWidth: 0,
+                        //         borderRadius: "0 0 0 10",
+                        //         margin: "70 0 10 0"
+                        //     },
+
+                        //     scaleR: {
+                        //         refAngle: 270
+                        //     },
+                        //     series: [
+                        //         {
+
+                        //             values: [successfulCount.length - 1],
+                        //             text: "Success",
+                        //             backgroundColor: 'green',
+
+
+                        //             lineColor: "#00BAF2",
+
+                        //             lineWidth: 1,
+                        //             marker: {
+                        //                 backgroundColor: '#00BAF2'
+                        //             }
+                        //         },
+                        //         {
+
+                        //             values: [errorCount.length - 1],
+                        //           text: "Error",
+                        //            backgroundColor: 'red',
+
+
+                        //             lineColor: "#E80C60",
+
+                        //             lineWidth: 1,
+                        //             marker: {
+                        //                 backgroundColor: '#E80C60'
+                        //             }
+                        //         },
+                        //         {
+
+                        //             values: [totalFileFoundCounter - (readArray.length - 1)],
+                        //          text: "Remaining",
+                        //   backgroundColor: '#50ADF5',
+
+
+                        //             lineColor: "#9B26AF",
+
+                        //             lineWidth: 1,
+                        //             marker: {
+                        //                 backgroundColor: '#9B26AF'
+                        //             }
+                        //         }
+                        //     ]
+                        // };
+
+                        // zingchart.render({
+                        //     id: 'myChart',
+                        //     data: {
+                        //         gui: {
+                        //             contextMenu: {
+                        //                 button: {
+                        //                     visible: true,
+                        //                     lineColor: "#2D66A4",
+                        //                     backgroundColor: "#2D66A4"
+                        //                 },
+                        //                 gear: {
+                        //                     alpha: 1,
+                        //                     backgroundColor: "#2D66A4"
+                        //                 },
+                        //                 position: "right",
+                        //                 backgroundColor: "#306EAA", /*sets background for entire contextMenu*/
+                        //                 docked: true,
+                        //                 item: {
+                        //                     backgroundColor: "#306EAA",
+                        //                     borderColor: "#306EAA",
+                        //                     borderWidth: 0,
+                        //                     fontFamily: "Lato",
+                        //                     color: "#fff"
+                        //                 }
+
+                        //             },
+                        //         },
+                        //         graphset: [myConfig]
+                        //     },
+                        //     height: '499',
+                        //     width: '99%'
+                        // });
+
+
+console.log
+
+                        if (sourceQueueArray.length >= 1) {
+
+                            if (mode == "healthCheck") {
+
+                                var totalFilesGraph = totalFileFoundCounter;
+
+                            } else {
+
+                                var totalFilesGraph = unConvertedFiles
+
+
+                            }
+
+
+
+                            var myConfig = {
+                                type: "ring",
+                                backgroundColor: "#1A2933",
+                                plot: {
+                                    borderColor: "#2B313B",
+                                    borderWidth: 0,
+                                    // slice: 90,
+                                    valueBox: {
+                                        placement: 'out',
+                                        // text: '%t\n%npv%',
+                                        text: '%t\n%pv\n%npv%',
+                                        fontFamily: "Open Sans"
+                                    },
+                                    tooltip: {
+                                        fontSize: '18',
+                                        fontFamily: "Open Sans",
+                                        padding: "5 10",
+                                        text: "%npv%"
+                                    },
+                                },
+                                source: {
+                                    text: '',
+                                    fontColor: "#8e99a9",
+                                    fontFamily: "Open Sans"
+                                },
+                                title: {
+                                    fontColor: "#fff",
+                                    text: '',
+                                    align: "left",
+                                    offsetX: 10,
+                                    fontFamily: "Open Sans",
+                                    fontSize: 25
+                                },
+                                subtitle: {
+                                    offsetX: 10,
+                                    offsetY: 10,
+                                    fontColor: "#8e99a9",
+                                    fontFamily: "Open Sans",
+                                    fontSize: "16",
+                                    text: '',
+                                    align: "left"
+                                },
+                                plotarea: {
+                                    margin: "20 0 0 0"
+                                    
+                                },
+                                series: [
+                                    {
+                                        values: [successfulCount.length - 1],
+                                        text: "Success",
+                                        backgroundColor: '#4CAF50',
+                                    },
+                                    {
+                                        values: [errorCount.length - 1],
+                                        text: "Error",
+                                        backgroundColor: '#ef435d'
+                                    },
+                                    {
+                                        values: [totalFilesGraph - (readArray.length - 1)],
+                                        text: "Remaining",
+                                        backgroundColor: '#50ADF5'
+                                    },
+
+
+
+                                ]
+                            };
+
+                            zingchart.render({
+                                id: 'myChart',
+                                data: myConfig,
+                                height: 500,
+                                width: 725
+                            });
+
+                            document.getElementById("myChartDiv").style.display = 'block';
+
+                        }
+
+
+
+                        ////
+
+
+
+
+
+
+
+
+
+
+
+
+ console.log("readArrayLowerBound:"+readArrayLowerBound)
+console.log("readArray.length:"+readArray.length)
+
+                     
+                        for (var i =readArrayLowerBound; i < globalQueueNumber; i++) {
+
+                           // readArrayLowerBound
+
+                           for (var j =readArrayLowerBound; j < readArray.length; j++) {
 
 
                                
@@ -1855,25 +2346,25 @@ document.getElementById("timer").value= f
 
                                     if (readArray[j].includes("Success")) {
 
-                                       
 
-                                        queueTable.rows[i + 1].cells[4].innerHTML = "Completed"
-                                        queueTable.rows[i + 1].cells[2].innerHTML = presetArray2[i]
 
-                                
+                                        queueTable.rows[i + 1].cells[5].innerHTML = "Completed"
+                                        queueTable.rows[i + 1].cells[3].innerHTML = presetArray2[i]
+
+
 
                                         queueTable.rows[i + 1].style.backgroundColor = "#59ff74";
 
 
 
                                     } else {
-                                        
 
-                                        queueTable.rows[i + 1].cells[4].innerHTML = "Error"
-                                        queueTable.rows[i + 1].cells[2].innerHTML = presetArray2[i]
+
+                                        queueTable.rows[i + 1].cells[5].innerHTML = "Error"
+                                        queueTable.rows[i + 1].cells[3].innerHTML = presetArray2[i]
 
                                         queueTable.rows[i + 1].style.backgroundColor = "#ff2d2d";
-                                        
+
 
 
 
@@ -1882,45 +2373,47 @@ document.getElementById("timer").value= f
 
 
 
-                         if(readArrayLowerBoundSwitch==1){
-                                readArrayLowerBound++;
+                                    // if (readArrayLowerBoundSwitch == 1) {
+                                    //     readArrayLowerBound++;
+
+                                    // }
+
+
+                                } 
+                                
+                                // else {
+
+                                //     readArrayLowerBoundSwitch = 0;
+
+                                // }
+
+
+
+
+
+
+
 
                             }
 
 
-                                }else{
+                            //
 
-                                    readArrayLowerBoundSwitch=0;
+                            if (queueTable.rows[i + 1].cells[5].innerHTML.includes("Completed") || queueTable.rows[i + 1].cells[5].innerHTML.includes("Error")) {
+
+
+                                if (continueCountingSwitch == 1) {
+
+
+
+                                    upToLine++;
 
                                 }
 
-
-                               
-
-
-
-
+                            } else {
+                                continueCountingSwitch = 0;
 
                             }
-
-
-//
-
-if (queueTable.rows[i+1].cells[4].innerHTML.includes("Completed") || queueTable.rows[i+1].cells[4].innerHTML.includes("Error") ){
-
-
-if(continueCountingSwitch ==1){
-
-
-console.log(upToLine)
-    upToLine++;
-
-}
-
-}else{
-    continueCountingSwitch =0;
-
-}
 
 
 
@@ -1934,80 +2427,109 @@ console.log(upToLine)
                     }
                 } //end exist of function
 
-                var workerStatusArray=[];
-               
+                var workerStatusArray = [];
+
 
                 if (fs.existsSync(queueNumberPath)) {
 
 
-                    // lockFile.lockSync(queueNumberPath+".lock",10000,100,10000,1000,100)
-                 
-                    // lockFile.unlockSync(queueNumberPath+".lock",10000,100,10000,1000,100)
-               
-
-            if (inputPathArray.length >= 1) {
-    for (var i = upToLine-1; i <= globalQueueNumber; i++) {
 
 
-     for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
+                    //  if (inputPathArray.length >= 1) {
+                    for (var i = readArrayLowerBound; i <= globalQueueNumber; i++) {
 
 
-        var QueueNumber = fs.readFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+j+"QueueNumber.txt", 'utf8');
-        var FileName = fs.readFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+j+"FileName.txt", 'utf8');
-
-        workerStatusArray[j-1]=QueueNumber;
+                        for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
 
 
-        if (i == QueueNumber - 1) {
+                            var QueueNumber = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + j + "QueueNumber.txt", 'utf8');
+                            var FileName = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + j + "FileName.txt", 'utf8');
 
-queueTable.rows[i + 1].cells[3].innerHTML = "Worker "+j;
-queueTable.rows[i + 1].cells[4].innerHTML = 'Converting';
-queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
-
-}
+                            workerStatusArray[j - 1] = QueueNumber;
 
 
+                            if (i == QueueNumber - 1) {
 
-}
+                                queueTable.rows[i + 1].cells[4].innerHTML = "Worker " + j;
+                                queueTable.rows[i + 1].cells[5].innerHTML = 'Running';
+                                queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
 
-                          
+                            }
+
 
 
                         }
+
+
+
+
                     }
+                    // }
                 }
 
-            }
+            }else{
 
-            if(sourceQueueArray.length==0){
-
-AllComplete();
-
+document.getElementById("myChartDiv").style.display = 'none';
 }
 
 
+
+            if (sourceQueueArray.length == 0) {
+
+                AllComplete();
+
+            }
 
 
             if (sourceQueueArray.length >= 1) {
 
-                console.log(CompletedSwitch)
-console.log(CompletedSwitch2)
 
-var CompletedSwitch = 1;
+
+
+
+
+
+                CompletedSwitch = 1;
 
                 for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
 
-                    console.log("Worker status:"+workerStatusArray[j - 1])
+
+                    
+
+
 
                     if (workerStatusArray[j - 1] != "Complete!") {
                         CompletedSwitch = 0;
 
                     } else {
-                     
+
 
                     }
 
+                    
 
+
+
+
+                }
+
+                workerStatusArray.sort(function(a, b){return a-b}); 
+
+                if(isNaN(parseInt(workerStatusArray[0]))){
+
+                 
+
+       
+
+                }else{
+
+                if(parseInt(workerStatusArray[0])- document.getElementById("instanceNumber").value-1 <0){
+                
+                    readArrayLowerBound=0
+                  }else{
+                    readArrayLowerBound=parseInt(workerStatusArray[0])- document.getElementById("instanceNumber").value-1;
+
+                  }
                 }
 
                 if (CompletedSwitch == 1) {
@@ -2017,17 +2539,12 @@ var CompletedSwitch = 1;
 
 
 
-      
                 if (CompletedSwitch2 == 5) {
 
-AllComplete();
+                    AllComplete();
+                }
 
-}
-
-}
-
- 
-
+            }
 
 
 
@@ -2035,10 +2552,23 @@ AllComplete();
 
             function AllComplete() {
 
-                // lockFile.lockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
 
-                fs.writeFileSync(homePath+'/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt', "1", 'utf8');
-                // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
+                if(errorCount!=0){
+
+ipcRenderer.send('item:add','iconerror');
+
+
+ 
+}else{
+
+    ipcRenderer.send('item:add','icon'); 
+}
+
+
+           
+
+                fs.writeFileSync(homePath + '/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt', "1", 'utf8');
+              
 
                 document.getElementById("fullQueue").innerHTML = "";
 
@@ -2051,40 +2581,52 @@ AllComplete();
 
 
 
-                var completedQueuePath = homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
+                var completedQueuePath = homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
 
                 if (fs.existsSync(completedQueuePath)) {
 
 
-                    /* var array = fs.readFileSync(queuePath).toString().split("\n");
+                   
                   
-                  
-                    */
+           
                     var readArray = "";
 
-                    // lockFile.lockSync(completedQueuePath+".lock",10000,100,10000,1000,100)
+         
                     readArray = fs.readFileSync(completedQueuePath, 'utf8');
-                    // lockFile.unlockSync(completedQueuePath+".lock",10000,100,10000,1000,100)
+            
 
 
-                    var corruptFiles =0;
-                    var healthyFiles=0;
+                    var corruptFiles = 0;
+                    var healthyFiles = 0;
 
-                    document.getElementById('healthCheckDiv').innerHTML ="";
+                    document.getElementById('healthCheckDiv').innerHTML = "";
 
                     readArray = readArray.toString().split("\n");
 
+
+
+
+
                     if (readArray.length >= 1) {
+
+
 
                         for (var i = 0; i < sourceQueueArray.length; i++) {
 
 
+                    if(sourceQueueFileSizeArray[i]>=1){
+                    var itemSize = parseFloat(sourceQueueFileSizeArray[i]).toFixed(2)+"GB"
+
+                }else{
+
+                    var itemSize =  sourceQueueFileSizeArray[i]*1000;
+                     itemSize = parseFloat(itemSize).toFixed(2)+"MB"
+
+
+                }
+
 
                             for (var j = 0; j < readArray.length; j++) {
-
-
-console.log(readArray[j]);
-console.log(sourceQueueArray[i]);
 
 
 
@@ -2096,22 +2638,25 @@ console.log(sourceQueueArray[i]);
 
 
                                         if (mode != "healthCheck") {
-                                        var newRow = document.getElementById('sessionConversionsTable').insertRow();
+                                            var newRow = document.getElementById('sessionConversionsTable').insertRow();
 
-                                        newRow.innerHTML = "<tr >"
-                                            + "<td>" + sourceQueueArray[i] + "</td>"
-                                            + "<td>" + sessionNumber+ "</td>"
-                                            + "<td>" + presetArray2[i]+"</td>"
-                                         
-                                            + "<td > Completed </td>"
+                                            
 
-                                            + "</tr>";
+                                            newRow.innerHTML = "<tr >"
+                                                + "<td>" + sourceQueueArray[i] + "</td>"
+                                                + "<td>" + itemSize + "</td>"
+                                                + "<td>" + sessionNumber + "</td>"
+                                                + "<td>" + presetArray2[i] + "</td>"
+
+                                                + "<td > Completed </td>"
+
+                                                + "</tr>";
 
                                         }
-                                        
+
                                         healthyFiles++;
 
-                                            sessionNumber++;
+                                        sessionNumber++;
                                     } else {
 
                                         var newRow = document.getElementById('sessionConversionsTable').insertRow();
@@ -2119,16 +2664,18 @@ console.log(sourceQueueArray[i]);
                                         newRow.innerHTML = "<tr>"
                                             + "<td>" + sourceQueueArray[i] + "</td>"
 
-                                            + "<td>" + sessionNumber+ "</td>"
+                                            + "<td>" + itemSize + "</td>"
 
-                                            + "<td>" + presetArray2[i]+ "</td>"
-                                      
+                                            + "<td>" + sessionNumber + "</td>"
+
+                                            + "<td>" + presetArray2[i] + "</td>"
+
                                             + "<td > Error </td>"
 
                                             + "</tr>";
 
-                                            sessionNumber++;
-                                            corruptFiles++;
+                                        sessionNumber++;
+                                        corruptFiles++;
                                     }
 
 
@@ -2149,11 +2696,9 @@ console.log(sourceQueueArray[i]);
 
                         if (mode == "healthCheck") {
 
-                        var healthPercentage = ((healthyFiles/(corruptFiles+healthyFiles))*100).toFixed(2);
+                            var healthPercentage = ((healthyFiles / (corruptFiles + healthyFiles)) * 100).toFixed(2);
 
-                        console.log(healthyFiles);
-
-                        document.getElementById('healthCheckDiv').innerHTML ="<h1>Healthy files:<font color=\"green\">"+healthyFiles+"</font> Corrupt files:<font color=\"red\">"+corruptFiles+"</font> Health:"+healthPercentage+"%<\h1>"
+                            document.getElementById('healthCheckDiv').innerHTML = "<h1>Healthy files:<font color=\"green\">" + healthyFiles + "</font> Corrupt files:<font color=\"red\">" + corruptFiles + "</font> Health:" + healthPercentage + "%<\h1>"
 
                         }
 
@@ -2169,12 +2714,12 @@ console.log(sourceQueueArray[i]);
 
 
 
-                        if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Completed")) {
+                        if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Completed")) {
                             sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
 
 
 
-                        } else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Error")) {
+                        } else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Error")) {
 
                             sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
 
@@ -2215,40 +2760,57 @@ console.log(sourceQueueArray[i]);
                 timenow = h + '-' + m + '-' + s;
 
 
-                // lockFile.lockSync(homePath+"/HBBatchBeast/Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
-                var convertedFiles1 = fs.readFileSync(homePath+"/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
-                // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
+             
+                var convertedFiles1 = fs.readFileSync(homePath + "/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
+     
 
-                // lockFile.lockSync(homePath+"/HBBatchBeast/Config/Processes/queueNumberPath.txt.lock",10000,100,10000,1000,100)
-                var convertedFiles = fs.readFileSync(homePath+"/HBBatchBeast/Config/Processes/queueNumberPath.txt", 'utf8');
-                // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/Processes/queueNumberPath.txt.lock",10000,100,10000,1000,100)
+                
+                var convertedFiles = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/queueNumberPath.txt", 'utf8');
+               
 
-                // lockFile.lockSync(homePath+"/HBBatchBeast/Config/presetString.txt.lock",10000,100,10000,1000,100)
-                var preset = fs.readFileSync(homePath+"/HBBatchBeast/Config/presetString.txt", 'utf8');
-                // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/presetString.txt.lock",10000,100,10000,1000,100)
+            
+                var preset = fs.readFileSync(homePath + "/HBBatchBeast/Config/presetString.txt", 'utf8');
+               
 
-                // lockFile.lockSync(homePath+"/HBBatchBeast/Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
-                var unConvertedFiles = fs.readFileSync(homePath+"/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
-                // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/unconvertedFilesFound.txt.lock",10000,100,10000,1000,100)
+             
+                var unConvertedFiles = fs.readFileSync(homePath + "/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
+              
+
+                if (mode == "healthCheck") {
+
+                    preset = "Health check"
+
+                }
+
+            
+
+                fs.appendFileSync(homePath + "/HBBatchBeast/Logs/Scans.txt", "Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + convertedFiles1 + "-------Preset:" + preset + ". \r\n", 'utf8');
+       
 
 
 
-                //  document.getElementById("files").innerHTML += "<p>Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + convertedFiles1 + "-------Preset:" + preset + ".<\p>";
-
-
-                // lockFile.lockSync(homePath+"/HBBatchBeast/Logs/Scans.txt.lock",10000,100,10000,1000,100)
-                fs.appendFileSync(homePath+"/HBBatchBeast/Logs/Scans.txt", "Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + convertedFiles1 + "-------Preset:" + preset + ". \r\n", 'utf8');
-                // lockFile.unlockSync(homePath+"/HBBatchBeast/Logs/Scans.txt.lock",10000,100,10000,1000,100)
 
 
 
 
 
+
+
+                document.getElementById("sessionConversions").style.display = 'block';
+
+
+
+
+
+                document.getElementById("endTimeDiv").innerHTML = "<p>End time: " + getTimeNow() + "<\p>";
 
                 updateInfo = 0;
+                sourceQueueArray = [];
 
-               sourceQueueArray = [];
+                AllCompleted=1;
 
+                clearInterval(windowRefresh);
+            windowRefresh = window.setInterval("runScan();", 1000)
 
 
 
@@ -2258,8 +2820,6 @@ console.log(sourceQueueArray[i]);
 
         }
 
-
-//end update info
 
         if (scanCompleted == 1 && scanCompleted2 == 1) {
 
@@ -2274,7 +2834,7 @@ console.log(sourceQueueArray[i]);
 
 
 
-            
+
 
 
 
@@ -2283,46 +2843,48 @@ console.log(sourceQueueArray[i]);
 
         }
 
-        var fs = require('fs');
-
-        if (fs.existsSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt")) {
 
 
-
-            try {
-
-                // lockFile.lockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
-                var AllComplete = fs.readFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt", 'utf8');
-                // lockFile.unlockSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt.lock",10000,100,10000,1000,100)
-
-            } catch (err) {
-                var AllComplete = "0";
-
-            }
-
-        }
+     
 
 
+        if (countDownOn == 1 && AllCompleted == "1") {
+
+            if (mode == "scanandconvert") {
+                scanCompleted = 1;
+
+                if(timerSeconds%2 ==0){
+                    ipcRenderer.send('item:add','iconwatching');
+
+                }else{
+                    if(errorCount!=0){
+
+ipcRenderer.send('item:add','iconerror');
 
 
+ 
+}else{
 
-        if (countDownOn == 1 && AllComplete == "1") {
-            scanCompleted = 1;
+    ipcRenderer.send('item:add','icon'); 
+}
 
-            var timerSeconds = document.getElementById("countdown").value
+                }
 
-            timerSeconds--;
+               
 
-            document.getElementById("countdown").value = timerSeconds;
+                timerSeconds--;
 
-
-            if (timerSeconds == 0) {
-
-                convertFiles('scanandconvert');
-
-                document.getElementById("countdown").value = document.getElementById("timer").value
+                document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\">Time until next scan: <font color=\"#66ccff\">" + timerSeconds + "</font> seconds</p>";
 
 
+                if (timerSeconds == 0) {
+
+                    convertFiles('scanandconvert');
+
+                    timerSeconds = document.getElementById("timer").value
+
+
+                }
             }
         }
 
@@ -2346,10 +2908,10 @@ console.log(sourceQueueArray[i]);
         }, (folderPaths) => {
             // folderPaths is an array that contains all the selected paths
             if (folderPaths === undefined) {
-                // console.log("No destination folder selected");
+
                 return;
             } else {
-                // console.log(folderPaths);
+
                 document.getElementById(folder).value = folderPaths;
             }
         });
@@ -2377,12 +2939,11 @@ console.log(sourceQueueArray[i]);
 
         var fullPath = __dirname;
 
-        // console.log(fullPath)
         fullPath = fullPath.slice(0, fullPath.lastIndexOf(stringProcessingSlash));
-        // console.log(fullPath)
+
 
         fullPath = fullPath.slice(0, fullPath.lastIndexOf(stringProcessingSlash));
-        // console.log(fullPath)
+
 
         if (process.platform == 'win32') {
 
@@ -2409,11 +2970,11 @@ console.log(sourceQueueArray[i]);
 
                 // var logPath = fullPath + "/HBBatchBeast/Logs/" + logType + ".txt";
                 //   var logPath = homePath+"/HBBatchBeast/Logs/"+ logType + ".txt";
-                var logPath = homePath+"/HBBatchBeast/Logs/" + logType + ".txt";
+                var logPath = homePath + "/HBBatchBeast/Logs/" + logType + ".txt";
             } else {
 
                 //development
-                var logPath = homePath+"/HBBatchBeast/Logs/" + logType + ".txt";
+                var logPath = homePath + "/HBBatchBeast/Logs/" + logType + ".txt";
 
 
             }
@@ -2438,7 +2999,17 @@ console.log(sourceQueueArray[i]);
 
 
         var opener = require("opener");
+
+        var fs = require('fs');
+
+       if(fs.existsSync(logPath)){
+ 
         opener(logPath);
+
+    }else{
+
+        alert('Log does not exist! Please run health check/conversion first.')
+    }
 
         // const opn = require('opn');
         // opn(logPath);
@@ -2449,15 +3020,15 @@ console.log(sourceQueueArray[i]);
         // require('child_process').execSync(logPath, function (err, stdout, stderr) {
         //     if (err) {
         //         // Ooops.
-        //         //// console.log(stderr);
-        //         //// console.log("Error with worker number:"+workerNumber);
-        //         return // console.log(err);
+        //        
+        //        
+        //         return // 
         //     }
 
         //     // Done.
         //     //runEndSection();
         //     //runScan();
-        //     // console.log(stdout);
+        //     
         // });
 
 
@@ -2480,10 +3051,112 @@ console.log(sourceQueueArray[i]);
 
 
 
-function OnInput() {
-  this.style.height = 'auto';
-  this.style.height = (this.scrollHeight) + 'px';
-}
+    function OnInput() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    }
+
+
+
+    const remote = require('electron').remote;
+
+    (function handleWindowControls() {
+        // When document has loaded, initialise
+        document.onreadystatechange = () => {
+            if (document.readyState == "complete") {
+                init();
+            }
+        };
+
+        function init() {
+            let window = remote.getCurrentWindow();
+            const minButton = document.getElementById('min-button'),
+                maxButton = document.getElementById('max-button'),
+                restoreButton = document.getElementById('restore-button'),
+                closeButton = document.getElementById('close-button');
+
+            minButton.addEventListener("click", event => {
+                window = remote.getCurrentWindow();
+                window.minimize();
+            });
+
+            maxButton.addEventListener("click", event => {
+                window = remote.getCurrentWindow();
+                window.maximize();
+                toggleMaxRestoreButtons();
+            });
+
+            restoreButton.addEventListener("click", event => {
+                window = remote.getCurrentWindow();
+                window.unmaximize();
+                toggleMaxRestoreButtons();
+            });
+
+            // Toggle maximise/restore buttons when maximisation/unmaximisation
+            // occurs by means other than button clicks e.g. double-clicking
+            // the title bar:
+            toggleMaxRestoreButtons();
+            window.on('maximize', toggleMaxRestoreButtons);
+            window.on('unmaximize', toggleMaxRestoreButtons);
+
+            closeButton.addEventListener("click", event => {
+                window = remote.getCurrentWindow();
+                window.close();
+            });
+
+            function toggleMaxRestoreButtons() {
+                window = remote.getCurrentWindow();
+                if (window.isMaximized()) {
+                    maxButton.style.display = "none";
+                    restoreButton.style.display = "flex";
+                } else {
+                    restoreButton.style.display = "none";
+                    maxButton.style.display = "flex";
+                }
+            }
+        }
+    })();
+
+
+
+    function openTab(evt, tabName) {
+        // Declare all variables
+        var i, tabcontent, tablinks;
+
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+
+        textAreaHeight();
+    }
+
+
+
+    function toggleView(id) {
+
+        if (document.getElementById(id).style.display == 'none') {
+
+            document.getElementById(id).style.display = 'block';
+
+
+        } else {
+
+            document.getElementById(id).style.display = 'none';
+
+        }
+    }
 
 
 
@@ -2501,22 +3174,12 @@ function OnInput() {
 
 <style>
 
-    body {
-                  background-color:#505050;
-                  display: inline;
-                }
-                
-                
-                
-                .main {
-                
-                  height: 20em;
-                
-                  width: 70em;
-                
-                }
-                
-                .folderPaths {
+
+
+
+
+
+    .folderPaths {
                 
                 
                   width: 70%;
@@ -2528,7 +3191,7 @@ function OnInput() {
                 
                   height: 10em;
                 
-                  width: 100em;
+                  width: 70%;
                   border-radius: 2px;
                 
                 }
@@ -2549,7 +3212,7 @@ function OnInput() {
                   text-decoration: none;
                   display: inline-block;
                   font-size: 16px;
-                  border-radius: 25px;
+                  border-radius: 10px;
                 }
 
 
@@ -2563,7 +3226,19 @@ function OnInput() {
                   text-decoration: none;
                   display: inline-block;
                   font-size: 16px;
-                  border-radius: 25px;
+                  border-radius: 10px;
+                }
+
+                .toggleButton{
+                  background-color: #0019a8;
+                  border: none;
+                  color: rgb(255, 255, 255);
+               
+                  text-align: center;
+                  text-decoration: none;
+                  display: inline-block;
+                  font-size: 16px;
+                  border-radius: 5px;
                 }
 
                      
@@ -2576,7 +3251,7 @@ function OnInput() {
                   text-decoration: none;
                   display: inline-block;
                   font-size: 16px;
-                  border-radius: 25px;
+                  border-radius: 10px;
                 }
                 
                 
@@ -2589,19 +3264,36 @@ function OnInput() {
                   text-decoration: none;
                   display: inline-block;
                   font-size: 16px;
-                  border-radius: 25px;
+                  border-radius: 10px;
                 }
 
                 .button3 {
-                  background-color:  #66ccff; /* Green */
+                  background-color:  #66ccff; 
                   border: none;
                   color: white;
              
                   text-align: left;
                   text-decoration: none;
+                    
                   display: block;
+                  font-size: 1em;
+                  border-radius: 5px;
+                  margin-top: 1px;
+                    margin-bottom: 15px;
+                    margin-right: 1px;
+                margin-left: 1px;
+                }
+
+                .button4 {
+                  background-color:  #66ccff;
+                  border: none;
+                  color: white;
+             
+                  text-align: left;
+                  text-decoration: none;
+                
                   font-size: 20px;
-                  border-radius: 25px;
+                  border-radius: 5px;
                   margin-top: 1px;
                     margin-bottom: 15px;
                     margin-right: 1px;
@@ -2613,16 +3305,6 @@ function OnInput() {
                     border-radius: 10px;
                 }
                 
-                p {
-
-                    color: white;
-                
-                  text-align: center;
-                  text-decoration: none;
-                
-                  font-size: 16px;
-                  font-family:verdana;
-                }
 
                 h1 {
                     color: white;
@@ -2652,8 +3334,13 @@ function OnInput() {
                 }
                 
                 
-                          table.outputTable th {
+                   table.outputTable th {
                     background-color: #0088cc;
+                    color: black;
+                }
+
+                table.outputTable td {
+                  
                     color: black;
                 }
                  
@@ -2674,6 +3361,11 @@ function OnInput() {
                     background-color: #9b9b9b;
                     color: black;
                 }
+                table.historicTable td {
+                  
+                  color: black;
+              }
+               
 
   table.historicTable tr:nth-child(even) {background-color: #828282;}
           table.historicTable tr:nth-child(odd) {background-color: #545454;}
@@ -2714,6 +3406,11 @@ function OnInput() {
 .alert {
   background-color: #ff9800;
   padding: 0px;
+
+  border-style: solid;
+  border:#87001b;
+  border-width: 5px;
+  width: 40%;
 }
 
 
@@ -2723,10 +3420,260 @@ textarea {
     padding: 0;
     outline: none;
     background-color: #D0D0D0;
+
+      
+
 }
 
 
-                
+
+
+* {margin: 0; padding: 0; border: 0; vertical-align: baseline;}
+html {box-sizing: border-box;}
+*, *:before, *:after {box-sizing: inherit;}
+html, body {height: 100%; margin: 0;}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #1A2933; color: #FFF;
+
+}
+h1 {margin: 0 0 10px 0; font-weight: 600; line-height: 1.2;}
+p {margin-top: 10px; color: rgba(255,255,255,0.4); }
+
+
+body {
+  border: 1px solid #48545c;
+  overflow-y: hidden;
+}
+
+#titlebar {
+  display: block;
+  position: fixed;
+  height: 32px;
+  width: calc(100% - 2px);
+ 
+  padding: 4px;
+  color: #FFF;
+
+
+
+
+}
+
+#titlebar #drag-region {
+    width: 100%;
+  height: 100%;
+  -webkit-app-region: drag;
+  display: grid;
+  grid-template-columns: auto 138px;
+
+}
+
+#main {
+  height: calc(100% - 32px);
+  margin-top: 32px;
+  padding: 20px;
+  overflow-y: auto;
+
+
+}
+
+#window-controls {
+  display: grid;
+  grid-template-columns: repeat(3, 46px);
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  font-family: "Segoe MDL2 Assets";
+  font-size: 10px;
+  -webkit-app-region: no-drag;
+}
+#window-controls .button {
+  grid-row: 1 / span 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  cursor: default;
+  opacity: 0.8;
+}
+
+#window-controls .button:hover {
+  background: rgba(255,255,255,0.2);
+  opacity: 1;
+}
+
+#window-controls #close-button:hover {
+  background: #E81123;
+}
+
+#window-controls #restore-button {
+  display: none;
+}
+
+
+
+
+
+#window-controls #min-button {
+  grid-column: 1;
+}
+#window-controls #max-button, #window-controls #restore-button {
+  grid-column: 2;
+}
+#window-controls #close-button {
+  grid-column: 3;
+}
+
+#window-title {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 12px;
+  margin-left: 8px;
+  overflow-x: hidden;
+
+ 
+}   
+
+#window-title span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+ 
+}
+
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: center;
+  width: 33%;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+.helpSectionDiv {
+
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  background-color: #1A2933;
+  
+}
+.grid-itemleft {
+
+  text-align:left;
+
+  }
+
+  .grid-itemright {
+
+text-align:right;
+
+}
+
+
+.grid-container2 {
+  display: grid;
+  grid-template-columns: 15% 70% 15%;
+  background-color: #1A2933;
+  
+}
+
+
+
+
+
+.grid-item2 {
+
+text-align:left;
+
+}
+
+
+@font-face {
+    font-family: "Elianto-Regular";
+    src: url('./HBBatchBeast/Config/Fonts/Blanka-Regular.otf') format("truetype");
+}
+
+h1{
+
+}
+.titleDiv{
+display:inline-block;
+
+
+
+}
+
+.titleSpan{
+display:inline-block;
+font-family:"Elianto-Regular";
+font-size: 4em;
+
+
+background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.HaveAGitGat{
+
+                 background-color:  #00476b; 
+                  border: none;
+                  color: white;
+             
+                  text-align: left;
+                  text-decoration: none;
+                    
+                  display: block;
+                  font-size: 1em;
+                  border-radius: 5px;
+                  margin-top: 1px;
+                    margin-bottom: 15px;
+                    margin-right: 1px;
+                margin-left: 1px;
+
+
+}
+
+
                 </style>
 
 
@@ -2735,276 +3682,639 @@ textarea {
 
 
 
-<head>
 
 
 
 <body>
 
-    <center>
+    <header id="titlebar">
+        <div id="drag-region">
 
-        <img src="paypaldonateimage.jpg" alt="Italian Trulli" style="width:50x;height:25px;" onclick="openURL('https://www.paypal.me/HaveAGitGat')">
-
-        <center>
-            <h1 style="font-family:verdana;">HBBatchBeast</h1>
-        </center>
-
-        <input type="button" onclick="openURL('https://github.com/HaveAGitGat')" value="by HaveAGitGat"> <input type="button"
-            onclick="openURL('https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help')" value="Help">
+            <div id="window-title">
+                <span>HBBatchBeast 2.0.5</span>
+            </div>
 
 
-
-
-
-
-        <p>Source folder  (Please see help page^ for monitoring several folders)</p>
-        <textarea type="text" class="folderPaths" id="sourcePath"  ></textarea><input type='button' class="button3" value='Select folder'
-            onclick="selectFolder('sourcePath')" />
-
-
-
-
-
-
-        <p>Temporary conversion folder?<input type="checkbox" class="rounded" id="selectTemporaryConversionFolder"
-                onchange="cbChange2()"></p>
-
-
-        <div id="ShowHide1">
-            <p>Destination folder</p>
-        </div>
-        <div id="ShowHide2">
-
-        </div>
-
-        <textarea type="text" class="folderPaths" id="destinationPath"> </textarea><input type='button' class="button3"
-            value='Select folder' onclick="selectFolder('destinationPath')" />
-
-
-        <div style="display: none;" id="tempConversionFolderDiv">
-            <p>Destination folder:</p><textarea type="text" class="folderPaths" id="tempDestinationPath"></textarea>
-            <input type='button' class="button3" value='Select folder' onclick="selectFolder('tempDestinationPath')" />
-        </div>
-
-
-
-        <p>Standard preset:<input type="checkbox" id="selectStandardPreset" class="cb1" onchange="cbChange1(this)">
-            Custom preset:<input type="checkbox" id="selectCustomPreset" class="cb1" onchange="cbChange1(this)"></p>
-
-
-        <div style="display: none;" id="standardPresetDiv">
-
-            <p>Select standard preset:</p>
-            <select name="preset" class="selectbox" id="preset">
-                <option value="0">Very Fast 1080p30</option>
-                <option value="1">Very Fast 720p30</option>
-                <option value="2">Very Fast 576p25</option>
-                <option value="3">Very Fast 480p30</option>
-                <option value="4">Fast 1080p30</option>
-                <option value="5">Fast 720p30</option>
-                <option value="6">Fast 576p25</option>
-                <option value="7">Fast 480p30</option>
-                <option value="8">HQ 1080p30 Surround</option>
-                <option value="9">HQ 720p30 Surround</option>
-                <option value="10">HQ 576p25 Surround</option>
-                <option value="11">HQ 480p30 Surround</option>
-                <option value="12">Super HQ 1080p30 Surround</option>
-                <option value="13">Super HQ 720p30 Surround</option>
-                <option value="14">Super HQ 576p25 Surround</option>
-                <option value="15">Super HQ 480p30 Surround</option>
-                <option value="16">Gmail Large 3 Minutes 720p30</option>
-                <option value="17">Gmail Medium 5 Minutes 480p30</option>
-                <option value="18">Gmail Small 10 Minutes 288p30</option>
-                <option value="19">Vimeo YouTube HQ 2160p60 4K</option>
-                <option value="20">Vimeo YouTube HQ 1440p60 2.5K</option>
-                <option value="21">Vimeo YouTube HQ 1080p60</option>
-                <option value="22">Vimeo YouTube HQ 720p60</option>
-                <option value="23">Vimeo YouTube 720p30</option>
-                <option value="24">Android 1080p30</option>
-                <option value="25">Android 720p30</option>
-                <option value="26">Android 576p25</option>
-                <option value="27">Android 480p30</option>
-                <option value="28">Apple 2160p60 4K HEVC Surround</option>
-                <option value="29">Apple 1080p60 Surround</option>
-                <option value="30">Apple 1080p30 Surround</option>
-                <option value="31">Apple 720p30 Surround</option>
-                <option value="32">Apple 540p30 Surround</option>
-                <option value="33">Apple 240p30</option>
-                <option value="34">Chromecast 2160p60 4K HEVC Surround</option>
-                <option value="35">Chromecast 1080p60 Surround</option>
-                <option value="36">Chromecast 1080p30 Surround</option>
-                <option value="37">Amazon Fire 2160p60 4K HEVC Surround</option>
-                <option value="38">Amazon Fire 1080p30 Surround</option>
-                <option value="39">Amazon Fire 720p30</option>
-                <option value="40">Playstation 1080p30 Surround</option>
-                <option value="41">Playstation 720p30</option>
-                <option value="42">Playstation 540p30</option>
-                <option value="43">Roku 2160p60 4K HEVC Surround</option>
-                <option value="44">Roku 1080p30 Surround</option>
-                <option value="45">Roku 720p30 Surround</option>
-                <option value="46">Roku 576p25</option>
-                <option value="47">Roku 480p30</option>
-                <option value="48">Windows Mobile 1080p30</option>
-                <option value="49">Windows Mobile 720p30</option>
-                <option value="50">Windows Mobile 540p30</option>
-                <option value="51">Windows Mobile 480p30</option>
-                <option value="52">Xbox 1080p30 Surround</option>
-                <option value="53">Xbox Legacy 1080p30 Surround</option>
-                <option value="54">H.265 MKV 2160p60</option>
-                <option value="55">H.265 MKV 1080p30</option>
-                <option value="56">H.265 MKV 720p30</option>
-                <option value="57">H.265 MKV 576p25</option>
-                <option value="58">H.265 MKV 480p30</option>
-                <option value="59">H.264 MKV 2160p60</option>
-                <option value="60">H.264 MKV 1080p30</option>
-                <option value="61">H.264 MKV 720p30</option>
-                <option value="62">H.264 MKV 576p25</option>
-                <option value="63">H.264 MKV 480p30</option>
-                <option value="64">VP9 MKV 2160p60</option>
-                <option value="65">VP9 MKV 1080p30</option>
-                <option value="66">VP9 MKV 720p30</option>
-                <option value="67">VP9 MKV 576p25</option>
-                <option value="68">VP9 MKV 480p30</option>
-                <option value="69">VP8 MKV 1080p30</option>
-                <option value="70">VP8 MKV 720p30</option>
-                <option value="71">VP8 MKV 576p25</option>
-                <option value="72">VP8 MKV 480p30</option>
-                <option value="73">Production Max</option>
-                <option value="74">Production Standard</option>
-                <option value="75">Production Proxy 1080p</option>
-                <option value="76">Production Proxy 540p</option>
-
-
-
-            </select>
-        </div>
-
-        <div style="display: none;" id="customPresetDiv">
-
-            <textarea type="text" class="customPresetBox" id="customPresets"></textarea>
-
-        </div>
-
-        <p>Container:</p>
-        <select name="container" class="selectbox" id="container">
-            <option value="0">.mp4</option>
-            <option value="1">.m4v</option>
-            <option value="2">.mkv</option>
-
-        </select>
-
-        <br>
-
-        <p>Enable periodic scanning?:<input type="checkbox" id="scanOnOff"></p>
-
-
-        <p>Show/hide advanced<input id="showHideAdvanced" type="checkbox" onchange="cbChange3()"></p>
-        <div id="advancedSettings" style="display: none;">
-
-
-
-            <p>Scan interval (minimum 5):<input type="text" class="infoBox" id="timer">seconds</p>
-
-
-
-
-
-
-            <p>Valid file types:</p><textarea type="text" class="folderPaths" id="includedFileTypes"></textarea>
-
-            <p>Number of simulataneous Handbrake instances to use?(Recommended <=4):<input type="text" class="infoBox" id="instanceNumber"></p>
-
-            <div id="customBatPathDiv" style="display: none;">
-                <p>Custom bat path to run after each conversion (leave blank if not using):</p><textarea type="text"
-                    class="folderPaths" id="customBatPath"></textarea>
+            <div id="window-controls">
+                <div class="button" id="min-button">
+                    <span>&#xE921;</span>
+                </div>
+                <div class="button" id="max-button">
+                    <span>&#xE922;</span>
+                </div>
+                <div class="button" id="restore-button">
+                    <span>&#xE923;</span>
+                </div>
+                <div class="button" id="close-button">
+                    <span>&#xE8BB;</span>
+                </div>
             </div>
 
         </div>
 
+    </header>
 
-        <div class="alert">
+    <div id="main">
+        <div ALIGN="LEFT">
 
-
-            <p id="deleteSourceFilesdiv" style="color:#87001b;">Delete source files after conversion?:<input type="checkbox"
-                    id="deleteSourceFiles" onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')"></p>
-
-        </div>
-
-        <input type='button' class="button1" value='Save config' onclick='saveConfig()' />
-
-
-        <input type='button' class="button2one1" value='Health check' onclick='convertFiles("healthCheck")' />
-        <input type='button' class="button2one" value='Scan only' onclick='convertFiles()' />
-        <input type='button' class="button2" value='Scan and convert' onclick='convertFiles("scanandconvert")' />
-
-
-        <div id="HBCLIStatus"></div>
-
-        <div id="conversionInfo"></div>
-
-
-
-        <p>---------------------------------------------------------------------------------------</p>
-        <p>Scanning for new files in:<input type="text" id="countdown" class="infoBox">seconds</p>
-
-        <input type="button" onclick="viewLogs('Scans')" value="View scan/conversion summary log" class="infoButton">
-        <input type="button" onclick="viewLogs('fileConversionLog')" value="View individual file conversion log" class="infoButton">
-
-
-
-        <p>Total number of media files found:<input type="text" id="totalFilesFound" class="infoBox">
-            Number of unconverted media files found:<input type="text" id="unconvertedFilesFound" class="infoBox"></p>
-
-        <div id="worker1"> </div>
-        <div id="worker1progress"> </div>
-        <div id="worker2"> </div>
-        <div id="worker3"> </div>
-        <div id="worker4"> </div>
-
-        <br>
-        <br>
-
-        <p>Queue</p>
-        <div id="fullQueue"></div>
-
-
-        <div id="files"></div>
-        <div id="files2"></div>
-
-
-        <p>Output this session</p>
-        <div id="sessionConversions">
-
-            <div id="healthCheckDiv"></div>
-
-            <table id="sessionConversionsTable" class="historicTable">
-                <col width="70%">
-                <col width="10%">
-                <col width="10%">
-                <col width="10%">
-
-                <th class="headcol">Source file</th>
-                <th class="headcol">No.</th>
-                <th class="headcol">Preset</th>
-
-                <th class="headcol">Status</th>
-
-
-            </table>
-
-
+            <img src="./HBBatchBeast/Config/Images/Refresh.png" alt="Italian Trulli" style="width:50x;height:25px;"
+                onclick="location.reload()">
 
         </div>
 
+        <center>
+
+            <img src="./HBBatchBeast/Config/Images/paypaldonateimage.jpg" alt="Italian Trulli" style="width:50x;height:25px;"
+                onclick="openURL('https://www.paypal.me/HaveAGitGat')">
+
+            <center>
+
+             
+
+                  
+                      <div class="titleDiv">
+                            <span style="color:#1A2933;">____________</span><span class="titleSpan"  >HBBatchBeast</span> <span> for HandBrake</span>
+                </div>
+                                    
+                
+           
+                  
+            </center>
+
+            <input type="button" class="HaveAGitGat" onclick="openURL('https://github.com/HaveAGitGat')" value="by HaveAGitGat">
 
 
-    </center>
 
 
+
+            <p>Source folder - see help tab for monitoring multiple folders</p>
+
+
+            <textarea type="text" class="folderPaths" id="sourcePath"></textarea>
+            <img src="./HBBatchBeast/Config/Images/Folder-Open-icon.png" alt="Italian Trulli" style="width:50x;height:25px;"
+                onclick="selectFolder('sourcePath')">
+
+
+
+
+
+            <!-- Tab links -->
+            <div class="tab">
+
+                <button class="tablinks" onclick="openTab(event, 'mediaHealthCheck')">Video health check</button>
+
+                <button class="tablinks" onclick="openTab(event, 'batchConversion')">Batch conversion & Folder watching</button>
+
+                <button class="tablinks" onclick="openTab(event, 'helpSection')">Help</button>
+
+            </div>
+
+            <!-- Tab content -->
+            <div id="batchConversion" class="tabcontent">
+
+
+                <div class="grid-container">
+
+
+                    <div class="grid-itemleft">
+                        <p>Temporary conversion folder?</p>
+                    </div>
+
+                    <div class="grid-itemright"> <input type="checkbox" class="rounded" id="selectTemporaryConversionFolder"
+                            onchange="cbChange2()"></div>
+
+
+
+                </div>
+
+
+
+
+
+                <div id="ShowHide1">
+                    <div class="grid-container">
+                        <div class="grid-itemleft">
+                            <p>Destination folder</p>
+                        </div>
+                        <div class="grid-itemright"></div>
+
+                    </div>
+                </div>
+                <div id="ShowHide2"> </div>
+
+
+
+                <div style="text-align: right">
+                    <textarea type="text" class="folderPaths" id="destinationPath"> </textarea>
+                    <img src="./HBBatchBeast/Config/Images/Folder-Open-icon.png" alt="Italian Trulli" style="width:50x;height:25px;"
+                        onclick="selectFolder('destinationPath')">
+
+                </div>
+
+
+
+
+
+                <div style="display: none;" id="tempConversionFolderDiv">
+                    <div class="grid-container">
+                        <div class="grid-itemleft">
+                            <p>Destination folder:</p>
+                        </div>
+                        <div class="grid-itemright"></div>
+
+                    </div>
+
+                    <div style="text-align: right"> <textarea type="text" class="folderPaths" id="tempDestinationPath"></textarea>
+
+                        <img src="./HBBatchBeast/Config/Images/Folder-Open-icon.png" alt="Italian Trulli" style="width:50x;height:25px;"
+                            onclick="selectFolder('tempDestinationPath')">
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="grid-container">
+                    <div class="grid-itemleft">
+                        <p>Standard preset:</p>
+                    </div>
+
+                    <div class="grid-itemright"> <input type="checkbox" id="selectStandardPreset" class="cb1" onchange="cbChange1(this)">
+                    </div>
+
+                    <div class="grid-itemleft">
+                        <p> Custom preset:</p>
+                    </div>
+
+                    <div class="grid-itemright"> <input type="checkbox" id="selectCustomPreset" class="cb1" onchange="cbChange1(this)">
+                    </div>
+
+                </div>
+
+
+
+                <div style="display: none;" id="standardPresetDiv">
+
+                    <div class="grid-container">
+
+                        <div class="grid-itemleft">
+                            <p>Select standard preset: </p>
+                        </div>
+                        <div class="grid-itemright"> <select name="preset" class="selectbox" id="preset">
+                                <option value="0">Very Fast 1080p30</option>
+                                <option value="1">Very Fast 720p30</option>
+                                <option value="2">Very Fast 576p25</option>
+                                <option value="3">Very Fast 480p30</option>
+                                <option value="4">Fast 1080p30</option>
+                                <option value="5">Fast 720p30</option>
+                                <option value="6">Fast 576p25</option>
+                                <option value="7">Fast 480p30</option>
+                                <option value="8">HQ 1080p30 Surround</option>
+                                <option value="9">HQ 720p30 Surround</option>
+                                <option value="10">HQ 576p25 Surround</option>
+                                <option value="11">HQ 480p30 Surround</option>
+                                <option value="12">Super HQ 1080p30 Surround</option>
+                                <option value="13">Super HQ 720p30 Surround</option>
+                                <option value="14">Super HQ 576p25 Surround</option>
+                                <option value="15">Super HQ 480p30 Surround</option>
+                                <option value="16">Gmail Large 3 Minutes 720p30</option>
+                                <option value="17">Gmail Medium 5 Minutes 480p30</option>
+                                <option value="18">Gmail Small 10 Minutes 288p30</option>
+                                <option value="19">Vimeo YouTube HQ 2160p60 4K</option>
+                                <option value="20">Vimeo YouTube HQ 1440p60 2.5K</option>
+                                <option value="21">Vimeo YouTube HQ 1080p60</option>
+                                <option value="22">Vimeo YouTube HQ 720p60</option>
+                                <option value="23">Vimeo YouTube 720p30</option>
+                                <option value="24">Android 1080p30</option>
+                                <option value="25">Android 720p30</option>
+                                <option value="26">Android 576p25</option>
+                                <option value="27">Android 480p30</option>
+                                <option value="28">Apple 2160p60 4K HEVC Surround</option>
+                                <option value="29">Apple 1080p60 Surround</option>
+                                <option value="30">Apple 1080p30 Surround</option>
+                                <option value="31">Apple 720p30 Surround</option>
+                                <option value="32">Apple 540p30 Surround</option>
+                                <option value="33">Apple 240p30</option>
+                                <option value="34">Chromecast 2160p60 4K HEVC Surround</option>
+                                <option value="35">Chromecast 1080p60 Surround</option>
+                                <option value="36">Chromecast 1080p30 Surround</option>
+                                <option value="37">Amazon Fire 2160p60 4K HEVC Surround</option>
+                                <option value="38">Amazon Fire 1080p30 Surround</option>
+                                <option value="39">Amazon Fire 720p30</option>
+                                <option value="40">Playstation 1080p30 Surround</option>
+                                <option value="41">Playstation 720p30</option>
+                                <option value="42">Playstation 540p30</option>
+                                <option value="43">Roku 2160p60 4K HEVC Surround</option>
+                                <option value="44">Roku 1080p30 Surround</option>
+                                <option value="45">Roku 720p30 Surround</option>
+                                <option value="46">Roku 576p25</option>
+                                <option value="47">Roku 480p30</option>
+                                <option value="48">Windows Mobile 1080p30</option>
+                                <option value="49">Windows Mobile 720p30</option>
+                                <option value="50">Windows Mobile 540p30</option>
+                                <option value="51">Windows Mobile 480p30</option>
+                                <option value="52">Xbox 1080p30 Surround</option>
+                                <option value="53">Xbox Legacy 1080p30 Surround</option>
+                                <option value="54">H.265 MKV 2160p60</option>
+                                <option value="55">H.265 MKV 1080p30</option>
+                                <option value="56">H.265 MKV 720p30</option>
+                                <option value="57">H.265 MKV 576p25</option>
+                                <option value="58">H.265 MKV 480p30</option>
+                                <option value="59">H.264 MKV 2160p60</option>
+                                <option value="60">H.264 MKV 1080p30</option>
+                                <option value="61">H.264 MKV 720p30</option>
+                                <option value="62">H.264 MKV 576p25</option>
+                                <option value="63">H.264 MKV 480p30</option>
+                                <option value="64">VP9 MKV 2160p60</option>
+                                <option value="65">VP9 MKV 1080p30</option>
+                                <option value="66">VP9 MKV 720p30</option>
+                                <option value="67">VP9 MKV 576p25</option>
+                                <option value="68">VP9 MKV 480p30</option>
+                                <option value="69">VP8 MKV 1080p30</option>
+                                <option value="70">VP8 MKV 720p30</option>
+                                <option value="71">VP8 MKV 576p25</option>
+                                <option value="72">VP8 MKV 480p30</option>
+                                <option value="73">Production Max</option>
+                                <option value="74">Production Standard</option>
+                                <option value="75">Production Proxy 1080p</option>
+                                <option value="76">Production Proxy 540p</option>
+
+
+
+                            </select> </div>
+
+                    </div>
+                </div>
+
+                <div style="display: none;" id="customPresetDiv">
+
+
+                    <div style="text-align: right">
+                        <textarea type="text" class="customPresetBox" id="customPresets"></textarea>
+                    </div>
+
+                </div>
+
+
+                <div class="grid-container">
+
+                    <div class="grid-itemleft">
+                        <p>Container:</p>
+                    </div>
+                    <div class="grid-itemright"> <select name="container" class="selectbox" id="container">
+                            <option value="0">.mp4</option>
+                            <option value="1">.m4v</option>
+                            <option value="2">.mkv</option>
+
+                        </select> </div>
+
+
+                    <div class="grid-itemleft">
+                        <p>Enable periodic scanning?:</p>
+                    </div>
+
+                    <div class="grid-itemright"><input type="checkbox" id="scanOnOff"></div>
+
+
+                    <div class="grid-itemleft">
+
+                        <div id="deleteItemDiv">
+                            <p id="deleteSourceFilesdiv">Delete source files after conversion?:</p>
+                        </div>
+                    </div>
+
+                    <div class="grid-itemright">
+
+
+                        <div id="deleteItemDiv2">
+                            <input type="checkbox" name="deleteSourceFilesname" id="deleteSourceFiles" onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')">
+                        </div>
+
+                    </div>
+
+
+
+
+
+                    <div class="grid-itemleft">
+                        <p>Show/hide advanced:</p>
+                    </div>
+
+                    <div class="grid-itemright"><input id="showHideAdvanced" type="checkbox" onchange="cbChange3()"></div>
+
+
+                </div>
+
+
+                <div id="advancedSettings" style="display: none;">
+
+
+
+                    <div class="grid-container">
+
+                        <div class="grid-itemleft">
+                            <p>Scan interval (minimum 5 seconds):</p>
+                        </div>
+
+                        <div class="grid-itemright"><input type="text" class="infoBox" id="timer"></div>
+
+
+                        <div class="grid-itemleft">
+                            <p>Number of simulataneous Handbrake instances to use?(Recommended <=4):</p> </div> <div
+                                    class="grid-itemright"><input type="text" class="infoBox" id="instanceNumber">
+                        </div>
+
+
+
+
+
+
+                    </div>
+
+
+                    <div style="text-align: left">
+                        <p>File type filter:</p>
+                    </div>
+
+                    <div style="text-align: right">
+                        <textarea type="text" class="folderPaths" id="includedFileTypes"></textarea>
+                    </div>
+
+
+
+
+                    <div id="customBatPathDiv" style="display: none;">
+
+                        <div style="text-align: left">
+                            <p>Custom bat path to run after each conversion (leave blank if not using):</p>
+                        </div>
+
+                        <div style="text-align: right">
+                            <textarea type="text" class="folderPaths" id="customBatPath"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+                <br>
+                <br>
+
+
+                <input type='button' class="button1" value='Save config' onclick='saveConfig()' />
+
+
+
+                <input type='button' class="button2one" value='Scan only' onclick='convertFiles()' />
+                <input type='button' class="button2" value='Scan and convert' onclick='convertFiles("scanandconvert")' />
+
+                <div id="HBCLIStatus"></div>
+
+                <div id="conversionInfo"></div>
+
+
+
+                <p>---------------------------------------------------------------------------------------</p>
+
+         
+
+
+                <input type="button" onclick="viewLogs('Scans')" value="View scan/conversion summary log" class="infoButton">
+                <input type="button" onclick="viewLogs('fileConversionLog')" value="View individual file check/conversion log"   class="infoButton">
+                  
+
+
+            </div>
+
+            <div id="mediaHealthCheck" class="tabcontent">
+                <input type='button' class="button2one1" value='Health check' onclick='convertFiles("healthCheck")' />
+                <p><p>
+                <input type="button" onclick="viewLogs('ErrorLog')" value="View error log" class="infoButton">
+
+            </div>
+
+            <center>
+                <div id="helpSection" class="tabcontent">
+
+
+
+                    <div class="grid-container2">
+
+                        <div class="grid-item2"></div>
+                        <div class="grid-item2">
+
+                            <p><br /><span style="font-size: 12pt;"><strong>Folder paths, entered with no trailing
+                                        slash -
+                                        e.g:</strong></span></p>
+                            <p>Windows:<br />C:\Users\HaveAGitGat\Desktop\Input</p>
+                            <p>Linux:<br />/home/haveagitgat/Desktop/Input</p>
+                            <p>macOS:<br />/Users/haveagitgat/Desktop/Input</p>
+                            <p>If monitoring multiple folders, you need to specify a temporary folder (if option
+                                checked)
+                                and
+                                destination folder for each source folder. <br />Each folder entry must be on a new
+                                line.
+                                If
+                                'Standard preset' is selected, then all source folders will be converted with the<br />selected
+                                standard preset. If 'Custom preset' is selected, then you must enter a preset for each
+                                source
+                                folder. Each preset must be<br />on a new line. See the following image for guidance:</p>
+                            <p>https://imgur.com/a/2tl8dIw</p>
+                            <p>For example, if you're wanting to use two standard presets for two different folders,
+                                you
+                                should put
+                                the following in the custom preset box:</p>
+                            <p>-Z "Very Fast 1080p30"<br />-Z "Very Fast 480p30"</p>
+                            <p>&nbsp;</p>
+                            <p><strong><span style="font-size: 12pt;">Standard preset:</span></strong><br />Select one
+                                of
+                                the
+                                standard Handbrake presets</p>
+                            <p><span style="font-size: 12pt;"><strong>Custom preset:</strong></span><br />Write custom
+                                presets or
+                                link to a json preset exported from Handbrake. For example:<br />-e x264 -q 20 -B 160<br />or<br />--preset-import-file
+                                "C:\Users\HaveAGitGat\Desktop\testpreset.json" -Z "My Preset"</p>
+                            <p><span style="font-size: 12pt;"><strong>Container:</strong></span><br />Select the output
+                                file
+                                container type.</p>
+                            <p><span style="font-size: 12pt;"><strong>Enable periodic scanning:</strong></span><br />Select
+                                this to
+                                automatically scan and convert files at a set interval (default 300 seconds). <br />Scan
+                                interval
+                                can be modified in the advanced settings section.</p>
+                            <p><strong><span style="font-size: 12pt;">Delete source files after conversion:</span></strong><br />If
+                                checked, source files will be deleted once the queue has completed.</p>
+                            <p><span style="font-size: 12pt;"><strong>Valid file types:</strong></span><br />File types
+                                which the
+                                program will scan for.<br />Separate with comma (e.g. iso,wmv, )<br />Default:mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,</p>
+                            <p><strong>Number<span style="font-size: 12pt;"> o</span><span style="font-size: 12pt;">f
+                                    </span>simultaneous<span style="font-size: 12pt;"> Handbrake instances:</span></strong><br />Set
+                                how many Handbrake
+                                simultaneous conversions to carry out. Although an ulimited amount can be used, it is
+                                recommended not to go above 4.</p>
+                            <p><span style="font-size: 12pt;"><strong>Custom bat path to run after each conversion
+                                        (Windows):</strong></span><br />Input
+                                a bat file path to run after each file has finished being converted.Bat files with
+                                timeout
+                                statements won't work (more on this here
+                                https://comm.support.ca.com/kb/the-timeout-command-in-batch-script-job-results-in-error-input-redirection-is-not-supported-exiting-the-process-immediately/kb000029524)<br />Leave
+                                box completely empty if you do not wish to use this option (make sure there are no
+                                hidden
+                                characters in the box).</p>
+                            <p>Save config:<br />Save current configuration</p>
+                            <p><span style="font-size: 12pt;"><strong>Health check:</strong></span><br />This uses
+                                Handbrakes
+                                inbuilt '--scan' feature it uses to scan a video for information. If an error is thrown
+                                during this
+                                process, the file my be corrupt. It is not 100% accurate so should only be used as
+                                guidance.</p>
+                            <p><span style="font-size: 12pt;"><strong>Scan only:</strong></span><br />Scan for files to
+                                be
+                                converted given current configuration. <br />No files will be converted. Pressing this
+                                will
+                                only
+                                run it once (regardless of whether 'periodic scanning' is checked.</p>
+                            <p><span style="font-size: 12pt;"><strong>Scan and convert:</strong></span><br />Scan for
+                                files
+                                and
+                                convert any valid ones. <br />If 'periodic scanning' is checked, then the program will
+                                scan
+                                and
+                                convert repeatedly at the specified interval.</p>
+                            <p><span style="font-size: 12pt;"><strong>View scan/conversion summary log:</strong></span><br />Show
+                                historic scan/conversion information</p>
+                            <p><span style="font-size: 12pt;"><strong>View individual file conversion log:</strong></span></p>
+                            <p>Shows a list of all files processed with success or error tag.</p>
+                            <p><br /><span style="font-size: 12pt;"><strong>Total number of media files found:</strong></span><br />Number
+                                of valid files found based on valid file types option.</p>
+                            <p><span style="font-size: 12pt;"><strong>Number of unconverted media files found:</strong></span><br />Files
+                                which don't exist in the destination folder structure when compared to the source
+                                folder
+                                structure.</p>
+                            <p><br />If an item in the queue comes out with "Error", this means that the HandbrakeCLI
+                                had
+                                trouble
+                                converting/scanning the file, most likely due to it being corrupt/partially corrupt. Else it may
+                                be
+                                a
+                                file type which Handbrake does not support. Try converting the file normally in
+                                Handbrake
+                                to
+                                see what error it throws.</p>
+                            <p>&nbsp;</p>
+                            <p>&nbsp;</p>
+
+                        </div>
+                        <div class="grid-item2"></div>
+
+
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+
+                <div id="timerDiv"></div>
+
+                <div id="worker1"> </div>
+                <div id="worker1progress"> </div>
+                <div id="worker2"> </div>
+                <div id="worker3"> </div>
+                <div id="worker4"> </div>
+
+                <br>
+                <br>
+                <div ALIGN="LEFT">
+                    <div id='totalFilesDiv'></div>
+                    <div id='totalUnconvertedFilesDiv'></div>
+                    <div id='startTimeDiv'></div>
+                    <div id='durationDiv'></div>
+                    <div id='endTimeDiv'></div>
+                </div>
+
+                <div id='myChartDiv' style="display: none;">
+                <div id='myChart' ></div>
+            </div>
+           
+
+                <div id="healthCheckDiv"></div>
+
+
+                <div ALIGN="LEFT">
+
+                    <div id="viewStatus"></div>
+                    <input type='button' id="queueButton" class="button4" value='Toggle queue view' onclick='toggleView("fullQueueDiv")'
+                        style="display: none;" />
+
+
+
+
+                </div>
+
+
+                <div id="fullQueueDiv" style="display: none;">
+                    <p>Queue</p>
+                    <div id="fullQueue">
+
+                    </div>
+                </div>
+
+
+
+                <div id="files"></div>
+                <div id="files2"></div>
+                <div ALIGN="LEFT">
+                    <input type='button' id="outputButton" class="button4" value='Toggle output view' onclick='toggleView("sessionConversions")'
+                        style="display: none;" />
+                </div>
+
+                <div id="sessionConversions" style="display: none;">
+                    <p>Output this session</p>
+
+
+
+                    <table id="sessionConversionsTable" class="historicTable">
+                        <col width="70%">
+                        <col width="auto">
+                        <col width="auto">
+                        <col width="auto">
+                        <col width="auto">
+
+                        <th class="headcol">Source file</th>
+                        <th class="headcol">Size</th>
+                        <th class="headcol">No.</th>
+                        <th class="headcol">Preset</th>
+
+                        <th class="headcol">Status</th>
+
+
+                    </table>
+
+
+
+                </div>
+
+
+
+            </center>
+
+    </div>
 
 
 
 
 </body>
 
-</html>s
+</html>

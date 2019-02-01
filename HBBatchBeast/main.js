@@ -18,7 +18,7 @@ const url = require('url');
 
 const path = require('path');
 
-const { app, BrowserWindow, Menu, ipcMain } = electron;
+const { app, BrowserWindow, Menu, ipcMain ,Tray} = electron;
 
 
 //declare main window limited to in scope to this block
@@ -31,6 +31,9 @@ let mainWindow;
 
 //listen for app to be ready
 
+
+var appIcon
+
 app.on('ready', function () {
 
     //create new window
@@ -38,6 +41,7 @@ app.on('ready', function () {
     mainWindow = new BrowserWindow({
         width: 1400,
         height: 1000,
+       frame: false,
         title: 'HBBatchBeast'
 
 
@@ -52,11 +56,11 @@ app.on('ready', function () {
 
     }));
 
-    //Quit app when closed
-    mainWindow.on('closed', function () {
-        app.quit();
+    // //Quit app when closed
+    // mainWindow.on('closed', function () {
+    //     app.quit();
 
-    });
+    // });
 
 
     //Build menu from template
@@ -64,7 +68,88 @@ app.on('ready', function () {
     //Insert menu
     Menu.setApplicationMenu(mainMenu);
 
+
+ appIcon = new Tray(iconpath)
+
+    var contextMenu = Menu.buildFromTemplate([
+        {
+            label: 'Show', click: function () {
+                mainWindow.show()
+            }
+        },
+             {
+
+             label: 'Clear notification', click: function () {
+                 var icon = iconPathNotify = path.join(__dirname, '.\\assets\\icons\\'+platform+'\\icon.ico')
+                 appIcon.setImage(icon);
+               
+            }
+        },
+        {
+            label: 'Quit', click: function () {
+                app.isQuiting = true
+                app.quit()
+            }
+        }
+   
+    ])
+
+    appIcon.setContextMenu(contextMenu)
+
+    mainWindow.on('close', function (event) {
+        mainWindow = null
+    })
+
+    mainWindow.on('minimize', function (event) {
+        event.preventDefault()
+        mainWindow.hide()
+    })
+
+mainWindow.on('show', function () {
+appIcon.setHighlightMode('always')
+
+var icon = iconPathNotify = path.join(__dirname, '.\\assets\\icons\\'+platform+'\\icon.ico')
+appIcon.setImage(icon);
+    })
+
+//appIcon.setToolTip('Error!');
+
+
+
 });
+
+ var iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.ico')
+ var iconPathNotify = path.join(__dirname, '.\\assets\\icons\\win\\iconnotify.ico')
+
+if(process.platform=='win32'){
+ var platform = "win"
+
+}
+
+    if(process.platform == 'linux' ){
+ var platform = "mac"
+
+    }
+    
+    if( process.platform == 'darwin'){
+ var platform = "png"
+
+    }
+
+//Catch icon updates
+ipcMain.on('item:add',function(e,item){
+
+    //  console.log(item);
+
+var icon = iconPathNotify = path.join(__dirname, '.\\assets\\icons\\'+platform+'\\'+item+'.ico')
+appIcon.setImage(icon);
+
+  
+  });
+
+
+
+
 
 
 //Create menu template
