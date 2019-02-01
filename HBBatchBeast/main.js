@@ -69,7 +69,7 @@ app.on('ready', function () {
     Menu.setApplicationMenu(mainMenu);
 
 
-
+if(process.platform=='win32'){
 
  appIcon = new Tray(iconpath)
 
@@ -115,7 +115,7 @@ appIcon.setImage(iconpath);
     })
 
 //appIcon.setToolTip('Error!');
-
+}
 
 });
 
