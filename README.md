@@ -7,7 +7,7 @@ is not always accurate.
 
 This is a standalone program on Windows but requires Handbrake to be installed on Linux and Mac. 
 
-![Screenshot](https://i.imgur.com/RE0w6bO.png)
+![Screenshot](https://i.imgur.com/MVS7yTb.png)
 
 Demo video - https://sendvid.com/g2b94i8j
 
