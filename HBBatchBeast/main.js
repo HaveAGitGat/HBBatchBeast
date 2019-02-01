@@ -129,13 +129,13 @@ if(process.platform=='win32'){
 
     if(process.platform == 'linux' ){
  var platform = "png"
- var iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.png')
+ var iconpath = path.join(__dirname, '.\\assets\\icons\\png\\icon.png')
 
     }
     
     if( process.platform == 'darwin'){
  var platform = "mac"
-  var iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.icns')
+  var iconpath = path.join(__dirname, '.\\assets\\icons\\mac\\icon.icns')
 
     }
 
