@@ -123,9 +123,9 @@ appIcon.setImage(iconpath);
 
 if(process.platform=='win32'){
  var platform = "win"
- //var iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.ico')
+ var iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.ico')
 var type = "ico"
-var iconpath = "./assets/icons/win/icon.ico"
+//var iconpath = "./assets/icons/win/icon.ico"
 }
 
     if(process.platform == 'linux' ){
@@ -147,9 +147,9 @@ ipcMain.on('item:add',function(e,item){
 
     //  console.log(item);
 
-//var icon = path.join(__dirname, '.\\assets\\icons\\'+platform+'\\'+item+'.ico')
+var icon = path.join(__dirname, '.\\assets\\icons\\'+platform+'\\'+item+'.ico')
 
-var icon ="./assets/icons/"+platform+"/"+item+"."+type;
+//var icon ="./assets/icons/"+platform+"/"+item+"."+type;
 appIcon.setImage(icon);
 
   
