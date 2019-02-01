@@ -69,6 +69,8 @@ app.on('ready', function () {
     Menu.setApplicationMenu(mainMenu);
 
 
+
+
  appIcon = new Tray(iconpath)
 
     var contextMenu = Menu.buildFromTemplate([
@@ -80,8 +82,8 @@ app.on('ready', function () {
              {
 
              label: 'Clear notification', click: function () {
-                 var icon = iconPathNotify = path.join(__dirname, '.\\assets\\icons\\'+platform+'\\icon.ico')
-                 appIcon.setImage(icon);
+                
+                 appIcon.setImage(iconpath);
                
             }
         },
@@ -108,31 +110,32 @@ app.on('ready', function () {
 mainWindow.on('show', function () {
 appIcon.setHighlightMode('always')
 
-var icon = iconPathNotify = path.join(__dirname, '.\\assets\\icons\\'+platform+'\\icon.ico')
-appIcon.setImage(icon);
+
+appIcon.setImage(iconpath);
     })
 
 //appIcon.setToolTip('Error!');
 
 
-
 });
 
- var iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.ico')
- var iconPathNotify = path.join(__dirname, '.\\assets\\icons\\win\\iconnotify.ico')
+ 
 
 if(process.platform=='win32'){
  var platform = "win"
+ var iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.ico')
 
 }
 
     if(process.platform == 'linux' ){
- var platform = "mac"
+ var platform = "png"
+ var iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.png')
 
     }
     
     if( process.platform == 'darwin'){
- var platform = "png"
+ var platform = "mac"
+  var iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.icns')
 
     }
 
@@ -141,7 +144,7 @@ ipcMain.on('item:add',function(e,item){
 
     //  console.log(item);
 
-var icon = iconPathNotify = path.join(__dirname, '.\\assets\\icons\\'+platform+'\\'+item+'.ico')
+var icon = path.join(__dirname, '.\\assets\\icons\\'+platform+'\\'+item+'.ico')
 appIcon.setImage(icon);
 
   

@@ -14,7 +14,7 @@
 
 
     //SET ENV
- process.env.NODE_ENV = "production";
+     process.env.NODE_ENV = "production";
 
     var home = require("os").homedir();
 
@@ -122,9 +122,8 @@
 
     window.onload = function () {
 
-        if(process.platform=='win32'){
+
         ipcRenderer.send('item:add','icon'); 
-        }
 
 
 
@@ -1746,9 +1745,8 @@ var refreshRate = totalFileFoundCounter/10
     function runEndSection() {
         var fs = require('fs');
 
-        if(process.platform=='win32'){
+
         ipcRenderer.send('item:add','iconrunning');
-        }
 
         //load conversion queue into table
 
@@ -2556,18 +2554,14 @@ document.getElementById("myChartDiv").style.display = 'none';
 
 
                 if(errorCount!=0){
-                    if(process.platform=='win32'){
 
 ipcRenderer.send('item:add','iconerror');
-                    }
 
 
  
 }else{
-    if(process.platform=='win32'){
 
     ipcRenderer.send('item:add','icon'); 
-    }
 }
 
 
@@ -2860,23 +2854,18 @@ ipcRenderer.send('item:add','iconerror');
                 scanCompleted = 1;
 
                 if(timerSeconds%2 ==0){
-                    if(process.platform=='win32'){
                     ipcRenderer.send('item:add','iconwatching');
-                    }
 
                 }else{
                     if(errorCount!=0){
-                        if(process.platform=='win32'){
+
 ipcRenderer.send('item:add','iconerror');
-                        }
 
 
  
 }else{
-    if(process.platform=='win32'){
 
     ipcRenderer.send('item:add','icon'); 
-    }
 }
 
                 }
