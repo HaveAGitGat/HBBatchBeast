@@ -1,4 +1,4 @@
-# HBBatchBeast (Windows, macOS and Linux)
+# HBBatchBeast for Handbrake (Windows, macOS and Linux)
 
 A simple GUI application for Handbrake on Windows with an emphasis on batch conversion (including recursive folder scans and folder watching). The destination folder structure is kept the same as the source folder structure. Media in subfolders is also converted. Multiple folders can be monitored and different conversion presets can be specified for each folder. There is also a health check feature which can scan for corrupt video files using Handbrakes's '--scan' feature, although this
 is not always accurate.
