@@ -18,7 +18,7 @@ https://github.com/HaveAGitGat/HBBatchBeast/releases
 
 Step 2:Run HBBatchBeast.exe
 
-Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
+Settings help in program 'Help' tab.
 
 -----------------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ Step 3:Install the package
 Step 4:Run hbbatchbeast from Launchpad
 
 
-Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
+Settings help in program 'Help' tab.
 
 -----------------------------------------------------------------------------
 
@@ -66,7 +66,7 @@ Step 3:Install the package
 
 Step 4:Run hbbatchbeast 
 
-Settings help:https://github.com/HaveAGitGat/HBBatchBeast/blob/master/Settings%20help
+Settings help in program 'Help' tab.
 
 -------------------------------------------------------------
 
