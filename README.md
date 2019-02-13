@@ -5,9 +5,9 @@ is not always accurate.
 
 This is a standalone program on Windows but requires Handbrake to be installed on Linux and Mac. 
 
-![Screenshot](https://i.imgur.com/MVS7yTb.png)
+![Screenshot](https://i.imgur.com/XMLxDxs.png)
 
-Demo video -https://sendvid.com/x9q0mzm1
+Demo video -https://sendvid.com/jvc4lc4z
 
 -------------------------------------------------------------
 INSTALLATION - Windows:
