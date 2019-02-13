@@ -8,51 +8,33 @@
 
 <script>
 
-var home = require("os").homedir();
 
+const electron=require('electron');
 
-if (process.platform == 'win32' || process.platform == 'linux') {
-
-    var homePath = "."
-
-
-}
-
-if (process.platform == 'darwin') {
-
-    var homePath = home
-
-}
-
-window.setInterval("updateStats();", 1000);
+const {ipcRenderer}=electron
 
 
 
-function updateStats(){
 
-var fs = require('fs');
+ipcRenderer.on('item:count',function(e,count){
 
-
-if (fs.existsSync(homePath + "/HBBatchBeast/Config/totalFilesFound.txt")) {
-
-var totalFileNumber = fs.readFileSync(homePath + "/HBBatchBeast/Config/totalFilesFound.txt", 'utf8');
+document.getElementById("informationWindow").innerHTML = "<h3>Total files found: "+count+"<\h3>";
 
 
-}
+});
 
-if (fs.existsSync(homePath + "/HBBatchBeast/Config/totalFilesFoundSize.txt")) {
+ipcRenderer.on('item:queueBuild',function(e,count){
 
-var fileSizeInGbytes = fs.readFileSync(homePath + "/HBBatchBeast/Config/totalFilesFoundSize.txt", 'utf8')
-
-
-
-}
+  document.getElementById("informationWindow2").innerHTML = "<h3>Building queue: "+count+"<\h3>";
 
 
-document.getElementById("informationWindow").innerHTML = "<h3>Total files found: "+totalFileNumber+"<\h3>";
-    document.getElementById("informationWindow").innerHTML += "<h3>"+fileSizeInGbytes+"<\h3>";
+});
 
-}
+   
+
+
+
+
 
 
 
@@ -268,11 +250,12 @@ body {
 
         <div id="main">
             <center>
-                <div id="informationWindow">
+                <div id="informationWindow"> </div>
+                <div id="informationWindow2"> </div>
                     
 
 
-                    </div>
+                   
 
                 </center>
                         

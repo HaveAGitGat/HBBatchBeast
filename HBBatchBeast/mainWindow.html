@@ -13,8 +13,11 @@
 <script>
 
 
+
+
+
     //SET ENV
-     process.env.NODE_ENV = "production";
+    process.env.NODE_ENV = "production";
 
     var home = require("os").homedir();
 
@@ -50,9 +53,13 @@
     }
 
 
+process.on('uncaughtException', function(err){
+    console.error(err.stack);
+    fs.appendFileSync(homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt',"Main thread error: "+err.stack+"\r\n" , 'utf8');
+    process.exit();
+});
 
 
- 
 
     function textAreaHeight() {
         //auto height text boxes
@@ -73,20 +80,20 @@
     const BrowserWindow = electron.remote.BrowserWindow;
 
 
-  
-     
 
 
 
-    
+
+
+
 
 
 
     const electron2 = require('electron');
-      const {ipcRenderer}=electron2;
+    const {ipcRenderer} = electron2;
 
 
-   
+
 
     function createscanWindow() {
 
@@ -95,7 +102,7 @@
         scanWindow = new BrowserWindow({
             width: 400,
             height: 200,
-            frame: false,
+           frame: false,
             title: 'Scan Window'
 
         });
@@ -120,10 +127,77 @@
     }
 
 
+        //Global variables
+
+        var cp
+    var globalQueueNumberManager = 0;
+
+    var fileNotExistsCounter = 0;
+    var totalFileFoundCounter = 0;
+    var totalFileSize = 0;
+
+    var inputPathArray = [];
+    var outputPathArray = [];
+
+    var sourceQueueArray = [];
+    var errorArray = [];
+    var sourceQueueFileSizeArray = []
+    var presetArray2 = [];
+
+    var mode = "";
+
+    var startDate
+    var unConvertedFiles;
+
+
+    //
+
+
+
+    var windowRefresh = window.setInterval("runScan();", 1000);
+
+
+
+
+    var updateInfo = 0;
+
+    var CompletedSwitch = 1;
+    
+
+    var countDownOn = 0;
+
+    var QueueNumber1Old
+
+    var colourSwitch = 0
+
+    var sessionNumber = 1;
+
+
+
+
+
+    var AllCompleted = 0;
+
+
+    var timerSeconds
+
+    var errorCount;
+
+    var successfulCount;
+
+
+
+    var queueView
+
+            
+
+
+
+
     window.onload = function () {
 
-        if(process.platform=='win32'){
-        ipcRenderer.send('item:add','icon'); 
+        if (process.platform == 'win32') {
+            ipcRenderer.send('item:add', 'icon');
         }
 
 
@@ -180,6 +254,11 @@
 
         }
 
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Email")) {
+            fs.mkdirSync(homePath + "/HBBatchBeast/Config/Email");
+
+        }
+
 
         if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes")) {
             fs.mkdirSync(homePath + "/HBBatchBeast/Config/Processes");
@@ -195,51 +274,6 @@
 
 
 
-        if (process.platform == 'win32') {
-
-            var scriptType = "bat"
-
-        }
-
-
-        if (process.platform == 'linux' || process.platform == 'darwin') {
-
-            var scriptType = "sh"
-        }
-
-
-        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1." + scriptType)) {
-
-            fs.writeFileSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp1." + scriptType, "", 'utf8');
-        }
-
-        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2." + scriptType)) {
-
-            fs.writeFileSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp2." + scriptType, "", 'utf8');
-        }
-
-
-        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3." + scriptType)) {
-
-            fs.writeFileSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp3." + scriptType, "", 'utf8');
-        }
-
-
-        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4." + scriptType)) {
-
-            fs.writeFileSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp4." + scriptType, "", 'utf8');
-        }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -248,6 +282,18 @@
             fs.mkdirSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus");
 
         }
+
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/Console")) {
+            fs.mkdirSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/Console");
+
+        }
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/ErrorLogs")) {
+            fs.mkdirSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/ErrorLogs");
+
+        }
+
 
         if (!fs.existsSync(homePath + "/HBBatchBeast/Logs")) {
             fs.mkdirSync(homePath + "/HBBatchBeast/Logs");
@@ -444,6 +490,28 @@
         }
 
 
+        //read email address
+
+        
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/Email/emailAddress.txt")) {
+
+document.getElementById("emailAddress").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/Email/emailAddress.txt", 'utf8');
+
+}
+
+
+        //read SMTP server
+
+
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/Email/SMTPServer.txt")) {
+
+document.getElementById("SMTPServer").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/Email/SMTPServer.txt", 'utf8');
+
+}
+
+
+
+
 
 
 
@@ -515,43 +583,38 @@
 
         var checkboxDelete = document.querySelector("input[name=deleteSourceFilesname]");
 
-checkboxDelete.addEventListener('change', function () {
-    if (this.checked) {
+        checkboxDelete.addEventListener('change', function () {
+            if (this.checked) {
 
 
-        //document.getElementById("deleteItemDiv2").style.backgroundColor = '#ef435d';
+                //document.getElementById("deleteItemDiv2").style.backgroundColor = '#ef435d';
 
 
-        document.getElementById("deleteSourceFilesdiv").style.color = '#ef435d';
-
-
-
-
-
-
-    } else {
-
-        document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,0.4)';
-
-    }
-});
+                document.getElementById("deleteSourceFilesdiv").style.color = '#ef435d';
 
 
 
 
 
+
+            } else {
+
+                document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,0.4)';
+
+            }
+        });
 
 
         cbChange2();
 
-if (document.getElementById("deleteSourceFiles").checked==true) {
+        if (document.getElementById("deleteSourceFiles").checked == true) {
 
-document.getElementById("deleteSourceFilesdiv").style.color = '#ef435d';
-} else {
+            document.getElementById("deleteSourceFilesdiv").style.color = '#ef435d';
+        } else {
 
-document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,0.4)';
+            document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,0.4)';
 
-}
+        }
 
 
 
@@ -729,7 +792,7 @@ document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,
         }
 
 
-        // save delete soure files
+        // save delete source files
 
 
         if (mode == "healthCheck") {
@@ -770,6 +833,16 @@ document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,
 
 
 
+        //email address
+
+        fs.writeFileSync(homePath + "/HBBatchBeast/Config/Email/emailAddress.txt", document.getElementById("emailAddress").value, 'utf8');
+
+        //SMTP server
+
+        fs.writeFileSync(homePath + "/HBBatchBeast/Config/Email/SMTPServer.txt", document.getElementById("SMTPServer").value, 'utf8');
+
+
+
 
 
 
@@ -806,6 +879,7 @@ document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,
         document.getElementById("endTimeDiv").innerHTML = ""
         document.getElementById("viewStatus").innerHTML = "";
         document.getElementById("timerDiv").innerHTML = "";
+        document.getElementById("workerStatusDiv").innerHTML = "";
 
 
         //set countdown timer
@@ -833,18 +907,19 @@ document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,
 
 
 
+        globalQueueNumberManager = 0;
+        AllCompleted = 0;
 
-        AllCompleted =0;
+       
 
-        CompletedSwitch2 = 0;
-        upToLine = 1;
-        readArrayLowerBound = 0;
+
 
 
         inputPathArray = [];
         outputPathArray = [];
         sourceQueueArray = [];
-        sourceQueueFileSizeArray=[]
+        errorArray = [];
+        sourceQueueFileSizeArray = []
         var outputPathArrayFinal = [];
 
 
@@ -856,7 +931,8 @@ document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,
         totalFileFoundCounter = 0;
         totalFileSize = 0;
 
-        errorCount=0;
+        errorCount = 0;
+        successfulCount=0;
 
         var g;
 
@@ -869,6 +945,7 @@ document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,
         var topFolderCharLength
         var programPath = ""
 
+        queueView ="enabled"
 
 
 
@@ -1322,6 +1399,16 @@ document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,
                                     //Write to file to state that file with valid format has been found
 
                                     fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFound.txt', (totalFileFoundCounter + 1), 'utf8');
+
+                                    if((totalFileFoundCounter + 1)%100==0){
+
+                                    scanWindow.webContents.send('item:count', (totalFileFoundCounter + 1));
+                                }
+
+
+                                   // ipcRenderer.send('item:count', (totalFileFoundCounter + 1));
+
+
                                     totalFileFoundCounter++
 
 
@@ -1524,53 +1611,49 @@ document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,
 
                 for (var i = 0; i < outputPathArray.length; i++) {
 
+                    try {
 
 
 
-                    if (fs.existsSync(outputPathArrayFinal[i])) {
 
-                    } else {
+                        if (fs.existsSync(outputPathArrayFinal[i])) {
 
-
-                        fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + ",,," + presetArray2[i] + "\n", 'utf8');
-                        sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
-                       
+                        } else {
 
 
-//write to file to specify size of all files found so far
-var singleFileSize = fs.statSync(sourceQueueArray[sourceQueueArrayCounter])
+                            fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + ",,," + presetArray2[i] + "\n", 'utf8');
+                            sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
 
-totalFileSize = totalFileSize + singleFileSize.size
+                          //  fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFoundSize.txt', "Building queue:" + (sourceQueueArrayCounter + 1), 'utf8');
 
 
 
-var fileSizeInGbytes = totalFileSize / 1000000000.0;
-
-fileSizeInGbytes = parseFloat(fileSizeInGbytes).toFixed(2);
-fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFoundSize.txt', "Building queue:"+(sourceQueueArrayCounter+1)+"("+fileSizeInGbytes+"GB)", 'utf8');
-
-
-sourceQueueFileSizeArray[sourceQueueArrayCounter]= singleFileSize.size/ 1000000000.0;
+                          if((sourceQueueArrayCounter + 1)%100==0){
 
 
 
-sourceQueueArrayCounter++
-
-            
-
-
-                        fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
+                          scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
+                
+                        }
 
 
-                        fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
+                            sourceQueueArrayCounter++
 
 
-                        writeNumber++;
-
-                    }
 
 
-                }
+                            fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
+
+
+                            fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
+
+
+                            writeNumber++;
+
+                        }
+
+                    } catch (err) {}
+                }//
 
 
 
@@ -1579,48 +1662,44 @@ sourceQueueArrayCounter++
 
                 for (var i = 0; i < outputPathArray.length; i++) {
 
-                    if (fs.existsSync(outputPathArray[i])) {
+                    try {
 
-                    } else {
+                        if (fs.existsSync(outputPathArray[i])) {
 
-                        fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + ",,," + presetArray2[i] + "\n", 'utf8');
-                        sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
-                       
+                        } else {
 
+                            fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + ",,," + presetArray2[i] + "\n", 'utf8');
+                            sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
 
-                        //write to file to specify size of all files found so far
-var singleFileSize = fs.statSync(sourceQueueArray[sourceQueueArrayCounter])
+                          //  fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFoundSize.txt', "Building queue:" + (sourceQueueArrayCounter + 1), 'utf8');
 
-totalFileSize = totalFileSize + singleFileSize.size
-
-
-
-var fileSizeInGbytes = totalFileSize / 1000000000.0;
+                   
+                          if((sourceQueueArrayCounter + 1)%100==0){
 
 
-fileSizeInGbytes = parseFloat(fileSizeInGbytes).toFixed(2);
-fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFoundSize.txt', "Building queue:"+(sourceQueueArrayCounter+1)+"("+fileSizeInGbytes+"GB)", 'utf8');
 
+scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
 
-sourceQueueFileSizeArray[sourceQueueArrayCounter]= singleFileSize.size/ 1000000000.0;
+}
 
 
 
 
-sourceQueueArrayCounter++
 
-                        fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
+                            sourceQueueArrayCounter++
 
-                        fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
+                            fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
 
-
-
-                        writeNumber++;
-
-                    }
+                            fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
 
 
-                }
+
+                            writeNumber++;
+
+                        }
+
+                    } catch (err) {}
+                }//
 
 
 
@@ -1632,91 +1711,52 @@ sourceQueueArrayCounter++
                 scanWindow.close();
             } catch (err) {}
 
-            // Run all worker modules
 
-            var workLaunchNumber = 1;
 
-            fs.writeFileSync(homePath + '/HBBatchBeast/Config/workerLaunch.txt', workLaunchNumber, 'utf8');
+            document.getElementById("queueButton").style.display = 'block';
+            document.getElementById("outputButton").style.display = 'block';
 
 
             if (mode == "scanandconvert" || mode == "healthCheck") {
 
+            if (totalFileFoundCounter >= 1000) {
+                document.getElementById("fullQueueDiv").style.display = 'none';
+                document.getElementById("viewStatus").innerHTML = "<p style=\"color:red\">Large number of items in the queue! Queue view disabled.<\p>";
+
+                    queueView ="disabled";
+       
+            } else {
+
+                document.getElementById("fullQueueDiv").style.display = 'block';
+     
 
 
-                for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
-
-
-                    var workerPath = "worker1.js"
-                    var childProcess = require("child_process");
-                    var path = require("path");
-                    var cp = childProcess.fork(path.join(__dirname, workerPath));
-                    cp.on("exit", function (code, signal) {
-
-                    });
-                    cp.on("error", console.error.bind(console));
-
-                    sleep(500);
-
-                    workLaunchNumber++;
-                    fs.writeFileSync(homePath + '/HBBatchBeast/Config/workerLaunch.txt', workLaunchNumber, 'utf8');
-
-
-                }
             }
 
 
 
+            for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
+
+            document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker"+i+"Status\"> </div>";
+
+            }
+            updateGraph();
 
 
 
+            }else{
+
+                document.getElementById("fullQueueDiv").style.display = 'block';
+            }
 
 
 
-
-
-
-
-
-
-
-            
-
-
-
+            document.getElementById("sessionConversions").style.display = 'none';
 
 
             runEndSection();
 
 
-            clearInterval(windowRefresh);
-            document.getElementById("queueButton").style.display = 'block';
-            document.getElementById("outputButton").style.display = 'block';
-
-var refreshRate = totalFileFoundCounter/10
-
-            if (refreshRate < 1000) {
-
-                refreshRate=1000
-            }
-
-            if (totalFileFoundCounter >= 1000) {
-                document.getElementById("fullQueueDiv").style.display = 'none';
-                document.getElementById("viewStatus").innerHTML = "<p style=\"color:red\">Large number of items in the queue! For best performance keep tables hidden while running. Refresh rate reduced to "+(refreshRate/1000)+" secs<\p>";
-                 windowRefresh = window.setInterval("runScan();", refreshRate);
-            } else {
-
-                document.getElementById("fullQueueDiv").style.display = 'block';
-                 windowRefresh = window.setInterval("runScan();", refreshRate);
-
-
-            }
-            document.getElementById("sessionConversions").style.display = 'none';
-
-
-            
-
-
-           
 
 
 
@@ -1724,7 +1764,7 @@ var refreshRate = totalFileFoundCounter/10
 
         }// end validation section
 
-        document.getElementById("totalFilesDiv").innerHTML = "<p>Total files found: " + totalFileFoundCounter + ". Size: " + parseFloat(totalFileSize / 1000000000).toFixed(2) + "GB<\p>";
+        document.getElementById("totalFilesDiv").innerHTML = "<p>Total files found: " + totalFileFoundCounter + "<\p>";
 
         if (mode != "healthCheck") {
             unConvertedFiles = fs.readFileSync(homePath + "/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
@@ -1746,8 +1786,8 @@ var refreshRate = totalFileFoundCounter/10
     function runEndSection() {
         var fs = require('fs');
 
-        if(process.platform=='win32'){
-        ipcRenderer.send('item:add','iconrunning');
+        if (process.platform == 'win32') {
+            ipcRenderer.send('item:add', 'iconrunning');
         }
 
         //load conversion queue into table
@@ -1781,15 +1821,14 @@ var refreshRate = totalFileFoundCounter/10
 
                 + "<col width=\"70%\">"
                 + "<col width=\"auto\">"
-               
-                + "<col width=\"auto\">"
+
                 + "<col width=\"auto\">"
                 + "<col width=\"auto\">"
                 + "<col width=\"auto\">"
                 + "<tr>"
 
                 + "<th class=\"headcol\">Source file</th>"
-                + "<th class=\"headcol\">Size</th>"
+
                 + "<th class=\"headcol\">Queue no.</th>"
                 + "<th class=\"headcol\">Preset</th>"
                 + "<th class=\"headcol\">Worker</th>"
@@ -1799,24 +1838,15 @@ var refreshRate = totalFileFoundCounter/10
 
             for (var i = 0; i < (sourceQueueArray.length); i++) {
 
-                if(sourceQueueFileSizeArray[i]>=1){
-                    var itemSize = parseFloat(sourceQueueFileSizeArray[i]).toFixed(2)+"GB"
 
-                }else{
-
-                    var itemSize =  sourceQueueFileSizeArray[i]*1000;
-                     itemSize = parseFloat(itemSize).toFixed(2)+"MB"
-
-
-                }
 
                 var currentSourceLine = (sourceQueueArray[i]);
                 tableHTML += "<tr>"
                     + "<td>" + currentSourceLine + "</td>"
-                    + "<td>" +  itemSize+ "</td>"
 
-       
-                    
+
+
+
                     + "<td>" + tableQueueNumber + "</td>"
                     + "<td > " + presetArray2[i] + "</td>"
                     + "<td > - </td>"
@@ -1831,7 +1861,192 @@ var refreshRate = totalFileFoundCounter/10
 
             tableHTML += "</table>";
 
+
+
+            if(queueView =="enabled"){
             document.getElementById("fullQueue").innerHTML = tableHTML;
+        }else{
+
+            document.getElementById("fullQueue").innerHTML = "";
+        }
+   
+
+        }
+
+
+
+        // Run all worker modules
+
+        var workerPath = "worker1.js"
+        //   var workerPath2 = "worker2.js"
+        var path = require("path");
+
+
+        var cp = [];
+        var childProcess = require("child_process");
+        const cluster = require('cluster');
+        var path = require("path");
+
+        let workers = [];
+
+
+
+
+
+        if (mode == "scanandconvert" || mode == "healthCheck") {
+
+            //document.getElementById("instanceNumber").value
+
+            for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
+
+
+             //   workers.push(childProcess.fork(path.join(__dirname, workerPath ),[], { silent: true }));
+
+                
+                workers.push(childProcess.fork(path.join(__dirname, workerPath )));
+
+
+
+                // workers[i - 1].stdout.on('data', function(data) {
+                //     console.log('stdout: ' + data);
+                //     //Here is where the output goes
+                //         });
+
+
+
+
+
+                workers[i - 1].send("w:" + i);
+
+                // var worker = workers[1];
+                //  worker.send("w:"+2);
+
+
+                workers[i - 1].on("exit", function (code, signal) {
+
+                });
+                workers[i - 1].on("error", console.error.bind(console));
+
+
+
+
+
+
+                workers[i - 1].on('message', function (message) {
+
+
+                
+
+                    message = message.split(",");
+
+                    if (message[1] == "queueRequest") {
+
+                        if (globalQueueNumberManager <= sourceQueueArray.length-1) {
+                            var currentNumber = "q:" + globalQueueNumberManager;
+                            globalQueueNumberManager++;
+                        } else {
+                            var currentNumber = "completed";
+                        }
+                        workers[message[0] - 1].send(currentNumber);
+                    }
+
+
+                    if (message[1] == "processing") {
+
+                      
+                        var currentRow = parseInt(message[2]) + 1
+
+                        if(queueView =="enabled"){
+                        queueTable.rows[currentRow].cells[3].innerHTML = "Worker " + message[0];
+                        queueTable.rows[currentRow].cells[4].innerHTML = 'Running';
+                        queueTable.rows[currentRow].style.backgroundColor = "#ffa24c";
+                    }
+
+
+                    document.getElementById("worker"+message[0]+"Status").innerHTML = "<div class=\"grid-itemleft\"><p>Worker "+message[0]+" processing file:</p></div><div class=\"grid-itemright\"><p>"+sourceQueueArray[message[2]]+"</p></div>";
+
+
+                   // workerStatusDiv
+
+                    }
+
+                    if (message[1] == "error") {
+
+                        var currentRow = parseInt(message[2]) + 1
+
+                        if(queueView =="enabled"){
+                        queueTable.rows[currentRow].cells[3].innerHTML = "";
+                        queueTable.rows[currentRow].cells[4].innerHTML = "Error"
+                        queueTable.rows[currentRow].cells[2].innerHTML = message[3];
+
+                        queueTable.rows[currentRow].style.backgroundColor = "#ff2d2d";
+                        }
+
+                        errorArray.push(sourceQueueArray[currentRow-1])   
+
+                        errorCount++;
+  
+                        updateGraph();
+
+
+                    }
+
+                    if (message[1] == "success") {
+                        var currentRow = parseInt(message[2]) + 1
+
+                        if(queueView =="enabled"){
+                        queueTable.rows[currentRow].cells[3].innerHTML = "";
+                        queueTable.rows[currentRow].cells[4].innerHTML = "Completed"
+                        queueTable.rows[currentRow].cells[2].innerHTML = message[3];
+                        queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
+                        }
+
+                        successfulCount++;
+                        updateGraph();
+
+                    }
+
+
+                    if (message[1] == "writeRequest") {
+       
+
+   fs.writeFileSync(message[2],message[3] , 'utf8');
+
+                    }
+
+
+
+
+                    if (message[1] == "appendRequest") {
+       fs.appendFileSync(message[2],message[3] , 'utf8');
+    
+                        }        
+
+
+
+
+
+
+
+                });
+
+               
+
+
+
+
+
+            }
+
+
+
+
+
+
+
+
+
+
 
 
         }
@@ -1844,14 +2059,9 @@ var refreshRate = totalFileFoundCounter/10
 
 
 
-        scanCompleted2 = 1;
-        scanCompleted = 0;
+        updateInfo = 1;
 
-      
 
-            updateInfo = 1;
-
-   
 
         if (mode == "scanandconvert" && document.getElementById("scanOnOff").checked == true) {
 
@@ -1865,21 +2075,133 @@ var refreshRate = totalFileFoundCounter/10
         }
 
 
-      //  var elmnt = document.getElementById("worker4");
-      //  elmnt.scrollIntoView()
+
+        //  var elmnt = document.getElementById("worker4");
+        //  elmnt.scrollIntoView()
 
 
- var i, tabcontent, tablinks;
+        var i, tabcontent, tablinks;
 
-// Get all elements with class="tabcontent" and hide them
-tabcontent = document.getElementsByClassName("tabcontent");
-for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-}
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
 
 
 
     }
+
+    function updateGraph() {
+
+
+
+if (sourceQueueArray.length >= 1) {
+
+    if (mode == "healthCheck") {
+
+        var totalFilesGraph = totalFileFoundCounter;
+
+    } else {
+
+        var totalFilesGraph = unConvertedFiles
+
+
+    }
+
+
+
+    var myConfig = {
+        type: "ring",
+        backgroundColor: "#1A2933",
+        plot: {
+            borderColor: "#2B313B",
+            borderWidth: 0,
+            // slice: 90,
+            valueBox: {
+                placement: 'out',
+                // text: '%t\n%npv%',
+                text: '%t\n%pv\n%npv%',
+                fontFamily: "Open Sans"
+            },
+            tooltip: {
+                fontSize: '18',
+                fontFamily: "Open Sans",
+                padding: "5 10",
+                text: "%npv%"
+            },
+        },
+        source: {
+            text: '',
+            fontColor: "#8e99a9",
+            fontFamily: "Open Sans"
+        },
+        title: {
+            fontColor: "#fff",
+            text: '',
+            align: "left",
+            offsetX: 10,
+            fontFamily: "Open Sans",
+            fontSize: 25
+        },
+        subtitle: {
+            offsetX: 10,
+            offsetY: 10,
+            fontColor: "#8e99a9",
+            fontFamily: "Open Sans",
+            fontSize: "16",
+            text: '',
+            align: "left"
+        },
+        plotarea: {
+            margin: "20 0 0 0"
+
+        },
+        series: [
+            {
+                values: [(successfulCount)],
+                text: "Success",
+                backgroundColor: '#4CAF50',
+            },
+            {
+                values: [(errorCount)],
+                text: "Error",
+                backgroundColor: '#ef435d'
+            },
+            {
+                values: [totalFilesGraph - (successfulCount+errorCount)],
+                text: "Remaining",
+                backgroundColor: '#50ADF5'
+            },
+
+
+
+        ]
+    };
+
+    zingchart.render({
+        id: 'myChart',
+        data: myConfig,
+        height: 500,
+        width: 725
+    });
+
+    document.getElementById("myChartDiv").style.display = 'block';
+
+}
+
+
+
+
+
+
+
+
+
+}
+
+
+
 
 
     function fancyTimeFormat(time) {
@@ -1900,75 +2222,25 @@ for (i = 0; i < tabcontent.length; i++) {
         return ret;
     }
 
-   
-
-    //Global variables
-
-    var fileNotExistsCounter = 0;
-    var totalFileFoundCounter = 0;
-    var totalFileSize = 0;
-
-    var inputPathArray =[];
-    var outputPathArray =[];
-
-    var sourceQueueArray =[];
-    var sourceQueueFileSizeArray=[]
-    var presetArray2 =[];
-
-    var mode = "";
-
-    var startDate
-    var unConvertedFiles;
 
 
-    //
 
-
-    var scanCompleted = 0;
-    var scanCompleted2 = 0;
-
-    var windowRefresh = window.setInterval("runScan();", 1000);
-
-  
-
-
-    var updateInfo = 0;
-
-    var CompletedSwitch = 1;
-    var CompletedSwitch2 = 0;
-
-    var countDownOn = 0;
-
-    var QueueNumber1Old
-
-    var colourSwitch = 0
-
-    var sessionNumber = 1;
-
-    var upToLine = 1;
-
-    var readArrayLowerBound = 0;
-
-    var AllCompleted =0;
-
-
-    var timerSeconds
-
-    var errorCount;
 
     function runScan() {
 
 
 
-    
+
         var fs = require('fs');
+
+
 
         if (updateInfo == 1) {
 
 
-         
 
-           
+
+
 
             if (mode == "scanandconvert" || mode == "healthCheck") {
                 var endDate = new Date();
@@ -1984,595 +2256,111 @@ for (i = 0; i < tabcontent.length; i++) {
 
 
 
-            if  (mode != "healthCheck" && mode != "scanandconvert") {
+            if (mode != "healthCheck" && mode != "scanandconvert") {
 
-                updateInfo =0;      
+                updateInfo = 0;
 
-                                        }
+            }
 
-
-
-
-
-
-
-
-
-
-  
-            var continueCountingSwitch = 1;
-            var readArrayLowerBoundSwitch = 1;
 
 
             queueNumberPath = homePath + "/HBBatchBeast/Config/Processes/queueNumberPath.txt";
-            var globalQueueNumber = fs.readFileSync(queueNumberPath, 'utf8');
+            // var globalQueueNumber = fs.readFileSync(queueNumberPath, 'utf8');
 
+            var globalQueueNumber = globalQueueNumberManager - 1;
 
-console.log("upToLine:"+upToLine)
-
-console.log("globalQueueNumber:"+globalQueueNumber)
 
             if (sourceQueueArray.length >= 1) {
 
+} else {
 
-                for (var i = readArrayLowerBound; i < globalQueueNumber; i++) {
-
-                    queueTable.rows[i + 1].cells[4].innerHTML = "";
-
-
-                }
-
-
-
-
-
-
-
-
-
-                var completedQueuePath = homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
-
-
-
-                if (fs.existsSync(completedQueuePath)) {
-
-
-                  
-                  
-                    var readArray = "";
-
-
-
-                    readArray = fs.readFileSync(completedQueuePath, 'utf8');
-              
-
-
-                    readArray = readArray.toString().split("\n");
-
-
-
-                    if (readArray.length >= 1) {
-
-
-
-                        //render graph
-
-                        var successfulCount = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueSuccess.txt", 'utf8');
-
-
-
-                        successfulCount = successfulCount.split("\n");
-
-                         errorCount = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueError.txt", 'utf8');
-
-                        errorCount = errorCount.split("\n");
-
-
-
-               
-
-
-
-                        // var myConfig = {
-                        //     backgroundColor:  "#1A2933",
-                        //     type: "ring",
-                        //     title: {
-                        //         text: "",
-                        //         fontFamily: 'Lato',
-                        //         fontSize: 14,
-                        //         // border: "1px solid black",
-                        //         padding: "15",
-                        //         fontColor: "#1E5D9E",
-                        //     },
-                        //     subtitle: {
-                        //         text: "",
-                        //         fontFamily: 'Lato',
-                        //         fontSize: 12,
-                        //         fontColor: "#777",
-                        //         padding: "5"
-                        //     },
-                        //     plot: {
-                        //         slice: '50%',
-                        //         borderWidth: 0,
-                        //         backgroundColor: '#FBFCFE',
-                        //         animation: {
-                        //             effect: 0,
-                        //             sequence: 0
-                        //         },
-                        //         valueBox: [
-                        //             {
-                        //                 type: 'all',
-                        //                 text: '%t',
-                        //                 placement: 'out'
-                        //             },
-                        //             {
-                        //                 type: 'all',
-                        //                 text: '%npv%',
-                        //                 placement: 'in'
-                        //             }
-                        //         ]
-                        //     },
-                        //     tooltip: {
-                        //         fontSize: 16,
-                        //         anchor: 'c',
-                        //         x: '50%',
-                        //         y: '50%',
-                        //         sticky: true,
-                        //         backgroundColor: 'none',
-                        //         borderWidth: 0,
-                        //         thousandsSeparator: ',',
-                        //         text: '<span style="color:%color">Page Url: %t</span><br><span style="color:%color">Pageviews: %v</span>',
-                        //         mediaRules: [
-                        //             {
-                        //                 maxWidth: 500,
-                        //                 y: '54%',
-                        //             }
-                        //         ]
-                        //     },
-                        //     plotarea: {
-                        //         backgroundColor: 'transparent',
-                        //         borderWidth: 0,
-                        //         borderRadius: "0 0 0 10",
-                        //         margin: "70 0 10 0"
-                        //     },
-
-                        //     scaleR: {
-                        //         refAngle: 270
-                        //     },
-                        //     series: [
-                        //         {
-
-                        //             values: [successfulCount.length - 1],
-                        //             text: "Success",
-                        //             backgroundColor: 'green',
-
-
-                        //             lineColor: "#00BAF2",
-
-                        //             lineWidth: 1,
-                        //             marker: {
-                        //                 backgroundColor: '#00BAF2'
-                        //             }
-                        //         },
-                        //         {
-
-                        //             values: [errorCount.length - 1],
-                        //           text: "Error",
-                        //            backgroundColor: 'red',
-
-
-                        //             lineColor: "#E80C60",
-
-                        //             lineWidth: 1,
-                        //             marker: {
-                        //                 backgroundColor: '#E80C60'
-                        //             }
-                        //         },
-                        //         {
-
-                        //             values: [totalFileFoundCounter - (readArray.length - 1)],
-                        //          text: "Remaining",
-                        //   backgroundColor: '#50ADF5',
-
-
-                        //             lineColor: "#9B26AF",
-
-                        //             lineWidth: 1,
-                        //             marker: {
-                        //                 backgroundColor: '#9B26AF'
-                        //             }
-                        //         }
-                        //     ]
-                        // };
-
-                        // zingchart.render({
-                        //     id: 'myChart',
-                        //     data: {
-                        //         gui: {
-                        //             contextMenu: {
-                        //                 button: {
-                        //                     visible: true,
-                        //                     lineColor: "#2D66A4",
-                        //                     backgroundColor: "#2D66A4"
-                        //                 },
-                        //                 gear: {
-                        //                     alpha: 1,
-                        //                     backgroundColor: "#2D66A4"
-                        //                 },
-                        //                 position: "right",
-                        //                 backgroundColor: "#306EAA", /*sets background for entire contextMenu*/
-                        //                 docked: true,
-                        //                 item: {
-                        //                     backgroundColor: "#306EAA",
-                        //                     borderColor: "#306EAA",
-                        //                     borderWidth: 0,
-                        //                     fontFamily: "Lato",
-                        //                     color: "#fff"
-                        //                 }
-
-                        //             },
-                        //         },
-                        //         graphset: [myConfig]
-                        //     },
-                        //     height: '499',
-                        //     width: '99%'
-                        // });
-
-
-console.log
-
-                        if (sourceQueueArray.length >= 1) {
-
-                            if (mode == "healthCheck") {
-
-                                var totalFilesGraph = totalFileFoundCounter;
-
-                            } else {
-
-                                var totalFilesGraph = unConvertedFiles
-
-
-                            }
-
-
-
-                            var myConfig = {
-                                type: "ring",
-                                backgroundColor: "#1A2933",
-                                plot: {
-                                    borderColor: "#2B313B",
-                                    borderWidth: 0,
-                                    // slice: 90,
-                                    valueBox: {
-                                        placement: 'out',
-                                        // text: '%t\n%npv%',
-                                        text: '%t\n%pv\n%npv%',
-                                        fontFamily: "Open Sans"
-                                    },
-                                    tooltip: {
-                                        fontSize: '18',
-                                        fontFamily: "Open Sans",
-                                        padding: "5 10",
-                                        text: "%npv%"
-                                    },
-                                },
-                                source: {
-                                    text: '',
-                                    fontColor: "#8e99a9",
-                                    fontFamily: "Open Sans"
-                                },
-                                title: {
-                                    fontColor: "#fff",
-                                    text: '',
-                                    align: "left",
-                                    offsetX: 10,
-                                    fontFamily: "Open Sans",
-                                    fontSize: 25
-                                },
-                                subtitle: {
-                                    offsetX: 10,
-                                    offsetY: 10,
-                                    fontColor: "#8e99a9",
-                                    fontFamily: "Open Sans",
-                                    fontSize: "16",
-                                    text: '',
-                                    align: "left"
-                                },
-                                plotarea: {
-                                    margin: "20 0 0 0"
-                                    
-                                },
-                                series: [
-                                    {
-                                        values: [successfulCount.length - 1],
-                                        text: "Success",
-                                        backgroundColor: '#4CAF50',
-                                    },
-                                    {
-                                        values: [errorCount.length - 1],
-                                        text: "Error",
-                                        backgroundColor: '#ef435d'
-                                    },
-                                    {
-                                        values: [totalFilesGraph - (readArray.length - 1)],
-                                        text: "Remaining",
-                                        backgroundColor: '#50ADF5'
-                                    },
-
-
-
-                                ]
-                            };
-
-                            zingchart.render({
-                                id: 'myChart',
-                                data: myConfig,
-                                height: 500,
-                                width: 725
-                            });
-
-                            document.getElementById("myChartDiv").style.display = 'block';
-
-                        }
-
-
-
-                        ////
-
-
-
-
-
-
-
-
-
-
-
-
- console.log("readArrayLowerBound:"+readArrayLowerBound)
-console.log("readArray.length:"+readArray.length)
-
-                     
-                        for (var i =readArrayLowerBound; i < globalQueueNumber; i++) {
-
-                           // readArrayLowerBound
-
-                           for (var j =readArrayLowerBound; j < readArray.length; j++) {
-
-
-                               
-
-
-                                if (readArray[j].includes(sourceQueueArray[i])) {
-
-                                    if (readArray[j].includes("Success")) {
-
-
-
-                                        queueTable.rows[i + 1].cells[5].innerHTML = "Completed"
-                                        queueTable.rows[i + 1].cells[3].innerHTML = presetArray2[i]
-
-
-
-                                        queueTable.rows[i + 1].style.backgroundColor = "#59ff74";
-
-
-
-                                    } else {
-
-
-                                        queueTable.rows[i + 1].cells[5].innerHTML = "Error"
-                                        queueTable.rows[i + 1].cells[3].innerHTML = presetArray2[i]
-
-                                        queueTable.rows[i + 1].style.backgroundColor = "#ff2d2d";
-
-
-
-
-                                    }
-
-
-
-
-                                    // if (readArrayLowerBoundSwitch == 1) {
-                                    //     readArrayLowerBound++;
-
-                                    // }
-
-
-                                } 
-                                
-                                // else {
-
-                                //     readArrayLowerBoundSwitch = 0;
-
-                                // }
-
-
-
-
-
-
-
-
-                            }
-
-
-                            //
-
-                            if (queueTable.rows[i + 1].cells[5].innerHTML.includes("Completed") || queueTable.rows[i + 1].cells[5].innerHTML.includes("Error")) {
-
-
-                                if (continueCountingSwitch == 1) {
-
-
-
-                                    upToLine++;
-
-                                }
-
-                            } else {
-                                continueCountingSwitch = 0;
-
-                            }
-
-
-
-                        }
-
-
-
-
-
-
-                    }
-                } //end exist of function
-
-                var workerStatusArray = [];
-
-
-                if (fs.existsSync(queueNumberPath)) {
-
-
-
-
-                    //  if (inputPathArray.length >= 1) {
-                    for (var i = readArrayLowerBound; i <= globalQueueNumber; i++) {
-
-
-                        for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
-
-
-                            var QueueNumber = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + j + "QueueNumber.txt", 'utf8');
-                            var FileName = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + j + "FileName.txt", 'utf8');
-
-                            workerStatusArray[j - 1] = QueueNumber;
-
-
-                            if (i == QueueNumber - 1) {
-
-                                queueTable.rows[i + 1].cells[4].innerHTML = "Worker " + j;
-                                queueTable.rows[i + 1].cells[5].innerHTML = 'Running';
-                                queueTable.rows[i + 1].style.backgroundColor = "#ffa24c";
-
-                            }
-
-
-
-                        }
-
-
-
-
-                    }
-                    // }
-                }
-
-            }else{
-
-document.getElementById("myChartDiv").style.display = 'none';
+    document.getElementById("myChartDiv").style.display = 'none';
 }
 
 
 
-            if (sourceQueueArray.length == 0) {
 
-                AllComplete();
+if (sourceQueueArray.length == 0) {
 
-            }
+AllComplete();
 
+}  
+
+
+
+
+
+            var workerStatusArray = [];
 
             if (sourceQueueArray.length >= 1) {
-
-
-
-
-
-
 
                 CompletedSwitch = 1;
 
-                for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
+            for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
 
 
-                    
+                var QueueNumber = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + j + "QueueNumber.txt", 'utf8');
 
+                workerStatusArray[j - 1] = QueueNumber;
 
-
-                    if (workerStatusArray[j - 1] != "Complete!") {
+                if (workerStatusArray[j - 1] != "Complete!") {
                         CompletedSwitch = 0;
 
-                    } else {
+                            } 
 
 
+            }
+
+
+
+            if (CompletedSwitch == 1) {
+
+                AllComplete();
                     }
-
-                    
-
-
-
-
-                }
-
-                workerStatusArray.sort(function(a, b){return a-b}); 
-
-                if(isNaN(parseInt(workerStatusArray[0]))){
-
-                 
-
-       
-
-                }else{
-
-                if(parseInt(workerStatusArray[0])- document.getElementById("instanceNumber").value-1 <0){
-                
-                    readArrayLowerBound=0
-                  }else{
-                    readArrayLowerBound=parseInt(workerStatusArray[0])- document.getElementById("instanceNumber").value-1;
-
-                  }
-                }
-
-                if (CompletedSwitch == 1) {
-                    CompletedSwitch2++;
-
-                }
-
-
-
-                if (CompletedSwitch2 == 5) {
-
-                    AllComplete();
-                }
-
             }
 
 
 
 
 
+
+
+
+
+
+
+
+     
             function AllComplete() {
 
+              
 
-                if(errorCount!=0){
-                    if(process.platform=='win32'){
-ipcRenderer.send('item:add','iconerror');
+//reset status div
+                document.getElementById("workerStatusDiv").innerHTML = "";
+
+
+
+//send email alert                
+
+                if (errorCount != 0) {
+                    if (process.platform == 'win32') {
+                        ipcRenderer.send('item:add', 'iconerror');
+                        
                     }
 
+                    emailAlert();
 
- 
-}else{
-    if(process.platform=='win32'){
-    ipcRenderer.send('item:add','icon'); 
-    }
-}
+                } else {
+                    if (process.platform == 'win32') {
+                        ipcRenderer.send('item:add', 'icon');
+                    }
+                }
 
 
-           
+
 
                 fs.writeFileSync(homePath + '/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt', "1", 'utf8');
-              
+
 
                 document.getElementById("fullQueue").innerHTML = "";
 
@@ -2590,18 +2378,15 @@ ipcRenderer.send('item:add','iconerror');
                 if (fs.existsSync(completedQueuePath)) {
 
 
-                   
-                  
-           
+
+
+
                     var readArray = "";
 
-         
+
                     readArray = fs.readFileSync(completedQueuePath, 'utf8');
-            
 
 
-                    var corruptFiles = 0;
-                    var healthyFiles = 0;
 
                     document.getElementById('healthCheckDiv').innerHTML = "";
 
@@ -2618,16 +2403,6 @@ ipcRenderer.send('item:add','iconerror');
                         for (var i = 0; i < sourceQueueArray.length; i++) {
 
 
-                    if(sourceQueueFileSizeArray[i]>=1){
-                    var itemSize = parseFloat(sourceQueueFileSizeArray[i]).toFixed(2)+"GB"
-
-                }else{
-
-                    var itemSize =  sourceQueueFileSizeArray[i]*1000;
-                     itemSize = parseFloat(itemSize).toFixed(2)+"MB"
-
-
-                }
 
 
                             for (var j = 0; j < readArray.length; j++) {
@@ -2644,11 +2419,12 @@ ipcRenderer.send('item:add','iconerror');
                                         if (mode != "healthCheck") {
                                             var newRow = document.getElementById('sessionConversionsTable').insertRow();
 
-                                            
+
 
                                             newRow.innerHTML = "<tr >"
                                                 + "<td>" + sourceQueueArray[i] + "</td>"
-                                                + "<td>" + itemSize + "</td>"
+
+
                                                 + "<td>" + sessionNumber + "</td>"
                                                 + "<td>" + presetArray2[i] + "</td>"
 
@@ -2658,8 +2434,6 @@ ipcRenderer.send('item:add','iconerror');
 
                                         }
 
-                                        healthyFiles++;
-
                                         sessionNumber++;
                                     } else {
 
@@ -2668,7 +2442,8 @@ ipcRenderer.send('item:add','iconerror');
                                         newRow.innerHTML = "<tr>"
                                             + "<td>" + sourceQueueArray[i] + "</td>"
 
-                                            + "<td>" + itemSize + "</td>"
+
+
 
                                             + "<td>" + sessionNumber + "</td>"
 
@@ -2679,7 +2454,7 @@ ipcRenderer.send('item:add','iconerror');
                                             + "</tr>";
 
                                         sessionNumber++;
-                                        corruptFiles++;
+                                 
                                     }
 
 
@@ -2700,9 +2475,9 @@ ipcRenderer.send('item:add','iconerror');
 
                         if (mode == "healthCheck") {
 
-                            var healthPercentage = ((healthyFiles / (corruptFiles + healthyFiles)) * 100).toFixed(2);
+                            var healthPercentage = ((successfulCount / (errorCount + successfulCount)) * 100).toFixed(2);
 
-                            document.getElementById('healthCheckDiv').innerHTML = "<h1>Healthy files:<font color=\"green\">" + healthyFiles + "</font> Corrupt files:<font color=\"red\">" + corruptFiles + "</font> Health:" + healthPercentage + "%<\h1>"
+                            document.getElementById('healthCheckDiv').innerHTML = "<h1>Healthy files:<font color=\"green\">" + successfulCount + "</font> Corrupt files:<font color=\"red\">" + errorCount + "</font> Health:" + healthPercentage + "%<\h1>"
 
                         }
 
@@ -2718,12 +2493,12 @@ ipcRenderer.send('item:add','iconerror');
 
 
 
-                        if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Completed")) {
+                        if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Completed")) {
                             sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
 
 
 
-                        } else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Error")) {
+                        } else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Error")) {
 
                             sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
 
@@ -2764,32 +2539,37 @@ ipcRenderer.send('item:add','iconerror');
                 timenow = h + '-' + m + '-' + s;
 
 
-             
+
                 var convertedFiles1 = fs.readFileSync(homePath + "/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
-     
 
-                
-                var convertedFiles = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/queueNumberPath.txt", 'utf8');
-               
 
-            
-                var preset = fs.readFileSync(homePath + "/HBBatchBeast/Config/presetString.txt", 'utf8');
-               
 
-             
+                //var convertedFiles = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/queueNumberPath.txt", 'utf8');
+
+                var convertedFiles = globalQueueNumberManager;
+
+
+
+
+                var preset
+
+
                 var unConvertedFiles = fs.readFileSync(homePath + "/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
-              
+
 
                 if (mode == "healthCheck") {
 
                     preset = "Health check"
 
+                } else {
+                    preset = fs.readFileSync(homePath + "/HBBatchBeast/Config/presetString.txt", 'utf8');
+
                 }
 
-            
+
 
                 fs.appendFileSync(homePath + "/HBBatchBeast/Logs/Scans.txt", "Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + convertedFiles1 + "-------Preset:" + preset + ". \r\n", 'utf8');
-       
+
 
 
 
@@ -2808,13 +2588,18 @@ ipcRenderer.send('item:add','iconerror');
 
                 document.getElementById("endTimeDiv").innerHTML = "<p>End time: " + getTimeNow() + "<\p>";
 
+
+
                 updateInfo = 0;
+
+               
+
                 sourceQueueArray = [];
 
-                AllCompleted=1;
+                AllCompleted = 1;
 
                 clearInterval(windowRefresh);
-            windowRefresh = window.setInterval("runScan();", 1000)
+                windowRefresh = window.setInterval("runScan();", 1000)
 
 
 
@@ -2825,60 +2610,37 @@ ipcRenderer.send('item:add','iconerror');
         }
 
 
-        if (scanCompleted == 1 && scanCompleted2 == 1) {
 
 
-
-
-
-
-            //    fs.unlinkSync(queuePath)
-
-
-
-
-
-
-
-
-
-            scanCompleted2 = 0;
-
-
-        }
-
-
-
-     
 
 
         if (countDownOn == 1 && AllCompleted == "1") {
 
             if (mode == "scanandconvert") {
-                scanCompleted = 1;
+               
 
-                if(timerSeconds%2 ==0){
-                    if(process.platform=='win32'){
-                    ipcRenderer.send('item:add','iconwatching');
+                if (timerSeconds % 2 == 0) {
+                    if (process.platform == 'win32') {
+                        ipcRenderer.send('item:add', 'iconwatching');
                     }
 
-                }else{
-                    if(errorCount!=0){
-                        if(process.platform=='win32'){
-ipcRenderer.send('item:add','iconerror');
+                } else {
+                    if (errorCount != 0) {
+                        if (process.platform == 'win32') {
+                            ipcRenderer.send('item:add', 'iconerror');
                         }
 
 
- 
-}else{
-    if(process.platform=='win32'){
-    ipcRenderer.send('item:add','icon'); 
-    }
-}
+
+                    } else {
+                        if (process.platform == 'win32') {
+                            ipcRenderer.send('item:add', 'icon');
+                        }
+                    }
 
                 }
 
-               
+
 
                 timerSeconds--;
 
@@ -3010,34 +2772,14 @@ ipcRenderer.send('item:add','iconerror');
 
         var fs = require('fs');
 
-       if(fs.existsSync(logPath)){
- 
-        opener(logPath);
+        if (fs.existsSync(logPath)) {
 
-    }else{
+            opener(logPath);
 
-        alert('Log does not exist! Please run health check/conversion first.')
-    }
+        } else {
 
-        // const opn = require('opn');
-        // opn(logPath);
-
-
-
-
-        // require('child_process').execSync(logPath, function (err, stdout, stderr) {
-        //     if (err) {
-        //         // Ooops.
-        //        
-        //        
-        //         return // 
-        //     }
-
-        //     // Done.
-        //     //runEndSection();
-        //     //runScan();
-        //     
-        // });
+            alert('Log does not exist!')
+        }
 
 
 
@@ -3164,6 +2906,64 @@ ipcRenderer.send('item:add','iconerror');
             document.getElementById(id).style.display = 'none';
 
         }
+    }
+
+
+    function emailAlert(emailMode){
+
+  try{     
+
+if(emailMode=="Test"){
+
+    var errorList="Test";
+
+    var subjectLine = "Test"
+
+}else{
+
+    var errorList="";
+for(var i=0; i<errorArray.length; i++){errorList+=errorArray[i]+"\r\n"}
+var subjectLine = "HBBatchBeast:Error with "+errorCount+" files!"
+
+}
+
+
+    
+
+
+
+        var email 	= require("./node_modules/emailjs");
+var server 	= email.server.connect({
+   user:     document.getElementById("emailAddress").value,
+   password: document.getElementById("emailPassword").value,
+   host:    document.getElementById("SMTPServer").value,
+   ssl:     true
+});
+
+// send the message and get a callback with an error or details of the message that was sent
+server.send({
+   text:    errorList,
+   from:    document.getElementById("emailAddress").value,
+   to:      document.getElementById("emailAddress").value,
+   subject: subjectLine
+}, function(err, message) { (err || message); 
+
+if(err){
+
+    if(emailMode=="Test"){
+    alert("Error sending email! Please check your settings.") 
+    } 
+}
+});
+
+if(emailMode=="Test"){
+
+alert("Test email sent!")
+
+}
+
+} catch(err){}
+
     }
 
 
@@ -3332,9 +3132,16 @@ ipcRenderer.send('item:add','iconerror');
 
                 }
 
+                .infoBox2{
+                    width: 15em;
+                  border-radius: 5px;
+
+
+                }
+
                 .infoButton{
                   
-                  border-radius: 5px;
+                  border-radius: 2px;
                   background-color:#ffda6d;
                   color: black;
 
@@ -3568,7 +3375,7 @@ body {
 .tab button {
   background-color: inherit;
   float: center;
-  width: 33%;
+  width: 24%;
   border: none;
   outline: none;
   cursor: pointer;
@@ -3725,8 +3532,7 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
     <div id="main">
         <div ALIGN="LEFT">
 
-            <img src="./assets/Images/Refresh.png" alt="Italian Trulli" style="width:50x;height:25px;"
-                onclick="location.reload()">
+            <img src="./assets/Images/Refresh.png" alt="Italian Trulli" style="width:50x;height:25px;" onclick="location.reload()">
 
         </div>
 
@@ -3737,16 +3543,17 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
             <center>
 
-             
 
-                  
-                      <div class="titleDiv">
-                            <span style="color:#1A2933;">____________</span><span class="titleSpan"  >HBBatchBeast</span> <span> for HandBrake</span>
+
+
+                <div class="titleDiv">
+                    <span style="color:#1A2933;">____________</span><span class="titleSpan">HBBatchBeast</span> <span>
+                        for HandBrake</span>
                 </div>
-                                    
-                
-           
-                  
+
+
+
+
             </center>
 
             <input type="button" class="HaveAGitGat" onclick="openURL('https://github.com/HaveAGitGat')" value="by HaveAGitGat">
@@ -3759,8 +3566,7 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
 
             <textarea type="text" class="folderPaths" id="sourcePath"></textarea>
-            <img src="./assets/Images/Folder-Open-icon.png" alt="Italian Trulli" style="width:50x;height:25px;"
-                onclick="selectFolder('sourcePath')">
+            <img src="./assets/Images/Folder-Open-icon.png" alt="Italian Trulli" style="width:50x;height:25px;" onclick="selectFolder('sourcePath')">
 
 
 
@@ -3772,6 +3578,10 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                 <button class="tablinks" onclick="openTab(event, 'mediaHealthCheck')">Video health check</button>
 
                 <button class="tablinks" onclick="openTab(event, 'batchConversion')">Batch conversion & Folder watching</button>
+
+
+                <button class="tablinks" onclick="openTab(event, 'systemSettings')">System settings</button>
+
 
                 <button class="tablinks" onclick="openTab(event, 'helpSection')">Help</button>
 
@@ -4029,10 +3839,7 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                         <div class="grid-itemright"><input type="text" class="infoBox" id="timer"></div>
 
 
-                        <div class="grid-itemleft">
-                            <p>Number of simulataneous Handbrake instances to use?(Recommended <=4):</p> </div> <div
-                                    class="grid-itemright"><input type="text" class="infoBox" id="instanceNumber">
-                        </div>
+        
 
 
 
@@ -4091,24 +3898,67 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
                 <p>---------------------------------------------------------------------------------------</p>
 
-         
+
 
 
                 <input type="button" onclick="viewLogs('Scans')" value="View scan/conversion summary log" class="infoButton">
-                <input type="button" onclick="viewLogs('fileConversionLog')" value="View individual file check/conversion log"   class="infoButton">
-                  
+                <input type="button" onclick="viewLogs('fileConversionLog')" value="View individual file check/conversion log"
+                    class="infoButton">
+
 
 
             </div>
 
             <div id="mediaHealthCheck" class="tabcontent">
                 <input type='button' class="button2one1" value='Health check' onclick='convertFiles("healthCheck")' />
-                <p><p>
-                <input type="button" onclick="viewLogs('ErrorLog')" value="View error log" class="infoButton">
+                <p>
+                    <p>
+                        <input type="button" onclick="viewLogs('ErrorLog')" value="View error log" class="infoButton">
 
             </div>
 
             <center>
+
+                    <div id="systemSettings" class="tabcontent">
+
+                            <div class="grid-container">
+
+                            <div class="grid-itemleft">
+                                    <p>Number of simulataneous Handbrake instances to use?(Recommended <=4):</p> </div> <div
+                                            class="grid-itemright"><input type="text" class="infoBox" id="instanceNumber">
+                                </div>
+
+
+                                <div class="grid-itemleft"> <p>Email address:</p> </div>
+                            
+                                        <div class="grid-itemright"><input type="text" class="infoBox2" id="emailAddress">  </div>
+
+                                        <div class="grid-itemleft"> <p>Email password(not saved):</p> </div>
+                            
+                                        <div class="grid-itemright"><input type="password" class="infoBox2" id="emailPassword">  </div>
+
+                                        <div class="grid-itemleft"> <p>SMTP server:</p> </div>
+                            
+                                        <div class="grid-itemright"><input type="text" class="infoBox2" id="SMTPServer">  </div>
+                                    
+
+                            </div>
+
+                            <input type='button' class="infoButton" value='Email test' onclick='emailAlert("Test")' /><br>
+                            <input type="button" onclick="viewLogs('SystemErrorLog')" value="View system error log" class="infoButton">
+
+                            <br>
+                            <br>
+                            <br>
+
+                            <input type='button' class="button1" value='Save config' onclick='saveConfig()' />
+
+                       
+
+
+
+                    </div>
+
                 <div id="helpSection" class="tabcontent">
 
 
@@ -4209,13 +4059,20 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                             <p><br />If an item in the queue comes out with "Error", this means that the HandbrakeCLI
                                 had
                                 trouble
-                                converting/scanning the file, most likely due to it being corrupt/partially corrupt. Else it may
+                                converting/scanning the file, most likely due to it being corrupt/partially corrupt.
+                                Else it may
                                 be
                                 a
                                 file type which Handbrake does not support. Try converting the file normally in
                                 Handbrake
                                 to
-                                see what error it throws.</p>
+                                see what error it throws.</p><br>
+                                <p><span style="font-size: 12pt;"><strong>Email settings:</strong></span><br />Fill in details to receive email notifications if an error is encountered during health check or conversion/folder watching. Won't work with accounts that require 2FA. May need to enable access to less secure apps on Gmail accounts.</p>
+                                <p>Email: e.g. example@exampleemail.com</p>
+                                <p>Password: Is not saved for security purposes.</p>
+                                <p>SMTP server: e.g. smtp.gmail.com</p>
+
+
                             <p>&nbsp;</p>
                             <p>&nbsp;</p>
 
@@ -4236,11 +4093,11 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
                 <div id="timerDiv"></div>
 
-                <div id="worker1"> </div>
+               
                 <div id="worker1progress"> </div>
-                <div id="worker2"> </div>
-                <div id="worker3"> </div>
-                <div id="worker4"> </div>
+
+     
+
 
                 <br>
                 <br>
@@ -4253,9 +4110,14 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                 </div>
 
                 <div id='myChartDiv' style="display: none;">
-                <div id='myChart' ></div>
-            </div>
-           
+                    <div id='myChart'></div>
+                </div>
+
+
+                <div class="grid-container">
+                        <div id="workerStatusDiv"> </div>
+                </div>
+
 
                 <div id="healthCheckDiv"></div>
 
@@ -4301,7 +4163,6 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                         <col width="auto">
 
                         <th class="headcol">Source file</th>
-                        <th class="headcol">Size</th>
                         <th class="headcol">No.</th>
                         <th class="headcol">Preset</th>
 

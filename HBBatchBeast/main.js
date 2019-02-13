@@ -25,7 +25,7 @@ const { app, BrowserWindow, Menu, ipcMain ,Tray} = electron;
 let mainWindow;
 
 //SET ENV
-//process.env.NODE_ENV = "production";
+process.env.NODE_ENV = "production";
 
 
 
@@ -154,6 +154,16 @@ appIcon.setImage(icon);
 
   
   });
+
+
+
+  
+
+
+  
+  
+  
+
 
 
 
