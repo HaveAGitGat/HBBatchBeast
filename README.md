@@ -25,12 +25,22 @@ Settings help in program 'Help' tab.
 
 INSTALLATION - macOS:
 
-Step 1: Make sure you have HandbrakeCLI installed. The easiest way is using Hombrew,
-paste the following into a terminal:
+Step 1: Make sure you have HandbrakeCLI installed. The easiest way is using Hombrew. Do the following.
+
+Copy the following line into a terminal:
 
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
+Press enter and wait for it to complete.
+
+Copy the following line into a terminal:
+
 brew install handbrake
+
+Press enter and wait for it to complete.
+
+
+
 
 
 Step 2:Download hbbatchbeast-Mac.dmg from the release page:
@@ -48,13 +58,26 @@ Settings help in program 'Help' tab.
 
 INSTALLATION - Linux:
 
-Step 1: Make sure you have HandbrakeCLI installed - paste the following into a terminal:
+Step 1: Make sure you have HandbrakeCLI installed - do the following:
+
+
+Copy the following line into a terminal:
 
 sudo add-apt-repository ppa:stebbins/handbrake-releases
 
+Press enter and wait for it to complete.
+
+Copy the following line into a terminal:
+
 sudo apt-get update
 
+Press enter and wait for it to complete.
+
+Copy the following line into a terminal:
+
 sudo apt-get install handbrake-cli handbrake-gtk
+
+Press enter and wait for it to complete.
 
 
 
