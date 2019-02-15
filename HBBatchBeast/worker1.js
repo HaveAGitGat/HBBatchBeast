@@ -41,15 +41,34 @@ function LogError(lineProcess){
 
 //fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/ErrorLogs/Worker"+workerNumber+"ErrorLog.txt", lineProcess, 'utf8');   
 
-process.send(workerNumber+",appendRequest,"+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/ErrorLogs/Worker"+workerNumber+"ErrorLog.txt"+","+ lineProcess);
+//process.send(workerNumber+",appendRequest,"+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/ErrorLogs/Worker"+workerNumber+"ErrorLog.txt"+","+ lineProcess);
+
+var message = [
+workerNumber,
+"appendRequest",
+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/ErrorLogs/Worker"+workerNumber+"ErrorLog.txt",
+lineProcess,
+];
+process.send(message);
 
 }
+
+
 
 
 function consoleLog(lineProcess){
 //fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Console/Worker"+workerNumber+"ConsoleLog.txt", lineProcess, 'utf8');  
 
-process.send(workerNumber+",appendRequest,"+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Console/Worker"+workerNumber+"ConsoleLog.txt"+","+ lineProcess);
+//process.send(workerNumber+",appendRequest,"+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Console/Worker"+workerNumber+"ConsoleLog.txt"+","+ lineProcess);
+
+var message = [
+workerNumber,
+"appendRequest",
+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Console/Worker"+workerNumber+"ConsoleLog.txt",
+lineProcess,
+];
+process.send(message);
+
 
 }
 
@@ -157,9 +176,18 @@ var  globalQueueNumber;
 process.on('uncaughtException', function(err){
     console.error(err.stack);
 
-var tempPath=homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt'
-var tempMessage="Worker thread error: "+err.stack+"\r\n"
-process.send(workerNumber+",writeRequest,"+tempPath+","+tempMessage)
+// var tempPath=homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt'
+// var tempMessage="Worker thread error: "+err.stack+"\r\n"
+// process.send(workerNumber+",writeRequest,"+tempPath+","+tempMessage)
+
+
+var message = [
+workerNumber,
+"writeRequest",
+homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt',
+"Worker thread error: "+err.stack+"\r\n",
+];
+process.send(message);
 
 
     process.exit();
@@ -179,7 +207,13 @@ workerNumber =m.substring(m.indexOf(":")+1);
 
 
 
-process.send(workerNumber+",queueRequest");
+//process.send(workerNumber+",queueRequest");
+
+var message = [
+workerNumber,
+"queueRequest",
+];
+process.send(message);
 
 }
 
@@ -196,7 +230,14 @@ if(m.charAt(0) == "q"){
 globalQueueNumber=m.substring(m.indexOf(":")+1);
 
 
-process.send(workerNumber+",processing,"+globalQueueNumber);
+//process.send(workerNumber+",processing,"+globalQueueNumber);
+
+var message = [
+workerNumber,
+"processing",
+globalQueueNumber,
+];
+process.send(message);
 
 
 
@@ -245,9 +286,17 @@ while(actionComplete==0){
  try{
 
 
-var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"FileName.txt"
-var tempMessage=currentDestinationLine
-process.send(workerNumber+",writeRequest,"+tempPath+","+tempMessage);  
+// var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"FileName.txt"
+// var tempMessage=currentDestinationLine
+// process.send(workerNumber+",writeRequest,"+tempPath+","+tempMessage);  
+
+var message = [
+workerNumber,
+"writeRequest",
+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"FileName.txt",
+currentDestinationLine,
+];
+process.send(message);
 
 //fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"FileName.txt", currentDestinationLine, 'utf8');
 
@@ -265,9 +314,18 @@ while(actionComplete==0){
 
  try{
 //fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"QueueNumber.txt", globalQueueNumber, 'utf8');
-var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"QueueNumber.txt"
-var tempMessage=globalQueueNumber
-process.send(workerNumber+",writeRequest,"+tempPath+","+tempMessage); 
+// var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"QueueNumber.txt"
+// var tempMessage=globalQueueNumber
+// process.send(workerNumber+",writeRequest,"+tempPath+","+tempMessage); 
+
+
+var message = [
+workerNumber,
+"writeRequest",
+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"QueueNumber.txt",
+globalQueueNumber,
+];
+process.send(message);
 
 
 actionComplete=1;
@@ -337,9 +395,7 @@ workerCommand ="HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDe
 
  
 
-//const { stdout, stderr, code } = sh.exec(workerCommand, { silent: true }
 
-//if (shell.exec(workerCommand).code !== 0) {
 
 
 
@@ -355,9 +411,18 @@ while(actionComplete==0){
  try{
  //fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",currentSourceLine+" ConversionError\n", 'utf8');
 
-var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
-var tempMessage=currentSourceLine+" ConversionError\n"
-process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+// var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
+// var tempMessage=currentSourceLine+" ConversionError\n"
+// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+
+
+var message = [
+workerNumber,
+"appendRequest",
+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",
+currentSourceLine+" ConversionError\n",
+];
+process.send(message);
 
 actionComplete=1;
 }catch(err){
@@ -370,9 +435,18 @@ while(actionComplete==0){
  try{
  //   fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueError.txt","Error\n", 'utf8');
 
-var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueError.txt"
-var tempMessage="Error\n"
-process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+// var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueError.txt"
+// var tempMessage="Error\n"
+// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+
+
+var message = [
+workerNumber,
+"appendRequest",
+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueError.txt",
+"Error\n",
+];
+process.send(message);
 
 actionComplete=1;
 }catch(err){
@@ -385,10 +459,18 @@ while(actionComplete==0){
  try{
    //  fs.appendFileSync(homePath+"/HBBatchBeast/Logs/ErrorLog.txt",today2 + "-" + timenow + "---Health---check--ERROR----------" + currentSourceLine + "\r\n", 'utf8');
 
-var tempPath=homePath+"/HBBatchBeast/Logs/ErrorLog.txt"
-var tempMessage=today2 + "-" + timenow + "---Health---check--ERROR----------" + currentSourceLine + "\r\n"
+// var tempPath=homePath+"/HBBatchBeast/Logs/ErrorLog.txt"
+// var tempMessage=today2 + "-" + timenow + "---Health---check--ERROR----------" + currentSourceLine + "\r\n"
 
-process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+
+var message = [
+workerNumber,
+"appendRequest",
+homePath+"/HBBatchBeast/Logs/ErrorLog.txt",
+today2 + "-" + timenow + "---Health---check--ERROR----------" + currentSourceLine + "\r\n",
+];
+process.send(message);
 
 actionComplete=1;
 }catch(err){
@@ -419,9 +501,17 @@ while(actionComplete==0){
   //  fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
 
 
-var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
-var tempMessage=today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n"
-process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+// var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
+// var tempMessage=today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n"
+// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+
+var message = [
+workerNumber,
+"appendRequest",
+homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",
+today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n",
+];
+process.send(message);
 
 
 actionComplete=1;
@@ -441,9 +531,17 @@ while(actionComplete==0){
  try{
    // fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');  
 
-var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
-var tempMessage=today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n"
-process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+// var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
+// var tempMessage=today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n"
+// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+
+var message = [
+workerNumber,
+"appendRequest",
+homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",
+today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n",
+];
+process.send(message);
 
 actionComplete=1;
 }catch(err){
@@ -464,7 +562,15 @@ actionComplete=1;
  // shell.echo('Failed');
   //shell.exit(1);
 
-   process.send(workerNumber+",error,"+globalQueueNumber+","+preset);
+   //process.send(workerNumber+",error,"+globalQueueNumber+","+preset);
+
+   var message = [
+workerNumber,
+"error",
+globalQueueNumber,
+preset,
+];
+process.send(message);
 }else{
 
 
@@ -483,9 +589,17 @@ while(actionComplete==0){
  try{
     //   fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",currentSourceLine+" Success\n", 'utf8');
 
-var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
-var tempMessage=currentSourceLine+" Success\n"
-process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+// var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
+// var tempMessage=currentSourceLine+" Success\n"
+// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+
+   var message = [
+workerNumber,
+"appendRequest",
+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",
+currentSourceLine+" Success\n",
+];
+process.send(message);
 
 
 actionComplete=1;
@@ -501,9 +615,17 @@ while(actionComplete==0){
 
    // fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueSuccess.txt","Success\n", 'utf8');
 
-var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueSuccess.txt"
-var tempMessage="Success\n";
-process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+// var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueSuccess.txt"
+// var tempMessage="Success\n";
+// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+
+   var message = [
+workerNumber,
+"appendRequest",
+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueSuccess.txt",
+"Success\n",
+];
+process.send(message);
 
 actionComplete=1;
 }catch(err){
@@ -514,7 +636,15 @@ actionComplete=1;
 
   
 
-  process.send(workerNumber+",success,"+globalQueueNumber+","+preset);
+ // process.send(workerNumber+",success,"+globalQueueNumber+","+preset);
+
+     var message = [
+workerNumber,
+"success",
+globalQueueNumber,
+preset,
+];
+process.send(message);
  
 }
 
@@ -584,9 +714,21 @@ while(actionComplete==0){
  try{
  //fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
   
-var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
-var tempMessage=today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n"
-process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+// var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
+// var tempMessage=today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n"
+// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+
+
+var message = [
+workerNumber,
+"appendRequest",
+homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",
+today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n",
+];
+process.send(message);
+
+
+
 actionComplete=1;
 }catch(err){
 }
@@ -611,9 +753,20 @@ while(actionComplete==0){
  try{
  //fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');
 
-var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
-var tempMessage=today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n"
-process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+// var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
+// var tempMessage=today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n"
+// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+
+
+var message = [
+workerNumber,
+"appendRequest",
+homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",
+today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n",
+];
+process.send(message);
+
+
 
 actionComplete=1;
 }catch(err){
@@ -648,7 +801,13 @@ fs.unlinkSync(currentSourceLine)
 } 
 
 
-process.send(workerNumber+",queueRequest");
+//process.send(workerNumber+",queueRequest");
+
+var message = [
+workerNumber,
+"queueRequest",
+];
+process.send(message);
 
 }
 
@@ -663,9 +822,19 @@ while(actionComplete==0){
  try{
 //fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + workerNumber + "FileName.txt", "Complete!", 'utf8');
 
-var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + workerNumber + "FileName.txt"
-var tempMessage="Complete!"
-process.send(workerNumber+",writeRequest,"+tempPath+","+tempMessage);
+// var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + workerNumber + "FileName.txt"
+// var tempMessage="Complete!"
+// process.send(workerNumber+",writeRequest,"+tempPath+","+tempMessage);
+
+
+var message = [
+workerNumber,
+"writeRequest",
+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + workerNumber + "FileName.txt",
+"Complete!",
+];
+process.send(message);
+
 
 actionComplete=1;
 }catch(err){
@@ -680,9 +849,19 @@ while(actionComplete==0){
  try{
 //fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + workerNumber + "QueueNumber.txt", "Complete!", 'utf8');
 
-var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + workerNumber + "QueueNumber.txt"
-var tempMessage="Complete!"
-process.send(workerNumber+",writeRequest,"+tempPath+","+tempMessage);
+// var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + workerNumber + "QueueNumber.txt"
+// var tempMessage="Complete!"
+// process.send(workerNumber+",writeRequest,"+tempPath+","+tempMessage);
+
+
+var message = [
+workerNumber,
+"writeRequest",
+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + workerNumber + "QueueNumber.txt",
+"Complete!",
+];
+process.send(message);
+
 
 actionComplete=1;
 }catch(err){
