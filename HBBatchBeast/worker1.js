@@ -1,5 +1,5 @@
 //SET ENV
-process.env.NODE_ENV = "production";
+//process.env.NODE_ENV = "production";
 
 var shell = require('shelljs');
 
@@ -308,52 +308,6 @@ workerCommand ="HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDe
 
 
 
-// //run bat file
-
-// if(process.platform=='win32'){
-
-//     if(process.env.NODE_ENV == 'production'){
-
-//         //production
-// var workerpath = fullPath+ "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".bat";
-
-
-
-//  }else{
-
-//             //development
-// var workerpath = __dirname + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".bat";
-
-//   }
-
-
-//     }
-    
-//     if(process.platform == 'linux' || process.platform == 'darwin'){
-
-//         if(process.env.NODE_ENV == 'production'){
-
-//                     //production
-// //var workerpath = fullPath+ "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".sh";
-// var workerpath = homePath+"/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".sh";
-
-//         }else{
-
-//             //development
-//         var workerpath = __dirname + "/HBBatchBeast/Config/Processes/BatchFiles/HandbrakeCLIBatchTemp" + workerNumber + ".sh";
-
-
-//         }
-//     }
-
-
-//   //  workerpath=  workerpath.replace(/ /g, '\\');
-
-//   if(process.platform=='win32'  || process.platform == 'darwin'){
-
-//   workerpath= "\""+ workerpath+"\"";
-
-//   }
 
 
   var today = new Date();
