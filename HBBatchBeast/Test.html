@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+
+<script>
+
+
+// folder loop begin 
+for (var y = 0; y < inputPathStemArray.length; y++) {
+
+
+
+
+
+
+
+inputPathStem = inputPathStemArray[y]
+outPutPathStem = outPutPathStemArray[y]
+
+if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+    outPutPathStemFinal = outPutPathStemFinalArray[y]
+}
+
+inputPathStemSplit = inputPathStem.split(',');
+
+
+
+topFolder = inputPathStemSplit[inputPathStemSplit.length - 1]
+
+topFolderCharLength = topFolder.length
+
+
+
+
+
+
+
+
+
+
+
+
+var fs = require('fs');
+var path = require('path');
+
+try {
+    traverseDir(inputPathStem);
+} catch (err) {}
+
+function traverseDir(inputPathStem) {
+    fs.readdirSync(inputPathStem).forEach(file => {
+        let fullPath = path.join(inputPathStem, file);
+
+        try {
+            if (fs.lstatSync(fullPath).isDirectory()) {
+
+                try {
+                    traverseDir(fullPath);
+                } catch (err) {}
+            } else {
+
+
+
+                var thisFile = fullPath + ""
+
+                fileTypeSplit = thisFile.split('.');
+                fileType = fileTypeSplit[fileTypeSplit.length - 1]
+
+
+                //Here we define supported file types
+                var supportedFileTypeArray = document.getElementById("includedFileTypes").value
+
+                supportedFileTypeArray = supportedFileTypeArray.split(',');
+
+                //Here we check to see if the current file being analysed contains a valid file type
+                var supportedFileSwitch = 0;
+
+
+                for (var j = 0; j < supportedFileTypeArray.length; j++) {
+
+                    if (fileType == supportedFileTypeArray[j]) {
+                        supportedFileSwitch = 1;
+                    }
+
+                }
+
+                //If the file type is valid, then process it
+
+                if (supportedFileSwitch == 1) {
+
+                    //document.getElementById("files2").innerHTML += "<p>"+ thisFile+"<\p>";
+
+
+
+                    //Here add the full file path to the inputPathArray
+                    inputPathArray[inputPathArrayCounter] = thisFile + "";
+
+
+
+                    //Write to file to state that file with valid format has been found
+
+                    fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFound.txt', (totalFileFoundCounter + 1), 'utf8');
+
+                    if((totalFileFoundCounter + 1)%100==0){
+
+                    scanWindow.webContents.send('item:count', (totalFileFoundCounter + 1));
+                }
+
+
+                   // ipcRenderer.send('item:count', (totalFileFoundCounter + 1));
+
+
+                    totalFileFoundCounter++
+
+
+
+
+
+
+
+                    var str = inputPathArray[inputPathArrayCounter];
+
+
+                    str = str.substring(str.indexOf("topFolder") + topFolderCharLength + 1);
+
+
+                    if (process.platform == 'win32') {
+
+                        var stringProcessingSlash = "\\";
+                    }
+
+                    if (process.platform == 'linux' || process.platform == 'darwin') {
+                        var stringProcessingSlash = "/";
+                    }
+
+                    pointer = str.split(stringProcessingSlash);
+
+                    filePathEnd = pointer[pointer.length - 1]
+
+                    filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));
+
+                    subfilePath = filePathEndFileType + document.getElementById("container").options[document.getElementById("container").selectedIndex].text;
+
+                    LongsubfilePath = str.slice(0, str.lastIndexOf(stringProcessingSlash));
+
+                    newsubfilePath = LongsubfilePath + stringProcessingSlash + subfilePath;
+
+
+                    outputPathArray[inputPathArrayCounter] = outPutPathStem + newsubfilePath;
+                    var outputFolderPath = outputPathArray[inputPathArrayCounter].substring(0, outputPathArray[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
+
+                    //
+
+                    presetArray2[inputPathArrayCounter] = presetArray[y]
+
+
+                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+                        outputPathArrayFinal[inputPathArrayCounter] = outPutPathStemFinal + newsubfilePath;
+                        var outputFolderPathFinal = outputPathArrayFinal[inputPathArrayCounter].substring(0, outputPathArrayFinal[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
+
+                    }
+
+
+                    //if temp folder unchcked
+
+
+                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+
+
+
+
+
+
+
+
+                        if (fs.existsSync(outputPathArrayFinal[inputPathArrayCounter])) {
+
+
+                        } else {
+
+
+                            fs.writeFileSync(homePath + '/HBBatchBeast/Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
+
+
+                            fileNotExistsCounter++
+                        }
+
+
+
+
+                        //ELSE if temp folder checked
+                    } else {
+
+                        //
+                        if (fs.existsSync(outputPathArray[inputPathArrayCounter])) {
+
+
+                        } else {
+
+                            fs.writeFileSync(homePath + '/HBBatchBeast/Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
+
+                            fileNotExistsCounter++
+
+                        }
+                        //
+
+                    }
+
+
+                    var shell = require('shelljs');
+
+
+
+                    if (fs.existsSync(outputFolderPath)) {
+
+
+                    } else {
+
+                        if (outputFolderPath != outputFolderPathold) {
+                            // fs.mkdirSync(outputFolderPath);
+
+
+                            try {
+
+                                if (mode == "scanandconvert") {
+                                    shell.mkdir('-p', outputFolderPath);
+                                }
+
+                            } catch (err) {}
+
+                            outputFolderPathold = outputFolderPath;
+                        }
+
+                    }
+
+
+                    //AND if tempfolderchecked
+
+                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+
+
+                        if (fs.existsSync(outputFolderPathFinal)) {
+
+                        } else {
+
+                            if (outputFolderPathFinal != outputFolderPathFinalold) {
+
+                                //fs.mkdirSync(outputFolderPathFinal);
+
+                                try {
+
+                                    if (mode == "scanandconvert") {
+                                        shell.mkdir('-p', outputFolderPathFinal);
+
+                                    }
+
+                                } catch (err) {}
+
+
+                                outputFolderPathFinalold = outputFolderPathFinal;
+
+                            }
+                        }
+                    }
+
+
+                    inputPathArrayCounter++;
+
+
+
+
+
+                } //end supported file switch
+
+
+
+
+            }  //end current file, go to next
+
+        } catch (err) {}
+    });
+}
+}//end source folder loop
+
+
+
+</script>
+<body>
+    
+</body>
+</html>

@@ -25,7 +25,7 @@ const { app, BrowserWindow, Menu, ipcMain ,Tray} = electron;
 let mainWindow;
 
 //SET ENV
-process.env.NODE_ENV = "production";
+//process.env.NODE_ENV = "production";
 
 
 
@@ -41,7 +41,7 @@ app.on('ready', function () {
     mainWindow = new BrowserWindow({
         width: 1400,
         height: 1000,
-       frame: false,
+   //    frame: false,
         title: 'HBBatchBeast'
 
 
@@ -111,7 +111,7 @@ mainWindow.on('show', function () {
 appIcon.setHighlightMode('always')
 
 
-appIcon.setImage(iconpath);
+//appIcon.setImage(iconpath);
     })
 
 //appIcon.setToolTip('Error!');

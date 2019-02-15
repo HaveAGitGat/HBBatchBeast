@@ -17,7 +17,7 @@
 
 
     //SET ENV
-    process.env.NODE_ENV = "production";
+    // process.env.NODE_ENV = "production";
 
     var home = require("os").homedir();
 
@@ -53,11 +53,11 @@
     }
 
 
-process.on('uncaughtException', function(err){
-    console.error(err.stack);
-    fs.appendFileSync(homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt',"Main thread error: "+err.stack+"\r\n" , 'utf8');
-    process.exit();
-});
+    // process.on('uncaughtException', function (err) {
+    //     console.error(err.stack);
+    //     fs.appendFileSync(homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt', "Main thread error: " + err.stack + "\r\n", 'utf8');
+    //     process.exit();
+    // });
 
 
 
@@ -102,7 +102,7 @@ process.on('uncaughtException', function(err){
         scanWindow = new BrowserWindow({
             width: 400,
             height: 200,
-           frame: false,
+            frame: false,
             title: 'Scan Window'
 
         });
@@ -127,9 +127,9 @@ process.on('uncaughtException', function(err){
     }
 
 
-        //Global variables
+    //Global variables
 
-        var cp
+    var cp
     var globalQueueNumberManager = 0;
 
     var fileNotExistsCounter = 0;
@@ -162,7 +162,7 @@ process.on('uncaughtException', function(err){
     var updateInfo = 0;
 
     var CompletedSwitch = 1;
-    
+
 
     var countDownOn = 0;
 
@@ -189,7 +189,7 @@ process.on('uncaughtException', function(err){
 
     var queueView
 
-            
+
 
 
 
@@ -492,12 +492,12 @@ process.on('uncaughtException', function(err){
 
         //read email address
 
-        
+
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/Email/emailAddress.txt")) {
 
-document.getElementById("emailAddress").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/Email/emailAddress.txt", 'utf8');
+            document.getElementById("emailAddress").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/Email/emailAddress.txt", 'utf8');
 
-}
+        }
 
 
         //read SMTP server
@@ -505,9 +505,9 @@ document.getElementById("emailAddress").value = fs.readFileSync(homePath + "/HBB
 
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/Email/SMTPServer.txt")) {
 
-document.getElementById("SMTPServer").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/Email/SMTPServer.txt", 'utf8');
+            document.getElementById("SMTPServer").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/Email/SMTPServer.txt", 'utf8');
 
-}
+        }
 
 
 
@@ -873,6 +873,7 @@ document.getElementById("SMTPServer").value = fs.readFileSync(homePath + "/HBBat
         //reset divs
 
         document.getElementById("totalFilesDiv").innerHTML = ""
+        document.getElementById("buildQueueDiv").innerHTML = ""
         document.getElementById("totalUnconvertedFilesDiv").innerHTML = ""
         document.getElementById("startTimeDiv").innerHTML = ""
         document.getElementById("durationDiv").innerHTML = ""
@@ -910,7 +911,7 @@ document.getElementById("SMTPServer").value = fs.readFileSync(homePath + "/HBBat
         globalQueueNumberManager = 0;
         AllCompleted = 0;
 
-       
+
 
 
 
@@ -932,7 +933,7 @@ document.getElementById("SMTPServer").value = fs.readFileSync(homePath + "/HBBat
         totalFileSize = 0;
 
         errorCount = 0;
-        successfulCount=0;
+        successfulCount = 0;
 
         var g;
 
@@ -945,7 +946,7 @@ document.getElementById("SMTPServer").value = fs.readFileSync(homePath + "/HBBat
         var topFolderCharLength
         var programPath = ""
 
-        queueView ="enabled"
+        queueView = "enabled"
 
 
 
@@ -1204,7 +1205,7 @@ document.getElementById("SMTPServer").value = fs.readFileSync(homePath + "/HBBat
 
 
             saveConfig();
-            createscanWindow();
+           // createscanWindow();
 
 
 
@@ -1266,7 +1267,6 @@ document.getElementById("SMTPServer").value = fs.readFileSync(homePath + "/HBBat
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/Processes/WorkerStatus/AllComplete.txt', "0", 'utf8');
 
-            var writeNumber = 0;
             var sourceQueueArrayCounter = 0;
 
 
@@ -1302,459 +1302,164 @@ document.getElementById("SMTPServer").value = fs.readFileSync(homePath + "/HBBat
 
 
 
+            // var queueInfoBomb = {
 
 
-            // folder loop begin 
-            for (var y = 0; y < inputPathStemArray.length; y++) {
 
+            //     inputPathStemArray: inputPathStemArray,
+            //     outPutPathStemArray: outPutPathStemArray,
 
+            //     outPutPathStemFinalArray: outPutPathStemFinalArray,
 
+            //     tempConversionFolderCheckedOnOff: document.getElementById("selectTemporaryConversionFolder").checked,
 
+            //     supportedFileTypeArray: document.getElementById("includedFileTypes").value,
 
+            //     containerType: document.getElementById("container").options[document.getElementById("container").selectedIndex].text,
 
+            //     mode: mode,
 
-                inputPathStem = inputPathStemArray[y]
-                outPutPathStem = outPutPathStemArray[y]
 
-                if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-                    outPutPathStemFinal = outPutPathStemFinalArray[y]
-                }
+            // };
 
-                inputPathStemSplit = inputPathStem.split(',');
 
+            var queueInfoBomb = [
 
+            inputPathStemArray,
+            outPutPathStemArray,
+            outPutPathStemFinalArray,
+            document.getElementById("selectTemporaryConversionFolder").checked,
+            document.getElementById("includedFileTypes").value,
+            document.getElementById("container").options[document.getElementById("container").selectedIndex].text,
+            mode,
+            presetArray,
+        
+ ];
 
-                topFolder = inputPathStemSplit[inputPathStemSplit.length - 1]
 
-                topFolderCharLength = topFolder.length
 
 
+            console.log(queueInfoBomb)
 
 
+            // launch Queue builder module
 
+            var fs = require('fs');
 
 
+            var path = require("path");
+            var childProcess = require("child_process");
+            var queueBuildModulePath = "queueBuild.js"
 
+            var queueBuildModule = childProcess.fork(path.join(__dirname, queueBuildModulePath ),[], { silent: true });
 
+            queueBuildModule.stdout.on('data', function(data) {
+                    console.log('stdout: ' + data);
+                    //Here is where the output goes
+                        });
 
+            queueBuildModule.send(queueInfoBomb); 
 
+            queueBuildModule.on("exit", function (code, signal,) {
+                console.log('Child exited:', code, signal,);
 
-                var fs = require('fs');
-                var path = require('path');
+            });
+         //   queueBuildModule.on("error", console.error.bind(console));
 
-                try {
-                    traverseDir(inputPathStem);
-                } catch (err) {}
 
-                function traverseDir(inputPathStem) {
-                    fs.readdirSync(inputPathStem).forEach(file => {
-                        let fullPath = path.join(inputPathStem, file);
 
-                        try {
-                            if (fs.lstatSync(fullPath).isDirectory()) {
 
-                                try {
-                                    traverseDir(fullPath);
-                                } catch (err) {}
-                            } else {
 
 
 
-                                var thisFile = fullPath + ""
 
-                                fileTypeSplit = thisFile.split('.');
-                                fileType = fileTypeSplit[fileTypeSplit.length - 1]
+            queueBuildModule.on('message', function (message) {
 
+                if (message.error) {
+    console.error(message.error);
+  }
 
-                                //Here we define supported file types
-                                var supportedFileTypeArray = document.getElementById("includedFileTypes").value
+                console.log(message)
 
-                                supportedFileTypeArray = supportedFileTypeArray.split(',');
 
-                                //Here we check to see if the current file being analysed contains a valid file type
-                                var supportedFileSwitch = 0;
 
+                // if (message[1] == "queueRequest") {
 
-                                for (var j = 0; j < supportedFileTypeArray.length; j++) {
+                //     if (globalQueueNumberManager <= sourceQueueArray.length-1) {
+                //         var currentNumber = "q:" + globalQueueNumberManager;
+                //         globalQueueNumberManager++;
+                //     } else {
+                //         var currentNumber = "completed";
+                //     }
+                //     queueBuildModule.send(currentNumber);
+                // }
 
-                                    if (fileType == supportedFileTypeArray[j]) {
-                                        supportedFileSwitch = 1;
-                                    }
 
-                                }
+                            
 
-                                //If the file type is valid, then process it
 
-                                if (supportedFileSwitch == 1) {
 
-                                    //document.getElementById("files2").innerHTML += "<p>"+ thisFile+"<\p>";
+if (message[0] == "writeRequest") {
 
 
-
-                                    //Here add the full file path to the inputPathArray
-                                    inputPathArray[inputPathArrayCounter] = thisFile + "";
-
-
-
-                                    //Write to file to state that file with valid format has been found
-
-                                    fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFound.txt', (totalFileFoundCounter + 1), 'utf8');
-
-                                    if((totalFileFoundCounter + 1)%100==0){
-
-                                    scanWindow.webContents.send('item:count', (totalFileFoundCounter + 1));
-                                }
-
-
-                                   // ipcRenderer.send('item:count', (totalFileFoundCounter + 1));
-
-
-                                    totalFileFoundCounter++
-
-
-
-
-
-
-
-                                    var str = inputPathArray[inputPathArrayCounter];
-
-
-                                    str = str.substring(str.indexOf("topFolder") + topFolderCharLength + 1);
-
-
-                                    if (process.platform == 'win32') {
-
-                                        var stringProcessingSlash = "\\";
-                                    }
-
-                                    if (process.platform == 'linux' || process.platform == 'darwin') {
-                                        var stringProcessingSlash = "/";
-                                    }
-
-                                    pointer = str.split(stringProcessingSlash);
-
-                                    filePathEnd = pointer[pointer.length - 1]
-
-                                    filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));
-
-                                    subfilePath = filePathEndFileType + document.getElementById("container").options[document.getElementById("container").selectedIndex].text;
-
-                                    LongsubfilePath = str.slice(0, str.lastIndexOf(stringProcessingSlash));
-
-                                    newsubfilePath = LongsubfilePath + stringProcessingSlash + subfilePath;
-
-
-                                    outputPathArray[inputPathArrayCounter] = outPutPathStem + newsubfilePath;
-                                    var outputFolderPath = outputPathArray[inputPathArrayCounter].substring(0, outputPathArray[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
-
-                                    //
-
-                                    presetArray2[inputPathArrayCounter] = presetArray[y]
-
-
-                                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-
-                                        outputPathArrayFinal[inputPathArrayCounter] = outPutPathStemFinal + newsubfilePath;
-                                        var outputFolderPathFinal = outputPathArrayFinal[inputPathArrayCounter].substring(0, outputPathArrayFinal[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
-
-                                    }
-
-
-                                    //if temp folder unchcked
-
-
-                                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-
-
-
-
-
-
-
-
-
-                                        if (fs.existsSync(outputPathArrayFinal[inputPathArrayCounter])) {
-
-
-                                        } else {
-
-
-                                            fs.writeFileSync(homePath + '/HBBatchBeast/Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
-
-
-                                            fileNotExistsCounter++
-                                        }
-
-
-
-
-                                        //ELSE if temp folder checked
-                                    } else {
-
-                                        //
-                                        if (fs.existsSync(outputPathArray[inputPathArrayCounter])) {
-
-
-                                        } else {
-
-                                            fs.writeFileSync(homePath + '/HBBatchBeast/Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
-
-                                            fileNotExistsCounter++
-
-                                        }
-                                        //
-
-                                    }
-
-
-                                    var shell = require('shelljs');
-
-
-
-                                    if (fs.existsSync(outputFolderPath)) {
-
-
-                                    } else {
-
-                                        if (outputFolderPath != outputFolderPathold) {
-                                            // fs.mkdirSync(outputFolderPath);
-
-
-                                            try {
-
-                                                if (mode == "scanandconvert") {
-                                                    shell.mkdir('-p', outputFolderPath);
-                                                }
-
-                                            } catch (err) {}
-
-                                            outputFolderPathold = outputFolderPath;
-                                        }
-
-                                    }
-
-
-                                    //AND if tempfolderchecked
-
-                                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-
-
-                                        if (fs.existsSync(outputFolderPathFinal)) {
-
-                                        } else {
-
-                                            if (outputFolderPathFinal != outputFolderPathFinalold) {
-
-                                                //fs.mkdirSync(outputFolderPathFinal);
-
-                                                try {
-
-                                                    if (mode == "scanandconvert") {
-                                                        shell.mkdir('-p', outputFolderPathFinal);
-
-                                                    }
-
-                                                } catch (err) {}
-
-
-                                                outputFolderPathFinalold = outputFolderPathFinal;
-
-                                            }
-                                        }
-                                    }
-
-
-                                    inputPathArrayCounter++;
-
-
-
-
-
-                                } //end supported file switch
-
-
-
-
-                            }  //end current file, go to next
-
-                        } catch (err) {}
-                    });
-                }
-            }//end source folder loop
-
-
-
-
-
-            //var currentWindowPath = window.location.pathname;
-            //var currentFolderPath = currentWindowPath.substring(0, currentWindowPath.lastIndexOf('/'));
-
-            var currentWindowPath = __filename;
-            var currentFolderPath = __dirname;
-
-
-
-            // var handBrakeCLIPath = fso.GetAbsolutePathName(homePath+'/HandBrakeCLI.exe');
-
-            //var handBrakeCLIPath = fso.GetAbsolutePathName(homePath+'/HandBrakeCLI.exe');
-
-
-
-
-
-
-
-
-
-            if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-
-                for (var i = 0; i < outputPathArray.length; i++) {
-
-                    try {
-
-
-
-
-                        if (fs.existsSync(outputPathArrayFinal[i])) {
-
-                        } else {
-
-
-                            fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + ",,," + presetArray2[i] + "\n", 'utf8');
-                            sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
-
-                          //  fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFoundSize.txt', "Building queue:" + (sourceQueueArrayCounter + 1), 'utf8');
-
-
-
-                          if((sourceQueueArrayCounter + 1)%100==0){
-
-
-
-                          scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
-                
-                        }
-
-
-                            sourceQueueArrayCounter++
-
-
-
-
-                            fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
-
-
-                            fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
-
-
-                            writeNumber++;
-
-                        }
-
-                    } catch (err) {}
-                }//
-
-
-
-            } else {
-
-
-                for (var i = 0; i < outputPathArray.length; i++) {
-
-                    try {
-
-                        if (fs.existsSync(outputPathArray[i])) {
-
-                        } else {
-
-                            fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + ",,," + presetArray2[i] + "\n", 'utf8');
-                            sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
-
-                          //  fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFoundSize.txt', "Building queue:" + (sourceQueueArrayCounter + 1), 'utf8');
-
-                   
-                          if((sourceQueueArrayCounter + 1)%100==0){
-
-
-
-scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
+fs.writeFileSync(message[1], message[2], 'utf8');
 
 }
 
 
 
 
+if (message[0] == "appendRequest") {
+fs.appendFileSync(message[1], message[2], 'utf8');
 
-                            sourceQueueArrayCounter++
-
-                            fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
-
-                            fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
+}
 
 
+if (message[0] == "complete") {
 
-                            writeNumber++;
 
-                        }
-
-                    } catch (err) {}
-                }//
+totalFileFoundCounter=message[1];
+sourceQueueArray=message[2];
+presetArray2=message[3];
 
 
 
-            }
+    runEndSection();
+
+}
+
+if (message[0] == "totalFiles") {
+document.getElementById("totalFilesDiv").innerHTML = "<p>Total files found: " + message[1] + "<\p>";
+}
+
+if (message[0] == "buildQueue") {
+document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + message[1] + "<\p>";
+}
+
+
+
+            });
+
+
+
+
+
+
+
+
 
             //Close scan Window
 
-            try {
-                scanWindow.close();
-            } catch (err) {}
+            // try {
+            //     scanWindow.close();
+            // } catch (err) {}
 
 
 
-            document.getElementById("queueButton").style.display = 'block';
-            document.getElementById("outputButton").style.display = 'block';
-
-
-            if (mode == "scanandconvert" || mode == "healthCheck") {
-
-            if (totalFileFoundCounter >= 1000) {
-                document.getElementById("fullQueueDiv").style.display = 'none';
-                document.getElementById("viewStatus").innerHTML = "<p style=\"color:red\">Large number of items in the queue! Queue view disabled.<\p>";
-
-                    queueView ="disabled";
-       
-            } else {
-
-                document.getElementById("fullQueueDiv").style.display = 'block';
-     
-
-
-            }
 
 
 
-            for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
-
-            document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker"+i+"Status\"> </div>";
-
-            }
-            updateGraph();
-
-
-
-            }else{
-
-                document.getElementById("fullQueueDiv").style.display = 'block';
-            }
-
-
-
-            document.getElementById("sessionConversions").style.display = 'none';
-
-
-            runEndSection();
+      //      runEndSection();
 
 
 
@@ -1764,10 +1469,64 @@ scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
 
         }// end validation section
 
-        document.getElementById("totalFilesDiv").innerHTML = "<p>Total files found: " + totalFileFoundCounter + "<\p>";
 
+
+
+
+
+    }//end convertfiles function
+
+    function runEndSection() {
+
+
+        var fs = require('fs');
+        document.getElementById("queueButton").style.display = 'block';
+        document.getElementById("outputButton").style.display = 'block';
+
+
+        if (mode == "scanandconvert" || mode == "healthCheck") {
+
+            if (totalFileFoundCounter >= 1000) {
+                document.getElementById("fullQueueDiv").style.display = 'none';
+                document.getElementById("viewStatus").innerHTML = "<p style=\"color:red\">Large number of items in the queue! Queue view disabled.<\p>";
+
+                queueView = "disabled";
+
+            } else {
+
+                document.getElementById("fullQueueDiv").style.display = 'block';
+
+
+
+            }
+
+
+
+            for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
+
+                document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker" + i + "Status\"> </div>";
+
+            }
+            updateGraph();
+
+
+
+        } else {
+
+            document.getElementById("fullQueueDiv").style.display = 'block';
+        }
+
+
+
+        document.getElementById("sessionConversions").style.display = 'none';
+
+
+
+       
+        unConvertedFiles = fs.readFileSync(homePath + "/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
         if (mode != "healthCheck") {
-            unConvertedFiles = fs.readFileSync(homePath + "/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
+         
+            document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + unConvertedFiles + "<\p>";
             document.getElementById("totalUnconvertedFilesDiv").innerHTML = "<p>Unconverted files found: " + unConvertedFiles + "<\p>";
         }
 
@@ -1780,11 +1539,20 @@ scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
 
 
 
+      
 
-    }//end convertfiles function
+        document.getElementById("totalFilesDiv").innerHTML = "<p>Total files found: " + totalFileFoundCounter + "<\p>";
 
-    function runEndSection() {
-        var fs = require('fs');
+            document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + unConvertedFiles + "<\p>";
+
+
+
+
+
+
+
+
+  
 
         if (process.platform == 'win32') {
             ipcRenderer.send('item:add', 'iconrunning');
@@ -1863,13 +1631,13 @@ scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
 
 
 
-            if(queueView =="enabled"){
-            document.getElementById("fullQueue").innerHTML = tableHTML;
-        }else{
+            if (queueView == "enabled") {
+                document.getElementById("fullQueue").innerHTML = tableHTML;
+            } else {
 
-            document.getElementById("fullQueue").innerHTML = "";
-        }
-   
+                document.getElementById("fullQueue").innerHTML = "";
+            }
+
 
         }
 
@@ -1879,7 +1647,6 @@ scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
 
         var workerPath = "worker1.js"
         //   var workerPath2 = "worker2.js"
-        var path = require("path");
 
 
         var cp = [];
@@ -1900,10 +1667,10 @@ scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
             for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
 
 
-             //   workers.push(childProcess.fork(path.join(__dirname, workerPath ),[], { silent: true }));
+                //   workers.push(childProcess.fork(path.join(__dirname, workerPath ),[], { silent: true }));
 
-                
-                workers.push(childProcess.fork(path.join(__dirname, workerPath )));
+
+                workers.push(childProcess.fork(path.join(__dirname, workerPath)));
 
 
 
@@ -1935,13 +1702,13 @@ scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
                 workers[i - 1].on('message', function (message) {
 
 
-                
+//console.log(message)
 
                     message = message.split(",");
 
                     if (message[1] == "queueRequest") {
 
-                        if (globalQueueNumberManager <= sourceQueueArray.length-1) {
+                        if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
                             var currentNumber = "q:" + globalQueueNumberManager;
                             globalQueueNumberManager++;
                         } else {
@@ -1953,20 +1720,20 @@ scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
 
                     if (message[1] == "processing") {
 
-                      
+
                         var currentRow = parseInt(message[2]) + 1
 
-                        if(queueView =="enabled"){
-                        queueTable.rows[currentRow].cells[3].innerHTML = "Worker " + message[0];
-                        queueTable.rows[currentRow].cells[4].innerHTML = 'Running';
-                        queueTable.rows[currentRow].style.backgroundColor = "#ffa24c";
-                    }
+                        if (queueView == "enabled") {
+                            queueTable.rows[currentRow].cells[3].innerHTML = "Worker " + message[0];
+                            queueTable.rows[currentRow].cells[4].innerHTML = 'Running';
+                            queueTable.rows[currentRow].style.backgroundColor = "#ffa24c";
+                        }
 
 
-                    document.getElementById("worker"+message[0]+"Status").innerHTML = "<div class=\"grid-itemleft\"><p>Worker "+message[0]+" processing file:</p></div><div class=\"grid-itemright\"><p>"+sourceQueueArray[message[2]]+"</p></div>";
+                        document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\"><p>Worker " + message[0] + " processing file:</p></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
 
 
-                   // workerStatusDiv
+                        // workerStatusDiv
 
                     }
 
@@ -1974,18 +1741,18 @@ scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
 
                         var currentRow = parseInt(message[2]) + 1
 
-                        if(queueView =="enabled"){
-                        queueTable.rows[currentRow].cells[3].innerHTML = "";
-                        queueTable.rows[currentRow].cells[4].innerHTML = "Error"
-                        queueTable.rows[currentRow].cells[2].innerHTML = message[3];
+                        if (queueView == "enabled") {
+                            queueTable.rows[currentRow].cells[3].innerHTML = "";
+                            queueTable.rows[currentRow].cells[4].innerHTML = "Error"
+                            queueTable.rows[currentRow].cells[2].innerHTML = message[3];
 
-                        queueTable.rows[currentRow].style.backgroundColor = "#ff2d2d";
+                            queueTable.rows[currentRow].style.backgroundColor = "#ff2d2d";
                         }
 
-                        errorArray.push(sourceQueueArray[currentRow-1])   
+                        errorArray.push(sourceQueueArray[currentRow - 1])
 
                         errorCount++;
-  
+
                         updateGraph();
 
 
@@ -1994,11 +1761,11 @@ scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
                     if (message[1] == "success") {
                         var currentRow = parseInt(message[2]) + 1
 
-                        if(queueView =="enabled"){
-                        queueTable.rows[currentRow].cells[3].innerHTML = "";
-                        queueTable.rows[currentRow].cells[4].innerHTML = "Completed"
-                        queueTable.rows[currentRow].cells[2].innerHTML = message[3];
-                        queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
+                        if (queueView == "enabled") {
+                            queueTable.rows[currentRow].cells[3].innerHTML = "";
+                            queueTable.rows[currentRow].cells[4].innerHTML = "Completed"
+                            queueTable.rows[currentRow].cells[2].innerHTML = message[3];
+                            queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
                         }
 
                         successfulCount++;
@@ -2008,9 +1775,9 @@ scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
 
 
                     if (message[1] == "writeRequest") {
-       
 
-   fs.writeFileSync(message[2],message[3] , 'utf8');
+
+                        fs.writeFileSync(message[2], message[3], 'utf8');
 
                     }
 
@@ -2018,9 +1785,9 @@ scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
 
 
                     if (message[1] == "appendRequest") {
-       fs.appendFileSync(message[2],message[3] , 'utf8');
-    
-                        }        
+                        fs.appendFileSync(message[2], message[3], 'utf8');
+
+                    }
 
 
 
@@ -2030,21 +1797,13 @@ scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
 
                 });
 
-               
+
 
 
 
 
 
             }
-
-
-
-
-
-
-
-
 
 
 
@@ -2096,109 +1855,109 @@ scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
 
 
 
-if (sourceQueueArray.length >= 1) {
+        if (sourceQueueArray.length >= 1) {
 
-    if (mode == "healthCheck") {
+            if (mode == "healthCheck") {
 
-        var totalFilesGraph = totalFileFoundCounter;
+                var totalFilesGraph = totalFileFoundCounter;
 
-    } else {
+            } else {
 
-        var totalFilesGraph = unConvertedFiles
+                var totalFilesGraph = unConvertedFiles
+
+
+            }
+
+
+
+            var myConfig = {
+                type: "ring",
+                backgroundColor: "#1A2933",
+                plot: {
+                    borderColor: "#2B313B",
+                    borderWidth: 0,
+                    // slice: 90,
+                    valueBox: {
+                        placement: 'out',
+                        // text: '%t\n%npv%',
+                        text: '%t\n%pv\n%npv%',
+                        fontFamily: "Open Sans"
+                    },
+                    tooltip: {
+                        fontSize: '18',
+                        fontFamily: "Open Sans",
+                        padding: "5 10",
+                        text: "%npv%"
+                    },
+                },
+                source: {
+                    text: '',
+                    fontColor: "#8e99a9",
+                    fontFamily: "Open Sans"
+                },
+                title: {
+                    fontColor: "#fff",
+                    text: '',
+                    align: "left",
+                    offsetX: 10,
+                    fontFamily: "Open Sans",
+                    fontSize: 25
+                },
+                subtitle: {
+                    offsetX: 10,
+                    offsetY: 10,
+                    fontColor: "#8e99a9",
+                    fontFamily: "Open Sans",
+                    fontSize: "16",
+                    text: '',
+                    align: "left"
+                },
+                plotarea: {
+                    margin: "20 0 0 0"
+
+                },
+                series: [
+                    {
+                        values: [(successfulCount)],
+                        text: "Success",
+                        backgroundColor: '#4CAF50',
+                    },
+                    {
+                        values: [(errorCount)],
+                        text: "Error",
+                        backgroundColor: '#ef435d'
+                    },
+                    {
+                        values: [totalFilesGraph - (successfulCount + errorCount)],
+                        text: "Remaining",
+                        backgroundColor: '#50ADF5'
+                    },
+
+
+
+                ]
+            };
+
+            zingchart.render({
+                id: 'myChart',
+                data: myConfig,
+                height: 500,
+                width: 725
+            });
+
+            document.getElementById("myChartDiv").style.display = 'block';
+
+        }
+
+
+
+
+
+
+
 
 
     }
-
-
-
-    var myConfig = {
-        type: "ring",
-        backgroundColor: "#1A2933",
-        plot: {
-            borderColor: "#2B313B",
-            borderWidth: 0,
-            // slice: 90,
-            valueBox: {
-                placement: 'out',
-                // text: '%t\n%npv%',
-                text: '%t\n%pv\n%npv%',
-                fontFamily: "Open Sans"
-            },
-            tooltip: {
-                fontSize: '18',
-                fontFamily: "Open Sans",
-                padding: "5 10",
-                text: "%npv%"
-            },
-        },
-        source: {
-            text: '',
-            fontColor: "#8e99a9",
-            fontFamily: "Open Sans"
-        },
-        title: {
-            fontColor: "#fff",
-            text: '',
-            align: "left",
-            offsetX: 10,
-            fontFamily: "Open Sans",
-            fontSize: 25
-        },
-        subtitle: {
-            offsetX: 10,
-            offsetY: 10,
-            fontColor: "#8e99a9",
-            fontFamily: "Open Sans",
-            fontSize: "16",
-            text: '',
-            align: "left"
-        },
-        plotarea: {
-            margin: "20 0 0 0"
-
-        },
-        series: [
-            {
-                values: [(successfulCount)],
-                text: "Success",
-                backgroundColor: '#4CAF50',
-            },
-            {
-                values: [(errorCount)],
-                text: "Error",
-                backgroundColor: '#ef435d'
-            },
-            {
-                values: [totalFilesGraph - (successfulCount+errorCount)],
-                text: "Remaining",
-                backgroundColor: '#50ADF5'
-            },
-
-
-
-        ]
-    };
-
-    zingchart.render({
-        id: 'myChart',
-        data: myConfig,
-        height: 500,
-        width: 725
-    });
-
-    document.getElementById("myChartDiv").style.display = 'block';
-
-}
-
-
-
-
-
-
-
-
-
-}
 
 
 
@@ -2272,19 +2031,19 @@ if (sourceQueueArray.length >= 1) {
 
             if (sourceQueueArray.length >= 1) {
 
-} else {
+            } else {
 
-    document.getElementById("myChartDiv").style.display = 'none';
-}
-
-
+                document.getElementById("myChartDiv").style.display = 'none';
+            }
 
 
-if (sourceQueueArray.length == 0) {
 
-AllComplete();
 
-}  
+            if (sourceQueueArray.length == 0) {
+
+                AllComplete();
+
+            }
 
 
 
@@ -2296,27 +2055,27 @@ AllComplete();
 
                 CompletedSwitch = 1;
 
-            for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
+                for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
 
 
-                var QueueNumber = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + j + "QueueNumber.txt", 'utf8');
+                    var QueueNumber = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/Worker" + j + "QueueNumber.txt", 'utf8');
 
-                workerStatusArray[j - 1] = QueueNumber;
+                    workerStatusArray[j - 1] = QueueNumber;
 
-                if (workerStatusArray[j - 1] != "Complete!") {
+                    if (workerStatusArray[j - 1] != "Complete!") {
                         CompletedSwitch = 0;
 
-                            } 
-
-
-            }
-
-
-
-            if (CompletedSwitch == 1) {
-
-                AllComplete();
                     }
+
+
+                }
+
+
+
+                if (CompletedSwitch == 1) {
+
+                    AllComplete();
+                }
             }
 
 
@@ -2330,22 +2089,22 @@ AllComplete();
 
 
 
-     
+
             function AllComplete() {
 
-              
 
-//reset status div
+
+                //reset status div
                 document.getElementById("workerStatusDiv").innerHTML = "";
 
 
 
-//send email alert                
+                //send email alert                
 
                 if (errorCount != 0) {
                     if (process.platform == 'win32') {
                         ipcRenderer.send('item:add', 'iconerror');
-                        
+
                     }
 
                     emailAlert();
@@ -2454,7 +2213,7 @@ AllComplete();
                                             + "</tr>";
 
                                         sessionNumber++;
-                                 
+
                                     }
 
 
@@ -2592,7 +2351,7 @@ AllComplete();
 
                 updateInfo = 0;
 
-               
+
 
                 sourceQueueArray = [];
 
@@ -2617,7 +2376,7 @@ AllComplete();
         if (countDownOn == 1 && AllCompleted == "1") {
 
             if (mode == "scanandconvert") {
-               
+
 
                 if (timerSeconds % 2 == 0) {
                     if (process.platform == 'win32') {
@@ -2909,60 +2668,61 @@ AllComplete();
     }
 
 
-    function emailAlert(emailMode){
+    function emailAlert(emailMode) {
 
-  try{     
+        try {
 
-if(emailMode=="Test"){
+            if (emailMode == "Test") {
 
-    var errorList="Test";
+                var errorList = "Test";
 
-    var subjectLine = "Test"
+                var subjectLine = "Test"
 
-}else{
+            } else {
 
-    var errorList="";
-for(var i=0; i<errorArray.length; i++){errorList+=errorArray[i]+"\r\n"}
-var subjectLine = "HBBatchBeast:Error with "+errorCount+" files!"
+                var errorList = "";
+                for (var i = 0; i < errorArray.length; i++) {errorList += errorArray[i] + "\r\n"}
+                var subjectLine = "HBBatchBeast:Error with " + errorCount + " files!"
 
-}
-
-
-    
+            }
 
 
 
-        var email 	= require("./node_modules/emailjs");
-var server 	= email.server.connect({
-   user:     document.getElementById("emailAddress").value,
-   password: document.getElementById("emailPassword").value,
-   host:    document.getElementById("SMTPServer").value,
-   ssl:     true
-});
 
-// send the message and get a callback with an error or details of the message that was sent
-server.send({
-   text:    errorList,
-   from:    document.getElementById("emailAddress").value,
-   to:      document.getElementById("emailAddress").value,
-   subject: subjectLine
-}, function(err, message) { (err || message); 
 
-if(err){
 
-    if(emailMode=="Test"){
-    alert("Error sending email! Please check your settings.") 
-    } 
-}
-});
+            var email = require("./node_modules/emailjs");
+            var server = email.server.connect({
+                user: document.getElementById("emailAddress").value,
+                password: document.getElementById("emailPassword").value,
+                host: document.getElementById("SMTPServer").value,
+                ssl: true
+            });
 
-if(emailMode=="Test"){
+            // send the message and get a callback with an error or details of the message that was sent
+            server.send({
+                text: errorList,
+                from: document.getElementById("emailAddress").value,
+                to: document.getElementById("emailAddress").value,
+                subject: subjectLine
+            }, function (err, message) {
+                (err || message);
 
-alert("Test email sent!")
+                if (err) {
 
-}
+                    if (emailMode == "Test") {
+                        alert("Error sending email! Please check your settings.")
+                    }
+                }
+            });
 
-} catch(err){}
+            if (emailMode == "Test") {
+
+                alert("Test email sent!")
+
+            }
+
+        } catch (err) {}
 
     }
 
@@ -2981,515 +2741,553 @@ alert("Test email sent!")
 
 
 <style>
-
-
-
-
-
-
     .folderPaths {
-                
-                
-                  width: 70%;
-                  border-radius: 2px;
-                
-                }
-                
-                .customPresetBox {
-                
-                  height: 10em;
-                
-                  width: 70%;
-                  border-radius: 2px;
-                
-                }
-                
-                .dropdown1 {
-                
-                
-                
-                }
-                
-                
-                .button1 {
-                  background-color: #66ccff; /* Green */
-                  border: none;
-                  color: white;
-                  padding: 15px 32px;
-                  text-align: center;
-                  text-decoration: none;
-                  display: inline-block;
-                  font-size: 16px;
-                  border-radius: 10px;
-                }
-
-
-                                     
-                .button2one1{
-                  background-color: #ffffff;
-                  border: none;
-                  color: #4CAF50;
-                  padding: 15px 32px;
-                  text-align: center;
-                  text-decoration: none;
-                  display: inline-block;
-                  font-size: 16px;
-                  border-radius: 10px;
-                }
-
-                .toggleButton{
-                  background-color: #0019a8;
-                  border: none;
-                  color: rgb(255, 255, 255);
-               
-                  text-align: center;
-                  text-decoration: none;
-                  display: inline-block;
-                  font-size: 16px;
-                  border-radius: 5px;
-                }
-
-                     
-                .button2one{
-                  background-color: #88fc80;
-                  border: none;
-                  color: white;
-                  padding: 15px 32px;
-                  text-align: center;
-                  text-decoration: none;
-                  display: inline-block;
-                  font-size: 16px;
-                  border-radius: 10px;
-                }
-                
-                
-                .button2{
-                  background-color: #4CAF50;
-                  border: none;
-                  color: white;
-                  padding: 15px 32px;
-                  text-align: center;
-                  text-decoration: none;
-                  display: inline-block;
-                  font-size: 16px;
-                  border-radius: 10px;
-                }
-
-                .button3 {
-                  background-color:  #66ccff; 
-                  border: none;
-                  color: white;
-             
-                  text-align: left;
-                  text-decoration: none;
-                    
-                  display: block;
-                  font-size: 1em;
-                  border-radius: 5px;
-                  margin-top: 1px;
-                    margin-bottom: 15px;
-                    margin-right: 1px;
-                margin-left: 1px;
-                }
-
-                .button4 {
-                  background-color:  #66ccff;
-                  border: none;
-                  color: white;
-             
-                  text-align: left;
-                  text-decoration: none;
-                
-                  font-size: 20px;
-                  border-radius: 5px;
-                  margin-top: 1px;
-                    margin-bottom: 15px;
-                    margin-right: 1px;
-                margin-left: 1px;
-                }
-
-                .rounded{
-
-                    border-radius: 10px;
-                }
-                
-
-                h1 {
-                    color: white;
-
-                }
-                
-                .selectbox{
-                
-                  width: 30em;
-                  border-radius: 5px;
-                
-                }
-                .infoBox{
-                    width: 5em;
-                  border-radius: 5px;
-
-
-                }
-
-                .infoBox2{
-                    width: 15em;
-                  border-radius: 5px;
-
-
-                }
-
-                .infoButton{
-                  
-                  border-radius: 2px;
-                  background-color:#ffda6d;
-                  color: black;
-
-
-                }
-                
-                
-                   table.outputTable th {
-                    background-color: #0088cc;
-                    color: black;
-                }
-
-                table.outputTable td {
-                  
-                    color: black;
-                }
-                 
-                 table.outputTable tr:nth-child(even) {background-color: #f2f2f2;}
-                 table.outputTable tr:nth-child(odd) {background-color: #c4feff;}
-                 table.outputTable tr:hover {background-color: #66ccff;}       
-                  
-                table.outputTable{
-                    border-radius: 5px;
-                    width: 100%;
-                   
-                 }
-
-                 
-
-
-                 table.historicTable th {
-                    background-color: #9b9b9b;
-                    color: black;
-                }
-                table.historicTable td {
-                  
-                  color: black;
-              }
-               
-
-  table.historicTable tr:nth-child(even) {background-color: #828282;}
-          table.historicTable tr:nth-child(odd) {background-color: #545454;}
-                 
-           
-                 table.historicTable tr:hover {background-color: #66ccff;}       
-                  
-                table.historicTable{
-                    border-radius: 5px;
-                    width: 100%;
-                   
-                 }
-
-
-
-              
-
-.box {
-  display: none;
-  background: #ccc;
-  width: 200px;
-  height: 100px;
-}
-#trigger:checked + .box {
-  display: block;
-}
-
-.box {
-  display: none;
-  background: #ccc;
-  width: 200px;
-  height: 100px;
-}
-#trigger:checked + .box {
-  display: block;
-}
-
-.alert {
-  background-color: #ff9800;
-  padding: 0px;
-
-  border-style: solid;
-  border:#87001b;
-  border-width: 5px;
-  width: 40%;
-}
-
-
-textarea {
-    border: 0 none white;
-    overflow: hidden;
-    padding: 0;
-    outline: none;
-    background-color: #D0D0D0;
-
-      
-
-}
-
-
-
-
-* {margin: 0; padding: 0; border: 0; vertical-align: baseline;}
-html {box-sizing: border-box;}
-*, *:before, *:after {box-sizing: inherit;}
-html, body {height: 100%; margin: 0;}
-
-body {
-  font-family: "Segoe UI", sans-serif;
-  background: #1A2933; color: #FFF;
-
-}
-h1 {margin: 0 0 10px 0; font-weight: 600; line-height: 1.2;}
-p {margin-top: 10px; color: rgba(255,255,255,0.4); }
-
-
-body {
-  border: 1px solid #48545c;
-  overflow-y: hidden;
-}
-
-#titlebar {
-  display: block;
-  position: fixed;
-  height: 32px;
-  width: calc(100% - 2px);
- 
-  padding: 4px;
-  color: #FFF;
-
-
-
-
-}
-
-#titlebar #drag-region {
-    width: 100%;
-  height: 100%;
-  -webkit-app-region: drag;
-  display: grid;
-  grid-template-columns: auto 138px;
-
-}
-
-#main {
-  height: calc(100% - 32px);
-  margin-top: 32px;
-  padding: 20px;
-  overflow-y: auto;
-
-
-}
-
-#window-controls {
-  display: grid;
-  grid-template-columns: repeat(3, 46px);
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  font-family: "Segoe MDL2 Assets";
-  font-size: 10px;
-  -webkit-app-region: no-drag;
-}
-#window-controls .button {
-  grid-row: 1 / span 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  user-select: none;
-  cursor: default;
-  opacity: 0.8;
-}
-
-#window-controls .button:hover {
-  background: rgba(255,255,255,0.2);
-  opacity: 1;
-}
-
-#window-controls #close-button:hover {
-  background: #E81123;
-}
-
-#window-controls #restore-button {
-  display: none;
-}
-
-
-
-
-
-#window-controls #min-button {
-  grid-column: 1;
-}
-#window-controls #max-button, #window-controls #restore-button {
-  grid-column: 2;
-}
-#window-controls #close-button {
-  grid-column: 3;
-}
-
-#window-title {
-  grid-column: 1;
-  display: flex;
-  align-items: center;
-  font-family: "Segoe UI", sans-serif;
-  font-size: 12px;
-  margin-left: 8px;
-  overflow-x: hidden;
-
- 
-}   
-
-#window-title span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.5;
- 
-}
-
-
-/* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-}
-
-/* Style the buttons that are used to open the tab content */
-.tab button {
-  background-color: inherit;
-  float: center;
-  width: 24%;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-}
-
-.helpSectionDiv {
-
-}
-
-.grid-container {
-  display: grid;
-  grid-template-columns: auto auto;
-  background-color: #1A2933;
-  
-}
-.grid-itemleft {
-
-  text-align:left;
-
-  }
-
-  .grid-itemright {
-
-text-align:right;
-
-}
-
-
-.grid-container2 {
-  display: grid;
-  grid-template-columns: 15% 70% 15%;
-  background-color: #1A2933;
-  
-}
-
-
-
-
-
-.grid-item2 {
-
-text-align:left;
-
-}
-
-
-@font-face {
-    font-family: "Elianto-Regular";
-    src: url('./assets/Fonts/Blanka-Regular.otf') format("truetype");
-}
-
-h1{
-
-}
-.titleDiv{
-display:inline-block;
-
-
-
-}
-
-.titleSpan{
-display:inline-block;
-font-family:"Elianto-Regular";
-font-size: 4em;
-
-
-background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.HaveAGitGat{
-
-                 background-color:  #00476b; 
-                  border: none;
-                  color: white;
-             
-                  text-align: left;
-                  text-decoration: none;
-                    
-                  display: block;
-                  font-size: 1em;
-                  border-radius: 5px;
-                  margin-top: 1px;
-                    margin-bottom: 15px;
-                    margin-right: 1px;
-                margin-left: 1px;
-
-
-}
-
-
-                </style>
+
+
+        width: 70%;
+        border-radius: 2px;
+
+    }
+
+    .customPresetBox {
+
+        height: 10em;
+
+        width: 70%;
+        border-radius: 2px;
+
+    }
+
+    .dropdown1 {}
+
+
+    .button1 {
+        background-color: #66ccff;
+        /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 10px;
+    }
+
+
+
+    .button2one1 {
+        background-color: #ffffff;
+        border: none;
+        color: #4CAF50;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 10px;
+    }
+
+    .toggleButton {
+        background-color: #0019a8;
+        border: none;
+        color: rgb(255, 255, 255);
+
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+
+
+    .button2one {
+        background-color: #88fc80;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 10px;
+    }
+
+
+    .button2 {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        border-radius: 10px;
+    }
+
+    .button3 {
+        background-color: #66ccff;
+        border: none;
+        color: white;
+
+        text-align: left;
+        text-decoration: none;
+
+        display: block;
+        font-size: 1em;
+        border-radius: 5px;
+        margin-top: 1px;
+        margin-bottom: 15px;
+        margin-right: 1px;
+        margin-left: 1px;
+    }
+
+    .button4 {
+        background-color: #66ccff;
+        border: none;
+        color: white;
+
+        text-align: left;
+        text-decoration: none;
+
+        font-size: 20px;
+        border-radius: 5px;
+        margin-top: 1px;
+        margin-bottom: 15px;
+        margin-right: 1px;
+        margin-left: 1px;
+    }
+
+    .rounded {
+
+        border-radius: 10px;
+    }
+
+
+    h1 {
+        color: white;
+
+    }
+
+    .selectbox {
+
+        width: 30em;
+        border-radius: 5px;
+
+    }
+
+    .infoBox {
+        width: 5em;
+        border-radius: 5px;
+
+
+    }
+
+    .infoBox2 {
+        width: 15em;
+        border-radius: 5px;
+
+
+    }
+
+    .infoButton {
+
+        border-radius: 2px;
+        background-color: #ffda6d;
+        color: black;
+
+
+    }
+
+
+    table.outputTable th {
+        background-color: #0088cc;
+        color: black;
+    }
+
+    table.outputTable td {
+
+        color: black;
+    }
+
+    table.outputTable tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    table.outputTable tr:nth-child(odd) {
+        background-color: #c4feff;
+    }
+
+    table.outputTable tr:hover {
+        background-color: #66ccff;
+    }
+
+    table.outputTable {
+        border-radius: 5px;
+        width: 100%;
+
+    }
+
+
+
+
+    table.historicTable th {
+        background-color: #9b9b9b;
+        color: black;
+    }
+
+    table.historicTable td {
+
+        color: black;
+    }
+
+
+    table.historicTable tr:nth-child(even) {
+        background-color: #828282;
+    }
+
+    table.historicTable tr:nth-child(odd) {
+        background-color: #545454;
+    }
+
+
+    table.historicTable tr:hover {
+        background-color: #66ccff;
+    }
+
+    table.historicTable {
+        border-radius: 5px;
+        width: 100%;
+
+    }
+
+
+
+
+
+    .box {
+        display: none;
+        background: #ccc;
+        width: 200px;
+        height: 100px;
+    }
+
+    #trigger:checked+.box {
+        display: block;
+    }
+
+    .box {
+        display: none;
+        background: #ccc;
+        width: 200px;
+        height: 100px;
+    }
+
+    #trigger:checked+.box {
+        display: block;
+    }
+
+    .alert {
+        background-color: #ff9800;
+        padding: 0px;
+
+        border-style: solid;
+        border: #87001b;
+        border-width: 5px;
+        width: 40%;
+    }
+
+
+    textarea {
+        border: 0 none white;
+        overflow: hidden;
+        padding: 0;
+        outline: none;
+        background-color: #D0D0D0;
+
+
+
+    }
+
+
+
+
+    * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        vertical-align: baseline;
+    }
+
+    html {
+        box-sizing: border-box;
+    }
+
+    *,
+    *:before,
+    *:after {
+        box-sizing: inherit;
+    }
+
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+    }
+
+    body {
+        font-family: "Segoe UI", sans-serif;
+        background: #1A2933;
+        color: #FFF;
+
+    }
+
+    h1 {
+        margin: 0 0 10px 0;
+        font-weight: 600;
+        line-height: 1.2;
+    }
+
+    p {
+        margin-top: 10px;
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+
+    body {
+        border: 1px solid #48545c;
+        overflow-y: hidden;
+    }
+
+    #titlebar {
+        display: block;
+        position: fixed;
+        height: 32px;
+        width: calc(100% - 2px);
+
+        padding: 4px;
+        color: #FFF;
+
+
+
+
+    }
+
+    #titlebar #drag-region {
+        width: 100%;
+        height: 100%;
+        -webkit-app-region: drag;
+        display: grid;
+        grid-template-columns: auto 138px;
+
+    }
+
+    #main {
+        height: calc(100% - 32px);
+        margin-top: 32px;
+        padding: 20px;
+        overflow-y: auto;
+
+
+    }
+
+    #window-controls {
+        display: grid;
+        grid-template-columns: repeat(3, 46px);
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        font-family: "Segoe MDL2 Assets";
+        font-size: 10px;
+        -webkit-app-region: no-drag;
+    }
+
+    #window-controls .button {
+        grid-row: 1 / span 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        user-select: none;
+        cursor: default;
+        opacity: 0.8;
+    }
+
+    #window-controls .button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        opacity: 1;
+    }
+
+    #window-controls #close-button:hover {
+        background: #E81123;
+    }
+
+    #window-controls #restore-button {
+        display: none;
+    }
+
+
+
+
+
+    #window-controls #min-button {
+        grid-column: 1;
+    }
+
+    #window-controls #max-button,
+    #window-controls #restore-button {
+        grid-column: 2;
+    }
+
+    #window-controls #close-button {
+        grid-column: 3;
+    }
+
+    #window-title {
+        grid-column: 1;
+        display: flex;
+        align-items: center;
+        font-family: "Segoe UI", sans-serif;
+        font-size: 12px;
+        margin-left: 8px;
+        overflow-x: hidden;
+
+
+    }
+
+    #window-title span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.5;
+
+    }
+
+
+    /* Style the tab */
+    .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+    }
+
+    /* Style the buttons that are used to open the tab content */
+    .tab button {
+        background-color: inherit;
+        float: center;
+        width: 24%;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+    }
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+        background-color: #ddd;
+    }
+
+    /* Create an active/current tablink class */
+    .tab button.active {
+        background-color: #ccc;
+    }
+
+    /* Style the tab content */
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+
+    .helpSectionDiv {}
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: auto auto;
+        background-color: #1A2933;
+
+    }
+
+    .grid-itemleft {
+
+        text-align: left;
+
+    }
+
+    .grid-itemright {
+
+        text-align: right;
+
+    }
+
+
+    .grid-container2 {
+        display: grid;
+        grid-template-columns: 15% 70% 15%;
+        background-color: #1A2933;
+
+    }
+
+
+
+
+
+    .grid-item2 {
+
+        text-align: left;
+
+    }
+
+
+    @font-face {
+        font-family: "Elianto-Regular";
+        src: url('./assets/Fonts/Blanka-Regular.otf') format("truetype");
+    }
+
+    h1 {}
+
+    .titleDiv {
+        display: inline-block;
+
+
+
+    }
+
+    .titleSpan {
+        display: inline-block;
+        font-family: "Elianto-Regular";
+        font-size: 4em;
+
+
+        background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .HaveAGitGat {
+
+        background-color: #00476b;
+        border: none;
+        color: white;
+
+        text-align: left;
+        text-decoration: none;
+
+        display: block;
+        font-size: 1em;
+        border-radius: 5px;
+        margin-top: 1px;
+        margin-bottom: 15px;
+        margin-right: 1px;
+        margin-left: 1px;
+
+
+    }
+</style>
 
 
 
@@ -3532,7 +3330,8 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
     <div id="main">
         <div ALIGN="LEFT">
 
-            <img src="./assets/Images/Refresh.png" alt="Italian Trulli" style="width:50x;height:25px;" onclick="location.reload()">
+            <img src="./assets/Images/Refresh.png" alt="Italian Trulli" style="width:50x;height:25px;"
+                onclick="location.reload()">
 
         </div>
 
@@ -3556,7 +3355,8 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
             </center>
 
-            <input type="button" class="HaveAGitGat" onclick="openURL('https://github.com/HaveAGitGat')" value="by HaveAGitGat">
+            <input type="button" class="HaveAGitGat" onclick="openURL('https://github.com/HaveAGitGat')"
+                value="by HaveAGitGat">
 
 
 
@@ -3566,7 +3366,8 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
 
             <textarea type="text" class="folderPaths" id="sourcePath"></textarea>
-            <img src="./assets/Images/Folder-Open-icon.png" alt="Italian Trulli" style="width:50x;height:25px;" onclick="selectFolder('sourcePath')">
+            <img src="./assets/Images/Folder-Open-icon.png" alt="Italian Trulli" style="width:50x;height:25px;"
+                onclick="selectFolder('sourcePath')">
 
 
 
@@ -3577,7 +3378,8 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
                 <button class="tablinks" onclick="openTab(event, 'mediaHealthCheck')">Video health check</button>
 
-                <button class="tablinks" onclick="openTab(event, 'batchConversion')">Batch conversion & Folder watching</button>
+                <button class="tablinks" onclick="openTab(event, 'batchConversion')">Batch conversion & Folder
+                    watching</button>
 
 
                 <button class="tablinks" onclick="openTab(event, 'systemSettings')">System settings</button>
@@ -3598,8 +3400,8 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                         <p>Temporary conversion folder?</p>
                     </div>
 
-                    <div class="grid-itemright"> <input type="checkbox" class="rounded" id="selectTemporaryConversionFolder"
-                            onchange="cbChange2()"></div>
+                    <div class="grid-itemright"> <input type="checkbox" class="rounded"
+                            id="selectTemporaryConversionFolder" onchange="cbChange2()"></div>
 
 
 
@@ -3642,10 +3444,11 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
                     </div>
 
-                    <div style="text-align: right"> <textarea type="text" class="folderPaths" id="tempDestinationPath"></textarea>
+                    <div style="text-align: right"> <textarea type="text" class="folderPaths"
+                            id="tempDestinationPath"></textarea>
 
-                        <img src="./assets/Images/Folder-Open-icon.png" alt="Italian Trulli" style="width:50x;height:25px;"
-                            onclick="selectFolder('tempDestinationPath')">
+                        <img src="./assets/Images/Folder-Open-icon.png" alt="Italian Trulli"
+                            style="width:50x;height:25px;" onclick="selectFolder('tempDestinationPath')">
                     </div>
                 </div>
 
@@ -3659,14 +3462,16 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                         <p>Standard preset:</p>
                     </div>
 
-                    <div class="grid-itemright"> <input type="checkbox" id="selectStandardPreset" class="cb1" onchange="cbChange1(this)">
+                    <div class="grid-itemright"> <input type="checkbox" id="selectStandardPreset" class="cb1"
+                            onchange="cbChange1(this)">
                     </div>
 
                     <div class="grid-itemleft">
                         <p> Custom preset:</p>
                     </div>
 
-                    <div class="grid-itemright"> <input type="checkbox" id="selectCustomPreset" class="cb1" onchange="cbChange1(this)">
+                    <div class="grid-itemright"> <input type="checkbox" id="selectCustomPreset" class="cb1"
+                            onchange="cbChange1(this)">
                     </div>
 
                 </div>
@@ -3807,7 +3612,8 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
 
                         <div id="deleteItemDiv2">
-                            <input type="checkbox" name="deleteSourceFilesname" id="deleteSourceFiles" onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')">
+                            <input type="checkbox" name="deleteSourceFilesname" id="deleteSourceFiles"
+                                onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')">
                         </div>
 
                     </div>
@@ -3820,7 +3626,8 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                         <p>Show/hide advanced:</p>
                     </div>
 
-                    <div class="grid-itemright"><input id="showHideAdvanced" type="checkbox" onchange="cbChange3()"></div>
+                    <div class="grid-itemright"><input id="showHideAdvanced" type="checkbox" onchange="cbChange3()">
+                    </div>
 
 
                 </div>
@@ -3839,7 +3646,7 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                         <div class="grid-itemright"><input type="text" class="infoBox" id="timer"></div>
 
 
-        
+
 
 
 
@@ -3888,7 +3695,8 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
 
                 <input type='button' class="button2one" value='Scan only' onclick='convertFiles()' />
-                <input type='button' class="button2" value='Scan and convert' onclick='convertFiles("scanandconvert")' />
+                <input type='button' class="button2" value='Scan and convert'
+                    onclick='convertFiles("scanandconvert")' />
 
                 <div id="HBCLIStatus"></div>
 
@@ -3901,9 +3709,10 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
 
 
-                <input type="button" onclick="viewLogs('Scans')" value="View scan/conversion summary log" class="infoButton">
-                <input type="button" onclick="viewLogs('fileConversionLog')" value="View individual file check/conversion log"
+                <input type="button" onclick="viewLogs('Scans')" value="View scan/conversion summary log"
                     class="infoButton">
+                <input type="button" onclick="viewLogs('fileConversionLog')"
+                    value="View individual file check/conversion log" class="infoButton">
 
 
 
@@ -3919,45 +3728,52 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
             <center>
 
-                    <div id="systemSettings" class="tabcontent">
+                <div id="systemSettings" class="tabcontent">
 
-                            <div class="grid-container">
+                    <div class="grid-container">
 
-                            <div class="grid-itemleft">
-                                    <p>Number of simulataneous Handbrake instances to use?(Recommended <=4):</p> </div> <div
-                                            class="grid-itemright"><input type="text" class="infoBox" id="instanceNumber">
-                                </div>
+                        <div class="grid-itemleft">
+                            <p>Number of simulataneous Handbrake instances to use?(Recommended <=4):</p> </div> <div
+                                    class="grid-itemright"><input type="text" class="infoBox" id="instanceNumber">
+                        </div>
 
 
-                                <div class="grid-itemleft"> <p>Email address:</p> </div>
-                            
-                                        <div class="grid-itemright"><input type="text" class="infoBox2" id="emailAddress">  </div>
+                        <div class="grid-itemleft">
+                            <p>Email address:</p>
+                        </div>
 
-                                        <div class="grid-itemleft"> <p>Email password(not saved):</p> </div>
-                            
-                                        <div class="grid-itemright"><input type="password" class="infoBox2" id="emailPassword">  </div>
+                        <div class="grid-itemright"><input type="text" class="infoBox2" id="emailAddress"> </div>
 
-                                        <div class="grid-itemleft"> <p>SMTP server:</p> </div>
-                            
-                                        <div class="grid-itemright"><input type="text" class="infoBox2" id="SMTPServer">  </div>
-                                    
+                        <div class="grid-itemleft">
+                            <p>Email password(not saved):</p>
+                        </div>
 
-                            </div>
+                        <div class="grid-itemright"><input type="password" class="infoBox2" id="emailPassword"> </div>
 
-                            <input type='button' class="infoButton" value='Email test' onclick='emailAlert("Test")' /><br>
-                            <input type="button" onclick="viewLogs('SystemErrorLog')" value="View system error log" class="infoButton">
+                        <div class="grid-itemleft">
+                            <p>SMTP server:</p>
+                        </div>
 
-                            <br>
-                            <br>
-                            <br>
-
-                            <input type='button' class="button1" value='Save config' onclick='saveConfig()' />
-
-                       
-
+                        <div class="grid-itemright"><input type="text" class="infoBox2" id="SMTPServer"> </div>
 
 
                     </div>
+
+                    <input type='button' class="infoButton" value='Email test' onclick='emailAlert("Test")' /><br>
+                    <input type="button" onclick="viewLogs('SystemErrorLog')" value="View system error log"
+                        class="infoButton">
+
+                    <br>
+                    <br>
+                    <br>
+
+                    <input type='button' class="button1" value='Save config' onclick='saveConfig()' />
+
+
+
+
+
+                </div>
 
                 <div id="helpSection" class="tabcontent">
 
@@ -3980,10 +3796,12 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                                 destination folder for each source folder. <br />Each folder entry must be on a new
                                 line.
                                 If
-                                'Standard preset' is selected, then all source folders will be converted with the<br />selected
+                                'Standard preset' is selected, then all source folders will be converted with
+                                the<br />selected
                                 standard preset. If 'Custom preset' is selected, then you must enter a preset for each
                                 source
-                                folder. Each preset must be<br />on a new line. See the following image for guidance:</p>
+                                folder. Each preset must be<br />on a new line. See the following image for guidance:
+                            </p>
                             <p>https://imgur.com/a/2tl8dIw</p>
                             <p>For example, if you're wanting to use two standard presets for two different folders,
                                 you
@@ -3997,23 +3815,28 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                                 standard Handbrake presets</p>
                             <p><span style="font-size: 12pt;"><strong>Custom preset:</strong></span><br />Write custom
                                 presets or
-                                link to a json preset exported from Handbrake. For example:<br />-e x264 -q 20 -B 160<br />or<br />--preset-import-file
+                                link to a json preset exported from Handbrake. For example:<br />-e x264 -q 20 -B
+                                160<br />or<br />--preset-import-file
                                 "C:\Users\HaveAGitGat\Desktop\testpreset.json" -Z "My Preset"</p>
                             <p><span style="font-size: 12pt;"><strong>Container:</strong></span><br />Select the output
                                 file
                                 container type.</p>
-                            <p><span style="font-size: 12pt;"><strong>Enable periodic scanning:</strong></span><br />Select
+                            <p><span style="font-size: 12pt;"><strong>Enable periodic
+                                        scanning:</strong></span><br />Select
                                 this to
                                 automatically scan and convert files at a set interval (default 300 seconds). <br />Scan
                                 interval
                                 can be modified in the advanced settings section.</p>
-                            <p><strong><span style="font-size: 12pt;">Delete source files after conversion:</span></strong><br />If
+                            <p><strong><span style="font-size: 12pt;">Delete source files after
+                                        conversion:</span></strong><br />If
                                 checked, source files will be deleted once the queue has completed.</p>
                             <p><span style="font-size: 12pt;"><strong>Valid file types:</strong></span><br />File types
                                 which the
-                                program will scan for.<br />Separate with comma (e.g. iso,wmv, )<br />Default:mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,</p>
+                                program will scan for.<br />Separate with comma (e.g. iso,wmv,
+                                )<br />Default:mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,</p>
                             <p><strong>Number<span style="font-size: 12pt;"> o</span><span style="font-size: 12pt;">f
-                                    </span>simultaneous<span style="font-size: 12pt;"> Handbrake instances:</span></strong><br />Set
+                                    </span>simultaneous<span style="font-size: 12pt;"> Handbrake
+                                        instances:</span></strong><br />Set
                                 how many Handbrake
                                 simultaneous conversions to carry out. Although an ulimited amount can be used, it is
                                 recommended not to go above 4.</p>
@@ -4046,13 +3869,17 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                                 scan
                                 and
                                 convert repeatedly at the specified interval.</p>
-                            <p><span style="font-size: 12pt;"><strong>View scan/conversion summary log:</strong></span><br />Show
+                            <p><span style="font-size: 12pt;"><strong>View scan/conversion summary
+                                        log:</strong></span><br />Show
                                 historic scan/conversion information</p>
-                            <p><span style="font-size: 12pt;"><strong>View individual file conversion log:</strong></span></p>
+                            <p><span style="font-size: 12pt;"><strong>View individual file conversion
+                                        log:</strong></span></p>
                             <p>Shows a list of all files processed with success or error tag.</p>
-                            <p><br /><span style="font-size: 12pt;"><strong>Total number of media files found:</strong></span><br />Number
+                            <p><br /><span style="font-size: 12pt;"><strong>Total number of media files
+                                        found:</strong></span><br />Number
                                 of valid files found based on valid file types option.</p>
-                            <p><span style="font-size: 12pt;"><strong>Number of unconverted media files found:</strong></span><br />Files
+                            <p><span style="font-size: 12pt;"><strong>Number of unconverted media files
+                                        found:</strong></span><br />Files
                                 which don't exist in the destination folder structure when compared to the source
                                 folder
                                 structure.</p>
@@ -4067,10 +3894,13 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                                 Handbrake
                                 to
                                 see what error it throws.</p><br>
-                                <p><span style="font-size: 12pt;"><strong>Email settings:</strong></span><br />Fill in details to receive email notifications if an error is encountered during health check or conversion/folder watching. Won't work with accounts that require 2FA. May need to enable access to less secure apps on Gmail accounts.</p>
-                                <p>Email: e.g. example@exampleemail.com</p>
-                                <p>Password: Is not saved for security purposes.</p>
-                                <p>SMTP server: e.g. smtp.gmail.com</p>
+                            <p><span style="font-size: 12pt;"><strong>Email settings:</strong></span><br />Fill in
+                                details to receive email notifications if an error is encountered during health check or
+                                conversion/folder watching. Won't work with accounts that require 2FA. May need to
+                                enable access to less secure apps on Gmail accounts.</p>
+                            <p>Email: e.g. example@exampleemail.com</p>
+                            <p>Password: Is not saved for security purposes.</p>
+                            <p>SMTP server: e.g. smtp.gmail.com</p>
 
 
                             <p>&nbsp;</p>
@@ -4093,16 +3923,17 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
                 <div id="timerDiv"></div>
 
-               
+
                 <div id="worker1progress"> </div>
 
-     
+
 
 
                 <br>
                 <br>
                 <div ALIGN="LEFT">
                     <div id='totalFilesDiv'></div>
+                    <div id='buildQueueDiv'></div>
                     <div id='totalUnconvertedFilesDiv'></div>
                     <div id='startTimeDiv'></div>
                     <div id='durationDiv'></div>
@@ -4115,7 +3946,7 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
 
 
                 <div class="grid-container">
-                        <div id="workerStatusDiv"> </div>
+                    <div id="workerStatusDiv"> </div>
                 </div>
 
 
@@ -4125,8 +3956,8 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                 <div ALIGN="LEFT">
 
                     <div id="viewStatus"></div>
-                    <input type='button' id="queueButton" class="button4" value='Toggle queue view' onclick='toggleView("fullQueueDiv")'
-                        style="display: none;" />
+                    <input type='button' id="queueButton" class="button4" value='Toggle queue view'
+                        onclick='toggleView("fullQueueDiv")' style="display: none;" />
 
 
 
@@ -4146,8 +3977,8 @@ background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
                 <div id="files"></div>
                 <div id="files2"></div>
                 <div ALIGN="LEFT">
-                    <input type='button' id="outputButton" class="button4" value='Toggle output view' onclick='toggleView("sessionConversions")'
-                        style="display: none;" />
+                    <input type='button' id="outputButton" class="button4" value='Toggle output view'
+                        onclick='toggleView("sessionConversions")' style="display: none;" />
                 </div>
 
                 <div id="sessionConversions" style="display: none;">
