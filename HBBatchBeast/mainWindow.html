@@ -17,7 +17,7 @@
 
 
     //SET ENV
-    // process.env.NODE_ENV = "production";
+     process.env.NODE_ENV = "production";
 
     var home = require("os").homedir();
 
@@ -1703,11 +1703,13 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
                 workers[i - 1].on('message', function (message) {
 
 
-console.log(message)
+
 
                     message = message.split(",");
 
                     if (message[1] == "queueRequest") {
+
+                        console.log(globalQueueNumberManager)
 
                         if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
                             var currentNumber = "q:" + globalQueueNumberManager;

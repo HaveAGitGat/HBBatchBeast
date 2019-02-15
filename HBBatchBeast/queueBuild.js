@@ -170,9 +170,9 @@ topFolderCharLength = topFolder.length
 var fs = require('fs');
 var path = require('path');
 
-//try {
+try {
     traverseDir(inputPathStem);
-//} catch (err) {}
+} catch (err) {}
 
 function traverseDir(inputPathStem) {
 
@@ -180,12 +180,12 @@ function traverseDir(inputPathStem) {
     fs.readdirSync(inputPathStem).forEach(file => {
         let fullPath = path.join(inputPathStem, file);
 
-      //  try {
+       try {
             if (fs.lstatSync(fullPath).isDirectory()) {
 
-              //  try {
+               try {
                     traverseDir(fullPath);
-             //   } catch (err) {}
+               } catch (err) {}
             } else {
 
 
@@ -380,13 +380,13 @@ process.send(message);
                             // fs.mkdirSync(outputFolderPath);
 
 
-                           // try {
+                            try {
 
                                 if (mode == "scanandconvert") {
                                     shell.mkdir('-p', outputFolderPath);
                                 }
 
-                           // } catch (err) {}
+                           } catch (err) {}
 
                             outputFolderPathold = outputFolderPath;
                         }
@@ -407,14 +407,14 @@ process.send(message);
 
                                 //fs.mkdirSync(outputFolderPathFinal);
 
-                               // try {
+                                try {
 
                                     if (mode == "scanandconvert") {
                                         shell.mkdir('-p', outputFolderPathFinal);
 
                                     }
 
-                               // } catch (err) {}
+                                } catch (err) {}
 
 
                                 outputFolderPathFinalold = outputFolderPathFinal;
@@ -437,7 +437,7 @@ process.send(message);
 
             }  //end current file, go to next
 
-      //  } catch (err) {}
+       } catch (err) {}
     });
 }
 }//end source folder loop
@@ -469,7 +469,7 @@ process.send(message);
 
                 for (var i = 0; i < outputPathArray.length; i++) {
 
-                    //try {
+                    try {
 
 
 
@@ -532,7 +532,7 @@ destinationQueueArrayWrite += outputPathArray[i] + "\n";
 
                         }
 
-                  //  } catch (err) {}
+                   } catch (err) {}
                 }//
 
 
@@ -542,7 +542,7 @@ destinationQueueArrayWrite += outputPathArray[i] + "\n";
 
                 for (var i = 0; i < outputPathArray.length; i++) {
 
-                   // try {
+                    try {
 
                         if (fs.existsSync(outputPathArray[i])) {
 
@@ -592,7 +592,7 @@ destinationQueueArrayWrite +=outputPathArray[i] + "\n";
 
                         }
 
-                //    } catch (err) {}
+                   } catch (err) {}
                 }//
 
 
