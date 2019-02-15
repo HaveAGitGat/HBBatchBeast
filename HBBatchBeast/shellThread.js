@@ -12,11 +12,11 @@ var workerCommand = infoArray[0];
 // shell.exec(workerCommand).code
 
 shell.exec(workerCommand, function(code, stdout, stderr) {
-  //console.log('Exit code:', code);
-  //console.log('Program output:', stdout);
+ // console.log('Exit code:', code);
+ // console.log('Program output:', stdout);
 
 
-  //console.log('stderr:', stderr);
+ // console.log('stderr:', stderr);
 
 // var str =""+stdout;
 
@@ -31,8 +31,8 @@ shell.exec(workerCommand, function(code, stdout, stderr) {
 // console.log('stdout:',output)
 
 
-       }
-      }
+      //  }
+      // }
 
 
 

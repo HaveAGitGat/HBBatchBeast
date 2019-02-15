@@ -411,26 +411,26 @@ console.log("here")
            // var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ));
 
             shellThreadModule.stdout.on('data', function(data) {
-              //   console.log('stdoutWorker: ' + data);
+                 console.log('stdoutWorker: ' + data);
 
- if(data.includes("stdout:")){
+//  if(data.includes("stdout:")){
 
-var str =""+data;
+// var str =""+data;
 
-      if(str.includes("%")){
-        if(str.length>=7){
+//       if(str.includes("%")){
+//         if(str.length>=7){
 
-        n = str.indexOf("%");
-//console.log(str.substring(n-6,n+1));
+//         n = str.indexOf("%");
+// //console.log(str.substring(n-6,n+1));
 
-var output = str.substring(n-6,n+1)
+// var output = str.substring(n-6,n+1)
 
-console.log(output)
+// console.log(output)
 
-        }
-      }
+//         }
+//       }
 
- }
+//  }
 
                     //Here is where the output goes
 
@@ -454,6 +454,11 @@ console.log(output)
 
 
                         });
+
+                                    shellThreadModule.stderr.on('data', function(data) {
+                 console.log('stdoutWorker: ' + data);
+
+                   });
 
 
                         shellThreadModule.send(infoArray); 
