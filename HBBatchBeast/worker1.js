@@ -393,13 +393,72 @@ workerCommand ="HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDe
   
 
 
- 
+ ////
+
+
+            var fs = require('fs');
+
+
+            var path = require("path");
+            var childProcess = require("child_process");
+            var shellThreadPath = "shellThread.js"
+        var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ),[], { silent: true });
+           // var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ));
+
+            shellThreadModule.stdout.on('data', function(data) {
+                    console.log('stdout: ' + data);
+                    //Here is where the output goes
+                        });
+
+
+                        shellThreadModule.send(queueInfoBomb); 
+
+            shellThreadModule.on("exit", function (code, signal,) {
+                console.log('Child exited:', code, signal,);
+
+            });
+         //   shellThreadModule.on("error", console.error.bind(console));
+
+
+
+
+
+
+
+
+            shellThreadModule.on('message', function (message) {
+
+if (message.error) {
+    console.error(message.error);
+  }
+
+
+
+if (message[0] == "writeRequest") {
+
+
+}
+
+
+
+            });
+
+
+
+
+}
+
+
+
+ //////
 
 
 
 
 
 if (shell.exec(workerCommand).code !== 0) {
+
+console.log("here")
 
 
 LogError("Worker"+workerNumber+" error executing shell"+"\r\n")
@@ -809,7 +868,7 @@ workerNumber,
 ];
 process.send(message);
 
-}
+//
 
 
 if(m.charAt(0) == "c"){

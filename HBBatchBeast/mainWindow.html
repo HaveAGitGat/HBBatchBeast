@@ -1380,25 +1380,7 @@
     console.error(message.error);
   }
 
-               
-
-
-
-                // if (message[1] == "queueRequest") {
-
-                //     if (globalQueueNumberManager <= sourceQueueArray.length-1) {
-                //         var currentNumber = "q:" + globalQueueNumberManager;
-                //         globalQueueNumberManager++;
-                //     } else {
-                //         var currentNumber = "completed";
-                //     }
-                //     queueBuildModule.send(currentNumber);
-                // }
-
-
-                            
-
-
+        
 
 if (message[0] == "writeRequest") {
 
@@ -1668,17 +1650,17 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
             for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
 
 
-                //   workers.push(childProcess.fork(path.join(__dirname, workerPath ),[], { silent: true }));
+               workers.push(childProcess.fork(path.join(__dirname, workerPath ),[], { silent: true }));
 
 
-                workers.push(childProcess.fork(path.join(__dirname, workerPath)));
+              //  workers.push(childProcess.fork(path.join(__dirname, workerPath)));
 
 
 
-                // workers[i - 1].stdout.on('data', function(data) {
-                //     console.log('stdout: ' + data);
-                //     //Here is where the output goes
-                //         });
+                workers[i - 1].stdout.on('data', function(data) {
+                    console.log('stdout: ' + data);
+                    //Here is where the output goes
+                        });
 
 
 
