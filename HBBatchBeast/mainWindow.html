@@ -1351,12 +1351,13 @@
             var childProcess = require("child_process");
             var queueBuildModulePath = "queueBuild.js"
 
-            var queueBuildModule = childProcess.fork(path.join(__dirname, queueBuildModulePath ),[], { silent: true });
+            //var queueBuildModule = childProcess.fork(path.join(__dirname, queueBuildModulePath ),[], { silent: true });
+            var queueBuildModule = childProcess.fork(path.join(__dirname, queueBuildModulePath ));
 
-            queueBuildModule.stdout.on('data', function(data) {
-                    console.log('stdout: ' + data);
-                    //Here is where the output goes
-                        });
+            // queueBuildModule.stdout.on('data', function(data) {
+            //         console.log('stdout: ' + data);
+            //         //Here is where the output goes
+            //             });
 
             queueBuildModule.send(queueInfoBomb); 
 
