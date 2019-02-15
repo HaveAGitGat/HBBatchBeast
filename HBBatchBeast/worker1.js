@@ -391,9 +391,14 @@ workerCommand ="HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDe
 
   var errorSwitch=0;
   
-
+console.log("here")
 
  ////
+
+
+             var infoArray = [
+ workerCommand
+ ];
 
 
             var fs = require('fs');
@@ -406,15 +411,55 @@ workerCommand ="HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDe
            // var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ));
 
             shellThreadModule.stdout.on('data', function(data) {
-                    console.log('stdout: ' + data);
+              //   console.log('stdoutWorker: ' + data);
+
+ if(data.includes("stdout:")){
+
+var str =""+data;
+
+      if(str.includes("%")){
+        if(str.length>=7){
+
+        n = str.indexOf("%");
+//console.log(str.substring(n-6,n+1));
+
+var output = str.substring(n-6,n+1)
+
+console.log(output)
+
+        }
+      }
+
+ }
+
                     //Here is where the output goes
+
+//console.log(""+data)
+// var str =""+data;
+
+//       if(str.includes("%")){
+//         if(str.length>=7){
+
+//         n = str.indexOf("%");
+// //console.log(str.substring(n-6,n+1));
+
+// var output = str.substring(n-6,n+1)
+
+// console.log(output)
+
+//         }
+//       }
+
+
+
+
                         });
 
 
-                        shellThreadModule.send(queueInfoBomb); 
+                        shellThreadModule.send(infoArray); 
 
             shellThreadModule.on("exit", function (code, signal,) {
-                console.log('Child exited:', code, signal,);
+                console.log('Child exited2:', code, signal,);
 
             });
          //   shellThreadModule.on("error", console.error.bind(console));
@@ -446,7 +491,7 @@ if (message[0] == "writeRequest") {
 
 
 
-}
+
 
 
 
@@ -456,85 +501,85 @@ if (message[0] == "writeRequest") {
 
 
 
-if (shell.exec(workerCommand).code !== 0) {
+// if (shell.exec(workerCommand).code !== 0) {
 
-console.log("here")
+// console.log("here")
 
 
-LogError("Worker"+workerNumber+" error executing shell"+"\r\n")
+// LogError("Worker"+workerNumber+" error executing shell"+"\r\n")
 
   
-var actionComplete=0
-while(actionComplete==0){
+// var actionComplete=0
+// while(actionComplete==0){
 
- try{
- //fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",currentSourceLine+" ConversionError\n", 'utf8');
+//  try{
+//  //fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",currentSourceLine+" ConversionError\n", 'utf8');
 
-// var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
-// var tempMessage=currentSourceLine+" ConversionError\n"
-// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
-
-
-var message = [
-workerNumber,
-"appendRequest",
-homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",
-currentSourceLine+" ConversionError\n",
-];
-process.send(message);
-
-actionComplete=1;
-}catch(err){
-}
-}
-
-var actionComplete=0
-while(actionComplete==0){
-
- try{
- //   fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueError.txt","Error\n", 'utf8');
-
-// var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueError.txt"
-// var tempMessage="Error\n"
-// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+// // var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
+// // var tempMessage=currentSourceLine+" ConversionError\n"
+// // process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
 
 
-var message = [
-workerNumber,
-"appendRequest",
-homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueError.txt",
-"Error\n",
-];
-process.send(message);
+// var message = [
+// workerNumber,
+// "appendRequest",
+// homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",
+// currentSourceLine+" ConversionError\n",
+// ];
+// process.send(message);
 
-actionComplete=1;
-}catch(err){
-}
-}
+// actionComplete=1;
+// }catch(err){
+// }
+// }
 
-var actionComplete=0
-while(actionComplete==0){
+// var actionComplete=0
+// while(actionComplete==0){
 
- try{
-   //  fs.appendFileSync(homePath+"/HBBatchBeast/Logs/ErrorLog.txt",today2 + "-" + timenow + "---Health---check--ERROR----------" + currentSourceLine + "\r\n", 'utf8');
+//  try{
+//  //   fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueError.txt","Error\n", 'utf8');
 
-// var tempPath=homePath+"/HBBatchBeast/Logs/ErrorLog.txt"
-// var tempMessage=today2 + "-" + timenow + "---Health---check--ERROR----------" + currentSourceLine + "\r\n"
+// // var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueError.txt"
+// // var tempMessage="Error\n"
+// // process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
 
-// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
 
-var message = [
-workerNumber,
-"appendRequest",
-homePath+"/HBBatchBeast/Logs/ErrorLog.txt",
-today2 + "-" + timenow + "---Health---check--ERROR----------" + currentSourceLine + "\r\n",
-];
-process.send(message);
+// var message = [
+// workerNumber,
+// "appendRequest",
+// homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueError.txt",
+// "Error\n",
+// ];
+// process.send(message);
 
-actionComplete=1;
-}catch(err){
-}
-}
+// actionComplete=1;
+// }catch(err){
+// }
+// }
+
+// var actionComplete=0
+// while(actionComplete==0){
+
+//  try{
+//    //  fs.appendFileSync(homePath+"/HBBatchBeast/Logs/ErrorLog.txt",today2 + "-" + timenow + "---Health---check--ERROR----------" + currentSourceLine + "\r\n", 'utf8');
+
+// // var tempPath=homePath+"/HBBatchBeast/Logs/ErrorLog.txt"
+// // var tempMessage=today2 + "-" + timenow + "---Health---check--ERROR----------" + currentSourceLine + "\r\n"
+
+// // process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+
+// var message = [
+// workerNumber,
+// "appendRequest",
+// homePath+"/HBBatchBeast/Logs/ErrorLog.txt",
+// today2 + "-" + timenow + "---Health---check--ERROR----------" + currentSourceLine + "\r\n",
+// ];
+// process.send(message);
+
+// actionComplete=1;
+// }catch(err){
+// }
+// }
 
   
 
@@ -550,62 +595,62 @@ actionComplete=1;
 
 
 
-    if (tempFolderSected == "1") {
+//     if (tempFolderSected == "1") {
 
 
-var actionComplete=0
-while(actionComplete==0){
+// var actionComplete=0
+// while(actionComplete==0){
 
- try{
-  //  fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
-
-
-// var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
-// var tempMessage=today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n"
-// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
-
-var message = [
-workerNumber,
-"appendRequest",
-homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",
-today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n",
-];
-process.send(message);
+//  try{
+//   //  fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
 
 
-actionComplete=1;
-}catch(err){
-}
-}
+// // var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
+// // var tempMessage=today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n"
+// // process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+
+// var message = [
+// workerNumber,
+// "appendRequest",
+// homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",
+// today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n",
+// ];
+// process.send(message);
+
+
+// actionComplete=1;
+// }catch(err){
+// }
+// }
    
   
       
 
-    }else{
+//     }else{
 
 
-var actionComplete=0
-while(actionComplete==0){
+// var actionComplete=0
+// while(actionComplete==0){
 
- try{
-   // fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');  
+//  try{
+//    // fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');  
 
-// var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
-// var tempMessage=today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n"
-// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+// // var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
+// // var tempMessage=today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n"
+// // process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
 
-var message = [
-workerNumber,
-"appendRequest",
-homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",
-today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n",
-];
-process.send(message);
+// var message = [
+// workerNumber,
+// "appendRequest",
+// homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",
+// today2 + "-" + timenow + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n",
+// ];
+// process.send(message);
 
-actionComplete=1;
-}catch(err){
-}
-}
+// actionComplete=1;
+// }catch(err){
+// }
+// }
   
    
 
@@ -613,99 +658,99 @@ actionComplete=1;
 
 
 
-    }
+//     }
 
-    errorSwitch=1;
-
-
- // shell.echo('Failed');
-  //shell.exit(1);
-
-   //process.send(workerNumber+",error,"+globalQueueNumber+","+preset);
-
-   var message = [
-workerNumber,
-"error",
-globalQueueNumber,
-preset,
-];
-process.send(message);
-}else{
+//     errorSwitch=1;
 
 
-}
+//  // shell.echo('Failed');
+//   //shell.exit(1);
+
+//    //process.send(workerNumber+",error,"+globalQueueNumber+","+preset);
+
+//    var message = [
+// workerNumber,
+// "error",
+// globalQueueNumber,
+// preset,
+// ];
+// process.send(message);
+// }else{
 
 
+// }
 
 
 
 
-if(errorSwitch==0){
-
-    var actionComplete=0
-while(actionComplete==0){
-
- try{
-    //   fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",currentSourceLine+" Success\n", 'utf8');
-
-// var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
-// var tempMessage=currentSourceLine+" Success\n"
-// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
-
-   var message = [
-workerNumber,
-"appendRequest",
-homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",
-currentSourceLine+" Success\n",
-];
-process.send(message);
 
 
-actionComplete=1;
-}catch(err){
-}
-}
+// if(errorSwitch==0){
+
+//     var actionComplete=0
+// while(actionComplete==0){
+
+//  try{
+//     //   fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",currentSourceLine+" Success\n", 'utf8');
+
+// // var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
+// // var tempMessage=currentSourceLine+" Success\n"
+// // process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+
+//    var message = [
+// workerNumber,
+// "appendRequest",
+// homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt",
+// currentSourceLine+" Success\n",
+// ];
+// process.send(message);
 
 
-    var actionComplete=0
-while(actionComplete==0){
+// actionComplete=1;
+// }catch(err){
+// }
+// }
 
- try{
 
-   // fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueSuccess.txt","Success\n", 'utf8');
+//     var actionComplete=0
+// while(actionComplete==0){
 
-// var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueSuccess.txt"
-// var tempMessage="Success\n";
-// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+//  try{
 
-   var message = [
-workerNumber,
-"appendRequest",
-homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueSuccess.txt",
-"Success\n",
-];
-process.send(message);
+//    // fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueSuccess.txt","Success\n", 'utf8');
 
-actionComplete=1;
-}catch(err){
-}
-}
+// // var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueSuccess.txt"
+// // var tempMessage="Success\n";
+// // process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+
+//    var message = [
+// workerNumber,
+// "appendRequest",
+// homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/completedQueueSuccess.txt",
+// "Success\n",
+// ];
+// process.send(message);
+
+// actionComplete=1;
+// }catch(err){
+// }
+// }
 
 
 
   
 
- // process.send(workerNumber+",success,"+globalQueueNumber+","+preset);
+//  // process.send(workerNumber+",success,"+globalQueueNumber+","+preset);
 
-     var message = [
-workerNumber,
-"success",
-globalQueueNumber,
-preset,
-];
-process.send(message);
+//      var message = [
+// workerNumber,
+// "success",
+// globalQueueNumber,
+// preset,
+// ];
+// process.send(message);
  
-}
+// }
 
 
 
@@ -718,155 +763,159 @@ process.send(message);
 
 
 
-    if(batOnOff != ""){
+//     if(batOnOff != ""){
 
-      var path = batOnOff;
-      path = "\""+path+"\""
+//       var path = batOnOff;
+//       path = "\""+path+"\""
 
 
-      try{
-      require('child_process').execSync( path , function (err, stdout, stderr) {
-        if (err) {
-        // Ooops.
+//       try{
+//       require('child_process').execSync( path , function (err, stdout, stderr) {
+//         if (err) {
+//         // Ooops.
     
-        return console.log(err);
-        }
+//         return console.log(err);
+//         }
         
-        // Done.
-        //runEndSection();
-        //runScan();
+//         // Done.
+//         //runEndSection();
+//         //runScan();
       
-        });
-    }catch(err){}
+//         });
+//     }catch(err){}
 
-    }
-
-
+//     }
 
 
-        if (tempFolderSected == "1") {
 
-            try {
+
+//         if (tempFolderSected == "1") {
+
+//             try {
             
 
-                fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
+//                 fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
 
 
-            } catch (err) {
-                //     fso.DeleteFile(currentDestinationLine)
-              //  sleep(((1000 * Math.random()) + 1000));
+//             } catch (err) {
+//                 //     fso.DeleteFile(currentDestinationLine)
+//               //  sleep(((1000 * Math.random()) + 1000));
         
-              try{
-                fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
-            }catch(err){}
+//               try{
+//                 fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
+//             }catch(err){}
 
 
-            }
+//             }
 
-            if(errorSwitch==0){
+//             if(errorSwitch==0){
 
 
 
-    var actionComplete=0
-while(actionComplete==0){
+//     var actionComplete=0
+// while(actionComplete==0){
 
- try{
- //fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
+//  try{
+//  //fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
   
-// var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
-// var tempMessage=today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n"
-// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
+// // var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
+// // var tempMessage=today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n"
+// // process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
 
 
-var message = [
-workerNumber,
-"appendRequest",
-homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",
-today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n",
-];
-process.send(message);
+// var message = [
+// workerNumber,
+// "appendRequest",
+// homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",
+// today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n",
+// ];
+// process.send(message);
 
 
 
-actionComplete=1;
-}catch(err){
-}
-}
+// actionComplete=1;
+// }catch(err){
+// }
+// }
 
             
      
 
 
            
-            }
+//             }
            
 
-        }else{
+//         }else{
 
-            if(errorSwitch==0){
+//             if(errorSwitch==0){
 
               
-    var actionComplete=0
-while(actionComplete==0){
+//     var actionComplete=0
+// while(actionComplete==0){
 
- try{
- //fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');
+//  try{
+//  //fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');
 
-// var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
-// var tempMessage=today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n"
-// process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
-
-
-var message = [
-workerNumber,
-"appendRequest",
-homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",
-today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n",
-];
-process.send(message);
+// // var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
+// // var tempMessage=today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n"
+// // process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
 
 
+// var message = [
+// workerNumber,
+// "appendRequest",
+// homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",
+// today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n",
+// ];
+// process.send(message);
 
-actionComplete=1;
-}catch(err){
-}
-}
+
+
+// actionComplete=1;
+// }catch(err){
+// }
+// }
 
 
       
            
 
-             }
-        }
+//              }
+//         }
 
 
  
-  if (deleteSourceFilesOnOff == "1") {
+//   if (deleteSourceFilesOnOff == "1") {
                 
-if(errorSwitch==0){
-           if (fs.existsSync(currentSourceLine)) {
+// if(errorSwitch==0){
+//            if (fs.existsSync(currentSourceLine)) {
 
-fs.unlinkSync(currentSourceLine)
+// fs.unlinkSync(currentSourceLine)
 
 
-                        }
+//                         }
+// }
+//   } 
+
+
+
+
+
+
+
+
+// //process.send(workerNumber+",queueRequest");
+
+// var message = [
+// workerNumber,
+// "queueRequest",
+// ];
+// process.send(message);
+
 }
-  } 
-
-
-
-
 
 } 
-
-
-//process.send(workerNumber+",queueRequest");
-
-var message = [
-workerNumber,
-"queueRequest",
-];
-process.send(message);
 
 //
 
