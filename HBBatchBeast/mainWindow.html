@@ -933,10 +933,12 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
             document.getElementById("startTimeDiv").innerHTML = "<p>Start time: " + getTimeNow() + "<\p>";
 
-                document.getElementById("pauseButtonDiv").style.display = 'block';
-                document.getElementById("continueButtonDiv").style.display = 'none';
+            
 
         }
+
+        document.getElementById("pauseButtonDiv").style.display = 'none';
+                document.getElementById("continueButtonDiv").style.display = 'none';
 
 
 
@@ -1488,7 +1490,7 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
 
 
 
-
+      document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Searching for files</font></p>";
 
 
 
@@ -1504,12 +1506,19 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
     function runEndSection() {
 
 
+
+
+       
+
+
         var fs = require('fs');
         document.getElementById("queueButton").style.display = 'block';
         document.getElementById("outputButton").style.display = 'block';
 
 
         if (mode == "scanandconvert" || mode == "healthCheck") {
+
+            document.getElementById("pauseButtonDiv").style.display = 'block';
 
             if (totalFileFoundCounter >= 1000) {
                 document.getElementById("fullQueueDiv").style.display = 'none';
@@ -1539,6 +1548,7 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
         } else {
 
             document.getElementById("fullQueueDiv").style.display = 'block';
+            document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Finished</font></p>";
         }
 
 
@@ -1873,11 +1883,13 @@ if (queueView == "enabled") {
 
         updateInfo = 1;
 
+       
+
 
 
         if (mode == "scanandconvert" && document.getElementById("scanOnOff").checked == true) {
 
-            document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\">Time until next scan: <font color=\"#66ccff\">Running</font></p>";
+            document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Running</font></p>";
 
             countDownOn = 1;
 
@@ -2154,6 +2166,10 @@ if (queueView == "enabled") {
 
 
             function AllComplete() {
+
+                //notify
+
+                document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Finished</font></p>";
 
 //Hide pause button
 
@@ -3838,7 +3854,7 @@ document.getElementById("pauseButtonDiv").style.display = 'none';
                 <input type='button' class="button2one1" value='Health check' onclick='convertFiles("healthCheck")' />
                 <p>
                     <p>
-                        <p>HBBB saves a list of scanned files reported as uncorrupt. Clear the cache to perform a fresh scan on all files.<p>
+                        <p>HBBB saves a list of scanned file paths reported as uncorrupt. Clear the cache to perform a fresh scan on all files.<p>
 
                             <input type="button" onclick="clearHealthyFileCache()" value="Clear healthy file cache" class="infoButton">
                         <input type="button" onclick="viewLogs('ErrorLog')" value="View error log" class="infoButton">
