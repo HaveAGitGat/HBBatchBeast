@@ -17,7 +17,7 @@
 
 
     //SET ENV
-    // process.env.NODE_ENV = "production";
+     process.env.NODE_ENV = "production";
 
     var home = require("os").homedir();
 
@@ -53,11 +53,11 @@
     }
 
 
-    // process.on('uncaughtException', function (err) {
-    //     console.error(err.stack);
-    //     fs.appendFileSync(homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt', "Main thread error: " + err.stack + "\r\n", 'utf8');
-    //     process.exit();
-    // });
+    process.on('uncaughtException', function (err) {
+        console.error(err.stack);
+        fs.appendFileSync(homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt', "Main thread error: " + err.stack + "\r\n", 'utf8');
+        process.exit();
+    });
 
 
 
@@ -1554,6 +1554,8 @@ for (i = 0; i < tabcontent.length; i++) {
 
             for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
 
+
+          
                 document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker" + i + "Status\"> </div>";
 
             }
@@ -1780,7 +1782,7 @@ for (i = 0; i < tabcontent.length; i++) {
                         }
 
 
-                        document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\"><p>Worker " + message[0] + " processing file:</p></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
+                        document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\"><p>Worker " + message[0] + " processing file:</p><div id=\"worker" + message[0] + "Percentage\"></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
 
 
                         // workerStatusDiv
@@ -1788,6 +1790,11 @@ for (i = 0; i < tabcontent.length; i++) {
                     }
                     
                     if (message[1] == "percentage") {
+
+
+                 // document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker" + i + "Status\"> </div>";       
+
+                  document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p>" + message[3] + "</p>";                        
 
 
 var currentRow = parseInt(message[2]) + 1
@@ -1821,6 +1828,8 @@ if (queueView == "enabled") {
                             queueTable.rows[currentRow].style.backgroundColor = "#ff2d2d";
                         }
 
+                        document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p>Error</p>"; 
+
 
                         fullErrorLogArray[message[2]] =message[4];  
 
@@ -1844,6 +1853,8 @@ if (queueView == "enabled") {
                             queueTable.rows[currentRow].cells[2].innerHTML = message[3];
                             queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
                         }
+
+                        document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p>Completed</p>";  
 
                         fullErrorLogArray[message[2]] =message[4];    
 
@@ -2829,6 +2840,8 @@ document.getElementById("pauseButtonDiv").style.display = 'none';
         
         document.getElementById("pauseButtonDiv").style.display = 'none';
                 document.getElementById("continueButtonDiv").style.display = 'block';
+
+                alert("Queue will be paused once current items have finished processing. Please do not press 'Continue queue' until all workers have paused.")
 
     }
 
