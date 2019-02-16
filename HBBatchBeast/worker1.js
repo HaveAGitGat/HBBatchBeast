@@ -411,7 +411,7 @@ workerCommand ="HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDe
 
             var path = require("path");
             var childProcess = require("child_process");
-            var shellThreadPath = "shellThread.js"
+            var shellThreadPath = "worker2.js"
         var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ),[], { silent: true });
            // var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ));
 
@@ -678,6 +678,15 @@ errorLogFull
 ];
 process.send(message);
 }else{
+
+
+var message = [
+workerNumber,
+"appendRequest",
+homePath+"/HBBatchBeast/Logs/healthyFileList.txt",
+currentSourceLine+"\n",
+];
+process.send(message);
 
 
 }

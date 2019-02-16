@@ -141,6 +141,21 @@ if (process.platform == 'darwin'){
 }
 
 
+                    
+
+
+ if (mode == "healthCheck") {                    
+
+var fs = require('fs');
+var healthyFileArray = "";
+healthyFileArray = fs.readFileSync(homePath + "/HBBatchBeast/Logs/healthyFileList.txt", 'utf8');
+healthyFileArray = healthyFileArray.toString().split("\n");
+
+ }
+
+
+
+
 
 
 
@@ -212,6 +227,21 @@ function traverseDir(inputPathStem) {
                     }
 
                 }
+
+
+
+
+ if (mode == "healthCheck") {
+for (var j = 0; j < healthyFileArray.length; j++) {
+
+if (thisFile == healthyFileArray[j]) {
+                        supportedFileSwitch = 0;
+                    }
+
+
+}
+ }
+                
 
                         
 

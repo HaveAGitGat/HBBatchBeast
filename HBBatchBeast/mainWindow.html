@@ -305,6 +305,11 @@
         }
 
 
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Logs/healthyFileList.txt")) {
+            fs.appendFileSync(homePath+"/HBBatchBeast/Logs/healthyFileList.txt","" ,'utf8');
+        }
+
+
         //read scan interval
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/scanInterval.txt")) {
 
@@ -2150,7 +2155,9 @@ if (queueView == "enabled") {
 
             function AllComplete() {
 
+//Hide pause button
 
+document.getElementById("pauseButtonDiv").style.display = 'none';
 
                 //reset status div
                 document.getElementById("workerStatusDiv").innerHTML = "";
@@ -2823,6 +2830,16 @@ if (queueView == "enabled") {
 
 
 
+
+
+    }
+
+
+    function clearHealthyFileCache(){
+        var fs = require('fs');
+        fs.writeFileSync(homePath + '/HBBatchBeast/Logs/healthyFileList.txt', "", 'utf8');
+
+        alert("Healthy file cache cleared!")
 
 
     }
@@ -3821,6 +3838,9 @@ if (queueView == "enabled") {
                 <input type='button' class="button2one1" value='Health check' onclick='convertFiles("healthCheck")' />
                 <p>
                     <p>
+                        <p>HBBB saves a list of scanned files reported as uncorrupt. Clear the cache to perform a fresh scan on all files.<p>
+
+                            <input type="button" onclick="clearHealthyFileCache()" value="Clear healthy file cache" class="infoButton">
                         <input type="button" onclick="viewLogs('ErrorLog')" value="View error log" class="infoButton">
 
             </div>
