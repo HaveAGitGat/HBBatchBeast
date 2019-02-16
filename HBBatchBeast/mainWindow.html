@@ -95,22 +95,22 @@
 
 
 
-    function createscanWindow() {
+    function createViewError() {
 
         //create new window
 
-        scanWindow = new BrowserWindow({
-            width: 400,
-            height: 200,
-            frame: false,
-            title: 'Scan Window'
+        ViewError = new BrowserWindow({
+            width: 1000,
+            height: 500,
+           // frame: false,
+            title: 'View Error Window'
 
         });
 
         //Load html into window
 
-        scanWindow.loadURL(url.format({
-            pathname: path.join(__dirname, 'scanWindow.html'),
+        ViewError.loadURL(url.format({
+            pathname: path.join(__dirname, 'viewError.html'),
             protocol: 'file:',
             slashes: true
 
@@ -119,8 +119,8 @@
 
 
         //Garbage collection handle
-        scanWindow.on('close', function () {
-            scanWindow = null;
+        ViewError.on('close', function () {
+            ViewError = null;
 
         });
 
@@ -128,6 +128,8 @@
 
 
     //Global variables
+
+    let workers = [];
 
     var cp
     var globalQueueNumberManager = 0;
@@ -189,6 +191,8 @@
 
     var queueView
 
+    var fullErrorLogArray =[];
+
 
 
 
@@ -207,7 +211,7 @@
 
 
 
-        //   createscanWindow();
+        //   createViewError();
 
 
 
@@ -689,6 +693,31 @@
 
     }
 
+    var errorIndex
+
+    function showAlert2(message) {
+
+        
+        createViewError(); 
+
+        errorIndex = message
+
+        //sleep(1000);    
+
+}
+
+ipcRenderer.on('item:ready',function(e,item){
+
+            
+    ViewError.webContents.send('item:Error', fullErrorLogArray[errorIndex] );  
+
+// /fullErrorLogArray[message]
+    
+});
+
+
+
+
 
     function saveConfig() {
 
@@ -867,7 +896,10 @@
 
     function convertFiles(processMode) {
 
+//reset queue status
+var fs = require('fs');
 
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf8');
 
 
         //reset divs
@@ -896,6 +928,9 @@
 
             document.getElementById("startTimeDiv").innerHTML = "<p>Start time: " + getTimeNow() + "<\p>";
 
+                document.getElementById("pauseButtonDiv").style.display = 'block';
+                document.getElementById("continueButtonDiv").style.display = 'none';
+
         }
 
 
@@ -915,7 +950,7 @@
 
 
 
-
+        workers = [];
         inputPathArray = [];
         outputPathArray = [];
         sourceQueueArray = [];
@@ -947,6 +982,8 @@
         var programPath = ""
 
         queueView = "enabled"
+
+        fullErrorLogArray =[];
 
 
 
@@ -1205,7 +1242,7 @@
 
 
             saveConfig();
-           // createscanWindow();
+           // createViewError();
 
 
 
@@ -1434,7 +1471,7 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
             //Close scan Window
 
             // try {
-            //     scanWindow.close();
+            //     ViewError.close();
             // } catch (err) {}
 
 
@@ -1490,7 +1527,7 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
                 document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker" + i + "Status\"> </div>";
 
             }
-            updateGraph();
+            updateGraph('initialisation');
 
 
 
@@ -1637,7 +1674,7 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
         const cluster = require('cluster');
         var path = require("path");
 
-        let workers = [];
+        
 
 
 
@@ -1707,7 +1744,7 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
 
                         if (queueView == "enabled") {
                             queueTable.rows[currentRow].cells[3].innerHTML = "Worker " + message[0];
-                            queueTable.rows[currentRow].cells[4].innerHTML = 'Running';
+                            queueTable.rows[currentRow].cells[4].innerHTML = message[3];
                             queueTable.rows[currentRow].style.backgroundColor = "#ffa24c";
                         }
 
@@ -1718,6 +1755,22 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
                         // workerStatusDiv
 
                     }
+                    
+                    if (message[1] == "percentage") {
+
+
+var currentRow = parseInt(message[2]) + 1
+
+if (queueView == "enabled") {
+    queueTable.rows[currentRow].cells[4].innerHTML = message[3];
+}
+
+
+// workerStatusDiv
+
+}
+
+
 
                     if (message[1] == "error") {
 
@@ -1725,11 +1778,22 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
 
                         if (queueView == "enabled") {
                             queueTable.rows[currentRow].cells[3].innerHTML = "";
-                            queueTable.rows[currentRow].cells[4].innerHTML = "Error"
+
+//onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')"
+
+
+
+
+                            queueTable.rows[currentRow].cells[4].innerHTML = "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+message[2]+"')\" value=\"Error (Click for info)\">"
                             queueTable.rows[currentRow].cells[2].innerHTML = message[3];
 
                             queueTable.rows[currentRow].style.backgroundColor = "#ff2d2d";
                         }
+
+
+                        fullErrorLogArray[message[2]] =message[4];  
+
+
 
                         errorArray.push(sourceQueueArray[currentRow - 1])
 
@@ -1749,6 +1813,8 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
                             queueTable.rows[currentRow].cells[2].innerHTML = message[3];
                             queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
                         }
+
+                        fullErrorLogArray[message[2]] =message[4];    
 
                         successfulCount++;
                         updateGraph();
@@ -1833,7 +1899,24 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
 
     }
 
-    function updateGraph() {
+    function updateGraph(graphMode) {
+
+        var successfulCount2;
+        var errorCount2;
+        if(graphMode== "initialisation"){
+
+           
+
+
+            successfulCount2 =0;
+            errorCount2= 0;
+
+        }else{
+
+            successfulCount2 =successfulCount
+            errorCount2= errorCount 
+
+        }
 
 
 
@@ -1900,12 +1983,12 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
                 },
                 series: [
                     {
-                        values: [(successfulCount)],
+                        values: [(successfulCount2)],
                         text: "Success",
                         backgroundColor: '#4CAF50',
                     },
                     {
-                        values: [(errorCount)],
+                        values: [(errorCount2)],
                         text: "Error",
                         backgroundColor: '#ef435d'
                     },
@@ -1930,13 +2013,6 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
             document.getElementById("myChartDiv").style.display = 'block';
 
         }
-
-
-
-
-
-
-
 
 
     }
@@ -2134,7 +2210,11 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
                     readArray = readArray.toString().split("\n");
 
 
+                   // console.log(fullErrorLogArray[0]);
 
+                  //  console.log("here");
+
+                 //   console.log(fullErrorLogArray[1]);
 
 
                     if (readArray.length >= 1) {
@@ -2190,7 +2270,7 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
 
                                             + "<td>" + presetArray2[i] + "</td>"
 
-                                            + "<td > Error </td>"
+                                            + "<td ><input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+i+"')\" value=\"Error (Click for info)\"> </td>"
 
                                             + "</tr>";
 
@@ -2709,6 +2789,43 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
     }
 
 
+    function pauseQueue(){
+        var fs = require('fs');
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "0", 'utf8');
+
+        
+        document.getElementById("pauseButtonDiv").style.display = 'none';
+                document.getElementById("continueButtonDiv").style.display = 'block';
+
+    }
+
+    function continueQueue(){
+
+        document.getElementById("pauseButtonDiv").style.display = 'block';
+                document.getElementById("continueButtonDiv").style.display = 'none';
+
+        var fs = require('fs');
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf8');
+
+        for (var i = 0; i < workers.length; i++) {
+
+            if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
+                            var currentNumber = "q:" + globalQueueNumberManager;
+                            globalQueueNumberManager++;
+                        } else {
+                            var currentNumber = "completed";
+                        }
+                        workers[i].send(currentNumber);
+
+
+
+        }
+
+
+
+
+
+    }
 
 
 </script>
@@ -3337,8 +3454,8 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
 
             </center>
 
-            <input type="button" class="HaveAGitGat" onclick="openURL('https://github.com/HaveAGitGat')"
-                value="by HaveAGitGat">
+            <input type="button" class="HaveAGitGat" onclick="openURL('https://github.com/HaveAGitGat')" value="by HaveAGitGat">
+                
 
 
 
@@ -3691,8 +3808,8 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
 
 
 
-                <input type="button" onclick="viewLogs('Scans')" value="View scan/conversion summary log"
-                    class="infoButton">
+                <input type="button" onclick="viewLogs('Scans')" value="View scan/conversion summary log"  class="infoButton">
+                   
                 <input type="button" onclick="viewLogs('fileConversionLog')"
                     value="View individual file check/conversion log" class="infoButton">
 
@@ -3900,6 +4017,8 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
 
 
 
+                
+
 
 
 
@@ -3926,6 +4045,13 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
                     <div id='myChart'></div>
                 </div>
 
+                <div id="pauseButtonDiv" style="display: none;">
+                <input type="button" onclick="pauseQueue()" value="Pause queue"  class="infoButton">
+            </div>
+
+            <div id="continueButtonDiv" style="display: none;">
+                <input type="button" onclick="continueQueue()" value="Continue queue"  class="infoButton">
+            </div>
 
                 <div class="grid-container">
                     <div id="workerStatusDiv"> </div>

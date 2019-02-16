@@ -14,21 +14,31 @@ const electron=require('electron');
 const {ipcRenderer}=electron
 
 
+window.onload = function () {
 
 
-ipcRenderer.on('item:count',function(e,count){
+//alert("Test")
 
-document.getElementById("informationWindow").innerHTML = "<h3>Total files found: "+count+"<\h3>";
+ipcRenderer.send('item:ready',"Test");
+
+
+
+
+}
+
+
+
+ipcRenderer.on('item:Error',function(e,errorMessage){
+
+document.getElementById("informationWindow").innerHTML = "<p>Error is also in log file.<\p><br>";
+
+  document.getElementById("errorTextArea").value = errorMessage;
+
 
 
 });
 
-ipcRenderer.on('item:queueBuild',function(e,count){
 
-  document.getElementById("informationWindow2").innerHTML = "<h3>Building queue: "+count+"<\h3>";
-
-
-});
 
    
 
@@ -215,6 +225,17 @@ body {
 }
 
 
+
+    .errorText {
+
+
+        width: 100%;
+        height: 100%;
+        border-radius: 2px;
+
+    }
+
+
 </style>
 
 
@@ -225,7 +246,7 @@ body {
                 <div id="drag-region">
 
                         <div id="window-title">
-                                <span>Scan Window</span>
+                                <span>View Error Window</span>
                               </div>
 
 
@@ -249,15 +270,12 @@ body {
         </header>
 
         <div id="main">
-            <center>
+            
                 <div id="informationWindow"> </div>
-                <div id="informationWindow2"> </div>
                     
+                <textarea type="text" class="errorText" id="errorTextArea"></textarea>
 
-
-                   
-
-                </center>
+                
                         
         </div>
       

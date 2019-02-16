@@ -36,6 +36,8 @@ var appIcon
 
 app.on('ready', function () {
 
+    console.log("App loading")
+
     //create new window
 
     mainWindow = new BrowserWindow({
@@ -155,6 +157,15 @@ appIcon.setImage(icon);
   
   });
 
+
+
+ipcMain.on('item:ready',function(e,item){
+
+
+     mainWindow.webContents.send('item:ready', "Test" );
+
+
+});
 
 
   
