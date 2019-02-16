@@ -102,7 +102,7 @@
         ViewError = new BrowserWindow({
             width: 1000,
             height: 500,
-           // frame: false,
+            frame: false,
             title: 'View Error Window'
 
         });
@@ -907,6 +907,10 @@ var fs = require('fs');
 fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf8');
 
 
+
+
+
+
         //reset divs
 
         document.getElementById("totalFilesDiv").innerHTML = ""
@@ -918,6 +922,8 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
         document.getElementById("viewStatus").innerHTML = "";
         document.getElementById("timerDiv").innerHTML = "";
         document.getElementById("workerStatusDiv").innerHTML = "";
+
+        document.getElementById("myChartDiv").style.display = 'none';
 
 
         //set countdown timer
@@ -1492,6 +1498,14 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
 
       document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Searching for files</font></p>";
 
+      var i, tabcontent, tablinks;
+
+// Get all elements with class="tabcontent" and hide them
+tabcontent = document.getElementsByClassName("tabcontent");
+for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+}
+
 
 
         }// end validation section
@@ -1517,6 +1531,8 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
 
 
         if (mode == "scanandconvert" || mode == "healthCheck") {
+
+            document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Running</font></p>";
 
             document.getElementById("pauseButtonDiv").style.display = 'block';
 
@@ -1885,7 +1901,7 @@ if (queueView == "enabled") {
 
        
 
-
+  
 
         if (mode == "scanandconvert" && document.getElementById("scanOnOff").checked == true) {
 
@@ -1904,13 +1920,7 @@ if (queueView == "enabled") {
         //  elmnt.scrollIntoView()
 
 
-        var i, tabcontent, tablinks;
 
-        // Get all elements with class="tabcontent" and hide them
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
 
 
 
