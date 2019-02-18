@@ -1,5 +1,5 @@
 //SET ENV
-process.env.NODE_ENV = "production";
+//process.env.NODE_ENV = "production";
 
 var shell = require('shelljs');
 
@@ -170,6 +170,7 @@ iStreamDestinationFinal = iStreamDestinationFinal.toString().split("\n");
 
 var workerNumber ;
 var  globalQueueNumber;
+var shellThreadModule;
 
 
 
@@ -198,7 +199,18 @@ process.send(message);
 process.on('message', (m) => {
 
 
-  
+  if(m.charAt(0) == "e"){
+
+var infoArray = [
+ "exitThread"               
+ ];     
+
+try{
+shellThreadModule.send(infoArray); 
+}catch (err){}
+
+
+  }
 
 
 if(m.charAt(0) == "w"){
@@ -398,6 +410,7 @@ workerCommand ="HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDe
 
 
              var infoArray = [
+ "processFile",                
  workerCommand
  ];
 
@@ -412,7 +425,7 @@ workerCommand ="HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDe
             var path = require("path");
             var childProcess = require("child_process");
             var shellThreadPath = "worker2.js"
-        var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ),[], { silent: true });
+         shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ),[], { silent: true });
            // var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ));
 
 
@@ -669,6 +682,24 @@ actionComplete=1;
 
    //process.send(workerNumber+",error,"+globalQueueNumber+","+preset);
 
+if (shellThreadExitCode == "Cancelled") {
+
+   var message = [
+workerNumber,
+"cancelled",
+globalQueueNumber,
+preset,
+errorLogFull
+];
+process.send(message);
+
+
+
+
+
+}else{
+
+
    var message = [
 workerNumber,
 "error",
@@ -677,6 +708,20 @@ preset,
 errorLogFull
 ];
 process.send(message);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
 }else{
 
 

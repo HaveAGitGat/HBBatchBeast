@@ -17,7 +17,7 @@
 
 
     //SET ENV
-     process.env.NODE_ENV = "production";
+   //  process.env.NODE_ENV = "production";
 
     var home = require("os").homedir();
 
@@ -1782,7 +1782,7 @@ for (i = 0; i < tabcontent.length; i++) {
                         }
 
 
-                        document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\"><p>Worker " + message[0] + " processing file:</p><div id=\"worker" + message[0] + "Percentage\"><p>Starting</p></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
+                        document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\"><p>Worker " + message[0] + " processing file:<input type='button' class=\"infoButton\" value='Cancel item' onclick='cancelItemProcess(\"" + message[0] + "\")'/></p><div id=\"worker" + message[0] + "Percentage\"><p>Starting</p></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
 
 
                         // workerStatusDiv
@@ -1816,12 +1816,6 @@ if (queueView == "enabled") {
 
                         if (queueView == "enabled") {
                             queueTable.rows[currentRow].cells[3].innerHTML = "";
-
-//onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')"
-
-
-
-
                             queueTable.rows[currentRow].cells[4].innerHTML = "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+message[2]+"')\" value=\"Error (Click for info)\">"
                             queueTable.rows[currentRow].cells[2].innerHTML = message[3];
 
@@ -1860,6 +1854,38 @@ if (queueView == "enabled") {
 
                         successfulCount++;
                         updateGraph();
+
+                    }
+
+
+                    if (message[1] == "cancelled") {
+
+
+                        var currentRow = parseInt(message[2]) + 1
+
+                        if (queueView == "enabled") {
+                            queueTable.rows[currentRow].cells[3].innerHTML = "";
+                            queueTable.rows[currentRow].cells[4].innerHTML = "Cancelled"
+                            queueTable.rows[currentRow].cells[2].innerHTML = message[3];
+
+                            queueTable.rows[currentRow].style.backgroundColor = "#ffda6d";
+                        }
+
+                        document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p>Cancelled</p>"; 
+
+
+                        fullErrorLogArray[message[2]] =message[4];  
+
+
+
+                        errorArray.push(sourceQueueArray[currentRow - 1])
+
+                        errorCount++;
+
+                        updateGraph();                        
+
+
+
 
                     }
 
@@ -2884,6 +2910,19 @@ document.getElementById("pauseButtonDiv").style.display = 'none';
     }
 
 
+    function cancelItemProcess(workerNumber){
+
+
+        workers[workerNumber - 1].send("exitThread");
+
+
+
+
+
+
+    }
+
+
 </script>
 
 
@@ -3533,8 +3572,7 @@ document.getElementById("pauseButtonDiv").style.display = 'none';
 
                 <button class="tablinks" onclick="openTab(event, 'mediaHealthCheck')">Video health check</button>
 
-                <button class="tablinks" onclick="openTab(event, 'batchConversion')">Batch conversion & Folder
-                    watching</button>
+                <button class="tablinks" onclick="openTab(event, 'batchConversion')">Batch conversion & Folder watching</button>
 
 
                 <button class="tablinks" onclick="openTab(event, 'systemSettings')">System settings</button>
@@ -4123,9 +4161,9 @@ document.getElementById("pauseButtonDiv").style.display = 'none';
                 <div ALIGN="LEFT">
 
                     <div id="viewStatus"></div>
-                    <input type='button' id="queueButton" class="button4" value='Toggle queue view'
-                        onclick='toggleView("fullQueueDiv")' style="display: none;" />
+                    <input type='button' id="queueButton" class="button4" value='Toggle queue view' onclick='toggleView("fullQueueDiv")' style="display: none;" />
 
+                        
 
 
 

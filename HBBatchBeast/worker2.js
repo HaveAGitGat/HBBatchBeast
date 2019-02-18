@@ -5,7 +5,11 @@ process.on('message', (infoArray) => {
 
 console.log("shellThread")
 
-var workerCommand = infoArray[0];
+
+if(infoArray[0]=="processFile"){
+
+
+var workerCommand = infoArray[1];
 
 
 shell.exec(workerCommand, function(code, stdout, stderr) {
@@ -24,7 +28,16 @@ process.send("Exit,"+code);
 
 process.exit()
 });
+}
 
+
+if(infoArray[0]=="exitThread"){
+
+process.send("Exit,"+"Cancelled");    
+
+process.exit();
+
+}
 
 
 
