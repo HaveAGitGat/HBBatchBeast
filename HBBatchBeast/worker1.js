@@ -198,6 +198,26 @@ process.send(message);
 
 process.on('message', (m) => {
 
+      if(m.charAt(0) == "s"){
+
+if(process.platform=='win32'){
+var killCommand = 'taskkill /PID '+process.pid+' /T /F'
+}
+if(process.platform=='linux'){
+var killCommand = 'vps -o pid --no-headers --ppid' + process.pid
+}
+if(process.platform=='darwin'){
+var killCommand = 'pgrep -P' + process.pid
+}
+
+
+ if (shell.exec(killCommand).code !== 0) {
+
+  shell.exit(1);
+}
+
+      }
+
 
   if(m.charAt(0) == "e"){
 

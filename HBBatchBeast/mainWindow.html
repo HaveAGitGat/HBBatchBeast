@@ -2879,27 +2879,12 @@ if(continueQueueProcess == 1){
 
     function stopQueue(){
 
-var shell = require('shelljs');
-shell.config.execPath = shell.which('node')
+
 
 for (var j = 0; j < document.getElementById("instanceNumber").value; j++) {
 
 
-if(process.platform=='win32'){
-var killCommand = 'taskkill /PID '+workers[j].pid+' /T /F'
-}
-if(process.platform=='linux'){
-var killCommand = 'vps -o pid --no-headers --ppid' + workers[j].pid
-}
-if(process.platform=='darwin'){
-var killCommand = 'pgrep -P' + workers[j].pid
-}
-
-
- if (shell.exec(killCommand).code !== 0) {
-
-  shell.exit(1);
-}
+workers[j].send("suicide");
 
 
 
