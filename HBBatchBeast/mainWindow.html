@@ -1782,7 +1782,7 @@ for (i = 0; i < tabcontent.length; i++) {
                         }
 
 
-                        document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\"><p>Worker " + message[0] + " processing file:<input type='button' class=\"infoButton\" value='Cancel item' onclick='cancelItemProcess(\"" + message[0] + "\")'/></p><div id=\"worker" + message[0] + "Percentage\"><p>Starting</p></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
+                        document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\"><p>Worker " + message[0] + " processing file:<input type='button' class=\"infoButton\" value='Cancel item' onclick='cancelItemProcess(\"" + message[0] + "\")'/></p><div id=\"worker" + message[0] + "Percentage\"><p><font color=\"#66ccff\">Starting</font></p></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
 
 
                         // workerStatusDiv
@@ -1794,7 +1794,7 @@ for (i = 0; i < tabcontent.length; i++) {
 
                  // document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker" + i + "Status\"> </div>";       
 
-                  document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p>" + message[3] + "</p>";                        
+                  document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">" + message[3] + "</font></p>";                        
 
 
 var currentRow = parseInt(message[2]) + 1
@@ -1822,7 +1822,7 @@ if (queueView == "enabled") {
                             queueTable.rows[currentRow].style.backgroundColor = "#ff2d2d";
                         }
 
-                        document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p>Error</p>"; 
+                        document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#ff2d2d\">Error</font></p>"; 
 
 
                         fullErrorLogArray[message[2]] =message[4];  
@@ -1839,19 +1839,11 @@ if (queueView == "enabled") {
                                           
 
                         document.getElementById('sessionConversionsTable').innerHTML += "<tr>"
-                                            + "<td>" + sourceQueueArray[i] + "</td>"
-
-
-
-
+                                            + "<td>" + sourceQueueArray[message[2]] + "</td>"
                                             + "<td>" + sessionNumber + "</td>"
-
-                                            + "<td>" + presetArray2[i] + "</td>"
-
+                                            + "<td>" + message[3] + "</td>"
                                             + "<td ><input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+i+"')\" value=\"Error (Click for info)\"> </td>"
-
                                             + "</tr>";
-
                                         sessionNumber++;
 
 
@@ -1867,7 +1859,7 @@ if (queueView == "enabled") {
                             queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
                         }
 
-                        document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p>Completed</p>";  
+                        document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">Completed</font></p>";  
 
                         fullErrorLogArray[message[2]] =message[4];    
 
@@ -1883,10 +1875,10 @@ if (queueView == "enabled") {
                        // var newRow = document.getElementById('sessionConversionsTable').insertRow();
                       // newRow.innerHTML = "<tr >"
 
-                       document.getElementById('sessionConversionsTable').innerHTML = "<tr >"
-                                                + "<td>" + sourceQueueArray[i] + "</td>"
+                       document.getElementById('sessionConversionsTable').innerHTML += "<tr >"
+                                                + "<td>" + sourceQueueArray[message[2]] + "</td>"
                                                 + "<td>" + sessionNumber + "</td>"
-                                                + "<td>" + presetArray2[i] + "</td>"
+                                                + "<td>" + message[3] + "</td>"
                                                 + "<td > Completed </td>"
                                                 + "</tr>";
 
@@ -1922,7 +1914,18 @@ if (queueView == "enabled") {
 
                         errorCount++;
 
-                        updateGraph();                        
+                        updateGraph(); 
+
+                        document.getElementById('sessionConversionsTable').innerHTML += "<tr >"
+                                                + "<td>" + sourceQueueArray[message[2]] + "</td>"
+                                                + "<td>" + sessionNumber + "</td>"
+                                                + "<td>" + message[3] + "</td>"
+                                                + "<td > Cancelled </td>"
+                                                + "</tr>";
+
+
+                                    
+                                        sessionNumber++;                       
 
 
 
@@ -2324,134 +2327,14 @@ if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Co
     sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
 
 
+} else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Cancelled")) {
+
+sessionConversionsTable.rows[i].style.backgroundColor = "#ffda6d";
+
+
 }
 
-
-
-
 }
-
-
-
-
-
-
-                // //sessionConversions
-
-
-
-                // var completedQueuePath = homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
-
-                // if (fs.existsSync(completedQueuePath)) {
-
-                    
-
-
-
-                //     var readArray = "";
-
-
-                //     readArray = fs.readFileSync(completedQueuePath, 'utf8');
-
-
-
-                   
-
-                //     readArray = readArray.toString().split("\n");
-
-
-                //    // console.log(fullErrorLogArray[0]);
-
-                //   //  console.log("here");
-
-                //  //   console.log(fullErrorLogArray[1]);
-
-
-                //     if (readArray.length >= 1) {
-
-
-
-                //         for (var i = 0; i < sourceQueueArray.length; i++) {
-
-
-
-
-                //             for (var j = 0; j < readArray.length; j++) {
-
-
-
-
-
-                //                 if (readArray[j].includes(sourceQueueArray[i])) {
-
-                //                     if (readArray[j].includes("Success")) {
-
-
-                //                         if (mode != "healthCheck") {
-                //                             var newRow = document.getElementById('sessionConversionsTable').insertRow();
-                //                             newRow.innerHTML = "<tr >"
-                //                                 + "<td>" + sourceQueueArray[i] + "</td>"
-                //                                 + "<td>" + sessionNumber + "</td>"
-                //                                 + "<td>" + presetArray2[i] + "</td>"
-                //                                 + "<td > Completed </td>"
-                //                                 + "</tr>";
-                //                         }
-                //                         sessionNumber++;
-                //                     } else {
-
-                //                         var newRow = document.getElementById('sessionConversionsTable').insertRow();
-
-                //                         newRow.innerHTML = "<tr>"
-                //                             + "<td>" + sourceQueueArray[i] + "</td>"
-
-
-
-
-                //                             + "<td>" + sessionNumber + "</td>"
-
-                //                             + "<td>" + presetArray2[i] + "</td>"
-
-                //                             + "<td ><input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+i+"')\" value=\"Error (Click for info)\"> </td>"
-
-                //                             + "</tr>";
-
-                //                         sessionNumber++;
-
-                //                     }
-
-
-
-
-
-                //                 }
-
-
-
-
-                //             }
-
-                //         }
-
-
-
-
-
-
-
-                //     }
-
-
-
-
-
-
-
-
-
-
-
-                // } //end of function
-
 
 
                 var today = new Date();
