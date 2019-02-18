@@ -172,7 +172,7 @@
 
     var colourSwitch = 0
 
-    var sessionNumber = 1;
+    var sessionNumber = 0;
 
 
 
@@ -192,6 +192,8 @@
     var queueView
 
     var fullErrorLogArray =[];
+
+    var tempOutputQueueHTML;
 
 
 
@@ -996,7 +998,9 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
         queueView = "enabled"
 
-        fullErrorLogArray =[];
+        tempOutputQueueHTML ="";
+
+      
 
 
 
@@ -1816,7 +1820,7 @@ if (queueView == "enabled") {
 
                         if (queueView == "enabled") {
                             queueTable.rows[currentRow].cells[3].innerHTML = "";
-                            queueTable.rows[currentRow].cells[4].innerHTML = "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+message[2]+"')\" value=\"Error (Click for info)\">"
+                            queueTable.rows[currentRow].cells[4].innerHTML = "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+sessionNumber+"')\" value=\"Error (Click for info)\">"
                             queueTable.rows[currentRow].cells[2].innerHTML = message[3];
 
                             queueTable.rows[currentRow].style.backgroundColor = "#ff2d2d";
@@ -1825,7 +1829,9 @@ if (queueView == "enabled") {
                         document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#ff2d2d\">Error</font></p>"; 
 
 
-                        fullErrorLogArray[message[2]] =message[4];  
+                        //fullErrorLogArray[message[2]] =message[4];  
+
+                        fullErrorLogArray.push(message[4])
 
 
 
@@ -1836,13 +1842,13 @@ if (queueView == "enabled") {
                         updateGraph();
 
 
-                                          
+                                  
 
-                        document.getElementById('sessionConversionsTable').innerHTML += "<tr>"
+                        tempOutputQueueHTML += "<tr>"
                                             + "<td>" + sourceQueueArray[message[2]] + "</td>"
                                             + "<td>" + sessionNumber + "</td>"
                                             + "<td>" + message[3] + "</td>"
-                                            + "<td ><input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+i+"')\" value=\"Error (Click for info)\"> </td>"
+                                            + "<td ><input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+sessionNumber+"')\" value=\"Error (Click for info)\"> </td>"
                                             + "</tr>";
                                         sessionNumber++;
 
@@ -1861,7 +1867,10 @@ if (queueView == "enabled") {
 
                         document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">Completed</font></p>";  
 
-                        fullErrorLogArray[message[2]] =message[4];    
+
+
+                        //fullErrorLogArray[message[2]] =message[4];    
+                        fullErrorLogArray.push(message[4])
 
                         successfulCount++;
                         updateGraph();
@@ -1875,7 +1884,7 @@ if (queueView == "enabled") {
                        // var newRow = document.getElementById('sessionConversionsTable').insertRow();
                       // newRow.innerHTML = "<tr >"
 
-                       document.getElementById('sessionConversionsTable').innerHTML += "<tr >"
+                        tempOutputQueueHTML  += "<tr >"
                                                 + "<td>" + sourceQueueArray[message[2]] + "</td>"
                                                 + "<td>" + sessionNumber + "</td>"
                                                 + "<td>" + message[3] + "</td>"
@@ -1906,7 +1915,8 @@ if (queueView == "enabled") {
                         document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p>Cancelled</p>"; 
 
 
-                        fullErrorLogArray[message[2]] =message[4];  
+                       // fullErrorLogArray[message[2]] =message[4];  
+                       fullErrorLogArray.push(message[4])
 
 
 
@@ -1915,8 +1925,9 @@ if (queueView == "enabled") {
                         errorCount++;
 
                         updateGraph(); 
-
-                        document.getElementById('sessionConversionsTable').innerHTML += "<tr >"
+                        
+                       
+                        tempOutputQueueHTML += "<tr >"
                                                 + "<td>" + sourceQueueArray[message[2]] + "</td>"
                                                 + "<td>" + sessionNumber + "</td>"
                                                 + "<td>" + message[3] + "</td>"
@@ -2256,6 +2267,10 @@ if (queueView == "enabled") {
 
 
             function AllComplete() {
+
+                //push conversion queue to output table
+
+                document.getElementById('sessionConversionsTable').innerHTML+= tempOutputQueueHTML;
 
                 //notify
 
