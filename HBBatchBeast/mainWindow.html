@@ -1836,6 +1836,25 @@ if (queueView == "enabled") {
                         updateGraph();
 
 
+                                          
+
+                        document.getElementById('sessionConversionsTable').innerHTML += "<tr>"
+                                            + "<td>" + sourceQueueArray[i] + "</td>"
+
+
+
+
+                                            + "<td>" + sessionNumber + "</td>"
+
+                                            + "<td>" + presetArray2[i] + "</td>"
+
+                                            + "<td ><input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+i+"')\" value=\"Error (Click for info)\"> </td>"
+
+                                            + "</tr>";
+
+                                        sessionNumber++;
+
+
                     }
 
                     if (message[1] == "success") {
@@ -1854,6 +1873,27 @@ if (queueView == "enabled") {
 
                         successfulCount++;
                         updateGraph();
+
+
+                        
+                        if (mode != "healthCheck") {
+
+
+
+                       // var newRow = document.getElementById('sessionConversionsTable').insertRow();
+                      // newRow.innerHTML = "<tr >"
+
+                       document.getElementById('sessionConversionsTable').innerHTML = "<tr >"
+                                                + "<td>" + sourceQueueArray[i] + "</td>"
+                                                + "<td>" + sessionNumber + "</td>"
+                                                + "<td>" + presetArray2[i] + "</td>"
+                                                + "<td > Completed </td>"
+                                                + "</tr>";
+
+
+                                        }
+                                        sessionNumber++;
+
 
                     }
 
@@ -2253,160 +2293,164 @@ document.getElementById("pauseButtonDiv").style.display = 'none';
 
 
 
+                document.getElementById('healthCheckDiv').innerHTML = "";
+                                        //health check stats
 
+if (mode == "healthCheck") {
 
+var healthPercentage = ((successfulCount / (errorCount + successfulCount)) * 100).toFixed(2);
 
-                //sessionConversions
+document.getElementById('healthCheckDiv').innerHTML = "<h1>Healthy files:<font color=\"green\">" + successfulCount + "</font> Corrupt files:<font color=\"red\">" + errorCount + "</font> Health:" + healthPercentage + "%<\h1>"
 
+}
 
 
-                var completedQueuePath = homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
 
-                if (fs.existsSync(completedQueuePath)) {
 
 
 
 
+for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
 
-                    var readArray = "";
 
 
-                    readArray = fs.readFileSync(completedQueuePath, 'utf8');
+if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Completed")) {
+    sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
 
 
 
-                    document.getElementById('healthCheckDiv').innerHTML = "";
+} else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Error")) {
 
-                    readArray = readArray.toString().split("\n");
+    sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
 
 
-                   // console.log(fullErrorLogArray[0]);
+}
 
-                  //  console.log("here");
 
-                 //   console.log(fullErrorLogArray[1]);
 
 
-                    if (readArray.length >= 1) {
+}
 
 
 
-                        for (var i = 0; i < sourceQueueArray.length; i++) {
 
 
 
+                // //sessionConversions
 
-                            for (var j = 0; j < readArray.length; j++) {
 
 
+                // var completedQueuePath = homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/completedQueue.txt"
 
+                // if (fs.existsSync(completedQueuePath)) {
 
+                    
 
-                                if (readArray[j].includes(sourceQueueArray[i])) {
 
-                                    if (readArray[j].includes("Success")) {
 
+                //     var readArray = "";
 
-                                        if (mode != "healthCheck") {
-                                            var newRow = document.getElementById('sessionConversionsTable').insertRow();
 
+                //     readArray = fs.readFileSync(completedQueuePath, 'utf8');
 
 
-                                            newRow.innerHTML = "<tr >"
-                                                + "<td>" + sourceQueueArray[i] + "</td>"
 
+                   
 
-                                                + "<td>" + sessionNumber + "</td>"
-                                                + "<td>" + presetArray2[i] + "</td>"
+                //     readArray = readArray.toString().split("\n");
 
-                                                + "<td > Completed </td>"
 
-                                                + "</tr>";
+                //    // console.log(fullErrorLogArray[0]);
 
-                                        }
+                //   //  console.log("here");
 
-                                        sessionNumber++;
-                                    } else {
+                //  //   console.log(fullErrorLogArray[1]);
 
-                                        var newRow = document.getElementById('sessionConversionsTable').insertRow();
 
-                                        newRow.innerHTML = "<tr>"
-                                            + "<td>" + sourceQueueArray[i] + "</td>"
+                //     if (readArray.length >= 1) {
 
 
 
+                //         for (var i = 0; i < sourceQueueArray.length; i++) {
 
-                                            + "<td>" + sessionNumber + "</td>"
 
-                                            + "<td>" + presetArray2[i] + "</td>"
 
-                                            + "<td ><input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+i+"')\" value=\"Error (Click for info)\"> </td>"
 
-                                            + "</tr>";
+                //             for (var j = 0; j < readArray.length; j++) {
 
-                                        sessionNumber++;
 
-                                    }
 
 
 
+                //                 if (readArray[j].includes(sourceQueueArray[i])) {
 
+                //                     if (readArray[j].includes("Success")) {
 
-                                }
 
+                //                         if (mode != "healthCheck") {
+                //                             var newRow = document.getElementById('sessionConversionsTable').insertRow();
+                //                             newRow.innerHTML = "<tr >"
+                //                                 + "<td>" + sourceQueueArray[i] + "</td>"
+                //                                 + "<td>" + sessionNumber + "</td>"
+                //                                 + "<td>" + presetArray2[i] + "</td>"
+                //                                 + "<td > Completed </td>"
+                //                                 + "</tr>";
+                //                         }
+                //                         sessionNumber++;
+                //                     } else {
 
+                //                         var newRow = document.getElementById('sessionConversionsTable').insertRow();
 
+                //                         newRow.innerHTML = "<tr>"
+                //                             + "<td>" + sourceQueueArray[i] + "</td>"
 
-                            }
 
-                        }
 
 
-                        //health check stats
+                //                             + "<td>" + sessionNumber + "</td>"
 
-                        if (mode == "healthCheck") {
+                //                             + "<td>" + presetArray2[i] + "</td>"
 
-                            var healthPercentage = ((successfulCount / (errorCount + successfulCount)) * 100).toFixed(2);
+                //                             + "<td ><input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+i+"')\" value=\"Error (Click for info)\"> </td>"
 
-                            document.getElementById('healthCheckDiv').innerHTML = "<h1>Healthy files:<font color=\"green\">" + successfulCount + "</font> Corrupt files:<font color=\"red\">" + errorCount + "</font> Health:" + healthPercentage + "%<\h1>"
+                //                             + "</tr>";
 
-                        }
+                //                         sessionNumber++;
 
+                //                     }
 
 
 
-                    }
 
 
+                //                 }
 
 
-                    for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
 
 
+                //             }
 
-                        if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Completed")) {
-                            sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
+                //         }
 
 
 
-                        } else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Error")) {
 
-                            sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
 
 
-                        }
 
+                //     }
 
 
 
-                    }
 
 
 
 
 
 
-                } //end of function
+
+
+                // } //end of function
 
 
 
