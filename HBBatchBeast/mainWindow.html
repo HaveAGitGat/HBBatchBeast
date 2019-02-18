@@ -2879,16 +2879,13 @@ if(continueQueueProcess == 1){
 
     function stopQueue(){
 
+  if (confirm('Are you sure you want to stop the queue and end all running processes?')) {
+        
+
 
 
 for (var j = 0; j < document.getElementById("instanceNumber").value; j++) {
-
-
 workers[j].send("suicide");
-
-
-
-
 }
 
                      document.getElementById("pauseButtonDiv").style.display = 'none';
@@ -2901,13 +2898,18 @@ workers[j].send("suicide");
 
 alert("All worker processes have been stopped.")
 
+  }
+
 
     }
 
 
     function pauseQueue(){
 
-        queueStatusPaused=1;
+
+        if (confirm('Are you sure you want to pause the queue?')) {
+
+                    queueStatusPaused=1;
 
         var fs = require('fs');
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "0", 'utf8');
@@ -2919,6 +2921,10 @@ alert("All worker processes have been stopped.")
 
 
                 alert("Queue will be paused once current items have finished processing. Please do not press 'Continue queue' until all workers have paused.")
+
+}
+
+
 
                
 
@@ -3567,7 +3573,7 @@ color: black;
         <div id="drag-region">
 
             <div id="window-title">
-                <span>HBBatchBeast 2.0.7</span>
+                <span>HBBatchBeast 2.0.8</span>
             </div>
 
 
