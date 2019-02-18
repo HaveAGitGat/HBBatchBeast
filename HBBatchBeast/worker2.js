@@ -64,10 +64,10 @@ if(process.platform=='win32'){
 var killCommand = 'taskkill /PID '+shellWorker.pid+' /T /F'
 }
 if(process.platform=='linux'){
-var killCommand = 'vps -o pid --no-headers --ppid' + shellWorker.pid
+var killCommand = 'vps -o pid --no-headers --ppid ' + shellWorker.pid
 }
 if(process.platform=='darwin'){
-var killCommand = 'pgrep -P' + shellWorker.pid
+var killCommand = 'pgrep -P ' + shellWorker.pid
 }
 
 
