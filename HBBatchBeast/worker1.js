@@ -206,7 +206,15 @@ var infoArray = [
  ];     
 
 try{
+
+
+if(shellThreadModule != ""){
 shellThreadModule.send(infoArray); 
+}
+
+
+
+
 }catch (err){}
 
 
@@ -244,13 +252,7 @@ globalQueueNumber=m.substring(m.indexOf(":")+1);
 
 //process.send(workerNumber+",processing,"+globalQueueNumber);
 
-var message = [
-workerNumber,
-"processing",
-globalQueueNumber,
-"Running"
-];
-process.send(message);
+
 
 
 
@@ -425,6 +427,25 @@ workerCommand ="HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDe
             var path = require("path");
             var childProcess = require("child_process");
             var shellThreadPath = "worker2.js"
+
+
+ 
+// Send ipc to state shell processing is starting
+var message = [
+workerNumber,
+"processing",
+globalQueueNumber,
+"Running"
+];
+process.send(message);
+//
+
+
+
+
+
+
+
          shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ),[], { silent: true });
            // var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ));
 
@@ -504,6 +525,8 @@ var mesage2 = message.split(",");
 
 if (mesage2[0] == "Exit") {
 
+    shellThreadModule="";
+
 console.log('shellThreadExited:', mesage2[1]);
 
 shellThreadExitCode = mesage2[1];
@@ -516,6 +539,51 @@ shellThreadExitCode = mesage2[1];
 
 
 if (shellThreadExitCode != 0) {
+
+
+if (shellThreadExitCode == "Cancelled") {
+
+   var message = [
+workerNumber,
+"cancelled",
+globalQueueNumber,
+preset,
+errorLogFull
+];
+process.send(message);
+
+
+}else{
+
+
+   var message = [
+workerNumber,
+"error",
+globalQueueNumber,
+preset,
+errorLogFull
+];
+process.send(message);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -682,32 +750,6 @@ actionComplete=1;
 
    //process.send(workerNumber+",error,"+globalQueueNumber+","+preset);
 
-if (shellThreadExitCode == "Cancelled") {
-
-   var message = [
-workerNumber,
-"cancelled",
-globalQueueNumber,
-preset,
-errorLogFull
-];
-process.send(message);
-
-
-}else{
-
-
-   var message = [
-workerNumber,
-"error",
-globalQueueNumber,
-preset,
-errorLogFull
-];
-process.send(message);
-
-
-}
 
 
 
@@ -739,6 +781,26 @@ process.send(message);
 
 
 if(errorSwitch==0){
+
+
+
+var message = [
+workerNumber,
+"success",
+globalQueueNumber,
+preset,
+errorLogFull
+];
+process.send(message);
+
+
+
+
+
+
+
+
+
 
     var actionComplete=0
 while(actionComplete==0){
@@ -795,14 +857,7 @@ actionComplete=1;
 
  // process.send(workerNumber+",success,"+globalQueueNumber+","+preset);
 
-     var message = [
-workerNumber,
-"success",
-globalQueueNumber,
-preset,
-errorLogFull
-];
-process.send(message);
+
  
 }
 

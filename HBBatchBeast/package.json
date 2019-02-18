@@ -24,7 +24,8 @@
     "node-localstorage": "^1.3.1",
     "opener": "^1.5.1",
     "shelljs": "^0.8.3",
-    "shx": "^0.3.2"
+    "shx": "^0.3.2",
+    "tree-kill": "^1.2.1"
   },
   "devDependencies": {
     "electron": "^3.1.3",

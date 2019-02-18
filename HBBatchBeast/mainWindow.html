@@ -195,6 +195,10 @@
 
     var tempOutputQueueHTML;
 
+    var workerStatusFinishedArray=[];
+
+     var queueStatusPaused=0;
+
 
 
 
@@ -945,8 +949,11 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
         }
 
-        document.getElementById("pauseButtonDiv").style.display = 'none';
+                document.getElementById("pauseButtonDiv").style.display = 'none';
+                document.getElementById("stopButtonDiv").style.display = 'none';
+
                 document.getElementById("continueButtonDiv").style.display = 'none';
+                document.getElementById("continueButtonGreyDiv").style.display = 'none';
 
 
 
@@ -999,6 +1006,8 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
         queueView = "enabled"
 
         tempOutputQueueHTML ="";
+        workerStatusFinishedArray=[];
+        queueStatusPaused=0;
 
       
 
@@ -1539,6 +1548,7 @@ for (i = 0; i < tabcontent.length; i++) {
             document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Running</font></p>";
 
             document.getElementById("pauseButtonDiv").style.display = 'block';
+            document.getElementById("stopButtonDiv").style.display = 'block';
 
             if (totalFileFoundCounter >= 1000) {
                 document.getElementById("fullQueueDiv").style.display = 'none';
@@ -1776,6 +1786,8 @@ for (i = 0; i < tabcontent.length; i++) {
 
                     if (message[1] == "processing") {
 
+                        workerStatusFinishedArray[message[0]-1] = ""
+
 
                         var currentRow = parseInt(message[2]) + 1
 
@@ -1786,7 +1798,12 @@ for (i = 0; i < tabcontent.length; i++) {
                         }
 
 
-                        document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\"><p>Worker " + message[0] + " processing file:<input type='button' class=\"infoButton\" value='Cancel item' onclick='cancelItemProcess(\"" + message[0] + "\")'/></p><div id=\"worker" + message[0] + "Percentage\"><p><font color=\"#66ccff\">Starting</font></p></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
+                        document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\" style=\"white-space:nowrap;\"><p>Worker " + message[0] + " processing file:<div id=\"cancelButtonDiv"+message[0]+"\"><input type='button' id=\"cancelButton"+message[0]+"\" class=\"infoButton\" value='Cancel item' onclick='cancelItemProcess(\"" + message[0] + "\")'/></div></p><div id=\"worker" + message[0] + "Percentage\"><p><font color=\"#66ccff\">Starting</font></p></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
+
+
+//style="display: none;"
+//document.getElementById("pauseButtonDiv").style.display = 'none';
+
 
 
                         // workerStatusDiv
@@ -1815,6 +1832,18 @@ if (queueView == "enabled") {
 
 
                     if (message[1] == "error") {
+
+                        //
+
+                        workerStatusFinishedArray[message[0]-1] = "Finished"
+
+                        if(queueStatusPaused==1){
+                        verifyContinue();
+                        }
+
+
+                        //hide cancel item button
+                        document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
 
                         var currentRow = parseInt(message[2]) + 1
 
@@ -1856,6 +1885,18 @@ if (queueView == "enabled") {
                     }
 
                     if (message[1] == "success") {
+
+                        workerStatusFinishedArray[message[0]-1] = "Finished"
+                       if(queueStatusPaused==1){
+                        verifyContinue();
+                        }
+
+
+
+//hide cancel item button
+document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
+
+
                         var currentRow = parseInt(message[2]) + 1
 
                         if (queueView == "enabled") {
@@ -1900,6 +1941,16 @@ if (queueView == "enabled") {
 
 
                     if (message[1] == "cancelled") {
+
+                        workerStatusFinishedArray[message[0]-1] = "Finished"
+                       if(queueStatusPaused==1){
+                        verifyContinue();
+                        }
+
+
+
+                        //hide cancel item button
+                        document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
 
 
                         var currentRow = parseInt(message[2]) + 1
@@ -2279,6 +2330,9 @@ if (queueView == "enabled") {
 //Hide pause button
 
 document.getElementById("pauseButtonDiv").style.display = 'none';
+document.getElementById("stopButtonDiv").style.display = 'none';
+document.getElementById("continueButtonDiv").style.display = 'none';
+document.getElementById("continueButtonGreyDiv").style.display = 'none';
 
                 //reset status div
                 document.getElementById("workerStatusDiv").innerHTML = "";
@@ -2800,23 +2854,99 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ffda6d";
 
     }
 
+    function verifyContinue(){
+
+var continueQueueProcess = 1;
+
+  for (var j = 0; j < document.getElementById("instanceNumber").value; j++) {
+
+if(workerStatusFinishedArray[j] != "Finished"){
+
+    var continueQueueProcess = 0;
+
+  }
+ }
+
+if(continueQueueProcess == 1){
+
+    document.getElementById("continueButtonDiv").style.display = 'block';
+    document.getElementById("continueButtonGreyDiv").style.display = 'none';
+
+}
+
+
+    }
+
+    function stopQueue(){
+
+var shell = require('shelljs');
+shell.config.execPath = shell.which('node')
+
+for (var j = 0; j < document.getElementById("instanceNumber").value; j++) {
+
+
+if(process.platform=='win32'){
+var killCommand = 'taskkill /PID '+workers[j].pid+' /T /F'
+}
+if(process.platform=='linux'){
+var killCommand = 'vps -o pid --no-headers --ppid' + workers[j].pid
+}
+if(process.platform=='darwin'){
+var killCommand = 'pgrep -P' + workers[j].pid
+}
+
+
+ if (shell.exec(killCommand).code !== 0) {
+
+  shell.exit(1);
+}
+
+
+
+
+}
+
+                     document.getElementById("pauseButtonDiv").style.display = 'none';
+                      document.getElementById("stopButtonDiv").style.display = 'none';
+                document.getElementById("continueButtonDiv").style.display = 'none';
+                document.getElementById("continueButtonGreyDiv").style.display = 'none';
+
+
+
+
+alert("All worker processes have been stopped.")
+
+
+    }
+
 
     function pauseQueue(){
+
+        queueStatusPaused=1;
+
         var fs = require('fs');
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "0", 'utf8');
 
         
         document.getElementById("pauseButtonDiv").style.display = 'none';
-                document.getElementById("continueButtonDiv").style.display = 'block';
+                document.getElementById("continueButtonDiv").style.display = 'none';
+                document.getElementById("continueButtonGreyDiv").style.display = 'block';
+
 
                 alert("Queue will be paused once current items have finished processing. Please do not press 'Continue queue' until all workers have paused.")
+
+               
 
     }
 
     function continueQueue(){
 
+
+        queueStatusPaused=0;
+
         document.getElementById("pauseButtonDiv").style.display = 'block';
                 document.getElementById("continueButtonDiv").style.display = 'none';
+                 document.getElementById("continueButtonGreyDiv").style.display = 'none';
 
         var fs = require('fs');
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf8');
@@ -2853,6 +2983,8 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ffda6d";
 
 
     function cancelItemProcess(workerNumber){
+
+        document.getElementById("cancelButtonDiv"+workerNumber).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
 
 
         workers[workerNumber - 1].send("exitThread");
@@ -3035,6 +3167,16 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ffda6d";
 
 
     }
+
+    .infoButtonGrey {
+
+border-radius: 2px;
+background-color: #4d4d4d;
+color: black;
+
+
+}
+
 
 
     table.outputTable th {
@@ -4088,8 +4230,19 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ffda6d";
                 <input type="button" onclick="pauseQueue()" value="Pause queue"  class="infoButton">
             </div>
 
-            <div id="continueButtonDiv" style="display: none;">
+                  <div id="continueButtonDiv" style="display: none;">
                 <input type="button" onclick="continueQueue()" value="Continue queue"  class="infoButton">
+            </div>
+
+                            <div id="stopButtonDiv" style="display: none;">
+                            <br>
+                <input type="button" onclick="stopQueue()" value="Stop queue"  class="infoButton">
+            </div>
+
+      
+
+            <div id="continueButtonGreyDiv" style="display: none;">
+                <input type="button" value="Continue queue"  class="infoButtonGrey">
             </div>
 
                 <div class="grid-container">

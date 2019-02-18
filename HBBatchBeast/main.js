@@ -101,7 +101,9 @@ if(process.platform=='win32'){
     appIcon.setContextMenu(contextMenu)
 
     mainWindow.on('close', function (event) {
-        mainWindow = null
+            //  mainWindow = null
+                 app.isQuiting = true
+                 app.quit()
     })
 
     mainWindow.on('minimize', function (event) {
