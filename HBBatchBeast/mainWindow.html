@@ -17,7 +17,7 @@
 
 
     //SET ENV
-    process.env.NODE_ENV = "production";
+   // process.env.NODE_ENV = "production";
 
     var home = require("os").homedir();
 
@@ -1768,6 +1768,8 @@ for (i = 0; i < tabcontent.length; i++) {
 
                 workers[i - 1].on('message', function (message) {
 
+
+                    console.log("Message:"+message);
 
 
                     if (message[1] == "queueRequest") {

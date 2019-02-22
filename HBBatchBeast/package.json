@@ -21,6 +21,7 @@
     "emailjs": "^2.2.0",
     "glob": "^7.1.3",
     "inquirer-select-directory": "^1.2.0",
+    "mv": "^2.1.1",
     "node-localstorage": "^1.3.1",
     "opener": "^1.5.1",
     "shelljs": "^0.8.3",

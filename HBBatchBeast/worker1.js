@@ -1,7 +1,9 @@
 //SET ENV
-process.env.NODE_ENV = "production";
+//process.env.NODE_ENV = "production";
 
 var shell = require('shelljs');
+
+var mv = require('mv');
 
 
 
@@ -920,22 +922,37 @@ actionComplete=1;
 
         if (tempFolderSected == "1") {
 
-            try {
+           try {
             
 
-                fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
+              //  fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
+
+
+mv(currentDestinationLine, currentDestinationFinalLine, function(err) {
+  // done. it tried fs.rename first, and then falls back to
+  // piping the source file to the dest file and then unlinking
+  // the source file.
+});
+
 
 
             } catch (err) {
-                //     fso.DeleteFile(currentDestinationLine)
-              //  sleep(((1000 * Math.random()) + 1000));
         
-              try{
-                fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
-            }catch(err){}
+        
+             try{
+           
+        mv(currentDestinationLine, currentDestinationFinalLine, function(err) {
+  // done. it tried fs.rename first, and then falls back to
+  // piping the source file to the dest file and then unlinking
+  // the source file.
+});   
 
 
-            }
+        
+       }catch(err){}
+
+
+           }
 
             if(errorSwitch==0){
 
