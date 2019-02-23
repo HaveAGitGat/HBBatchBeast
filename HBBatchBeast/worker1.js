@@ -395,7 +395,7 @@ workerCommand ="HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDesti
 
       
 
- workerCommand ="/usr/local/bin/HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset
+ workerCommand ="/usr/local/bin/HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset
 
 
       }
