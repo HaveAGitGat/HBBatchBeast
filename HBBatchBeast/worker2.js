@@ -67,7 +67,7 @@ var killCommand = 'taskkill /PID '+shellWorker.pid+' /T /F'
 }
 if(process.platform=='linux'){
 //var killCommand = 'vps -o pid --no-headers --ppid ' + shellWorker.pid
-var killCommand = 'pkill ' + shellWorker.pid
+var killCommand = 'pkill -P ' + shellWorker.pid
 }
 if(process.platform=='darwin'){
 
@@ -90,7 +90,7 @@ var killCommand = 'pkill -P ' + shellWorker.pid
     }
 
 
-process.send("Exit,"+"Cancelled");
+//process.send("Exit,"+"Cancelled");
     
 
 process.exit();

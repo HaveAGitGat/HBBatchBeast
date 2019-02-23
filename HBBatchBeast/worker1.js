@@ -213,10 +213,10 @@ var killCommand = 'taskkill /PID '+process.pid+' /T /F'
 
 }
 if(process.platform=='linux'){
-var killCommand = 'vps -o pid --no-headers --ppid' + process.pid
+var killCommand = 'pkill -P ' + process.pid
 }
 if(process.platform=='darwin'){
-var killCommand = 'pgrep -P' + process.pid
+var killCommand = 'pkill -P ' + process.pid
 }
 
 
