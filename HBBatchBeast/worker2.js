@@ -70,7 +70,10 @@ if(process.platform=='linux'){
 var killCommand = 'pkill ' + shellWorker.pid
 }
 if(process.platform=='darwin'){
-var killCommand = 'pgrep -P ' + shellWorker.pid
+
+
+//var killCommand = 'pgrep -P ' + shellWorker.pid
+var killCommand = 'pkill -P ' + shellWorker.pid
 }
 
 
