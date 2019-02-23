@@ -3,6 +3,8 @@ process.env.NODE_ENV = "production";
 
 var shell = require('shelljs');
 
+var mv = require('mv');
+
 
 
 var home = require("os").homedir();
@@ -170,6 +172,7 @@ iStreamDestinationFinal = iStreamDestinationFinal.toString().split("\n");
 
 var workerNumber ;
 var  globalQueueNumber;
+var shellThreadModule;
 
 
 
@@ -197,8 +200,47 @@ process.send(message);
 
 process.on('message', (m) => {
 
+      if(m.charAt(0) == "s"){
 
-  
+if(process.platform=='win32'){
+var killCommand = 'taskkill /PID '+process.pid+' /T /F'
+}
+if(process.platform=='linux'){
+var killCommand = 'vps -o pid --no-headers --ppid' + process.pid
+}
+if(process.platform=='darwin'){
+var killCommand = 'pgrep -P' + process.pid
+}
+
+
+ if (shell.exec(killCommand).code !== 0) {
+
+  shell.exit(1);
+}
+
+      }
+
+
+  if(m.charAt(0) == "e"){
+
+var infoArray = [
+ "exitThread"               
+ ];     
+
+try{
+
+
+if(shellThreadModule != ""){
+shellThreadModule.send(infoArray); 
+}
+
+
+
+
+}catch (err){}
+
+
+  }
 
 
 if(m.charAt(0) == "w"){
@@ -232,13 +274,7 @@ globalQueueNumber=m.substring(m.indexOf(":")+1);
 
 //process.send(workerNumber+",processing,"+globalQueueNumber);
 
-var message = [
-workerNumber,
-"processing",
-globalQueueNumber,
-"Running"
-];
-process.send(message);
+
 
 
 
@@ -349,7 +385,7 @@ workerCommand =handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + cu
     }
     
     if(process.platform == 'linux' ){
-workerCommand ="HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset;
+workerCommand ="HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
     }
 
 
@@ -358,6 +394,8 @@ workerCommand ="HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDe
 
 
       
+
+ //workerCommand ="/usr/local/bin/HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
 
  workerCommand ="/usr/local/bin/HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset
 
@@ -398,6 +436,7 @@ workerCommand ="HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDe
 
 
              var infoArray = [
+ "processFile",                
  workerCommand
  ];
 
@@ -412,7 +451,26 @@ workerCommand ="HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDe
             var path = require("path");
             var childProcess = require("child_process");
             var shellThreadPath = "worker2.js"
-        var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ),[], { silent: true });
+
+
+ 
+// Send ipc to state shell processing is starting
+var message = [
+workerNumber,
+"processing",
+globalQueueNumber,
+"Running"
+];
+process.send(message);
+//
+
+
+
+
+
+
+
+         shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ),[], { silent: true });
            // var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ));
 
 
@@ -491,6 +549,8 @@ var mesage2 = message.split(",");
 
 if (mesage2[0] == "Exit") {
 
+    shellThreadModule="";
+
 console.log('shellThreadExited:', mesage2[1]);
 
 shellThreadExitCode = mesage2[1];
@@ -503,6 +563,51 @@ shellThreadExitCode = mesage2[1];
 
 
 if (shellThreadExitCode != 0) {
+
+
+if (shellThreadExitCode == "Cancelled") {
+
+   var message = [
+workerNumber,
+"cancelled",
+globalQueueNumber,
+preset,
+errorLogFull
+];
+process.send(message);
+
+
+}else{
+
+
+   var message = [
+workerNumber,
+"error",
+globalQueueNumber,
+preset,
+errorLogFull
+];
+process.send(message);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -669,14 +774,17 @@ actionComplete=1;
 
    //process.send(workerNumber+",error,"+globalQueueNumber+","+preset);
 
-   var message = [
-workerNumber,
-"error",
-globalQueueNumber,
-preset,
-errorLogFull
-];
-process.send(message);
+
+
+
+
+
+
+
+
+
+
+
 }else{
 
 
@@ -697,6 +805,26 @@ process.send(message);
 
 
 if(errorSwitch==0){
+
+
+
+var message = [
+workerNumber,
+"success",
+globalQueueNumber,
+preset,
+errorLogFull
+];
+process.send(message);
+
+
+
+
+
+
+
+
+
 
     var actionComplete=0
 while(actionComplete==0){
@@ -753,14 +881,7 @@ actionComplete=1;
 
  // process.send(workerNumber+",success,"+globalQueueNumber+","+preset);
 
-     var message = [
-workerNumber,
-"success",
-globalQueueNumber,
-preset,
-errorLogFull
-];
-process.send(message);
+
  
 }
 
@@ -803,22 +924,37 @@ process.send(message);
 
         if (tempFolderSected == "1") {
 
-            try {
+           try {
             
 
-                fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
+              //  fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
+
+
+mv(currentDestinationLine, currentDestinationFinalLine, function(err) {
+  // done. it tried fs.rename first, and then falls back to
+  // piping the source file to the dest file and then unlinking
+  // the source file.
+});
+
 
 
             } catch (err) {
-                //     fso.DeleteFile(currentDestinationLine)
-              //  sleep(((1000 * Math.random()) + 1000));
         
-              try{
-                fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
-            }catch(err){}
+        
+             try{
+           
+        mv(currentDestinationLine, currentDestinationFinalLine, function(err) {
+  // done. it tried fs.rename first, and then falls back to
+  // piping the source file to the dest file and then unlinking
+  // the source file.
+});   
 
 
-            }
+        
+       }catch(err){}
+
+
+           }
 
             if(errorSwitch==0){
 
