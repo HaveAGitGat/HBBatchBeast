@@ -186,7 +186,7 @@ process.on('uncaughtException', function(err){
 
 var message = [
 workerNumber,
-"writeRequest",
+"appendRequest",
 homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt',
 "Worker thread error: "+err.stack+"\r\n",
 ];
@@ -203,7 +203,14 @@ process.on('message', (m) => {
       if(m.charAt(0) == "s"){
 
 if(process.platform=='win32'){
+
+
+
+
 var killCommand = 'taskkill /PID '+process.pid+' /T /F'
+
+
+
 }
 if(process.platform=='linux'){
 var killCommand = 'vps -o pid --no-headers --ppid' + process.pid

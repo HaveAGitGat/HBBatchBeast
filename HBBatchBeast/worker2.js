@@ -56,7 +56,7 @@ process.exit()
 
 if(infoArray[0]=="exitThread"){
 
-    
+    process.send("Exit,"+"Cancelled");
 
 
 try{
