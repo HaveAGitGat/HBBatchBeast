@@ -8,11 +8,25 @@ var shell = require('shelljs');
 
 
 var fs = require('fs');
- 
+
+
+var home = require("os").homedir(); 
+if (process.platform == 'win32'||process.platform == 'linux') {
+
+var homePath = "."
+
+    
+}
+
+if (process.platform == 'darwin'){
+
+    var homePath = home
+
+}
 
 process.on('message', (infoArray) => {
 
-//console.log("shellThread")
+console.log("shellThread")
 
 
 if(infoArray[0]=="processFile"){
