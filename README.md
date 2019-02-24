@@ -45,7 +45,7 @@ Press enter and wait for it to complete.
 
 
 
-Step 2:Download hbbatchbeast-Mac.dmg from the release page:
+Step 2:Download hbbatchbeast-macOS.dmg from the release page:
 
 https://github.com/HaveAGitGat/HBBatchBeast/releases
 
@@ -98,13 +98,13 @@ Settings help in program 'Help' tab.
 
 The program scans the source folder for all files. It then compares the source folder files with the destination folder files to see if any of the source files exist in the destination folder already. If not, the program queues the files for conversion.
  
-The 4 worker modules then work through the conversion queue. If periodic scanning is enabled then the program will run at the chosen interval.
+4 worker modules (default number) then work through the conversion queue. If periodic scanning is enabled then the program will run at the chosen interval.
 
 After it a bit more testing it seems that weird things can happen if you monitor a folder which is being downloaded to. It seems sometimes conversions start before a file has fully downloaded. To solve this, I recommend using a temporary download folder before moving completed files into your HBBB source folder.
 
 If you use a download program which has an 'incomplete downloads' folder etc, do not put that folder inside your main source folder else you may end up converting each file twice.
 
-The program won't work properly if you put the destination folder in a folder inside the source folder because the program is recreating the source folder structure inside the destination folder structure. It will cause an infinite loop of creating more and more sub-folders each time you run the program. So it will NOT work properly if you do this:
+The program won't work properly if you put the destination folder in a folder inside the source folder because the program is recreating the source folder structure inside the destination folder. It will cause an infinite loop of creating more and more sub-folders each time you run the program. So it will NOT work properly if you do something like this:
 
 Source:
 
@@ -114,7 +114,7 @@ Destination:
 
 D:\Videos\Converted
 
-It will work properly if you do this etc:
+It will work properly if you do something like this etc:
 
 Source:
 
