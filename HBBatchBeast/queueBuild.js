@@ -700,10 +700,12 @@ presetArray2,
 ];
 process.send(message);
 
+process.exit();
+
 
         });
 
 
-        process.exit();
+      
 
 
