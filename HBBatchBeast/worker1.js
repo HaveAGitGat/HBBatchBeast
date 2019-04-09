@@ -587,7 +587,7 @@ process.send(message);
 }else{
 
 
-   var message = [
+var message = [
 workerNumber,
 "error",
 globalQueueNumber,
@@ -1194,7 +1194,7 @@ actionComplete=1;
 
 
 
-
+process.exit();
 
 }
 
