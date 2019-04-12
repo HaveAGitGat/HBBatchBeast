@@ -2676,6 +2676,84 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ffda6d";
     }
 
 
+
+    function viewFolder(folderPath) {
+
+if (process.platform == 'win32') {
+
+    var stringProcessingSlash = "\\";
+}
+
+if (process.platform == 'linux' || process.platform == 'darwin') {
+    var stringProcessingSlash = "/";
+}
+
+
+
+//view logs
+
+var fullPath = __dirname;
+
+fullPath = fullPath.slice(0, fullPath.lastIndexOf(stringProcessingSlash));
+
+
+fullPath = fullPath.slice(0, fullPath.lastIndexOf(stringProcessingSlash));
+
+
+if (process.platform == 'win32') {
+
+    if (process.env.NODE_ENV == 'production') {
+
+        //production
+        var logPath = fullPath + "\\HBBatchBeast\\Logs\\";
+
+    } else {
+
+        //development
+        var logPath = __dirname + "\\HBBatchBeast\\Logs\\";
+
+    }
+
+
+}
+
+if (process.platform == 'linux' || process.platform == 'darwin') {
+
+    if (process.env.NODE_ENV == 'production') {
+
+        //production
+
+        // var logPath = fullPath + "/HBBatchBeast/Logs/" + logType + ".txt";
+        //   var logPath = homePath+"/HBBatchBeast/Logs/"+ logType + ".txt";
+        var logPath = homePath + "/HBBatchBeast/Logs/";
+    } else {
+
+        //development
+        var logPath = homePath + "/HBBatchBeast/Logs/";
+
+
+    }
+}
+
+var opener = require("opener");
+
+var fs = require('fs');
+
+if (fs.existsSync(logPath)) {
+
+    opener(logPath);
+
+} else {
+
+    alert('Folder does not exist!')
+}
+
+
+
+
+}
+
+
     function openURL(link) {
 
         var opener = require("opener");
@@ -3983,6 +4061,9 @@ color: black;
                    
                 <input type="button" onclick="viewLogs('fileConversionLog')"
                     value="View individual file check/conversion log" class="infoButton">
+
+
+                    <input type="button" onclick="viewFolder('')" value="View HB console output"  class="infoButton">     
 
 
 

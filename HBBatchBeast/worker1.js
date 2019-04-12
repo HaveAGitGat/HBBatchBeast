@@ -495,7 +495,7 @@ var str =""+data;
 var message = [
     workerNumber,
     "appendRequest",
-    homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Console/Worker"+workerNumber+"ConsoleOutput.txt",
+    homePath+"/HBBatchBeast/Logs/Worker"+workerNumber+"ConsoleOutput.txt",
     str,
     //currentSourceLine+" ConversionError\n",
     ];
@@ -549,6 +549,17 @@ if(str.includes("stderr:")){
 
             shellThreadModule.stderr.on('data', function(data) {
                 // console.log('stderrorWorker: ' + data);
+
+var str =""+data;
+
+var message = [
+    workerNumber,
+    "appendRequest",
+    homePath+"/HBBatchBeast/Logs/Worker"+workerNumber+"ConsoleOutput.txt",
+    str,
+    //currentSourceLine+" ConversionError\n",
+    ];
+    process.send(message);
 
                 errorLogFull  += data;
 
