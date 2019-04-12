@@ -120,6 +120,8 @@ tempConversionFolderCheckedOnOff=queueInfoBomb[3]
 
             presetArray = queueInfoBomb[7]
 
+            titleWordFilterArrayImport=queueInfoBomb[8]
+
 
        
 
@@ -166,20 +168,20 @@ for (var y = 0; y < inputPathStemArray.length; y++) {
 
 
 
-inputPathStem = inputPathStemArray[y]
+inputPathStem = inputPathStemArray[y]   // input folder path with comma:  /path/to/folder,
 outPutPathStem = outPutPathStemArray[y]
 
 if (tempConversionFolderCheckedOnOff == true) {
     outPutPathStemFinal = outPutPathStemFinalArray[y]
 }
 
-inputPathStemSplit = inputPathStem.split(',');
+inputPathStemSplit = inputPathStem.split(','); // comma removed step 1:  /path/to/folder
 
 
 
-topFolder = inputPathStemSplit[inputPathStemSplit.length - 1]
+topFolder = inputPathStemSplit[inputPathStemSplit.length - 1] // comma removed step 2:  /path/to/folder
 
-topFolderCharLength = topFolder.length
+topFolderCharLength = topFolder.length   //
 
 
 var fs = require('fs');
@@ -205,10 +207,10 @@ function traverseDir(inputPathStem) {
 
 
 
-                var thisFile = fullPath + ""
+                var thisFile = fullPath + "" // path/to/folder/test.mp4
 
-                fileTypeSplit = thisFile.split('.');
-                fileType = fileTypeSplit[fileTypeSplit.length - 1]
+                fileTypeSplit = thisFile.split('.');    // 
+                fileType = fileTypeSplit[fileTypeSplit.length - 1]   // .mp4
 
 
                 //Here we define supported file types
@@ -225,6 +227,43 @@ function traverseDir(inputPathStem) {
                     if (fileType == supportedFileTypeArray[j]) {
                         supportedFileSwitch = 1;
                     }
+
+                }
+
+
+
+                // check if file should be filtered out
+
+
+
+                if (process.platform == 'win32') {
+
+                    var stringProcessingSlash = "\\";
+                }
+
+                if (process.platform == 'linux' || process.platform == 'darwin') {
+                    var stringProcessingSlash = "/";
+                }
+
+                pointer = thisFile.split(stringProcessingSlash);  
+
+                filePathEnd = pointer[pointer.length - 1]   //     test.mp4
+
+                filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));   // test
+
+
+                var titleWordFilterArray = titleWordFilterArrayImport
+
+                titleWordFilterArray = titleWordFilterArray.split(',');
+
+                for (var j = 0; j < titleWordFilterArray.length; j++) {
+
+                    if (filePathEndFileType.indexOf(titleWordFilterArray[j]) !== -1 ) {
+                        supportedFileSwitch = 0;
+                    }
+
+
+
 
                 }
 
@@ -299,10 +338,14 @@ process.send(message);
 
 
 
-                    var str = inputPathArray[inputPathArrayCounter];
+                    var str = inputPathArray[inputPathArrayCounter];   // path/to/topfolder/subfolder/test.mp4
 
 
-                    str = str.substring(str.indexOf("topFolder") + topFolderCharLength + 1);
+                    //str = str.substring(str.indexOf("topFolder") + topFolderCharLength + 1);
+
+                   // str = str.substring(str.indexOf(topFolder));
+
+                     str = str.substring(topFolderCharLength);       // /subfolder/test.mp4
 
 
                     if (process.platform == 'win32') {
@@ -314,17 +357,17 @@ process.send(message);
                         var stringProcessingSlash = "/";
                     }
 
-                    pointer = str.split(stringProcessingSlash);
+                    pointer = str.split(stringProcessingSlash);  
 
-                    filePathEnd = pointer[pointer.length - 1]
+                    filePathEnd = pointer[pointer.length - 1]   //     test.mp4
 
-                    filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));
+                    filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));   // test
 
-                    subfilePath = filePathEndFileType + containerType;
+                    subfilePath = filePathEndFileType + containerType;   // "test" +".mp4"
 
-                    LongsubfilePath = str.slice(0, str.lastIndexOf(stringProcessingSlash));
+                    LongsubfilePath = str.slice(0, str.lastIndexOf(stringProcessingSlash)); //  path/to/folder
 
-                    newsubfilePath = LongsubfilePath + stringProcessingSlash + subfilePath;
+                    newsubfilePath = LongsubfilePath + stringProcessingSlash + subfilePath; // path/to/folder + "/" + "test.mp4"
 
 
                     outputPathArray[inputPathArrayCounter] = outPutPathStem + newsubfilePath;

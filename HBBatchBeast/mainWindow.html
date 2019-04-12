@@ -481,6 +481,17 @@
         }
 
 
+        // filter out keywords
+
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/titleWordFilter.txt")) {
+
+document.getElementById("customBatPath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/titleWordFilter.txt", 'utf8');
+
+
+}
+
+
+
         //read number of instances 
 
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/instanceNumber.txt")) {
@@ -859,6 +870,11 @@ ipcRenderer.on('item:ready',function(e,item){
         //define included file types
 
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/includedFileTypes.txt', document.getElementById("includedFileTypes").value, 'utf8');
+
+
+        //save title word filter
+
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/titleWordFilter.txt', document.getElementById("titleWordFilter").value, 'utf8');
 
 
         // save number of instances to use 
@@ -1396,6 +1412,7 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
             document.getElementById("container").options[document.getElementById("container").selectedIndex].text,
             mode,
             presetArray,
+            document.getElementById("titleWordFilter").value,
         
  ];
 
@@ -4010,6 +4027,15 @@ color: black;
 
                     <div style="text-align: right">
                         <textarea type="text" class="folderPaths" id="includedFileTypes"></textarea>
+                    </div>
+
+
+                    <div style="text-align: left">
+                        <p>File type filter:</p>
+                    </div>
+
+                    <div style="text-align: right">
+                        <textarea type="text" class="folderPaths" id="titleWordFilter"></textarea>
                     </div>
 
 
