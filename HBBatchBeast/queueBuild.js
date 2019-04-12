@@ -38,6 +38,10 @@ var writeNumber = 0;
         var inputPathArray = [];
         var outputPathArray = [];
         var sourceQueueArray = [];
+
+        var skipOrCopyArray = [];
+
+
         var errorArray = [];
         var sourceQueueFileSizeArray = []
         var outputPathArrayFinal = [];
@@ -232,46 +236,7 @@ function traverseDir(inputPathStem) {
 
 
 
-                // check if file should be filtered out
 
-
-
-                if (process.platform == 'win32') {
-
-                    var stringProcessingSlash = "\\";
-                }
-
-                if (process.platform == 'linux' || process.platform == 'darwin') {
-                    var stringProcessingSlash = "/";
-                }
-
-                pointer = thisFile.split(stringProcessingSlash);  
-
-                filePathEnd = pointer[pointer.length - 1]   //     test.mp4
-
-                filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));   // test
-
-
-                var titleWordFilterArray = titleWordFilterArrayImport
-
-                titleWordFilterArray = titleWordFilterArray.split(',');
-
-                for (var j = 0; j < titleWordFilterArray.length; j++) {
-
-                    if (titleWordFilterArray[j] != "" ) {
-               
-                    
-
-                    if (filePathEndFileType.indexOf(titleWordFilterArray[j]) >= 0 ) {
-                        supportedFileSwitch = 0;
-                    }
-
-                }
-
-
-
-
-                }
 
 
 
@@ -337,11 +302,6 @@ process.send(message);
 
 
                     totalFileFoundCounter++
-
-
-
-
-
 
 
                     var str = inputPathArray[inputPathArrayCounter];   // path/to/topfolder/subfolder/test.mp4
@@ -550,34 +510,14 @@ process.send(message);
 
                     try {
 
-
-
-
                         if (fs.existsSync(outputPathArrayFinal[i])) {
 
                         } else {
+                      
+sourceQueueArrayWrite += inputPathArray[i] + ",,," + presetArray2[i] + "\n";
+sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
 
-
-                            //fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + ",,," + presetArray2[i] + "\n", 'utf8');
-
- sourceQueueArrayWrite += inputPathArray[i] + ",,," + presetArray2[i] + "\n";
-
-
-
-
-
-                            sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
-
-                          //  fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFoundSize.txt', "Building queue:" + (sourceQueueArrayCounter + 1), 'utf8');
-
-
-
-                          if((sourceQueueArrayCounter + 1)%100==0){
-
-
-
-                         // scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
-
+if((sourceQueueArrayCounter + 1)%100==0){
 var message = [
 "buildQueue",
 (sourceQueueArrayCounter + 1),
@@ -585,29 +525,62 @@ var message = [
 process.send(message);
                 
                         }
+                // check if file should be filtered out
+                if (process.platform == 'win32') {
+
+                    var stringProcessingSlash = "\\";
+                }
+
+                if (process.platform == 'linux' || process.platform == 'darwin') {
+                    var stringProcessingSlash = "/";
+                }
+
+                pointer = inputPathArray[i].split(stringProcessingSlash);  
+
+                filePathEnd = pointer[pointer.length - 1]   //     test.mp4
+
+                filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));   // test
 
 
-                            sourceQueueArrayCounter++
+                var titleWordFilterArray = titleWordFilterArrayImport
+
+                titleWordFilterArray = titleWordFilterArray.split(',');
+
+                for (var j = 0; j < titleWordFilterArray.length; j++) {
+
+                    if (titleWordFilterArray[j] != "" ) {
+                    if (filePathEndFileType.indexOf(titleWordFilterArray[j]) >= 0 ) {
+                       // supportedFileSwitch = 0;
+
+                       skipOrCopyArray[sourceQueueArrayCounter] = 1 ;
+
+                    }
+                }
+                }
 
 
 
 
-                       //     fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
 
 
 
+
+
+
+
+
+sourceQueueArrayCounter++
 destinationQueueArrayWrite += outputPathArray[i] + "\n";
-
-
-                         //   fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
-
-
- destinationFinalQueueArrayWrite +=outputPathArrayFinal[i] + "\n";
-
-
-
-
+destinationFinalQueueArrayWrite +=outputPathArrayFinal[i] + "\n";
                             writeNumber++;
+
+
+
+
+
+
+
+
 
                         }
 
@@ -627,20 +600,15 @@ destinationQueueArrayWrite += outputPathArray[i] + "\n";
 
                         } else {
 
-                           // fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/sourceQueue.txt', inputPathArray[i] + ",,," + presetArray2[i] + "\n", 'utf8');
-
-
 
  sourceQueueArrayWrite += inputPathArray[i] + ",,," + presetArray2[i] + "\n";
 
 
-                            sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
+sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
 
-                          //  fs.writeFileSync(homePath + '/HBBatchBeast/Config/totalFilesFoundSize.txt', "Building queue:" + (sourceQueueArrayCounter + 1), 'utf8');
-
+                        
                    
                           if((sourceQueueArrayCounter + 1)%100==0){
-//scanWindow.webContents.send('item:queueBuild', (sourceQueueArrayCounter + 1));
 
 var message = [
 "buildQueue",
@@ -652,22 +620,45 @@ process.send(message);
 
 
 
-                            sourceQueueArrayCounter++
+                // check if file should be filtered out
+                if (process.platform == 'win32') {
 
-                         //   fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationQueue.txt', outputPathArray[i] + "\n", 'utf8');
+                    var stringProcessingSlash = "\\";
+                }
+
+                if (process.platform == 'linux' || process.platform == 'darwin') {
+                    var stringProcessingSlash = "/";
+                }
+
+                pointer = inputPathArray[i].split(stringProcessingSlash);  
+
+                filePathEnd = pointer[pointer.length - 1]   //     test.mp4
+
+                filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));   // test
 
 
+                var titleWordFilterArray = titleWordFilterArrayImport
+
+                titleWordFilterArray = titleWordFilterArray.split(',');
+
+                for (var j = 0; j < titleWordFilterArray.length; j++) {
+
+                    if (titleWordFilterArray[j] != "" ) {
+                    if (filePathEndFileType.indexOf(titleWordFilterArray[j]) >= 0 ) {
+                       // supportedFileSwitch = 0;
+
+                       skipOrCopyArray[sourceQueueArrayCounter] = 1 ;
+
+                    }
+                }
+                }
+
+
+
+sourceQueueArrayCounter++                  
 destinationQueueArrayWrite +=outputPathArray[i] + "\n";
-
-                         //   fs.appendFileSync(homePath + '/HBBatchBeast/Config/Processes/destinationFinalQueue.txt', outputPathArrayFinal[i] + "\n", 'utf8');
-
-
-
- destinationFinalQueueArrayWrite += outputPathArrayFinal[i] + "\n";
-
-
-
-                            writeNumber++;
+destinationFinalQueueArrayWrite += outputPathArrayFinal[i] + "\n";
+writeNumber++;
 
                         }
 
@@ -745,6 +736,7 @@ var message = [
 totalFileFoundCounter,
 sourceQueueArray,
 presetArray2,
+skipOrCopyArray,
 
 ];
 process.send(message);

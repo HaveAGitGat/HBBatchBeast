@@ -271,12 +271,17 @@ process.send(message);
 
 //workerNumber =m.substring(m.indexOf(":")+1);
 
-if(m.charAt(0) == "q"){
+ //if(m.charAt(0) == "q"){
+
+    if(m[0] == "queueNumber"){
+    
 
 
 
 
-globalQueueNumber=m.substring(m.indexOf(":")+1);
+//globalQueueNumber=m.substring(m.indexOf(":")+1);
+
+globalQueueNumber=m[1];
 
 
 //process.send(workerNumber+",processing,"+globalQueueNumber);

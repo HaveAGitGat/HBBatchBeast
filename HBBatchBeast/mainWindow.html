@@ -142,6 +142,9 @@
     var outputPathArray = [];
 
     var sourceQueueArray = [];
+
+    var skipOrCopyArray  = [];
+
     var errorArray = [];
     var sourceQueueFileSizeArray = []
     var presetArray2 = [];
@@ -992,6 +995,8 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
         inputPathArray = [];
         outputPathArray = [];
         sourceQueueArray = [];
+        skipOrCopyArray = [];
+
         errorArray = [];
         sourceQueueFileSizeArray = []
         var outputPathArrayFinal = [];
@@ -1484,6 +1489,7 @@ if (message[0] == "complete") {
 totalFileFoundCounter=message[1];
 sourceQueueArray=message[2];
 presetArray2=message[3];
+skipOrCopyArray=message[4];
 
 
 
@@ -1693,6 +1699,18 @@ for (i = 0; i < tabcontent.length; i++) {
 
 
                 var currentSourceLine = (sourceQueueArray[i]);
+
+
+                var tablePreset = "<td > " +presetArray2[i] + "</td>";
+
+                if( skipOrCopyArray[i] ==1){
+
+                    tablePreset ="<td >" + "<font color=\"#ff2d2d\">Skip (Due to word filter)</font>"+ "</td>";
+
+                }
+                
+                
+                
                 tableHTML += "<tr>"
                     + "<td>" + currentSourceLine + "</td>"
 
@@ -1700,7 +1718,7 @@ for (i = 0; i < tabcontent.length; i++) {
 
 
                     + "<td>" + tableQueueNumber + "</td>"
-                    + "<td > " + presetArray2[i] + "</td>"
+                    + tablePreset 
                     + "<td > - </td>"
                     + "<td > - </td>"
 
@@ -1794,12 +1812,33 @@ for (i = 0; i < tabcontent.length; i++) {
                         console.log(globalQueueNumberManager)
 
                         if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
-                            var currentNumber = "q:" + globalQueueNumberManager;
-                            globalQueueNumberManager++;
+
+
+
+
+                          
+
+                                var message = [
+                                    "queueNumber",
+                                    globalQueueNumberManager,
+                                    skipOrCopyArray[globalQueueNumberManager],
+                                             ];
+
+                                    globalQueueNumberManager++;
+
                         } else {
-                            var currentNumber = "completed";
+
+                                                var message = [
+                                                "completed",
+                                                            ];
+
                         }
-                        workers[message[0] - 1].send(currentNumber);
+                                 workers[message[0] - 1].send(message);
+
+
+
+
+
                     }
 
 
@@ -3041,14 +3080,29 @@ alert("All worker processes have been stopped.")
 
         for (var i = 0; i < workers.length; i++) {
 
-            if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
-                            var currentNumber = "q:" + globalQueueNumberManager;
-                            globalQueueNumberManager++;
-                        } else {
-                            var currentNumber = "completed";
-                        }
+   
+                
                         workers[i].send(currentNumber);
 
+
+
+                        if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
+var message = [
+    "queueNumber",
+    globalQueueNumberManager,
+    skipOrCopyArray[globalQueueNumberManager],
+             ];
+
+    globalQueueNumberManager++;
+
+} else {
+
+                var message = [
+                "completed",
+                            ];
+
+}
+workers[i].send(message);
 
 
         }
@@ -4031,7 +4085,7 @@ color: black;
 
 
                     <div style="text-align: left">
-                        <p>File type filter:</p>
+                        <p>File title word filter:</p>
                     </div>
 
                     <div style="text-align: right">
