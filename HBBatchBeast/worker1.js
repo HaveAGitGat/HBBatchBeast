@@ -488,7 +488,24 @@ process.send(message);
 
 
 
+//log console output to text file
+
 var str =""+data;
+
+var message = [
+    workerNumber,
+    "appendRequest",
+    homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Console/Worker"+workerNumber+"ConsoleOutput.txt",
+    str,
+    //currentSourceLine+" ConversionError\n",
+    ];
+    process.send(message);
+
+
+
+
+// send percentage update to GUI
+
 
       if(str.includes("%")){
         if(str.length>=7){
