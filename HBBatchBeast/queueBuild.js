@@ -258,9 +258,15 @@ function traverseDir(inputPathStem) {
 
                 for (var j = 0; j < titleWordFilterArray.length; j++) {
 
-                    if (filePathEndFileType.indexOf(titleWordFilterArray[j]) !== -1 ) {
+                    if (titleWordFilterArray[j] != "" ) {
+               
+                    
+
+                    if (filePathEndFileType.indexOf(titleWordFilterArray[j]) >= 0 ) {
                         supportedFileSwitch = 0;
                     }
+
+                }
 
 
 
