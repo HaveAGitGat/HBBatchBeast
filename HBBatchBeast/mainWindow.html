@@ -1783,9 +1783,12 @@ for (i = 0; i < tabcontent.length; i++) {
 
 
 
+                        var message = [
+                            "workerNumber",
+                            i,
+                                        ];
 
-
-                workers[i - 1].send("w:" + i);
+                workers[i - 1].send(message);
 
                 // var worker = workers[1];
                 //  worker.send("w:"+2);
@@ -3021,7 +3024,14 @@ if(continueQueueProcess == 1){
 
 
 for (var j = 0; j < document.getElementById("instanceNumber").value; j++) {
-workers[j].send("suicide");
+
+var message = [
+"suicide",
+];
+
+workers[j].send(message);
+
+
 }
 
                      document.getElementById("pauseButtonDiv").style.display = 'none';
@@ -3082,11 +3092,11 @@ alert("All worker processes have been stopped.")
 
    
                 
-                        workers[i].send(currentNumber);
+                      //  workers[i].send(currentNumber);
 
 
 
-                        if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
+  if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
 var message = [
     "queueNumber",
     globalQueueNumberManager,
@@ -3128,12 +3138,10 @@ workers[i].send(message);
 
         document.getElementById("cancelButtonDiv"+workerNumber).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
 
-
-        workers[workerNumber - 1].send("exitThread");
-
-
-
-
+        var message = [
+        "exitThread",
+                        ];
+        workers[workerNumber - 1].send(message);
 
 
     }

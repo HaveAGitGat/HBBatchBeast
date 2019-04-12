@@ -200,7 +200,9 @@ process.send(message);
 
 process.on('message', (m) => {
 
-      if(m.charAt(0) == "s"){
+     // if(m.charAt(0) == "s"){
+
+        if(m[0] == "suicide"){
 
 if(process.platform=='win32'){
 
@@ -228,7 +230,9 @@ var killCommand = 'pkill -P ' + process.pid
       }
 
 
-  if(m.charAt(0) == "e"){
+ // if(m.charAt(0) == "e"){
+
+    if(m[0] == "exitThread"){
 
 var infoArray = [
  "exitThread"               
@@ -250,8 +254,14 @@ shellThreadModule.send(infoArray);
   }
 
 
-if(m.charAt(0) == "w"){
-workerNumber =m.substring(m.indexOf(":")+1);
+//if(m.charAt(0) == "w"){
+
+    if(m[0] == "workerNumber"){
+
+
+workerNumber =m[1];
+
+
 //workerNumber =process.argv[2]
 
 
@@ -1164,7 +1174,9 @@ process.send(message);
 //
 
 
-if(m.charAt(0) == "c"){
+//if(m.charAt(0) == "c"){
+
+    if(m[0] == "completed"){
 
 
 
