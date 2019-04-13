@@ -2137,6 +2137,60 @@ tempOutputQueueHTML  += "<tr >"
 }
 
 
+if (message[1] == "copiedFail") {
+
+workerStatusFinishedArray[message[0]-1] = "Finished"
+if(queueStatusPaused==1){
+verifyContinue();
+}
+
+//hide cancel item button
+document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
+
+
+var currentRow = parseInt(message[2]) + 1
+
+if (queueView == "enabled") {
+    queueTable.rows[currentRow].cells[3].innerHTML = "";
+    queueTable.rows[currentRow].cells[4].innerHTML = "Copy failed"
+    queueTable.rows[currentRow].cells[2].innerHTML = message[3];
+   // queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
+}
+
+document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">Completed</font></p>";  
+
+                        //fullErrorLogArray[message[2]] =message[4];  
+
+                        fullErrorLogArray.push(message[4])
+
+
+
+                        errorArray.push(sourceQueueArray[currentRow - 1])
+
+                        errorCount++;
+updateGraph();
+
+
+
+if (mode != "healthCheck") {
+// var newRow = document.getElementById('sessionConversionsTable').insertRow();
+// newRow.innerHTML = "<tr >"
+
+tempOutputQueueHTML  += "<tr >"
+                        + "<td>" + sourceQueueArray[message[2]] + "</td>"
+                        + "<td>" + sessionNumber + "</td>"
+                        + "<td>" + message[3] + "</td>"
+                        + "<td > Copy failed </td>"
+                        + "</tr>";
+
+
+                }
+                sessionNumber++;
+
+
+}
+
+
                     if (message[1] == "cancelled") {
 
                         workerStatusFinishedArray[message[0]-1] = "Finished"
@@ -2598,7 +2652,25 @@ if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Co
 sessionConversionsTable.rows[i].style.backgroundColor = "#ffda6d";
 
 
+}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Skipped")) {
+
+sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
+
+
+}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Copied")) {
+
+sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
+
+
+}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Copy failed")) {
+
+sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
+
+
 }
+
+
+
 
 }
 

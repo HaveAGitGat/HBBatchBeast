@@ -511,33 +511,46 @@ if(skipOrCopy==1){
         try {
          
            const fs = require('fs');
-      fs.copyFile(currentSourceLine,currentDestinationFinalLine ), err => {
-   if(!err){
-console.log(file + " has been copied!");
-          }
-        };
+           fs.copyFileSync(currentSourceLine,currentDestinationFinalLine);
 
-         } catch (err) {}
+           copySuccess();
+
+         } catch (err) { 
+             copyFail();
+
+        
+         }
 
         }else{
 
-            try {
+           try {
 
                 const fs = require('fs');
-                fs.copyFile(currentSourceLine,currentDestinationLine ), err => {
-             if(!err){
-          console.log(file + " has been copied!");
-                    }
-                  };
+                fs.copyFileSync(currentSourceLine,currentDestinationLine);
+
+                copySuccess();
 
 
-            }catch (err) {}
+
+
+           }catch (err) {
+               
+            copyFail(); 
+        
+        }
+        
+        
+        
+      
+
+
+
+          
 
 
         }
 
-
-
+function copySuccess(){
     var message = [
         workerNumber,
         "copied",
@@ -548,18 +561,42 @@ console.log(file + " has been copied!");
         process.send(message);
 
 
-
-
- if (deleteSourceFilesOnOff == "1") {
+        if (deleteSourceFilesOnOff == "1") {
                 
    
-        if (fs.existsSync(currentSourceLine)) {
+            if (fs.existsSync(currentSourceLine)) {
+    
+    fs.unlinkSync(currentSourceLine)
+    
+    
+    } 
+    }
 
-fs.unlinkSync(currentSourceLine)
 
 
-} 
 }
+
+
+function copyFail(){
+        var message = [
+            workerNumber,
+            "copiedFail",
+            globalQueueNumber,
+            "Copy",
+            errorLogFull
+            ];
+            process.send(message);
+
+        }
+
+
+
+
+
+
+
+
+
 
 
 
