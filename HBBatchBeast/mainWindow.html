@@ -17,7 +17,7 @@
 
 
     //SET ENV
-    process.env.NODE_ENV = "production";
+   // process.env.NODE_ENV = "production";
 
     var home = require("os").homedir();
 
@@ -55,8 +55,9 @@
 
     process.on('uncaughtException', function (err) {
         console.error(err.stack);
+        var fs = require('fs');
         fs.appendFileSync(homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt', "Main thread error: " + err.stack + "\r\n", 'utf8');
-        process.exit();
+        //process.exit();
     });
 
 
@@ -494,6 +495,22 @@ document.getElementById("titleWordFilter").value = fs.readFileSync(homePath + "/
 }
 
 
+// read if to copy filtered files
+
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/copyFilteredFiles.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/copyFilteredFiles.txt", 'utf8');
+if (f == "1") {
+    document.getElementById("copyFilteredFiles").checked = true;
+} else {
+    document.getElementById("copyFilteredFiles").checked = false;
+
+}
+
+}
+
+
 
         //read number of instances 
 
@@ -878,6 +895,17 @@ ipcRenderer.on('item:ready',function(e,item){
         //save title word filter
 
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/titleWordFilter.txt', document.getElementById("titleWordFilter").value, 'utf8');
+
+        //periodic scanning
+
+        if (document.getElementById("copyFilteredFiles").checked == true) {
+
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/copyFilteredFiles.txt', 1, 'utf8');
+        } else {
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/copyFilteredFiles.txt', 0, 'utf8');
+    }
+  
+
 
 
         // save number of instances to use 
@@ -1705,7 +1733,19 @@ for (i = 0; i < tabcontent.length; i++) {
 
                 if( skipOrCopyArray[i] ==1){
 
-                    tablePreset ="<td >" + "<font color=\"#ff2d2d\">Skip (Due to word filter)</font>"+ "</td>";
+                    if (document.getElementById("copyFilteredFiles").checked == true) {
+
+                        tablePreset ="<td >" + "<font color=\"#ff2d2d\">Copy (Due to word filter)</font>"+ "</td>";
+
+                    }else{
+
+                        tablePreset ="<td >" + "<font color=\"#ff2d2d\">Skip (Due to word filter)</font>"+ "</td>";
+
+                    }
+
+                 
+
+
 
                 }
                 
@@ -1783,12 +1823,12 @@ for (i = 0; i < tabcontent.length; i++) {
 
 
 
-                        var message = [
+                        var messageOut = [
                             "workerNumber",
                             i,
                                         ];
 
-                workers[i - 1].send(message);
+                workers[i - 1].send(messageOut);
 
                 // var worker = workers[1];
                 //  worker.send("w:"+2);
@@ -1810,33 +1850,33 @@ for (i = 0; i < tabcontent.length; i++) {
                     console.log("Message:"+message);
 
 
-                    if (message[1] == "queueRequest") {
+                    if (message[1] == "queueRequest") { 
 
                         console.log(globalQueueNumberManager)
 
                         if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
 
-
-
-
-                          
-
-                                var message = [
+                                var messageOut = [
                                     "queueNumber",
                                     globalQueueNumberManager,
                                     skipOrCopyArray[globalQueueNumberManager],
+                                    document.getElementById("copyFilteredFiles").checked,
                                              ];
 
                                     globalQueueNumberManager++;
 
                         } else {
 
-                                                var message = [
+                                                var messageOut = [
                                                 "completed",
                                                             ];
 
                         }
-                                 workers[message[0] - 1].send(message);
+                               //  workers[message[0] - 1].send(message);
+
+                               console.log(messageOut)
+
+                               workers[message[0] - 1].send(messageOut);
 
 
 
@@ -1952,8 +1992,6 @@ if (queueView == "enabled") {
                         verifyContinue();
                         }
 
-
-
 //hide cancel item button
 document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
 
@@ -1980,9 +2018,6 @@ document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='
 
                         
                         if (mode != "healthCheck") {
-
-
-
                        // var newRow = document.getElementById('sessionConversionsTable').insertRow();
                       // newRow.innerHTML = "<tr >"
 
@@ -1999,6 +2034,107 @@ document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='
 
 
                     }
+
+
+ if (message[1] == "skipped") {
+
+workerStatusFinishedArray[message[0]-1] = "Finished"
+if(queueStatusPaused==1){
+verifyContinue();
+}
+
+//hide cancel item button
+document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
+
+
+var currentRow = parseInt(message[2]) + 1
+
+if (queueView == "enabled") {
+    queueTable.rows[currentRow].cells[3].innerHTML = "";
+    queueTable.rows[currentRow].cells[4].innerHTML = "Skipped"
+    queueTable.rows[currentRow].cells[2].innerHTML = message[3];
+   // queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
+}
+
+document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">Completed</font></p>";  
+
+
+
+//fullErrorLogArray[message[2]] =message[4];    
+fullErrorLogArray.push(message[4])
+
+successfulCount++;
+updateGraph();
+
+
+
+if (mode != "healthCheck") {
+// var newRow = document.getElementById('sessionConversionsTable').insertRow();
+// newRow.innerHTML = "<tr >"
+
+tempOutputQueueHTML  += "<tr >"
+                        + "<td>" + sourceQueueArray[message[2]] + "</td>"
+                        + "<td>" + sessionNumber + "</td>"
+                        + "<td>" + message[3] + "</td>"
+                        + "<td > Skipped </td>"
+                        + "</tr>";
+
+
+                }
+                sessionNumber++;
+
+
+}
+
+if (message[1] == "copied") {
+
+workerStatusFinishedArray[message[0]-1] = "Finished"
+if(queueStatusPaused==1){
+verifyContinue();
+}
+
+//hide cancel item button
+document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
+
+
+var currentRow = parseInt(message[2]) + 1
+
+if (queueView == "enabled") {
+    queueTable.rows[currentRow].cells[3].innerHTML = "";
+    queueTable.rows[currentRow].cells[4].innerHTML = "Copied"
+    queueTable.rows[currentRow].cells[2].innerHTML = message[3];
+   // queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
+}
+
+document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">Completed</font></p>";  
+
+
+
+//fullErrorLogArray[message[2]] =message[4];    
+fullErrorLogArray.push(message[4])
+
+successfulCount++;
+updateGraph();
+
+
+
+if (mode != "healthCheck") {
+// var newRow = document.getElementById('sessionConversionsTable').insertRow();
+// newRow.innerHTML = "<tr >"
+
+tempOutputQueueHTML  += "<tr >"
+                        + "<td>" + sourceQueueArray[message[2]] + "</td>"
+                        + "<td>" + sessionNumber + "</td>"
+                        + "<td>" + message[3] + "</td>"
+                        + "<td > Copied </td>"
+                        + "</tr>";
+
+
+                }
+                sessionNumber++;
+
+
+}
 
 
                     if (message[1] == "cancelled") {
@@ -3025,11 +3161,11 @@ if(continueQueueProcess == 1){
 
 for (var j = 0; j < document.getElementById("instanceNumber").value; j++) {
 
-var message = [
+var messageOut = [
 "suicide",
 ];
 
-workers[j].send(message);
+workers[j].send(messageOut);
 
 
 }
@@ -3097,7 +3233,7 @@ alert("All worker processes have been stopped.")
 
 
   if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
-var message = [
+var messageOut = [
     "queueNumber",
     globalQueueNumberManager,
     skipOrCopyArray[globalQueueNumberManager],
@@ -3107,12 +3243,12 @@ var message = [
 
 } else {
 
-                var message = [
+                var messageOut = [
                 "completed",
                             ];
 
 }
-workers[i].send(message);
+workers[i].send(messageOut);
 
 
         }
@@ -3138,10 +3274,10 @@ workers[i].send(message);
 
         document.getElementById("cancelButtonDiv"+workerNumber).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
 
-        var message = [
+        var messageOut = [
         "exitThread",
                         ];
-        workers[workerNumber - 1].send(message);
+        workers[workerNumber - 1].send(messageOut);
 
 
     }
@@ -4099,6 +4235,12 @@ color: black;
                     <div style="text-align: right">
                         <textarea type="text" class="folderPaths" id="titleWordFilter"></textarea>
                     </div>
+
+                    <div class="grid-itemleft">
+                        <p>Copy filtered files to destination?</p>
+                    </div>
+
+                    <div class="grid-itemright"><input type="checkbox" id="copyFilteredFiles"></div>
 
 
 

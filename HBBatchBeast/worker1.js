@@ -1,5 +1,5 @@
 //SET ENV
-process.env.NODE_ENV = "production";
+//process.env.NODE_ENV = "production";
 
 var shell = require('shelljs');
 
@@ -172,6 +172,9 @@ iStreamDestinationFinal = iStreamDestinationFinal.toString().split("\n");
 
 var workerNumber ;
 var  globalQueueNumber;
+var  skipOrCopy;
+var  copyOnOff;
+
 var shellThreadModule;
 
 
@@ -293,10 +296,14 @@ process.send(message);
 
 globalQueueNumber=m[1];
 
+skipOrCopy = m[2];
+
+copyOnOff = m[3];
+
+
+
 
 //process.send(workerNumber+",processing,"+globalQueueNumber);
-
-
 
 
 
@@ -488,6 +495,115 @@ process.send(message);
 
 
 
+if(skipOrCopy==1){
+
+
+   if(copyOnOff==true){
+
+
+
+    // currentSourceLine + "\" -o \"" + currentDestinationLine
+    //mv(currentDestinationLine, currentDestinationFinalLine
+
+
+    if (tempFolderSected == "1") {
+
+        try {
+         
+           const fs = require('fs');
+      fs.copyFile(currentSourceLine,currentDestinationFinalLine ), err => {
+   if(!err){
+console.log(file + " has been copied!");
+          }
+        };
+
+         } catch (err) {}
+
+        }else{
+
+            try {
+
+                const fs = require('fs');
+                fs.copyFile(currentSourceLine,currentDestinationLine ), err => {
+             if(!err){
+          console.log(file + " has been copied!");
+                    }
+                  };
+
+
+            }catch (err) {}
+
+
+        }
+
+
+
+    var message = [
+        workerNumber,
+        "copied",
+        globalQueueNumber,
+        "Copy",
+        errorLogFull
+        ];
+        process.send(message);
+
+
+
+
+ if (deleteSourceFilesOnOff == "1") {
+                
+   
+        if (fs.existsSync(currentSourceLine)) {
+
+fs.unlinkSync(currentSourceLine)
+
+
+} 
+}
+
+
+
+endCyle();
+
+   } else{
+
+    var message = [
+        workerNumber,
+        "skipped",
+        globalQueueNumber,
+        "Skip",
+        errorLogFull
+        ];
+        process.send(message);
+
+
+        endCyle();
+
+   }
+
+function endCyle(){
+
+
+        
+        //process.send(workerNumber+",queueRequest");
+        
+                    var f = fs.readFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
+                    if (f == "1") {
+                  
+        var message = [
+        workerNumber,
+        "queueRequest",
+        ];
+        process.send(message);
+                    } else if (f == "0"){
+                    }
+
+                }
+             
+
+
+}else{
+
 
 
 
@@ -607,9 +723,6 @@ shellThreadExitCode = mesage2[1];
 
 
 //// exit code begin
-
-
-
 
 
 if (shellThreadExitCode != 0) {
@@ -1096,16 +1209,7 @@ fs.unlinkSync(currentSourceLine)
 }
   } 
 
-
-
-
-
-
-
-
 //process.send(workerNumber+",queueRequest");
-
- 
 
             var f = fs.readFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
 
@@ -1127,26 +1231,6 @@ process.send(message);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /// exit finish
 
 }
@@ -1154,6 +1238,8 @@ process.send(message);
 
 
             });
+
+        }
 
 
 
