@@ -77,7 +77,7 @@ icon.
 to be interacted with as it waits for a response from "queueBuild.js".
 
 
-Once "queueBuild.js" is finished compiling a "Health Check", "Scan" "Conversion" queue it notifies "mainWindow.html" of the 
+Once "queueBuild.js" is finished compiling a "Health Check", "Scan" or "Conversion" queue it notifies "mainWindow.html" of the 
 results. "mainWindow.html" then forks several child processes (depending on how many worker threads have been specified) and, 
 using IPC, manages the file queue while keeping all worker threads in sync.
 
