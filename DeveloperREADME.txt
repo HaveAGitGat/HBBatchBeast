@@ -25,8 +25,3 @@ npm install
 Once that's finished, it's worth updating any dependencies with:
 
 npm update
-
-
-  
-
-
