@@ -1,4 +1,5 @@
 This is an electron application:https://electronjs.org/
+The application can be found at: https://electronjs.org/apps/hbbatchbeast
 
 
 Make sure to have nodejs installed:https://nodejs.org/en/
