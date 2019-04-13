@@ -525,6 +525,11 @@ var message = [
 process.send(message);
                 
                         }
+
+
+
+
+                        if (mode != "healthCheck") {
                 // check if file should be filtered out
                 if (process.platform == 'win32') {
 
@@ -557,6 +562,7 @@ process.send(message);
                     }
                 }
                 }
+            }
 
 
 
@@ -618,7 +624,7 @@ process.send(message);
 
 }
 
-
+if (mode != "healthCheck") {
 
                 // check if file should be filtered out
                 if (process.platform == 'win32') {
@@ -652,6 +658,7 @@ process.send(message);
                     }
                 }
                 }
+            }
 
 
 

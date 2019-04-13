@@ -1731,6 +1731,9 @@ for (i = 0; i < tabcontent.length; i++) {
 
                 var tablePreset = "<td > " +presetArray2[i] + "</td>";
 
+
+                if (mode != "healthCheck") {
+
                 if( skipOrCopyArray[i] ==1){
 
                     if (document.getElementById("copyFilteredFiles").checked == true) {
@@ -1748,6 +1751,7 @@ for (i = 0; i < tabcontent.length; i++) {
 
 
                 }
+            }
                 
                 
                 
