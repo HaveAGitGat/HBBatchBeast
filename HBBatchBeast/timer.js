@@ -1,15 +1,22 @@
 
+
+
+
+//ar windowRefresh = window.setInterval("runTimer();", 1000);
+
+
+setInterval(runTimer, 1000);
+
 //global variables
-
-
-var windowRefresh = window.setInterval("runTimer();", 1000);
-
 var runTimerOn= 0;
 
-var timer =2;
+var timer =1;
 
 
 function runTimer(){
+
+    //timer--;
+    console.log(timer)
 
 
 if(runTimerOn== 1){
@@ -27,6 +34,8 @@ process.exit()
  }
 }
 }
+
+
 
 process.on('message', (infoArray) => {
 

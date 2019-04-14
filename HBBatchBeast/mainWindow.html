@@ -134,6 +134,8 @@
 
     var timerModule ="";
 
+    var viewSwitch =0;
+
     var cp
     var globalQueueNumberManager = 0;
 
@@ -351,8 +353,14 @@ document.getElementById("dailyRunTime").value = fs.readFileSync(homePath + "/HBB
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/periodicScanningOnOff.txt", 'utf8');
             if (f == "1") {
                 document.getElementById("scanOnOff").checked = true;
+
+                document.getElementById("showHideScanInterval").style.display ='block';         
+                document.getElementById("showHideDailyRunTime").style.display = 'none';
+
+
             } else {
                 document.getElementById("scanOnOff").checked = false;
+                document.getElementById("showHideScanInterval").style.display ='none';
 
             }
 
@@ -367,8 +375,12 @@ document.getElementById("dailyRunTime").value = fs.readFileSync(homePath + "/HBB
 var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/dailyRunTimeOnOff.txt", 'utf8');
 if (f == "1") {
     document.getElementById("dailyRunTimeOnOff").checked = true;
+    document.getElementById("showHideScanInterval").style.display ='none'; 
+    document.getElementById("showHideDailyRunTime").style.display = 'block';
+
 } else {
     document.getElementById("dailyRunTimeOnOff").checked = false;
+    document.getElementById("showHideDailyRunTime").style.display = 'none';
 
 }
 
@@ -753,6 +765,41 @@ if (f == "1") {
         }
         textAreaHeight()
     }
+
+
+
+
+
+    function cbChange4(obj) {
+        if (obj.checked == false) {
+            obj.checked = false;
+        } else if (obj.checked == true) {
+            var cbs = document.getElementsByClassName("cb4");
+            for (var i = 0; i < cbs.length; i++) {
+                cbs[i].checked = false;
+            }
+            obj.checked = true;
+        }
+
+        document.getElementById("showHideScanInterval").style.display = 'none';
+        document.getElementById("showHideDailyRunTime").style.display = 'none';
+
+        if (document.getElementById("scanOnOff").checked == true) {
+            document.getElementById("showHideScanInterval").style.display = 'block';
+        }
+
+        if (document.getElementById("dailyRunTimeOnOff").checked == true) {
+
+            document.getElementById("showHideDailyRunTime").style.display = 'block';
+        }
+
+        textAreaHeight()
+    }
+
+
+
+
+
 
     function showAlert(message) {
 
@@ -1369,11 +1416,36 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
             if (document.getElementById("dailyRunTimeOnOff").checked == true) {
 
 
+                if(isNaN(parseInt(dailyRunTime.charAt(0))) || isNaN(parseInt(dailyRunTime.charAt(1))) || isNaN(parseInt(dailyRunTime.charAt(3))) || isNaN(parseInt(dailyRunTime.charAt(4)))){
 
-                document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\">Scan will run at: <font color=\"#66ccff\">" + dailyRunTime + "</font></p>";
-  
+
+                alert("Please enter a daily scan time in 24 hour format: hh:mm  (for example 13:02)");
+                break validationSection;
+
+
+
+                }else{
+
+
+
+
+             
+
+
+                if(viewSwitch==0){
+                    document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\">Scan will run at: <font color=\"#66ccff\">" + dailyRunTime + "</font></p>";
+                    viewSwitch=1
+
+                }else{
+
+                    document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\">Scan will run at: <font color=\"#ef435d\">" + dailyRunTime + "</font></p>";
+                    viewSwitch=0
+
+                }
+
+               
                 
-                var time = fancyTimeFormat(time)    
+               // var time = fancyTimeFormat(time)    
                 
                 
                 var d = new Date(),
@@ -1383,10 +1455,26 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
 
                 console.log(dailyRunTime+"   "+timenow)
-                      
-                dailyRunTime.charAt(0) == timenow.charAt(0)
 
-   if(dailyRunTime.charAt(0) == timenow.charAt(0) && dailyRunTime.charAt(1) == timenow.charAt(1) && dailyRunTime.charAt(2) == timenow.charAt(2) && dailyRunTime.charAt(3) == timenow.charAt(3)){
+                console.log(dailyRunTime.charAt(0))
+                console.log(dailyRunTime.charAt(1))
+                console.log(dailyRunTime.charAt(2))
+                console.log(dailyRunTime.charAt(3))
+                console.log(dailyRunTime.charAt(4))
+
+                console.log("")
+
+                console.log(timenow.charAt(0))
+                console.log(timenow.charAt(1))
+                console.log(timenow.charAt(2))
+                console.log(timenow.charAt(3))
+                console.log(timenow.charAt(4))
+                      
+            
+
+   if(dailyRunTime.charAt(0) == timenow.charAt(0) && dailyRunTime.charAt(1) == timenow.charAt(1) && dailyRunTime.charAt(2) == timenow.charAt(2) && dailyRunTime.charAt(3) == timenow.charAt(3)  && dailyRunTime.charAt(4) == timenow.charAt(4)){
+
+   // break validationSection;
 
    }else{
 
@@ -1412,15 +1500,23 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
 timerModule.on('message', function (message) {
 
+    
 
 if (message[0] == "scanandconvert") {
+    
     convertFiles('scanandconvert');
 }
 
             });
 
-            break validationSection;
+            hideTabs();
+
+
+
+           break validationSection;
             }
+
+           }
             }
 
 
@@ -1670,12 +1766,16 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
 
       document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Searching for files</font></p>";
 
-      var i, tabcontent, tablinks;
+      
+      hideTabs();
 
+function hideTabs(){
+      var i, tabcontent, tablinks;
 // Get all elements with class="tabcontent" and hide them
 tabcontent = document.getElementsByClassName("tabcontent");
 for (i = 0; i < tabcontent.length; i++) {
     tabcontent[i].style.display = "none";
+}
 }
 
 
@@ -3336,7 +3436,7 @@ alert("All worker processes have been stopped.")
     function pauseQueue(){
 
 
-        if (confirm('Are you sure you want to pause the queue?')) {
+        if (confirm('Queue will be paused once current items have finished processing. Are you sure you want to pause the queue? ')) {
 
                     queueStatusPaused=1;
 
@@ -3349,7 +3449,7 @@ alert("All worker processes have been stopped.")
                 document.getElementById("continueButtonGreyDiv").style.display = 'block';
 
 
-                alert("Queue will be paused once current items have finished processing. Please do not press 'Continue queue' until all workers have paused.")
+                alert("Queue pause initiated.'Continue' button will appear once all workers have paused.")
 
 }
 
@@ -4345,14 +4445,14 @@ color: black;
                         <p>Enable periodic scanning?:</p>
                     </div>
 
-                    <div class="grid-itemright"><input type="checkbox" id="scanOnOff"></div>
+                    <div class="grid-itemright"><input type="checkbox" id="scanOnOff" onchange="cbChange4(this)" class="cb4"></div>
 
 
                     <div class="grid-itemleft">
                             <p>Enable daily scanning?:</p>
                         </div>
     
-                        <div class="grid-itemright"><input type="checkbox" id="dailyRunTimeOnOff"></div>
+                        <div class="grid-itemright"><input type="checkbox" id="dailyRunTimeOnOff" onchange="cbChange4(this)" class="cb4"></div>
 
 
                     <div class="grid-itemleft">
@@ -4391,7 +4491,9 @@ color: black;
 
 
 
-                    <div class="grid-container">
+                    <div class="grid-container"></div>
+
+                            <div id="showHideScanInterval" style="display: none;">
 
                         <div class="grid-itemleft">
                             <p>Scan interval (minimum 5 seconds):</p>
@@ -4399,13 +4501,21 @@ color: black;
 
                         <div class="grid-itemright"><input type="text" class="infoBox" id="timer"></div>
 
+                             </div>
+
+                            
+
+                             <div id="showHideDailyRunTime" style="display: none;">
+
                         <div class="grid-itemleft">
                                 <p>Daily run time (hh:mm):</p>
                             </div>
     
                             <div class="grid-itemright"><input type="text" class="infoBox" id="dailyRunTime"></div>
 
-                    </div>
+                        </div>
+
+                    
 
 
                     <div style="text-align: left">
