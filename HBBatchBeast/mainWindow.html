@@ -335,6 +335,15 @@
         }
 
 
+        // read daily run time:
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/dailyRunTime.txt")) {
+
+document.getElementById("dailyRunTime").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/dailyRunTime.txt", 'utf8');
+
+}
+
+
         // read periodic scanning on/off
 
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/periodicScanningOnOff.txt")) {
@@ -801,6 +810,9 @@ ipcRenderer.on('item:ready',function(e,item){
 
         // save scan interval
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/scanInterval.txt', document.getElementById("timer").value, 'utf8');
+
+       // save daily run time
+      fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTime.txt', document.getElementById("dailyRunTime").value, 'utf8');
 
 
 
@@ -1360,23 +1372,23 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
                 document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\">Scan will run at: <font color=\"#66ccff\">" + dailyRunTime + "</font></p>";
   
-                var endDate = new Date();
-                var seconds2 = (endDate.getTime() - startDate.getTime()) / 1000;
-                var time = Math.round(seconds2);
-                document.getElementById("durationDiv").innerHTML = "<p>Duration: " + fancyTimeFormat(time) + "<\p>";              
+                
+                var time = fancyTimeFormat(time)    
+                
+                
+                var d = new Date(),
+                    h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
+                    m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+                timenow = h + ':' + m 
 
 
-   if(){
+                console.log(dailyRunTime+"   "+timenow)
+                      
+                dailyRunTime.charAt(0) == timenow.charAt(0)
 
-
-
+   if(dailyRunTime.charAt(0) == timenow.charAt(0) && dailyRunTime.charAt(1) == timenow.charAt(1) && dailyRunTime.charAt(2) == timenow.charAt(2) && dailyRunTime.charAt(3) == timenow.charAt(3)){
 
    }else{
-
-
-
-
-
 
 // creat timer module
             var timerInfoBomb = [
@@ -1389,9 +1401,9 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
             var childProcess = require("child_process");
             var timerModulePath = "timer.js"
 
-            if(timerModule != ""){
+           // if(timerModule != ""){
             timerModule = childProcess.fork(path.join(__dirname, timerModulePath ));
-        }
+       // }
             timerModule.send(timerInfoBomb); 
             timerModule.on("exit", function (code, signal,) {
             console.log('Child exited:', code, signal,);
@@ -1407,12 +1419,12 @@ if (message[0] == "scanandconvert") {
 
             });
 
-                break validationSection;
+            break validationSection;
             }
             }
 
 
-
+            
 
 
 
