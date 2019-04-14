@@ -132,6 +132,8 @@
 
     let workers = [];
 
+    var timerModule ="";
+
     var cp
     var globalQueueNumberManager = 0;
 
@@ -1355,18 +1357,63 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
             if (document.getElementById("dailyRunTimeOnOff").checked == true) {
 
 
-                document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\">Scan will run at: <font color=\"#66ccff\">" + dailyRunTime + "</font></p>";
-            
 
+                document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\">Scan will run at: <font color=\"#66ccff\">" + dailyRunTime + "</font></p>";
+  
                 var endDate = new Date();
                 var seconds2 = (endDate.getTime() - startDate.getTime()) / 1000;
                 var time = Math.round(seconds2);
-                document.getElementById("durationDiv").innerHTML = "<p>Duration: " + fancyTimeFormat(time) + "<\p>";
+                document.getElementById("durationDiv").innerHTML = "<p>Duration: " + fancyTimeFormat(time) + "<\p>";              
 
 
+   if(){
+
+
+
+
+   }else{
+
+
+
+
+
+
+// creat timer module
+            var timerInfoBomb = [
+            "runTimer",
+            "dailyRunTime",
+            2,
+                    ];        
+
+            var path = require("path");
+            var childProcess = require("child_process");
+            var timerModulePath = "timer.js"
+
+            if(timerModule != ""){
+            timerModule = childProcess.fork(path.join(__dirname, timerModulePath ));
+        }
+            timerModule.send(timerInfoBomb); 
+            timerModule.on("exit", function (code, signal,) {
+            console.log('Child exited:', code, signal,);
+     
+            });
+
+timerModule.on('message', function (message) {
+
+
+if (message[0] == "scanandconvert") {
+    convertFiles('scanandconvert');
+}
+
+            });
 
                 break validationSection;
             }
+            }
+
+
+
+
 
 
 
@@ -1848,12 +1895,6 @@ for (i = 0; i < tabcontent.length; i++) {
         var childProcess = require("child_process");
         const cluster = require('cluster');
         var path = require("path");
-
-        
-
-
-
-
 
         if (mode == "scanandconvert" || mode == "healthCheck") {
 
@@ -4296,6 +4337,13 @@ color: black;
 
 
                     <div class="grid-itemleft">
+                            <p>Enable daily scanning?:</p>
+                        </div>
+    
+                        <div class="grid-itemright"><input type="checkbox" id="dailyRunTimeOnOff"></div>
+
+
+                    <div class="grid-itemleft">
 
                         <div id="deleteItemDiv">
                             <p id="deleteSourceFilesdiv">Delete source files after conversion?:</p>
@@ -4334,13 +4382,13 @@ color: black;
                     <div class="grid-container">
 
                         <div class="grid-itemleft">
-                            <p>Either Scan interval (minimum 5 seconds):</p>
+                            <p>Scan interval (minimum 5 seconds):</p>
                         </div>
 
                         <div class="grid-itemright"><input type="text" class="infoBox" id="timer"></div>
 
                         <div class="grid-itemleft">
-                                <p>Or Daily run time (hh:mm):</p>
+                                <p>Daily run time (hh:mm):</p>
                             </div>
     
                             <div class="grid-itemright"><input type="text" class="infoBox" id="dailyRunTime"></div>
