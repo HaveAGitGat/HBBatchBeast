@@ -174,6 +174,7 @@ var workerNumber ;
 var  globalQueueNumber;
 var  skipOrCopy;
 var  copyOnOff;
+var  replaceOriginalFile;
 
 var shellThreadModule;
 
@@ -299,6 +300,8 @@ globalQueueNumber=m[1];
 skipOrCopy = m[2];
 
 copyOnOff = m[3];
+
+replaceOriginalFile = m[4];
 
 
 
@@ -1008,14 +1011,7 @@ if(errorSwitch==0){
 
 
 
-var message = [
-workerNumber,
-"success",
-globalQueueNumber,
-preset,
-errorLogFull
-];
-process.send(message);
+
 
 
 
@@ -1083,89 +1079,76 @@ actionComplete=1;
 
 
  
-}
+ if(batOnOff != ""){
+
+    var path = batOnOff;
+    path = "\""+path+"\""
 
 
-
-
-
-
-
-
-
-
-
-
-    if(batOnOff != ""){
-
-      var path = batOnOff;
-      path = "\""+path+"\""
-
-
-      try{
-      require('child_process').execSync( path , function (err, stdout, stderr) {
-        if (err) {
-        // Ooops.
-    
-        return console.log(err);
-        }
-        
-        // Done.
-        //runEndSection();
-        //runScan();
+    try{
+    require('child_process').execSync( path , function (err, stdout, stderr) {
+      if (err) {
+      // Ooops.
+  
+      return console.log(err);
+      }
       
-        });
-    }catch(err){}
+      // Done.
+      //runEndSection();
+      //runScan();
+    
+      });
+  }catch(err){}
 
-    }
+  }
 
 
 
 
-        if (tempFolderSected == "1") {
+      if (tempFolderSected == "1") {
 
-           try {
-            
+         try {
+          
 
-              //  fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
+            //  fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
 
 
 mv(currentDestinationLine, currentDestinationFinalLine, function(err) {
-  // done. it tried fs.rename first, and then falls back to
-  // piping the source file to the dest file and then unlinking
-  // the source file.
+// done. it tried fs.rename first, and then falls back to
+// piping the source file to the dest file and then unlinking
+// the source file.
 });
 
 
 
-            } catch (err) {
-        
-        
-             try{
-           
-        mv(currentDestinationLine, currentDestinationFinalLine, function(err) {
-  // done. it tried fs.rename first, and then falls back to
-  // piping the source file to the dest file and then unlinking
-  // the source file.
+          } catch (err) {
+      
+      
+           try{
+         
+      mv(currentDestinationLine, currentDestinationFinalLine, function(err) {
+// done. it tried fs.rename first, and then falls back to
+// piping the source file to the dest file and then unlinking
+// the source file.
 });   
 
 
-        
-       }catch(err){}
+      
+     }catch(err){}
 
 
-           }
+         }
 
-            if(errorSwitch==0){
+          if(errorSwitch==0){
 
 
 
-    var actionComplete=0
+  var actionComplete=0
 while(actionComplete==0){
 
- try{
- //fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
-  
+try{
+//fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n", 'utf8');
+
 // var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
 // var tempMessage=today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n"
 // process.send(workerNumber+",appendRequest,"+tempPath+","+tempMessage );
@@ -1186,24 +1169,24 @@ actionComplete=1;
 }
 }
 
+          
+   
+
+
+         
+          }
+         
+
+      }else{
+
+          if(errorSwitch==0){
+
             
-     
-
-
-           
-            }
-           
-
-        }else{
-
-            if(errorSwitch==0){
-
-              
-    var actionComplete=0
+  var actionComplete=0
 while(actionComplete==0){
 
- try{
- //fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');
+try{
+//fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt",today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n", 'utf8');
 
 // var tempPath=homePath+"/HBBatchBeast/Logs/fileConversionLog.txt"
 // var tempMessage=today2 + "-" + timenow + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset+"\r\n"
@@ -1226,25 +1209,120 @@ actionComplete=1;
 }
 
 
-      
-           
+    
+         
 
-             }
-        }
+           }
+      }
 
 
- 
-  if (deleteSourceFilesOnOff == "1") {
-                
+// check to see if should delete source files
+if (deleteSourceFilesOnOff == "1") {
+              
 if(errorSwitch==0){
-           if (fs.existsSync(currentSourceLine)) {
+         if (fs.existsSync(currentSourceLine)) {
 
 fs.unlinkSync(currentSourceLine)
 
 
-                        }
+                      }
 }
-  } 
+} 
+
+//check to see if original file should be replaced if new file is smaller
+
+if (replaceOriginalFile == true) {
+
+  var fs = require('fs');
+
+  if (fs.existsSync(currentSourceLine)) {
+      var originalFileSize = fs.statSync(currentSourceLine)
+          originalFileSize=originalFileSize.size
+  }
+
+  if (fs.existsSync(currentDestinationLine)) {
+      var newFileSize = fs.statSync(currentSourceLine)
+          newFileSize=newFileSize.size
+  }
+
+  if (fs.existsSync(currentDestinationFinalLine)) {
+      var newFinalFileSize = fs.statSync(currentSourceLine)
+          newFinalFileSize=newFinalFileSize.size
+  }
+
+if (tempFolderSected == "1") {
+
+if(newFinalFileSize < originalFileSize){
+  mv(currentDestinationFinalLine, currentSourceLine, function(err) {});
+
+  var message = [
+    workerNumber,
+    "originalReplaced",
+    globalQueueNumber,
+    preset,
+    errorLogFull
+    ];
+    process.send(message);
+
+}
+
+
+  }else{
+
+      if(newFileSize < originalFileSize){
+          mv(currentDestinationLine, currentSourceLine, function(err) {
+
+          });  
+          
+          
+          var message = [
+            workerNumber,
+            "originalReplaced",
+            globalQueueNumber,
+            preset,
+            errorLogFull
+            ];
+            process.send(message);
+        
+        }
+
+
+
+
+      }
+
+
+
+      
+  }else{
+
+    var message = [
+        workerNumber,
+        "success",
+        globalQueueNumber,
+        preset,
+        errorLogFull
+        ];
+        process.send(message);
+
+
+}
+
+
+ 
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 //process.send(workerNumber+",queueRequest");
 
@@ -1293,6 +1371,7 @@ process.send(message);
 }
 
 } 
+
 
 //
 

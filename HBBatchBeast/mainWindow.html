@@ -550,6 +550,22 @@ if (f == "1") {
 }
 
 
+// read if to replace original file if converted file is smaller
+
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/replaceOriginalFile.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/replaceOriginalFile.txt", 'utf8');
+if (f == "1") {
+    document.getElementById("replaceOriginalFile").checked = true;
+} else {
+    document.getElementById("replaceOriginalFile").checked = false;
+
+}
+
+}
+
+
 
         //read number of instances 
 
@@ -984,7 +1000,7 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTimeOnOff.txt', 0, 'ut
 
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/titleWordFilter.txt', document.getElementById("titleWordFilter").value, 'utf8');
 
-        //periodic scanning
+        //save copy filtered files or not
 
         if (document.getElementById("copyFilteredFiles").checked == true) {
 
@@ -992,6 +1008,16 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTimeOnOff.txt', 0, 'ut
         } else {
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/copyFilteredFiles.txt', 0, 'utf8');
     }
+
+
+            //save replace filtered files or not
+
+if (document.getElementById("replaceOriginalFile").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFile.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFile.txt', 0, 'utf8');
+}
   
 
 
@@ -1404,13 +1430,15 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
             }
 
 
-            saveConfig();
+            
            // createViewError();
 
 
 
 
            // daily timer run validation
+
+           if (mode == "scanandconvert") {
 
            var dailyRunTime = document.getElementById("dailyRunTime").value
             if (document.getElementById("dailyRunTimeOnOff").checked == true) {
@@ -1518,6 +1546,11 @@ if (message[0] == "scanandconvert") {
 
            }
             }
+        }
+
+
+
+            saveConfig();
 
 
             
@@ -1701,8 +1734,10 @@ if (message[0] == "scanandconvert") {
 
 if (message[0] == "writeRequest") {
 
-
+try{
 fs.writeFileSync(message[1], message[2], 'utf8');
+
+} catch (err) {}
 
 }
 
@@ -1710,7 +1745,9 @@ fs.writeFileSync(message[1], message[2], 'utf8');
 
 
 if (message[0] == "appendRequest") {
+    try{
 fs.appendFileSync(message[1], message[2], 'utf8');
+} catch (err) {}
 
 }
 
@@ -2067,6 +2104,9 @@ for (i = 0; i < tabcontent.length; i++) {
                                     globalQueueNumberManager,
                                     skipOrCopyArray[globalQueueNumberManager],
                                     document.getElementById("copyFilteredFiles").checked,
+                                    document.getElementById("replaceOriginalFile").checked,
+
+                                
                                              ];
 
                                     globalQueueNumberManager++;
@@ -2307,7 +2347,7 @@ var currentRow = parseInt(message[2]) + 1
 
 if (queueView == "enabled") {
     queueTable.rows[currentRow].cells[3].innerHTML = "";
-    queueTable.rows[currentRow].cells[4].innerHTML = "Copied"
+    queueTable.rows[currentRow].cells[4].innerHTML = "Copied to destination"
     queueTable.rows[currentRow].cells[2].innerHTML = message[3];
    // queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
 }
@@ -2332,7 +2372,7 @@ tempOutputQueueHTML  += "<tr >"
                         + "<td>" + sourceQueueArray[message[2]] + "</td>"
                         + "<td>" + sessionNumber + "</td>"
                         + "<td>" + message[3] + "</td>"
-                        + "<td > Copied </td>"
+                        + "<td > Copied to destination </td>"
                         + "</tr>";
 
 
@@ -2358,7 +2398,7 @@ var currentRow = parseInt(message[2]) + 1
 
 if (queueView == "enabled") {
     queueTable.rows[currentRow].cells[3].innerHTML = "";
-    queueTable.rows[currentRow].cells[4].innerHTML = "Copy failed"
+    queueTable.rows[currentRow].cells[4].innerHTML = "Copy to destination failed"
     queueTable.rows[currentRow].cells[2].innerHTML = message[3];
    // queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
 }
@@ -2386,7 +2426,7 @@ tempOutputQueueHTML  += "<tr >"
                         + "<td>" + sourceQueueArray[message[2]] + "</td>"
                         + "<td>" + sessionNumber + "</td>"
                         + "<td>" + message[3] + "</td>"
-                        + "<td > Copy failed </td>"
+                        + "<td > Copy to destination failed </td>"
                         + "</tr>";
 
 
@@ -2395,6 +2435,61 @@ tempOutputQueueHTML  += "<tr >"
 
 
 }
+
+
+if (message[1] == "originalReplaced") {
+
+workerStatusFinishedArray[message[0]-1] = "Finished"
+if(queueStatusPaused==1){
+verifyContinue();
+}
+
+//hide cancel item button
+document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
+
+
+var currentRow = parseInt(message[2]) + 1
+
+if (queueView == "enabled") {
+    queueTable.rows[currentRow].cells[3].innerHTML = "";
+    queueTable.rows[currentRow].cells[4].innerHTML = "Original replaced"
+    queueTable.rows[currentRow].cells[2].innerHTML = message[3];
+   // queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
+}
+
+document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">Completed</font></p>";  
+
+
+
+//fullErrorLogArray[message[2]] =message[4];    
+fullErrorLogArray.push(message[4])
+
+successfulCount++;
+updateGraph();
+
+
+
+if (mode != "healthCheck") {
+// var newRow = document.getElementById('sessionConversionsTable').insertRow();
+// newRow.innerHTML = "<tr >"
+
+tempOutputQueueHTML  += "<tr >"
+                        + "<td>" + sourceQueueArray[message[2]] + "</td>"
+                        + "<td>" + sessionNumber + "</td>"
+                        + "<td>" + message[3] + "</td>"
+                        + "<td > Original replaced </td>"
+                        + "</tr>";
+
+
+                }
+                sessionNumber++;
+
+
+}
+
+
+
+
 
 
                     if (message[1] == "cancelled") {
@@ -2455,7 +2550,11 @@ tempOutputQueueHTML  += "<tr >"
                     if (message[1] == "writeRequest") {
 
 
+
+try{
                         fs.writeFileSync(message[2], message[3], 'utf8');
+
+                    } catch (err) {}
 
                     }
 
@@ -2463,7 +2562,9 @@ tempOutputQueueHTML  += "<tr >"
 
 
                     if (message[1] == "appendRequest") {
+                        try{
                         fs.appendFileSync(message[2], message[3], 'utf8');
+                    } catch (err) {}
 
                     }
 
@@ -2863,14 +2964,19 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ffda6d";
 sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
 
 
-}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Copied")) {
+}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Copied to destination")) {
 
 sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
 
 
-}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Copy failed")) {
+}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Copy to destination failed")) {
 
 sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
+
+
+}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Original replaced")) {
+
+sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
 
 
 }
@@ -3260,7 +3366,13 @@ if (fs.existsSync(logPath)) {
 
             closeButton.addEventListener("click", event => {
                 window = remote.getCurrentWindow();
-                window.close();
+
+if (confirm('Are you sure you want to close the program? Any running conversions/scans will end.')) {
+    window.close();
+}
+
+
+               
             });
 
             function toggleMaxRestoreButtons() {
@@ -4540,6 +4652,14 @@ color: black;
                     </div>
 
                     <div class="grid-itemright"><input type="checkbox" id="copyFilteredFiles"></div>
+
+
+
+                    <div class="grid-itemleft">
+                            <p>Replace original file if converted file is smaller?</p>
+                        </div>
+    
+                        <div class="grid-itemright"><input type="checkbox" id="replaceOriginalFile"></div>
 
 
 
