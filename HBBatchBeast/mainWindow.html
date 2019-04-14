@@ -17,7 +17,7 @@
 
 
     //SET ENV
-    process.env.NODE_ENV = "production";
+   // process.env.NODE_ENV = "production";
 
     var home = require("os").homedir();
 
@@ -346,6 +346,22 @@
             }
 
         }
+
+
+
+                // read daily scan on/off
+
+                if (fs.existsSync(homePath + "/HBBatchBeast/Config/dailyRunTimeOnOff.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/dailyRunTimeOnOff.txt", 'utf8');
+if (f == "1") {
+    document.getElementById("dailyRunTimeOnOff").checked = true;
+} else {
+    document.getElementById("dailyRunTimeOnOff").checked = false;
+
+}
+
+}
 
 
 
@@ -795,6 +811,17 @@ ipcRenderer.on('item:ready',function(e,item){
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/periodicScanningOnOff.txt', 0, 'utf8');
 
         }
+
+
+//daily scanning
+
+if (document.getElementById("dailyRunTimeOnOff").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTimeOnOff.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTimeOnOff.txt', 0, 'utf8');
+
+}
 
 
 
@@ -1318,6 +1345,28 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
             saveConfig();
            // createViewError();
+
+
+
+
+           // daily timer run validation
+
+           var dailyRunTime = document.getElementById("dailyRunTime").value
+            if (document.getElementById("dailyRunTimeOnOff").checked == true) {
+
+
+                document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\">Scan will run at: <font color=\"#66ccff\">" + dailyRunTime + "</font></p>";
+            
+
+                var endDate = new Date();
+                var seconds2 = (endDate.getTime() - startDate.getTime()) / 1000;
+                var time = Math.round(seconds2);
+                document.getElementById("durationDiv").innerHTML = "<p>Duration: " + fancyTimeFormat(time) + "<\p>";
+
+
+
+                break validationSection;
+            }
 
 
 
@@ -2300,16 +2349,16 @@ tempOutputQueueHTML  += "<tr >"
 
   
 
-        if (mode == "scanandconvert" && document.getElementById("scanOnOff").checked == true) {
+        if (mode == "scanandconvert") {
 
+if ( document.getElementById("scanOnOff").checked == true || document.getElementById("dailyRunTimeOnOff").checked == true ) {
             document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Running</font></p>";
-
             countDownOn = 1;
 
-        } else {
+            }else {
             countDownOn = 0;
-
         }
+        } 
 
 
 
@@ -2715,64 +2764,21 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
 
 
                 var unConvertedFiles = fs.readFileSync(homePath + "/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
-
-
                 if (mode == "healthCheck") {
-
                     preset = "Health check"
-
                 } else {
                     preset = fs.readFileSync(homePath + "/HBBatchBeast/Config/presetString.txt", 'utf8');
-
                 }
-
-
-
                 fs.appendFileSync(homePath + "/HBBatchBeast/Logs/Scans.txt", "Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + convertedFiles1 + "-------Preset:" + preset + ". \r\n", 'utf8');
-
-
-
-
-
-
-
-
-
-
-
                 document.getElementById("sessionConversions").style.display = 'block';
-
-
-
-
-
                 document.getElementById("endTimeDiv").innerHTML = "<p>End time: " + getTimeNow() + "<\p>";
-
-
-
                 updateInfo = 0;
-
-
-
                 sourceQueueArray = [];
-
                 AllCompleted = 1;
-
                 clearInterval(windowRefresh);
                 windowRefresh = window.setInterval("runScan();", 1000)
-
-
-
             }
-
-
-
         }
-
-
-
-
-
 
         if (countDownOn == 1 && AllCompleted == "1") {
 
@@ -2790,23 +2796,34 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
                             ipcRenderer.send('item:add', 'iconerror');
                         }
 
-
-
                     } else {
                         if (process.platform == 'win32') {
                             ipcRenderer.send('item:add', 'icon');
                         }
                     }
+                }
+
+
+
+                               // for daily timer function
+
+          if (document.getElementById("dailyRunTimeOnOff").checked == true ) { 
+                                   
+           convertFiles('scanandconvert');
+                                         
+
 
                 }
 
 
 
+
+                // for periodic scan
+                if (document.getElementById("scanOnOff").checked == true ) { 
+
                 timerSeconds--;
-
                 document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\">Time until next scan: <font color=\"#66ccff\">" + timerSeconds + "</font> seconds</p>";
-
-
+    
                 if (timerSeconds == 0) {
 
                     convertFiles('scanandconvert');
@@ -2815,6 +2832,7 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
 
 
                 }
+            }
             }
         }
 
@@ -3339,23 +3357,16 @@ workers[i].send(messageOut);
     function clearHealthyFileCache(){
         var fs = require('fs');
         fs.writeFileSync(homePath + '/HBBatchBeast/Logs/healthyFileList.txt', "", 'utf8');
-
         alert("Healthy file cache cleared!")
-
-
     }
 
 
     function cancelItemProcess(workerNumber){
-
         document.getElementById("cancelButtonDiv"+workerNumber).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
-
         var messageOut = [
         "exitThread",
                         ];
         workers[workerNumber - 1].send(messageOut);
-
-
     }
 
 
@@ -4323,18 +4334,16 @@ color: black;
                     <div class="grid-container">
 
                         <div class="grid-itemleft">
-                            <p>Scan interval (minimum 5 seconds):</p>
+                            <p>Either Scan interval (minimum 5 seconds):</p>
                         </div>
 
                         <div class="grid-itemright"><input type="text" class="infoBox" id="timer"></div>
 
-
-
-
-
-
-
-
+                        <div class="grid-itemleft">
+                                <p>Or Daily run time (hh:mm):</p>
+                            </div>
+    
+                            <div class="grid-itemright"><input type="text" class="infoBox" id="dailyRunTime"></div>
 
                     </div>
 
