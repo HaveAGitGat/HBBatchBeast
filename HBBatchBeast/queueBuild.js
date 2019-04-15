@@ -41,6 +41,8 @@ var writeNumber = 0;
 
         var skipOrCopyArray = [];
 
+        var  replaceOriginalFile;
+
 
         var errorArray = [];
         var sourceQueueFileSizeArray = []
@@ -126,6 +128,8 @@ tempConversionFolderCheckedOnOff=queueInfoBomb[3]
 
             titleWordFilterArrayImport=queueInfoBomb[8]
 
+            replaceOriginalFile = queueInfoBomb[9]
+
 
        
 
@@ -160,13 +164,13 @@ healthyFileArray = healthyFileArray.toString().split("\n");
  }
 
 
- if (mode != "healthCheck") {                    
+ if (mode != "healthCheck") { 
+     
+        var fs = require('fs');
+        var replacedFileArray = "";
+        replacedFileArray = fs.readFileSync(homePath + "/HBBatchBeast/Logs/originalFileReplacedList.txt", 'utf8');
+        replacedFileArray = replacedFileArray.toString().split("\n");
 
-    var fs = require('fs');
-    var replacedFileArray = "";
-    replacedFileArray = fs.readFileSync(homePath + "/HBBatchBeast/Logs/originalFileReplacedList.txt", 'utf8');
-    replacedFileArray = replacedFileArray.toString().split("\n");
-    
      }
 
 
@@ -263,12 +267,15 @@ if (thisFile == healthyFileArray[j]) {
  // compare against files already replaced list
 
  if (mode != "healthCheck") {
+
+    if(replaceOriginalFile == true){  
     for (var j = 0; j < replacedFileArray.length; j++) {
     
     if (thisFile == replacedFileArray[j]) {
                             supportedFileSwitch = 0;
                         }
     }
+}
      }
                 
 
