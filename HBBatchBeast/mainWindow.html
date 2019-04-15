@@ -2417,6 +2417,19 @@ document.getElementById("worker" + workerNumber + "Percentage").innerHTML =Statu
                                             + "<td>"+Status+ "</td>"
                                             + "</tr>";
 
+                        }else if(Status2 == "<p><font color=\"#ff2d2d\">Error</font></p>"){
+
+
+                            tempOutputQueueHTML += "<tr>"
+                                            + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
+                                            + "<td>" + sessionNumber + "</td>"
+                                            + "<td>" + preset + "</td>"
+                                            + "<td>"+Status+ "</td>"
+                                            + "</tr>";    
+
+
+
+
                         }
                                         sessionNumber++;
     
@@ -4255,7 +4268,7 @@ color: black;
 
             </center>
 
-            <input type="button" class="HaveAGitGat" onclick="openURL('https://github.com/HaveAGitGat')" value="by HaveAGitGat">
+            <input type="button" class="HaveAGitGat" onclick="openURL('https://github.com/HaveAGitGat/HBBatchBeast')" value="by HaveAGitGat">
                 
 
 
