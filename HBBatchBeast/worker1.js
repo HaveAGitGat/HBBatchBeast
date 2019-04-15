@@ -176,6 +176,12 @@ var  skipOrCopy;
 var  copyOnOff;
 var  replaceOriginalFile;
 
+
+var  moveCorruptFileOnOff;
+var  corruptDestinationPath;
+
+var mode
+
 var shellThreadModule;
 
 
@@ -302,6 +308,12 @@ skipOrCopy = m[2];
 copyOnOff = m[3];
 
 replaceOriginalFile = m[4];
+
+
+moveCorruptFileOnOff = m[5];
+corruptDestinationPath = m[6];
+
+mode =m[7];
 
 
 
@@ -782,6 +794,43 @@ process.send(message);
 
 }else{
 
+    if (mode == "healthCheck") {                
+
+        if(moveCorruptFileOnOff == true){
+    
+
+          //  currentSourceLine  corruptDestinationPath
+    
+          if (process.platform == 'win32') {
+    
+            var stringProcessingSlash = "\\";
+        }
+    
+        if (process.platform == 'linux' || process.platform == 'darwin') {
+            var stringProcessingSlash = "/";
+        }
+    
+        pointer = currentSourceLine.split(stringProcessingSlash);  
+        filePathEnd = pointer[pointer.length - 1]   //     test.mp4
+    
+    
+        corruptDestinationPath = corruptDestinationPath +stringProcessingSlash +filePathEnd;
+
+    
+    var mv = require('mv');
+    mv(currentSourceLine, corruptDestinationPath, function(err) {
+    
+        });
+    
+    
+    
+    
+    
+        }
+    
+    
+    }
+
 
 var message = [
 workerNumber,
@@ -791,6 +840,12 @@ preset,
 errorLogFull
 ];
 process.send(message);
+
+
+
+
+
+
 
 
 }
