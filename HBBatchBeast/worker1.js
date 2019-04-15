@@ -978,16 +978,6 @@ actionComplete=1;
    //process.send(workerNumber+",error,"+globalQueueNumber+","+preset);
 
 
-
-
-
-
-
-
-
-
-
-
 }else{
 
 
@@ -1233,6 +1223,7 @@ fs.unlinkSync(currentSourceLine)
 
 if (replaceOriginalFile == true) {
 
+
   var fs = require('fs');
 
   if (fs.existsSync(currentSourceLine)) {
@@ -1241,14 +1232,17 @@ if (replaceOriginalFile == true) {
   }
 
   if (fs.existsSync(currentDestinationLine)) {
-      var newFileSize = fs.statSync(currentSourceLine)
+      var newFileSize = fs.statSync(currentDestinationLine)
           newFileSize=newFileSize.size
   }
 
   if (fs.existsSync(currentDestinationFinalLine)) {
-      var newFinalFileSize = fs.statSync(currentSourceLine)
+      var newFinalFileSize = fs.statSync(currentDestinationFinalLine)
           newFinalFileSize=newFinalFileSize.size
   }
+
+
+
 
 if (tempFolderSected == "1") {
 
@@ -1264,15 +1258,32 @@ if(newFinalFileSize < originalFileSize){
     ];
     process.send(message);
 
+}{
+
+    var message = [
+        workerNumber,
+        "originalNotReplaced",
+        globalQueueNumber,
+        preset,
+        errorLogFull
+        ];
+        process.send(message);
+
+
+
 }
 
 
   }else{
 
+
+
       if(newFileSize < originalFileSize){
           mv(currentDestinationLine, currentSourceLine, function(err) {
 
           });  
+
+
           
           
           var message = [
@@ -1284,12 +1295,34 @@ if(newFinalFileSize < originalFileSize){
             ];
             process.send(message);
         
+        }else{
+
+            var message = [
+                workerNumber,
+                "originalNotReplaced",
+                globalQueueNumber,
+                preset,
+                errorLogFull
+                ];
+                process.send(message);
+
+
+
         }
 
 
 
 
       }
+
+
+      var message = [
+        workerNumber,
+        "appendRequest",
+        homePath+"/HBBatchBeast/Logs/originalFileReplacedList.txt",
+        currentSourceLine+"\n",
+        ];
+        process.send(message);
 
 
 
@@ -1309,6 +1342,8 @@ if(newFinalFileSize < originalFileSize){
 }
 
 
+
+
  
 }
 
@@ -1320,27 +1355,27 @@ if(newFinalFileSize < originalFileSize){
 
 
 
+var fs = require('fs');
+var f = fs.readFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
 
 
+if (f == "1") {
 
-
-//process.send(workerNumber+",queueRequest");
-
-            var f = fs.readFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
-
-
-            if (f == "1") {
-          
 var message = [
 workerNumber,
 "queueRequest",
 ];
 process.send(message);
 
-            } else if (f == "0"){
+} else if (f == "0"){
 
 
-            }
+}
+
+
+
+
+
 
 
 

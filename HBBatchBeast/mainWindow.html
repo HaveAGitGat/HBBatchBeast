@@ -323,6 +323,35 @@
             fs.appendFileSync(homePath+"/HBBatchBeast/Logs/healthyFileList.txt","" ,'utf8');
         }
 
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Logs/originalFileReplacedList.txt")) {
+            fs.appendFileSync(homePath+"/HBBatchBeast/Logs/originalFileReplacedList.txt","" ,'utf8');
+        }
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Logs/ErrorLog.txt")) {
+            fs.appendFileSync(homePath+"/HBBatchBeast/Logs/ErrorLog.txt","" ,'utf8');
+        }
+
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Logs/fileConversionLog.txt")) {
+            fs.appendFileSync(homePath+"/HBBatchBeast/Logs/fileConversionLog.txt","" ,'utf8');
+        }
+
+
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Logs/Scans.txt")) {
+            fs.appendFileSync(homePath+"/HBBatchBeast/Logs/Scans.txt","" ,'utf8');
+        }
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Logs/SystemErrorLog.txt")) {
+            fs.appendFileSync(homePath+"/HBBatchBeast/Logs/SystemErrorLog.txt","" ,'utf8');
+        }
+
+
+
+
+
+
+
 
         //read scan interval
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/scanInterval.txt")) {
@@ -548,6 +577,24 @@ if (f == "1") {
 }
 
 }
+
+
+// read if auto create folders
+
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/autoCreateFolders.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/autoCreateFolders.txt", 'utf8');
+if (f == "1") {
+    document.getElementById("autoCreateFolders").checked = true;
+} else {
+    document.getElementById("autoCreateFolders").checked = false;
+
+}
+
+}
+
+
 
 
 // read if to replace original file if converted file is smaller
@@ -1010,7 +1057,17 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTimeOnOff.txt', 0, 'ut
     }
 
 
-            //save replace filtered files or not
+            //save auto create folders or not
+
+            if (document.getElementById("autoCreateFolders").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoCreateFolders.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoCreateFolders.txt', 0, 'utf8');
+}
+
+
+            //save replace original files or not
 
 if (document.getElementById("replaceOriginalFile").checked == true) {
 
@@ -1354,8 +1411,10 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
                 if (fs.existsSync(inputPathStemArray[y] + validationSlash) == false || inputPathStemArray[y] == "") {
 
+
                     alert("Source folder " + (y + 1) + " " + inputPathStemArray[y] + " does not exist! Please make sure there are no spaces or hidden characters before/after the path");
-                    break validationSection;
+                    break validationSection;    
+
                 }
 
                 if (mode != "healthCheck") {
@@ -1364,9 +1423,24 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
                         if (fs.existsSync(outPutPathStemArray[y] + validationSlash) == false || outPutPathStemArray[y] == "") {
 
+
+                            if (document.getElementById("autoCreateFolders").checked == true) {
+
+
+try{
+fs.mkdirSync(outPutPathStemArray[y] + validationSlash);
+} catch (err) {
+    break validationSection; 
+    alert("Error creating temporary conversion folder " + (y + 1) + ": " + outPutPathStemArray[y] + validationSlash);
+}
+
+
+}else{
+
                             alert("Temporary conversion folder " + (y + 1) + " " + outPutPathStemArray[y] + " does not exist! Please make sure there are no spaces or hidden characters before/after the path");
                             break validationSection;
                         }
+                    }
 
 
 
@@ -1374,10 +1448,24 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
                         if (fs.existsSync(outPutPathStemArray[y] + validationSlash) == false || outPutPathStemArray[y] == "") {
 
+                            if (document.getElementById("autoCreateFolders").checked == true) {
+
+
+try{
+fs.mkdirSync(outPutPathStemArray[y] + validationSlash);
+} catch (err) {
+    break validationSection; 
+    alert("Error creating destination folder " + (y + 1) + ": " + outPutPathStemArray[y] + validationSlash);
+}
+
+
+}else{
+                            
+
                             alert("Destination folder " + (y + 1) + " " + outPutPathStemArray[y] + " does not exist! Please make sure there are no spaces or hidden characters before/after the path");
                             break validationSection;
                         }
-
+                    }
 
                     }
 
@@ -1386,9 +1474,25 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
                         if (fs.existsSync(outPutPathStemFinalArray[y] + validationSlash) == false || outPutPathStemFinalArray[y] == "") {
 
+                            if (document.getElementById("autoCreateFolders").checked == true) {
+
+
+try{
+fs.mkdirSync(outPutPathStemFinalArray[y] + validationSlash);
+} catch (err) {
+    break validationSection; 
+    alert("Error creating destination folder " + (y + 1) + ": " + outPutPathStemFinalArray[y] + validationSlash);
+}
+
+
+}else{
+
+
+
                             alert("Destination folder " + (y + 1) + " " + outPutPathStemFinalArray[y] + " does not exist! Please make sure there are no spaces or hidden characters before/after the path");
                             break validationSection;
                         }
+                    }
 
 
 
@@ -2177,313 +2281,102 @@ if (queueView == "enabled") {
 }
 
 
+function informationUpdate(workerNumber,preset,errorLog,globalQueueNumber,backgroundColor,Status,Status2,Status3){
 
-                    if (message[1] == "error") {
+    workerStatusFinishedArray[workerNumber-1] = "Finished"
 
-                        //
-
-                        workerStatusFinishedArray[message[0]-1] = "Finished"
-
-                        if(queueStatusPaused==1){
+    if(queueStatusPaused==1){
                         verifyContinue();
                         }
 
+     //hide cancel item button
+     document.getElementById("cancelButtonDiv"+workerNumber).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
+    
+     
+var currentRow = parseInt(globalQueueNumber) + 1
 
-                        //hide cancel item button
-                        document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
+//var currentRow = parseInt(message[2]) + 1
 
-                        var currentRow = parseInt(message[2]) + 1
+if (queueView == "enabled") {
+    queueTable.rows[currentRow].cells[3].innerHTML = "";
+    queueTable.rows[currentRow].cells[4].innerHTML = Status;
+    queueTable.rows[currentRow].cells[2].innerHTML = preset;
 
-                        if (queueView == "enabled") {
-                            queueTable.rows[currentRow].cells[3].innerHTML = "";
-                            queueTable.rows[currentRow].cells[4].innerHTML = "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+sessionNumber+"')\" value=\"Error (Click for info)\">"
-                            queueTable.rows[currentRow].cells[2].innerHTML = message[3];
+    queueTable.rows[currentRow].style.backgroundColor =backgroundColor;
+}
 
-                            queueTable.rows[currentRow].style.backgroundColor = "#ff2d2d";
-                        }
-
-                        document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#ff2d2d\">Error</font></p>"; 
-
-
-                        //fullErrorLogArray[message[2]] =message[4];  
-
-                        fullErrorLogArray.push(message[4])
+document.getElementById("worker" + workerNumber + "Percentage").innerHTML =Status2;
 
 
-
+                        fullErrorLogArray.push(errorLog)
                         errorArray.push(sourceQueueArray[currentRow - 1])
 
-                        errorCount++;
-
                         updateGraph();
 
-
-                                  
+                        if (mode != "healthCheck") {
 
                         tempOutputQueueHTML += "<tr>"
-                                            + "<td>" + sourceQueueArray[message[2]] + "</td>"
+                                            + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
                                             + "<td>" + sessionNumber + "</td>"
-                                            + "<td>" + message[3] + "</td>"
-                                            + "<td ><input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+sessionNumber+"')\" value=\"Error (Click for info)\"> </td>"
+                                            + "<td>" + preset + "</td>"
+                                            + "<td>"+Status+ "</td>"
                                             + "</tr>";
+
+                        }
                                         sessionNumber++;
+    
+}
 
 
+
+                    if (message[1] == "error") {
+                        errorCount++;
+
+                        informationUpdate(message[0],message[3],message[4],message[2],"#ff2d2d","<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+sessionNumber+"')\" value=\"Error (Click for info)\">","<p><font color=\"#ff2d2d\">Error</font></p>")
+                        
                     }
 
+
+
                     if (message[1] == "success") {
-
-                        workerStatusFinishedArray[message[0]-1] = "Finished"
-                       if(queueStatusPaused==1){
-                        verifyContinue();
-                        }
-
-//hide cancel item button
-document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
-
-
-                        var currentRow = parseInt(message[2]) + 1
-
-                        if (queueView == "enabled") {
-                            queueTable.rows[currentRow].cells[3].innerHTML = "";
-                            queueTable.rows[currentRow].cells[4].innerHTML = "Completed"
-                            queueTable.rows[currentRow].cells[2].innerHTML = message[3];
-                            queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
-                        }
-
-                        document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">Completed</font></p>";  
-
-
-
-                        //fullErrorLogArray[message[2]] =message[4];    
-                        fullErrorLogArray.push(message[4])
-
                         successfulCount++;
-                        updateGraph();
-
-
-                        
-                        if (mode != "healthCheck") {
-                       // var newRow = document.getElementById('sessionConversionsTable').insertRow();
-                      // newRow.innerHTML = "<tr >"
-
-                        tempOutputQueueHTML  += "<tr >"
-                                                + "<td>" + sourceQueueArray[message[2]] + "</td>"
-                                                + "<td>" + sessionNumber + "</td>"
-                                                + "<td>" + message[3] + "</td>"
-                                                + "<td > Completed </td>"
-                                                + "</tr>";
-
-
-                                        }
-                                        sessionNumber++;
-
+                        informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Completed","<p><font color=\"#66ccff\">Completed</font></p>")
 
                     }
 
 
  if (message[1] == "skipped") {
 
-workerStatusFinishedArray[message[0]-1] = "Finished"
-if(queueStatusPaused==1){
-verifyContinue();
-}
-
-//hide cancel item button
-document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
-
-
-var currentRow = parseInt(message[2]) + 1
-
-if (queueView == "enabled") {
-    queueTable.rows[currentRow].cells[3].innerHTML = "";
-    queueTable.rows[currentRow].cells[4].innerHTML = "Skipped"
-    queueTable.rows[currentRow].cells[2].innerHTML = message[3];
-   // queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
-}
-
-document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">Completed</font></p>";  
-
-
-
-//fullErrorLogArray[message[2]] =message[4];    
-fullErrorLogArray.push(message[4])
-
-successfulCount++;
-updateGraph();
-
-
-
-if (mode != "healthCheck") {
-// var newRow = document.getElementById('sessionConversionsTable').insertRow();
-// newRow.innerHTML = "<tr >"
-
-tempOutputQueueHTML  += "<tr >"
-                        + "<td>" + sourceQueueArray[message[2]] + "</td>"
-                        + "<td>" + sessionNumber + "</td>"
-                        + "<td>" + message[3] + "</td>"
-                        + "<td > Skipped </td>"
-                        + "</tr>";
-
-
-                }
-                sessionNumber++;
-
-
+    successfulCount++;
+    informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Skipped","<p><font color=\"#66ccff\">Completed</font></p>")
 }
 
 if (message[1] == "copied") {
 
-workerStatusFinishedArray[message[0]-1] = "Finished"
-if(queueStatusPaused==1){
-verifyContinue();
-}
-
-//hide cancel item button
-document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
-
-
-var currentRow = parseInt(message[2]) + 1
-
-if (queueView == "enabled") {
-    queueTable.rows[currentRow].cells[3].innerHTML = "";
-    queueTable.rows[currentRow].cells[4].innerHTML = "Copied to destination"
-    queueTable.rows[currentRow].cells[2].innerHTML = message[3];
-   // queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
-}
-
-document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">Completed</font></p>";  
-
-
-
-//fullErrorLogArray[message[2]] =message[4];    
-fullErrorLogArray.push(message[4])
-
-successfulCount++;
-updateGraph();
-
-
-
-if (mode != "healthCheck") {
-// var newRow = document.getElementById('sessionConversionsTable').insertRow();
-// newRow.innerHTML = "<tr >"
-
-tempOutputQueueHTML  += "<tr >"
-                        + "<td>" + sourceQueueArray[message[2]] + "</td>"
-                        + "<td>" + sessionNumber + "</td>"
-                        + "<td>" + message[3] + "</td>"
-                        + "<td > Copied to destination </td>"
-                        + "</tr>";
-
-
-                }
-                sessionNumber++;
-
-
+    successfulCount++;
+    informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Copied to destination","<p><font color=\"#66ccff\">Completed</font></p>")
 }
 
 
 if (message[1] == "copiedFail") {
 
-workerStatusFinishedArray[message[0]-1] = "Finished"
-if(queueStatusPaused==1){
-verifyContinue();
-}
-
-//hide cancel item button
-document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
-
-
-var currentRow = parseInt(message[2]) + 1
-
-if (queueView == "enabled") {
-    queueTable.rows[currentRow].cells[3].innerHTML = "";
-    queueTable.rows[currentRow].cells[4].innerHTML = "Copy to destination failed"
-    queueTable.rows[currentRow].cells[2].innerHTML = message[3];
-   // queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
-}
-
-document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">Completed</font></p>";  
-
-                        //fullErrorLogArray[message[2]] =message[4];  
-
-                        fullErrorLogArray.push(message[4])
-
-
-
-                        errorArray.push(sourceQueueArray[currentRow - 1])
-
-                        errorCount++;
-updateGraph();
-
-
-
-if (mode != "healthCheck") {
-// var newRow = document.getElementById('sessionConversionsTable').insertRow();
-// newRow.innerHTML = "<tr >"
-
-tempOutputQueueHTML  += "<tr >"
-                        + "<td>" + sourceQueueArray[message[2]] + "</td>"
-                        + "<td>" + sessionNumber + "</td>"
-                        + "<td>" + message[3] + "</td>"
-                        + "<td > Copy to destination failed </td>"
-                        + "</tr>";
-
-
-                }
-                sessionNumber++;
-
+    errorCount++;
+    informationUpdate(message[0],message[3],message[4],message[2],"#ff2d2d","Copy to destination failed","<p><font color=\"#66ccff\">Completed</font></p>")
 
 }
 
 
 if (message[1] == "originalReplaced") {
 
-workerStatusFinishedArray[message[0]-1] = "Finished"
-if(queueStatusPaused==1){
-verifyContinue();
+    successfulCount++;
+    informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Original replaced","<p><font color=\"#66ccff\">Completed</font></p>")
+
 }
 
-//hide cancel item button
-document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
-
-
-var currentRow = parseInt(message[2]) + 1
-
-if (queueView == "enabled") {
-    queueTable.rows[currentRow].cells[3].innerHTML = "";
-    queueTable.rows[currentRow].cells[4].innerHTML = "Original replaced"
-    queueTable.rows[currentRow].cells[2].innerHTML = message[3];
-   // queueTable.rows[currentRow].style.backgroundColor = "#59ff74";
-}
-
-document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">Completed</font></p>";  
-
-
-
-//fullErrorLogArray[message[2]] =message[4];    
-fullErrorLogArray.push(message[4])
+if (message[1] == "originalNotReplaced") {
 
 successfulCount++;
-updateGraph();
-
-
-
-if (mode != "healthCheck") {
-// var newRow = document.getElementById('sessionConversionsTable').insertRow();
-// newRow.innerHTML = "<tr >"
-
-tempOutputQueueHTML  += "<tr >"
-                        + "<td>" + sourceQueueArray[message[2]] + "</td>"
-                        + "<td>" + sessionNumber + "</td>"
-                        + "<td>" + message[3] + "</td>"
-                        + "<td > Original replaced </td>"
-                        + "</tr>";
-
-
-                }
-                sessionNumber++;
-
+informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Original not replaced","<p><font color=\"#66ccff\">Completed</font></p>")
 
 }
 
@@ -2494,56 +2387,8 @@ tempOutputQueueHTML  += "<tr >"
 
                     if (message[1] == "cancelled") {
 
-                        workerStatusFinishedArray[message[0]-1] = "Finished"
-                       if(queueStatusPaused==1){
-                        verifyContinue();
-                        }
-
-
-
-                        //hide cancel item button
-                        document.getElementById("cancelButtonDiv"+message[0]).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
-
-
-                        var currentRow = parseInt(message[2]) + 1
-
-                        if (queueView == "enabled") {
-                            queueTable.rows[currentRow].cells[3].innerHTML = "";
-                            queueTable.rows[currentRow].cells[4].innerHTML = "Cancelled"
-                            queueTable.rows[currentRow].cells[2].innerHTML = message[3];
-
-                            queueTable.rows[currentRow].style.backgroundColor = "#ffda6d";
-                        }
-
-                        document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p>Cancelled</p>"; 
-
-
-                       // fullErrorLogArray[message[2]] =message[4];  
-                       fullErrorLogArray.push(message[4])
-
-
-
-                        errorArray.push(sourceQueueArray[currentRow - 1])
-
                         errorCount++;
-
-                        updateGraph(); 
-                        
-                       
-                        tempOutputQueueHTML += "<tr >"
-                                                + "<td>" + sourceQueueArray[message[2]] + "</td>"
-                                                + "<td>" + sessionNumber + "</td>"
-                                                + "<td>" + message[3] + "</td>"
-                                                + "<td > Cancelled </td>"
-                                                + "</tr>";
-
-
-                                    
-                                        sessionNumber++;                       
-
-
-
-
+                        informationUpdate(message[0],message[3],message[4],message[2],"#ffda6d","Cancelled","<p>Cancelled</p>")
                     }
 
 
@@ -2966,7 +2811,7 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
 
 }else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Copied to destination")) {
 
-sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
+sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
 
 
 }else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Copy to destination failed")) {
@@ -2976,7 +2821,7 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
 
 }else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Original replaced")) {
 
-sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
+sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
 
 
 }
@@ -3623,6 +3468,12 @@ workers[i].send(messageOut);
         var fs = require('fs');
         fs.writeFileSync(homePath + '/HBBatchBeast/Logs/healthyFileList.txt', "", 'utf8');
         alert("Healthy file cache cleared!")
+    }
+
+    function clearOriginalFileCompressAttemptCache(){
+        var fs = require('fs');
+        fs.writeFileSync(homePath + '/HBBatchBeast/Logs/originalFileReplacedList.txt', "", 'utf8');
+        alert("Cache cleared!")
     }
 
 
@@ -4656,10 +4507,24 @@ color: black;
 
 
                     <div class="grid-itemleft">
-                            <p>Replace original file if converted file is smaller?</p>
+                            <p>Replace original file if converted file is smaller?(Compress attempt)</p>
                         </div>
     
                         <div class="grid-itemright"><input type="checkbox" id="replaceOriginalFile"></div>
+
+                      
+                                <input type="button" onclick="viewLogs('originalFileReplacedList')" value="View compress attempt cache" class="infoButton">
+              
+           
+                            <input type="button" onclick="clearOriginalFileCompressAttemptCache()" value="Clear compress attempt cash" class="infoButton">
+                       
+       
+
+                            <div class="grid-itemleft">
+                                    <p>Automatically create temp/destination folders if they don't exist?</p>
+                                </div>
+            
+                                <div class="grid-itemright"><input type="checkbox" id="autoCreateFolders"></div>
 
 
 

@@ -160,6 +160,16 @@ healthyFileArray = healthyFileArray.toString().split("\n");
  }
 
 
+ if (mode != "healthCheck") {                    
+
+    var fs = require('fs');
+    var replacedFileArray = "";
+    replacedFileArray = fs.readFileSync(homePath + "/HBBatchBeast/Logs/originalFileReplacedList.txt", 'utf8');
+    replacedFileArray = replacedFileArray.toString().split("\n");
+    
+     }
+
+
 
 
 
@@ -238,7 +248,7 @@ function traverseDir(inputPathStem) {
 
 
 
-
+// compare against healthy file list
 
 
  if (mode == "healthCheck") {
@@ -247,10 +257,19 @@ for (var j = 0; j < healthyFileArray.length; j++) {
 if (thisFile == healthyFileArray[j]) {
                         supportedFileSwitch = 0;
                     }
-
-
 }
  }
+
+ // compare against files already replaced list
+
+ if (mode != "healthCheck") {
+    for (var j = 0; j < replacedFileArray.length; j++) {
+    
+    if (thisFile == replacedFileArray[j]) {
+                            supportedFileSwitch = 0;
+                        }
+    }
+     }
                 
 
                         
