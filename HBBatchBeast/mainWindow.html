@@ -444,6 +444,17 @@ if (f == "1") {
 
         }
 
+
+
+//read corrupt file folder
+
+    if (fs.existsSync(homePath + "/HBBatchBeast/Config/corruptDestinationPath.txt")) {
+
+document.getElementById("corruptDestinationPath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/corruptDestinationPath.txt", 'utf8');
+
+
+}
+
         //set temp destination path on/off
 
 
@@ -530,6 +541,24 @@ if (f == "1") {
 
             }
         }
+
+
+// read whether to move corrupt files into folder or not
+
+
+                if (fs.existsSync(homePath + "/HBBatchBeast/Config/moveCorruptFileOnOff.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/moveCorruptFileOnOff.txt", 'utf8');
+
+
+if (f == "1") {
+    document.getElementById("moveCorruptFileOnOff").checked = true;
+
+} else {
+    document.getElementById("moveCorruptFileOnOff").checked = false;
+
+}
+}
 
 
 
@@ -961,6 +990,10 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTimeOnOff.txt', 0, 'ut
 
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/tempDestinationPath.txt', document.getElementById("tempDestinationPath").value, 'utf8');
 
+        //save corrupt folder path
+
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/corruptDestinationPath.txt', document.getElementById("corruptDestinationPath").value, 'utf8');
+
         //save enable/disble temporary destination
 
 
@@ -985,6 +1018,21 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTimeOnOff.txt', 0, 'ut
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/customPresetOnOff.txt', 1, 'utf8');
 
         }
+
+
+                //save if to move corrupt files into folder
+
+                if (document.getElementById("moveCorruptFileOnOff").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/moveCorruptFileOnOff.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/moveCorruptFileOnOff.txt', 0, 'utf8');
+
+}
+
+
+
+
 
 
         //save custom preset string
@@ -1293,6 +1341,9 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
             }
 
 
+            var corruptFolderStem = document.getElementById("corruptDestinationPath").value;
+
+
             if (mode != "healthCheck") {
                 if (document.getElementById("selectCustomPreset").checked == true) {
 
@@ -1354,6 +1405,26 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
                 //make sure there are no trailing slashes on file paths
 
+
+if (mode == "healthCheck") {                
+
+if(document.getElementById("moveCorruptFileOnOff").checked == true){
+
+    if (corruptFolderStem.charAt(corruptFolderStem.length - 1) == "\\" || corruptFolderStem.charAt(corruptFolderStem.length - 1) == "/") {
+
+alert("Please remove trailing slashes from source folder path " + corruptFolderStem + "!");
+break validationSection;
+}
+
+}
+}
+
+
+
+
+
+
+
                 if (inputPathStemArray[y].charAt(inputPathStemArray[y].length - 1) == "\\" || inputPathStemArray[y].charAt(inputPathStemArray[y].length - 1) == "/") {
 
                     alert("Please remove trailing slashes from source folder path " + inputPathStemArray[y] + "!");
@@ -1406,6 +1477,26 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
 
                 //check folders exist
+
+if (mode == "healthCheck") {                
+
+if(document.getElementById("moveCorruptFileOnOff").checked == true){
+    
+
+if (fs.existsSync(corruptFolderStem + validationSlash) == false || corruptFolderStem == "") {
+
+alert("Corrupt file folder " + corruptFolderStem + " does not exist! Please make sure there are no spaces or hidden characters before/after the path");
+break validationSection;    
+
+}
+}
+}
+
+
+
+
+
+
 
 
 
@@ -4586,8 +4677,41 @@ color: black;
 
             <div id="mediaHealthCheck" class="tabcontent">
                 <input type='button' class="button2one1" value='Health check' onclick='convertFiles("healthCheck")' />
-                <p>
-                    <p>
+
+
+                <p></p>
+                <p></p>
+
+                <div class="grid-itemleft">
+                        <p>Move corrupt files into the following folder?:</p>
+                    </div>
+
+                    <div class="grid-itemright"> <input type="checkbox" id="moveCorruptFileOnOff" >
+                           
+                    </div>
+
+                <div class="grid-container">
+                        <div class="grid-itemleft">
+                            <p>Corrupt file folder:</p>
+                        </div>
+                        <div class="grid-itemright"></div>
+
+                    </div>
+
+                    <div style="text-align: right"> <textarea type="text" class="folderPaths"
+                            id="corruptDestinationPath"></textarea>
+
+                        <img src="./assets/Images/Folder-Open-icon.png" alt="Italian Trulli"
+                            style="width:50x;height:25px;" onclick="selectFolder('corruptDestinationPath')">
+                    </div>
+
+
+
+
+
+
+                <p></p>
+                <p></p>
                         <p>HBBB saves a list of scanned file paths reported as uncorrupt. Clear the cache to perform a fresh scan on all files.<p>
 
                             <input type="button" onclick="clearHealthyFileCache()" value="Clear healthy file cache" class="infoButton">
