@@ -1866,6 +1866,8 @@ if (message[0] == "scanandconvert") {
 
             // };
 
+            console.log(document.getElementById("replaceOriginalFile").checked)
+
 
             var queueInfoBomb = [
 
@@ -1878,7 +1880,7 @@ if (message[0] == "scanandconvert") {
             mode,
             presetArray,
             document.getElementById("titleWordFilter").value,
-            document.getElementById("replaceOriginalFile").value,
+            document.getElementById("replaceOriginalFile").checked,
         
  ];
 
@@ -2456,7 +2458,7 @@ document.getElementById("worker" + workerNumber + "Percentage").innerHTML =Statu
  if (message[1] == "skipped") {
 
     successfulCount++;
-    informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Skipped","<p><font color=\"#66ccff\">Completed</font></p>")
+    informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c","Skipped","<p><font color=\"#66ccff\">Completed</font></p>")
 }
 
 if (message[1] == "copied") {
@@ -2484,7 +2486,7 @@ if (message[1] == "originalReplaced") {
 if (message[1] == "originalNotReplaced") {
 
 successfulCount++;
-informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Original not replaced","<p><font color=\"#66ccff\">Completed</font></p>")
+informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c","Original not replaced","<p><font color=\"#66ccff\">Completed</font></p>")
 
 }
 
@@ -2930,6 +2932,11 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
 }else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Original replaced")) {
 
 sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
+
+
+}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Original not replaced")) {
+
+sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
 
 
 }

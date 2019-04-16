@@ -434,7 +434,10 @@ workerCommand =handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + cu
     if(process.platform == 'linux' ){
     //workerCommand ="HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
 
-    workerCommand ="nice -n 20 HandBrakeCLI -i '\"" + currentSourceLine + "\"' -o '\"" + currentDestinationLine + "\"' " + preset;
+   // workerCommand ='nice -n 20 HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" ' + preset;
+
+
+    workerCommand ="nice -n 20 HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
 
     //20 low priority, 0 = default = highest priority (without sudo)
 
@@ -1310,6 +1313,8 @@ if (replaceOriginalFile == true) {
 if (tempFolderSected == "1") {
 
 if(newFinalFileSize < originalFileSize){
+
+    var mv = require('mv');
   mv(currentDestinationFinalLine, currentSourceLine, function(err) {});
 
   var message = [
@@ -1339,7 +1344,7 @@ if(newFinalFileSize < originalFileSize){
 
   }else{
 
-
+    var mv = require('mv');
 
       if(newFileSize < originalFileSize){
           mv(currentDestinationLine, currentSourceLine, function(err) {
