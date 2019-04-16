@@ -434,7 +434,7 @@ workerCommand =handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + cu
     if(process.platform == 'linux' ){
     //workerCommand ="HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
 
-    workerCommand ="nice -n 20 HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
+    workerCommand ="nice -n 20 HandBrakeCLI -i '\"" + currentSourceLine + "\"' -o '\"" + currentDestinationLine + "\"' " + preset;
 
     //20 low priority, 0 = default = highest priority (without sudo)
 
