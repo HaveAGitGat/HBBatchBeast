@@ -2,6 +2,8 @@
 
 [![Reddit](https://img.shields.io/badge/Reddit-HBBatchBeast-FF5700.svg?style=flat-square)](https://www.reddit.com/r/HBBatchBeast/)
 
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](97L64UK77NTZL)
+
 A GUI application for Handbrake on Windows, macOS and Linux with an emphasis on batch conversion (including recursive folder scans and folder watching). The destination folder structure is kept the same as the source folder structure. Media in subfolders is also converted. Multiple folders can be monitored and different conversion presets can be specified for each folder. There is also a health check feature which can scan for corrupt video files using Handbrakes's '--scan' feature, although this
 is not always accurate.
 
