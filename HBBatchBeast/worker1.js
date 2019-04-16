@@ -180,6 +180,8 @@ var  replaceOriginalFile;
 var  moveCorruptFileOnOff;
 var  corruptDestinationPath;
 
+var runPriority;
+
 var mode
 
 var shellThreadModule;
@@ -315,6 +317,14 @@ corruptDestinationPath = m[6];
 
 mode =m[7];
 
+if(m[8]==true){
+
+    runPriority = 20;
+
+}else{
+    runPriority =0;
+}
+
 
 
 
@@ -437,7 +447,7 @@ workerCommand =handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + cu
    // workerCommand ='nice -n 20 HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" ' + preset;
 
 
-    workerCommand ="nice -n 20 HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
+    workerCommand ="nice -n "+runPriority+" HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
 
     //20 low priority, 0 = default = highest priority (without sudo)
 
@@ -1276,6 +1286,7 @@ actionComplete=1;
 if (deleteSourceFilesOnOff == "1") {
               
 if(errorSwitch==0){
+    var fs = require('fs');
          if (fs.existsSync(currentSourceLine)) {
 
 fs.unlinkSync(currentSourceLine)

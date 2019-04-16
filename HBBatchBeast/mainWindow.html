@@ -249,6 +249,17 @@
         }
 
 
+//show priority checkbox div if on Linux
+
+                if (process.platform == 'linux') {
+
+document.getElementById("runPriorityDiv").style.display = 'block';
+
+
+
+}
+
+
 
         //var logpath = homePath + '/Documents/somefolderwhichexists/' + title + '.txt';
 
@@ -618,6 +629,23 @@ if (f == "1") {
     document.getElementById("autoCreateFolders").checked = true;
 } else {
     document.getElementById("autoCreateFolders").checked = false;
+
+}
+
+}
+
+
+
+// read if run at low priority
+
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/runPriority.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/runPriority.txt", 'utf8');
+if (f == "1") {
+    document.getElementById("runPriority").checked = true;
+} else {
+    document.getElementById("runPriority").checked = false;
 
 }
 
@@ -1112,6 +1140,16 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/moveCorruptFileOnOff.txt', 0, 
 fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoCreateFolders.txt', 1, 'utf8');
 } else {
 fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoCreateFolders.txt', 0, 'utf8');
+}
+
+
+            //save run priority
+
+            if (document.getElementById("runPriority").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/runPriority.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/runPriority.txt', 0, 'utf8');
 }
 
 
@@ -2306,6 +2344,7 @@ for (i = 0; i < tabcontent.length; i++) {
                                     document.getElementById("moveCorruptFileOnOff").checked,
                                     document.getElementById("corruptDestinationPath").value,
                                     mode,
+                                    document.getElementById("runPriority").checked,
 
                                 
                                              ];
@@ -4654,6 +4693,18 @@ color: black;
                             <textarea type="text" class="folderPaths" id="customBatPath"></textarea>
                         </div>
                     </div>
+
+
+                    <div id="runPriorityDiv" style="display: none;">
+
+                            <div style="text-align: left">
+                                <p>Run processes at low priority?</p>
+                            </div>
+    
+                            <div style="text-align: right">
+                                    <input type="checkbox" id="runPriority">
+                            </div>
+                        </div>
 
                 </div>
 
