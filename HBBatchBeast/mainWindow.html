@@ -4210,6 +4210,27 @@ color: black;
     }
 
 
+    .HaveAGitGat2 {
+
+background-color: #00476b;
+border: none;
+color: white;
+
+text-align: left;
+text-decoration: none;
+
+display: block;
+font-size: 5em;
+border-radius: 5px;
+margin-top: 1px;
+margin-bottom: 15px;
+margin-right: 1px;
+margin-left: 1px;
+
+
+}
+
+
 
 
 
@@ -4672,7 +4693,7 @@ color: black;
                                 <input type="button" onclick="viewLogs('originalFileReplacedList')" value="View compress attempt cache" class="infoButton">
               
            
-                            <input type="button" onclick="clearOriginalFileCompressAttemptCache()" value="Clear compress attempt cash" class="infoButton">
+                            <input type="button" onclick="clearOriginalFileCompressAttemptCache()" value="Clear compress attempt cache" class="infoButton">
                        
        
 
@@ -4802,7 +4823,7 @@ color: black;
                     <div class="grid-container">
 
                         <div class="grid-itemleft">
-                            <p>Number of simulataneous Handbrake instances to use?(Recommended <=4):</p> </div> <div
+                            <p>Number of simultaneous Handbrake instances to use?(Recommended <=4):</p> </div> <div
                                     class="grid-itemright"><input type="text" class="infoBox" id="instanceNumber">
                         </div>
 
@@ -4846,140 +4867,16 @@ color: black;
 
                 <div id="helpSection" class="tabcontent">
 
+                <centre>
+
+   
+
+                        <input type="button" class="HaveAGitGat2" onclick="openURL('https://github.com/HaveAGitGat/HBBatchBeast/wiki')" value="Wiki help">
 
 
-                    <div class="grid-container2">
-
-                        <div class="grid-item2"></div>
-                        <div class="grid-item2">
-
-                            <p><br /><span style="font-size: 12pt;"><strong>Folder paths, entered with no trailing
-                                        slash -
-                                        e.g:</strong></span></p>
-                            <p>Windows:<br />C:\Users\HaveAGitGat\Desktop\Input</p>
-                            <p>Linux:<br />/home/haveagitgat/Desktop/Input</p>
-                            <p>macOS:<br />/Users/haveagitgat/Desktop/Input</p>
-                            <p>If monitoring multiple folders, you need to specify a temporary folder (if option
-                                checked)
-                                and
-                                destination folder for each source folder. <br />Each folder entry must be on a new
-                                line.
-                                If
-                                'Standard preset' is selected, then all source folders will be converted with
-                                the<br />selected
-                                standard preset. If 'Custom preset' is selected, then you must enter a preset for each
-                                source
-                                folder. Each preset must be<br />on a new line. See the following image for guidance:
-                            </p>
-                            <p>https://imgur.com/a/2tl8dIw</p>
-                            <p>For example, if you're wanting to use two standard presets for two different folders,
-                                you
-                                should put
-                                the following in the custom preset box:</p>
-                            <p>-Z "Very Fast 1080p30"<br />-Z "Very Fast 480p30"</p>
-                            <p>&nbsp;</p>
-                            <p><strong><span style="font-size: 12pt;">Standard preset:</span></strong><br />Select one
-                                of
-                                the
-                                standard Handbrake presets</p>
-                            <p><span style="font-size: 12pt;"><strong>Custom preset:</strong></span><br />Write custom
-                                presets or
-                                link to a json preset exported from Handbrake. For example:<br />-e x264 -q 20 -B
-                                160<br />or<br />--preset-import-file
-                                "C:\Users\HaveAGitGat\Desktop\testpreset.json" -Z "My Preset"</p>
-                            <p><span style="font-size: 12pt;"><strong>Container:</strong></span><br />Select the output
-                                file
-                                container type.</p>
-                            <p><span style="font-size: 12pt;"><strong>Enable periodic
-                                        scanning:</strong></span><br />Select
-                                this to
-                                automatically scan and convert files at a set interval (default 300 seconds). <br />Scan
-                                interval
-                                can be modified in the advanced settings section.</p>
-                            <p><strong><span style="font-size: 12pt;">Delete source files after
-                                        conversion:</span></strong><br />If
-                                checked, source files will be deleted once the queue has completed.</p>
-                            <p><span style="font-size: 12pt;"><strong>Valid file types:</strong></span><br />File types
-                                which the
-                                program will scan for.<br />Separate with comma (e.g. iso,wmv,
-                                )<br />Default:mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,</p>
-                            <p><strong>Number<span style="font-size: 12pt;"> o</span><span style="font-size: 12pt;">f
-                                    </span>simultaneous<span style="font-size: 12pt;"> Handbrake
-                                        instances:</span></strong><br />Set
-                                how many Handbrake
-                                simultaneous conversions to carry out. Although an ulimited amount can be used, it is
-                                recommended not to go above 4.</p>
-                            <p><span style="font-size: 12pt;"><strong>Custom bat path to run after each conversion
-                                        (Windows):</strong></span><br />Input
-                                a bat file path to run after each file has finished being converted.Bat files with
-                                timeout
-                                statements won't work (more on this here
-                                https://comm.support.ca.com/kb/the-timeout-command-in-batch-script-job-results-in-error-input-redirection-is-not-supported-exiting-the-process-immediately/kb000029524)<br />Leave
-                                box completely empty if you do not wish to use this option (make sure there are no
-                                hidden
-                                characters in the box).</p>
-                            <p>Save config:<br />Save current configuration</p>
-                            <p><span style="font-size: 12pt;"><strong>Health check:</strong></span><br />This uses
-                                Handbrakes
-                                inbuilt '--scan' feature it uses to scan a video for information. If an error is thrown
-                                during this
-                                process, the file my be corrupt. It is not 100% accurate so should only be used as
-                                guidance.</p>
-                            <p><span style="font-size: 12pt;"><strong>Scan only:</strong></span><br />Scan for files to
-                                be
-                                converted given current configuration. <br />No files will be converted. Pressing this
-                                will
-                                only
-                                run it once (regardless of whether 'periodic scanning' is checked.</p>
-                            <p><span style="font-size: 12pt;"><strong>Scan and convert:</strong></span><br />Scan for
-                                files
-                                and
-                                convert any valid ones. <br />If 'periodic scanning' is checked, then the program will
-                                scan
-                                and
-                                convert repeatedly at the specified interval.</p>
-                            <p><span style="font-size: 12pt;"><strong>View scan/conversion summary
-                                        log:</strong></span><br />Show
-                                historic scan/conversion information</p>
-                            <p><span style="font-size: 12pt;"><strong>View individual file conversion
-                                        log:</strong></span></p>
-                            <p>Shows a list of all files processed with success or error tag.</p>
-                            <p><br /><span style="font-size: 12pt;"><strong>Total number of media files
-                                        found:</strong></span><br />Number
-                                of valid files found based on valid file types option.</p>
-                            <p><span style="font-size: 12pt;"><strong>Number of unconverted media files
-                                        found:</strong></span><br />Files
-                                which don't exist in the destination folder structure when compared to the source
-                                folder
-                                structure.</p>
-                            <p><br />If an item in the queue comes out with "Error", this means that the HandbrakeCLI
-                                had
-                                trouble
-                                converting/scanning the file, most likely due to it being corrupt/partially corrupt.
-                                Else it may
-                                be
-                                a
-                                file type which Handbrake does not support. Try converting the file normally in
-                                Handbrake
-                                to
-                                see what error it throws.</p><br>
-                            <p><span style="font-size: 12pt;"><strong>Email settings:</strong></span><br />Fill in
-                                details to receive email notifications if an error is encountered during health check or
-                                conversion/folder watching. Won't work with accounts that require 2FA. May need to
-                                enable access to less secure apps on Gmail accounts.</p>
-                            <p>Email: e.g. example@exampleemail.com</p>
-                            <p>Password: Is not saved for security purposes.</p>
-                            <p>SMTP server: e.g. smtp.gmail.com</p>
+                    </centre>    
 
 
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-
-                        </div>
-                        <div class="grid-item2"></div>
-
-
-                    </div>
 
                 </div>
 
