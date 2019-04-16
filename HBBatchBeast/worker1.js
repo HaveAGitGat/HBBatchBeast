@@ -3,7 +3,7 @@ process.env.NODE_ENV = "production";
 
 var shell = require('shelljs');
 
-var mv = require('mv');
+
 
 
 
@@ -539,7 +539,7 @@ if(skipOrCopy==1){
 
 
     // currentSourceLine + "\" -o \"" + currentDestinationLine
-    //mv(currentDestinationLine, currentDestinationFinalLine
+  
 
 
     if (tempFolderSected == "1") {
@@ -837,14 +837,9 @@ process.send(message);
     
         corruptDestinationPath = corruptDestinationPath +stringProcessingSlash +filePathEnd;
 
-    
-    var mv = require('mv');
-    mv(currentSourceLine, corruptDestinationPath, function(err) {
-    
-        });
-    
-    
-    
+
+   const fs = require('fs-extra')
+            fs.moveSync(currentSourceLine, corruptDestinationPath, { overwrite: true })
     
     
         }
@@ -1178,12 +1173,9 @@ actionComplete=1;
 
             //  fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
 
+const fs = require('fs-extra')
+fs.moveSync(currentDestinationLine, currentDestinationFinalLine, { overwrite: true })
 
-mv(currentDestinationLine, currentDestinationFinalLine, function(err) {
-// done. it tried fs.rename first, and then falls back to
-// piping the source file to the dest file and then unlinking
-// the source file.
-});
 
 
 
@@ -1191,12 +1183,10 @@ mv(currentDestinationLine, currentDestinationFinalLine, function(err) {
       
       
            try{
-         
-      mv(currentDestinationLine, currentDestinationFinalLine, function(err) {
-// done. it tried fs.rename first, and then falls back to
-// piping the source file to the dest file and then unlinking
-// the source file.
-});   
+
+               const fs = require('fs-extra')
+fs.moveSync(currentDestinationLine, currentDestinationFinalLine, { overwrite: true })
+ 
 
 
       
@@ -1298,6 +1288,14 @@ fs.unlinkSync(currentSourceLine)
 
 //check to see if original file should be replaced if new file is smaller
 
+
+
+
+if (mode != "healthCheck") {
+
+
+
+
 if (replaceOriginalFile == true) {
 
 
@@ -1325,8 +1323,13 @@ if (tempFolderSected == "1") {
 
 if(newFinalFileSize < originalFileSize){
 
-    var mv = require('mv');
-  mv(currentDestinationFinalLine, currentSourceLine, function(err) {});
+
+try{
+
+
+const fs = require('fs-extra')
+fs.moveSync(currentDestinationFinalLine, currentSourceLine, { overwrite: true })
+
 
   var message = [
     workerNumber,
@@ -1337,7 +1340,24 @@ if(newFinalFileSize < originalFileSize){
     ];
     process.send(message);
 
-}{
+}catch(err){
+
+        var message = [
+        workerNumber,
+        "originalNotReplaced",
+        globalQueueNumber,
+        preset,
+        errorLogFull
+        ];
+        process.send(message);
+
+
+}
+
+
+
+
+}else{
 
     var message = [
         workerNumber,
@@ -1355,14 +1375,23 @@ if(newFinalFileSize < originalFileSize){
 
   }else{
 
-    var mv = require('mv');
+    
 
       if(newFileSize < originalFileSize){
-          mv(currentDestinationLine, currentSourceLine, function(err) {
-
-          });  
 
 
+try{
+
+   //  var fs = require('fs');
+   //fs.renameSync(currentDestinationLine, currentSourceLine) 
+  
+
+
+const fs = require('fs-extra')
+fs.moveSync(currentDestinationLine, currentSourceLine, { overwrite: true })
+
+
+ 
           
           
           var message = [
@@ -1373,6 +1402,21 @@ if(newFinalFileSize < originalFileSize){
             errorLogFull
             ];
             process.send(message);
+
+}catch(err){
+
+                var message = [
+                workerNumber,
+                "originalNotReplaced",
+                globalQueueNumber,
+                preset,
+                errorLogFull
+                ];
+                process.send(message);
+
+}
+          
+
         
         }else{
 
@@ -1407,6 +1451,20 @@ if(newFinalFileSize < originalFileSize){
 
       
   }else{
+
+    var message = [
+        workerNumber,
+        "success",
+        globalQueueNumber,
+        preset,
+        errorLogFull
+        ];
+        process.send(message);
+
+
+}
+
+}else{
 
     var message = [
         workerNumber,

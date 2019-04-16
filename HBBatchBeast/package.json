@@ -19,6 +19,7 @@
     "async": "^2.6.2",
     "bcrypt": "^3.0.6",
     "emailjs": "^2.2.0",
+    "fs-extra": "^7.0.1",
     "glob": "^7.1.3",
     "inquirer-select-directory": "^1.2.0",
     "mv": "^2.1.1",
