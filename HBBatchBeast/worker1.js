@@ -425,11 +425,20 @@ if(process.platform=='win32'){
   
 workerCommand =handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset;
 
+//workerCommand =" /Low"+handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset;
+
+
 
     }
     
     if(process.platform == 'linux' ){
-    workerCommand ="HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
+    //workerCommand ="HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
+
+    workerCommand ="nice -n 20 HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
+
+    //20 low priority, 0 = default = highest priority (without sudo)
+
+    //nice -n -20
 
 //workerCommand ='HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" ' + preset;
     }
