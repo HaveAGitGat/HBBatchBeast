@@ -32,13 +32,12 @@ INSTALLATION - macOS:
 
 Step 1: Make sure you have HandbrakeCLI installed. The easiest way is using Hombrew. Do the following.
 
-Copy the following line into a terminal:
+a.Copy the following line into a terminal:
 
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 Press enter and wait for it to complete.
-
-Copy the following line into a terminal:
+b.Copy the following line into a terminal:
 
 brew install handbrake
 
@@ -66,19 +65,17 @@ INSTALLATION - Linux:
 Step 1: Make sure you have HandbrakeCLI installed - do the following:
 
 
-Copy the following line into a terminal:
+a.Copy the following line into a terminal:
 
 sudo add-apt-repository ppa:stebbins/handbrake-releases
 
 Press enter and wait for it to complete.
-
-Copy the following line into a terminal:
+b.Copy the following line into a terminal:
 
 sudo apt-get update
 
 Press enter and wait for it to complete.
-
-Copy the following line into a terminal:
+c.Copy the following line into a terminal:
 
 sudo apt-get install handbrake-cli handbrake-gtk
 
