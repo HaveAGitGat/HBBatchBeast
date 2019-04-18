@@ -243,7 +243,8 @@ var killCommand = 'pkill -P ' + process.pid
     if(m[0] == "exitThread"){
 
 var infoArray = [
- "exitThread"               
+ "exitThread",
+ "itemCancelled",               
  ];     
 
 try{
@@ -503,7 +504,7 @@ workerCommand =handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + cu
 
             var fs = require('fs');
 
-            var shellThreadExitCode
+           
 
             var errorLogFull =""
 
@@ -783,23 +784,23 @@ var message = [
                 errorLogFull  += data;
 
 
-                if(str.includes("Video: hevc") || str.includes("Video: h264")){
+                if(str.includes("Video: hevc")){
 
-                    var message = [
-                        workerNumber,
-                        "filterFound",
-                        str,
-                        //currentSourceLine+" ConversionError\n",
-                        ];
-                        process.send(message);
+                    // var message = [
+                    //     workerNumber,
+                    //     "filterFound",
+                    //     str,
+                    //     //currentSourceLine+" ConversionError\n",
+                    //     ];
+                    //     process.send(message);
                 
                     var infoArray = [
-                        "exitThread"               
+                        "exitThread",
+                        "propertyFilter",
+
                         ];     
                        
                        try{
-                       
-                       
                        if(shellThreadModule != ""){
                        shellThreadModule.send(infoArray); 
                        }
@@ -823,28 +824,29 @@ var message = [
 
 shellThreadModule.on('message', function (message) {
 
-if (message.error) {
+ if (message.error) {
     console.error(message.error);
-  }
+   }
 
-var mesage2 = message.split(",");
+//var message2 = message.split(",");
 
-if (mesage2[0] == "Exit") {
+
+
+if (message[0] == "Exit") {
 
     shellThreadModule="";
 
-console.log('shellThreadExited:', mesage2[1]);
+console.log('shellThreadExited:', message[1]);
 
-shellThreadExitCode = mesage2[1];
+
 
 
 //// exit code begin
 
+if (message[1] != 0) {
 
-if (shellThreadExitCode != 0) {
 
-
-if (shellThreadExitCode == "Cancelled") {
+if (message[1] == "Cancelled") {
 
    var message = [
 workerNumber,
@@ -856,7 +858,19 @@ errorLogFull
 process.send(message);
 
 
-}else{
+}else if(message[1] == "propertyFilter"){
+
+    var message = [
+        workerNumber,
+        "skipped",
+        globalQueueNumber,
+        "Skip",
+        errorLogFull
+        ];
+        process.send(message)
+
+
+}else {
 
     if (mode == "healthCheck") {                
 

@@ -38,7 +38,11 @@ var workerCommand = infoArray[1];
 shellWorker = shell.exec(workerCommand, function(code, stdout, stderr,stdin) {
  //console.log('Exit code:', code);
 
-process.send("Exit,"+code);
+ var message = [
+    "Exit",
+    code,
+    ];
+process.send(message);
 
 
   //console.log('Program output:', stdout+"    PID:"+shellWorker.pid);
@@ -56,7 +60,25 @@ process.exit()
 
 if(infoArray[0]=="exitThread"){
 
-    process.send("Exit,"+"Cancelled");
+
+if(infoArray[1] == "itemCancelled"){
+
+    var message = [
+        "Exit",
+        "Cancelled",
+        ];
+    process.send(message);
+
+}else if(infoArray[1] == "propertyFilter"){
+
+    var message = [
+        "Exit",
+        "propertyFilter",
+        ];
+    process.send(message);
+
+
+}
 
 
 try{
