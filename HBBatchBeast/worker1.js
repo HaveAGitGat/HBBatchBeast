@@ -219,15 +219,9 @@ process.on('message', (m) => {
         if(m[0] == "suicide"){
 
 if(process.platform=='win32'){
-
-
-
-
 var killCommand = 'taskkill /PID '+process.pid+' /T /F'
-
-
-
 }
+
 if(process.platform=='linux'){
 var killCommand = 'pkill -P ' + process.pid
 }
@@ -258,8 +252,6 @@ try{
 if(shellThreadModule != ""){
 shellThreadModule.send(infoArray); 
 }
-
-
 
 
 }catch (err){}
@@ -534,7 +526,34 @@ process.send(message);
 
 
 
-if(skipOrCopy==1){
+
+if(itemChecked == false){
+
+    var message = [
+        workerNumber,
+        "skipped",
+        globalQueueNumber,
+        "Skip",
+        errorLogFull
+        ];
+        process.send(message);
+
+
+ var f = fs.readFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
+ if (f == "1") {
+      
+var message = [
+workerNumber,
+"queueRequest",
+];
+process.send(message);
+        } else if (f == "0"){
+        }
+
+
+
+
+}else if(skipOrCopy==1){
 
 
    if(copyOnOff==true){
@@ -667,32 +686,6 @@ function endCyle(){
              
 
 
-}else if(itemChecked == false){
-
-    var message = [
-        workerNumber,
-        "skipped",
-        globalQueueNumber,
-        "Skip",
-        errorLogFull
-        ];
-        process.send(message);
-
-
- var f = fs.readFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
- if (f == "1") {
-      
-var message = [
-workerNumber,
-"queueRequest",
-];
-process.send(message);
-        } else if (f == "0"){
-        }
-
-
-
-
 }else{
 
 
@@ -705,12 +698,14 @@ process.send(message);
 
                          shellThreadModule.send(infoArray); 
 
-            shellThreadModule.stdout.on('data', function(data) {
+            shellThreadModule.stdout.on('data', function(data) {    
                //  console.log('stdoutWorker: ' + data);
 
 
 
 //log console output to text file
+
+
 
 var str =""+data;
 
@@ -727,6 +722,8 @@ var message = [
 
 
 // send percentage update to GUI
+
+
 
 
       if(str.includes("%")){
@@ -777,13 +774,41 @@ var str =""+data;
 var message = [
     workerNumber,
     "appendRequest",
-    homePath+"/HBBatchBeast/Logs/Worker"+workerNumber+"ConsoleOutput.txt",
+    homePath+"/HBBatchBeast/Logs/Worker"+workerNumber+"ConsoleOutputError.txt",
     str,
     //currentSourceLine+" ConversionError\n",
     ];
     process.send(message);
 
                 errorLogFull  += data;
+
+
+                if(str.includes("Video: hevc") || str.includes("Video: h264")){
+
+                    var message = [
+                        workerNumber,
+                        "filterFound",
+                        str,
+                        //currentSourceLine+" ConversionError\n",
+                        ];
+                        process.send(message);
+                
+                    var infoArray = [
+                        "exitThread"               
+                        ];     
+                       
+                       try{
+                       
+                       
+                       if(shellThreadModule != ""){
+                       shellThreadModule.send(infoArray); 
+                       }
+                       
+                       
+                       }catch (err){}
+                
+                
+                }
 
                    });
 
