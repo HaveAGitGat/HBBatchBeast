@@ -1,5 +1,5 @@
 //SET ENV
-process.env.NODE_ENV = "production";
+//process.env.NODE_ENV = "production";
 
 var shell = require('shelljs');
 
@@ -176,6 +176,8 @@ var  skipOrCopy;
 var  copyOnOff;
 var  replaceOriginalFile;
 
+var itemChecked;
+
 
 var  moveCorruptFileOnOff;
 var  corruptDestinationPath;
@@ -325,6 +327,7 @@ if(m[8]==true){
     runPriority =0;
 }
 
+itemChecked =m[9];
 
 
 
@@ -625,17 +628,6 @@ function copyFail(){
 
         }
 
-
-
-
-
-
-
-
-
-
-
-
 endCyle();
 
    } else{
@@ -673,6 +665,32 @@ function endCyle(){
 
                 }
              
+
+
+}else if(itemChecked == false){
+
+    var message = [
+        workerNumber,
+        "skipped",
+        globalQueueNumber,
+        "Skip",
+        errorLogFull
+        ];
+        process.send(message);
+
+
+ var f = fs.readFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
+ if (f == "1") {
+      
+var message = [
+workerNumber,
+"queueRequest",
+];
+process.send(message);
+        } else if (f == "0"){
+        }
+
+
 
 
 }else{

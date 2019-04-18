@@ -17,7 +17,7 @@
 
 
     //SET ENV
-   process.env.NODE_ENV = "production";
+  // process.env.NODE_ENV = "production";
 
     var home = require("os").homedir();
 
@@ -1245,13 +1245,13 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf
 
         startDate = new Date();
 
-        if (mode == "scanandconvert" || mode == "healthCheck") {
+       // if (mode == "scanandconvert" || mode == "healthCheck") { //test
 
             document.getElementById("startTimeDiv").innerHTML = "<p>Start time: " + getTimeNow() + "<\p>";
 
             
 
-        }
+       // }
 
                 document.getElementById("pauseButtonDiv").style.display = 'none';
                 document.getElementById("stopButtonDiv").style.display = 'none';
@@ -1671,7 +1671,9 @@ fs.mkdirSync(outPutPathStemFinalArray[y] + validationSlash);
 
            // daily timer run validation
 
-           if (mode == "scanandconvert") {
+         //  if (mode == "scanandconvert") {  //test
+
+            if (mode != "healthCheck") {
 
            var dailyRunTime = document.getElementById("dailyRunTime").value
             if (document.getElementById("dailyRunTimeOnOff").checked == true) {
@@ -2076,43 +2078,14 @@ for (i = 0; i < tabcontent.length; i++) {
 
 
         if (mode == "scanandconvert" || mode == "healthCheck") {
-
-            document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Running</font></p>";
-
-            document.getElementById("pauseButtonDiv").style.display = 'block';
-            document.getElementById("stopButtonDiv").style.display = 'block';
-
-            if (totalFileFoundCounter >= 1000) {
-                document.getElementById("fullQueueDiv").style.display = 'none';
-                document.getElementById("viewStatus").innerHTML = "<p style=\"color:red\">Large number of items in the queue! Queue view disabled.<\p>";
-
-               queueView = "disabled";
-
-            } else {
-
-                document.getElementById("fullQueueDiv").style.display = 'block';
-
-
-
-            }
-
-
-
-            for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
-
-
-          
-                document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker" + i + "Status\"> </div>";
-
-            }
-            updateGraph('initialisation');
-
-
+            document.getElementById("convertSelectedButton").style.display = 'none';
 
         } else {
 
             document.getElementById("fullQueueDiv").style.display = 'block';
-            document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Finished</font></p>";
+            document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Finished searching for files</font></p>";
+
+            document.getElementById("convertSelectedButton").style.display = 'block';
         }
 
 
@@ -2200,6 +2173,7 @@ for (i = 0; i < tabcontent.length; i++) {
                 + "<th class=\"headcol\">Preset</th>"
                 + "<th class=\"headcol\">Worker</th>"
                 + "<th class=\"headcol\">Status</th>"
+                + "<th class=\"headcol\">Process?</th>"
 
                 + "</tr>"
 
@@ -2246,6 +2220,7 @@ for (i = 0; i < tabcontent.length; i++) {
                     + tablePreset 
                     + "<td > - </td>"
                     + "<td > - </td>"
+                    + "<td ><input id=\"tableQueueNumber"+tableQueueNumber+"\" type=\"checkbox\" checked=\"true\"></td>"
 
                     + "</tr>"
 
@@ -2270,9 +2245,64 @@ for (i = 0; i < tabcontent.length; i++) {
 
 
 
-        // Run all worker modules
 
-        var workerPath = "worker1.js"
+
+        if (mode == "scanandconvert" || mode == "healthCheck") {
+
+            launchWorkerModules();
+           
+        }// end if
+
+    }
+
+
+    function launchWorkerModules(mode2){
+
+        document.getElementById("convertSelectedButton").style.display = 'none';
+
+        var fs = require('fs');
+
+
+
+if(mode2 == "launchModules"){
+
+mode = "scanandconvert";
+}
+
+// update display
+
+document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Running</font></p>";
+
+document.getElementById("pauseButtonDiv").style.display = 'block';
+document.getElementById("stopButtonDiv").style.display = 'block';
+
+if (totalFileFoundCounter >= 1000) {
+    document.getElementById("fullQueueDiv").style.display = 'none';
+    document.getElementById("viewStatus").innerHTML = "<p style=\"color:red\">Large number of items in the queue! Queue view disabled.<\p>";
+
+   queueView = "disabled";
+
+} else {
+
+    document.getElementById("fullQueueDiv").style.display = 'block';
+}
+
+for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
+    document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker" + i + "Status\"> </div>";
+}
+updateGraph('initialisation');
+
+
+
+//
+
+
+
+
+
+                // Run all worker modules
+
+                var workerPath = "worker1.js"
         //   var workerPath2 = "worker2.js"
 
 
@@ -2281,111 +2311,113 @@ for (i = 0; i < tabcontent.length; i++) {
         const cluster = require('cluster');
         var path = require("path");
 
-        if (mode == "scanandconvert" || mode == "healthCheck") {
-
-            //document.getElementById("instanceNumber").value
-
-            for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
-
-
-               workers.push(childProcess.fork(path.join(__dirname, workerPath ),[], { silent: true }));
-
-
-              //  workers.push(childProcess.fork(path.join(__dirname, workerPath)));
 
 
 
-                workers[i - 1].stdout.on('data', function(data) {
-                    console.log('stdout: ' + data);
-                    //Here is where the output goes
-                        });
+//document.getElementById("instanceNumber").value
+
+for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
+
+
+workers.push(childProcess.fork(path.join(__dirname, workerPath ),[], { silent: true }));
+
+
+//  workers.push(childProcess.fork(path.join(__dirname, workerPath)));
 
 
 
-                        var messageOut = [
-                            "workerNumber",
-                            i,
-                                        ];
-
-                workers[i - 1].send(messageOut);
-
-                // var worker = workers[1];
-                //  worker.send("w:"+2);
-
-
-                workers[i - 1].on("exit", function (code, signal) {
-
-                });
-                workers[i - 1].on("error", console.error.bind(console));
+workers[i - 1].stdout.on('data', function(data) {
+console.log('stdout: ' + data);
+//Here is where the output goes
+});
 
 
 
+var messageOut = [
+ "workerNumber",
+ i,
+             ];
+
+workers[i - 1].send(messageOut);
+
+// var worker = workers[1];
+//  worker.send("w:"+2);
 
 
+workers[i - 1].on("exit", function (code, signal) {
 
-                workers[i - 1].on('message', function (message) {
-
-
-                    console.log("Message:"+message);
-
-
-                    if (message[1] == "queueRequest") { 
-
-                        console.log(globalQueueNumberManager)
-
-                        if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
-
-                                var messageOut = [
-                                    "queueNumber",
-                                    globalQueueNumberManager,
-                                    skipOrCopyArray[globalQueueNumberManager],
-                                    document.getElementById("copyFilteredFiles").checked,
-                                    document.getElementById("replaceOriginalFile").checked,
-                                    document.getElementById("moveCorruptFileOnOff").checked,
-                                    document.getElementById("corruptDestinationPath").value,
-                                    mode,
-                                    document.getElementById("runPriority").checked,
-
-                                
-                                             ];
-
-                                    globalQueueNumberManager++;
-
-                        } else {
-
-                                                var messageOut = [
-                                                "completed",
-                                                            ];
-
-                        }
-                               //  workers[message[0] - 1].send(message);
-
-                               console.log(messageOut)
-
-                               workers[message[0] - 1].send(messageOut);
+});
+workers[i - 1].on("error", console.error.bind(console));
 
 
 
 
 
-                    }
+
+workers[i - 1].on('message', function (message) {
 
 
-                    if (message[1] == "processing") {
-
-                        workerStatusFinishedArray[message[0]-1] = ""
+console.log("Message:"+message);
 
 
-                        var currentRow = parseInt(message[2]) + 1
+if (message[1] == "queueRequest") { 
 
-                        if (queueView == "enabled") {
-                            queueTable.rows[currentRow].cells[3].innerHTML = "Worker " + message[0];
-                            queueTable.rows[currentRow].cells[4].innerHTML = message[3];
-                            queueTable.rows[currentRow].style.backgroundColor = "#ffa24c";
-                        }
+console.log(globalQueueNumberManager)
+
+if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
+
+     var messageOut = [
+         "queueNumber",
+         globalQueueNumberManager,
+         skipOrCopyArray[globalQueueNumberManager],
+         document.getElementById("copyFilteredFiles").checked,
+         document.getElementById("replaceOriginalFile").checked,
+         document.getElementById("moveCorruptFileOnOff").checked,
+         document.getElementById("corruptDestinationPath").value,
+         mode,
+         document.getElementById("runPriority").checked,
+         document.getElementById("tableQueueNumber"+(globalQueueNumberManager+1)).checked,
+
+     
+                  ];
+
+         globalQueueNumberManager++;
+
+} else {
+
+                     var messageOut = [
+                     "completed",
+                                 ];
+
+}
+    //  workers[message[0] - 1].send(message);
+
+    console.log(messageOut)
+
+    workers[message[0] - 1].send(messageOut);
 
 
-                        document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\" style=\"white-space:nowrap;\"><p>Worker " + message[0] + " processing file:<div id=\"cancelButtonDiv"+message[0]+"\"><input type='button' id=\"cancelButton"+message[0]+"\" class=\"infoButton\" value='Cancel item' onclick='cancelItemProcess(\"" + message[0] + "\")'/></div></p><div id=\"worker" + message[0] + "Percentage\"><p><font color=\"#66ccff\">Starting</font></p></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
+
+
+
+}
+
+
+if (message[1] == "processing") {
+
+workerStatusFinishedArray[message[0]-1] = ""
+
+
+var currentRow = parseInt(message[2]) + 1
+
+if (queueView == "enabled") {
+ queueTable.rows[currentRow].cells[3].innerHTML = "Worker " + message[0];
+ queueTable.rows[currentRow].cells[4].innerHTML = message[3];
+ queueTable.rows[currentRow].style.backgroundColor = "#ffa24c";
+}
+
+
+document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\" style=\"white-space:nowrap;\"><p>Worker " + message[0] + " processing file:<div id=\"cancelButtonDiv"+message[0]+"\"><input type='button' id=\"cancelButton"+message[0]+"\" class=\"infoButton\" value='Cancel item' onclick='cancelItemProcess(\"" + message[0] + "\")'/></div></p><div id=\"worker" + message[0] + "Percentage\"><p><font color=\"#66ccff\">Starting</font></p></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
 
 
 //style="display: none;"
@@ -2393,22 +2425,22 @@ for (i = 0; i < tabcontent.length; i++) {
 
 
 
-                        // workerStatusDiv
+// workerStatusDiv
 
-                    }
-                    
-                    if (message[1] == "percentage") {
+}
+
+if (message[1] == "percentage") {
 
 
-                 // document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker" + i + "Status\"> </div>";       
+// document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker" + i + "Status\"> </div>";       
 
-                  document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">" + message[3] + "</font></p>";                        
+document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">" + message[3] + "</font></p>";                        
 
 
 var currentRow = parseInt(message[2]) + 1
 
 if (queueView == "enabled") {
-    queueTable.rows[currentRow].cells[4].innerHTML = message[3];
+queueTable.rows[currentRow].cells[4].innerHTML = message[3];
 }
 
 
@@ -2419,106 +2451,106 @@ if (queueView == "enabled") {
 
 function informationUpdate(workerNumber,preset,errorLog,globalQueueNumber,backgroundColor,Status,Status2,Status3){
 
-    workerStatusFinishedArray[workerNumber-1] = "Finished"
+workerStatusFinishedArray[workerNumber-1] = "Finished"
 
-    if(queueStatusPaused==1){
-                        verifyContinue();
-                        }
+if(queueStatusPaused==1){
+verifyContinue();
+}
 
-     //hide cancel item button
-     document.getElementById("cancelButtonDiv"+workerNumber).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
-    
-     
+//hide cancel item button
+document.getElementById("cancelButtonDiv"+workerNumber).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='Cancel item' />"
+
+
 var currentRow = parseInt(globalQueueNumber) + 1
 
 //var currentRow = parseInt(message[2]) + 1
 
 if (queueView == "enabled") {
-    queueTable.rows[currentRow].cells[3].innerHTML = "";
-    queueTable.rows[currentRow].cells[4].innerHTML = Status;
-    queueTable.rows[currentRow].cells[2].innerHTML = preset;
+queueTable.rows[currentRow].cells[3].innerHTML = "";
+queueTable.rows[currentRow].cells[4].innerHTML = Status;
+queueTable.rows[currentRow].cells[2].innerHTML = preset;
 
-    queueTable.rows[currentRow].style.backgroundColor =backgroundColor;
+queueTable.rows[currentRow].style.backgroundColor =backgroundColor;
 }
 
 document.getElementById("worker" + workerNumber + "Percentage").innerHTML =Status2;
 
 
-                        fullErrorLogArray.push(errorLog)
-                        errorArray.push(sourceQueueArray[currentRow - 1])
+fullErrorLogArray.push(errorLog)
+errorArray.push(sourceQueueArray[currentRow - 1])
 
-                        updateGraph();
+updateGraph();
 
-                        if (mode != "healthCheck") {
+if (mode != "healthCheck") {
 
-                        tempOutputQueueHTML += "<tr>"
-                                            + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
-                                            + "<td>" + sessionNumber + "</td>"
-                                            + "<td>" + preset + "</td>"
-                                            + "<td>"+Status+ "</td>"
-                                            + "</tr>";
+tempOutputQueueHTML += "<tr>"
+                 + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
+                 + "<td>" + sessionNumber + "</td>"
+                 + "<td>" + preset + "</td>"
+                 + "<td>"+Status+ "</td>"
+                 + "</tr>";
 
-                        }else if(Status2 == "<p><font color=\"#ff2d2d\">Error</font></p>"){
-
-
-                            tempOutputQueueHTML += "<tr>"
-                                            + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
-                                            + "<td>" + sessionNumber + "</td>"
-                                            + "<td>" + preset + "</td>"
-                                            + "<td>"+Status+ "</td>"
-                                            + "</tr>";    
+}else if(Status2 == "<p><font color=\"#ff2d2d\">Error</font></p>"){
 
 
+ tempOutputQueueHTML += "<tr>"
+                 + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
+                 + "<td>" + sessionNumber + "</td>"
+                 + "<td>" + preset + "</td>"
+                 + "<td>"+Status+ "</td>"
+                 + "</tr>";    
 
 
-                        }
-                                        sessionNumber++;
-    
+
+
+}
+             sessionNumber++;
+
 }
 
 
 
-                    if (message[1] == "error") {
-                        errorCount++;
+if (message[1] == "error") {
+errorCount++;
 
-                        informationUpdate(message[0],message[3],message[4],message[2],"#ff2d2d","<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+sessionNumber+"')\" value=\"Error (Click for info)\">","<p><font color=\"#ff2d2d\">Error</font></p>")
-                        
-                    }
+informationUpdate(message[0],message[3],message[4],message[2],"#ff2d2d","<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+sessionNumber+"')\" value=\"Error (Click for info)\">","<p><font color=\"#ff2d2d\">Error</font></p>")
 
-
-
-                    if (message[1] == "success") {
-                        successfulCount++;
-                        informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Completed","<p><font color=\"#66ccff\">Completed</font></p>")
-
-                    }
+}
 
 
- if (message[1] == "skipped") {
 
-    successfulCount++;
-    informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c","Skipped","<p><font color=\"#66ccff\">Completed</font></p>")
+if (message[1] == "success") {
+successfulCount++;
+informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Completed","<p><font color=\"#66ccff\">Completed</font></p>")
+
+}
+
+
+if (message[1] == "skipped") {
+
+successfulCount++;
+informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c","Skipped","<p><font color=\"#66ccff\">Completed</font></p>")
 }
 
 if (message[1] == "copied") {
 
-    successfulCount++;
-    informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Copied to destination","<p><font color=\"#66ccff\">Completed</font></p>")
+successfulCount++;
+informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Copied to destination","<p><font color=\"#66ccff\">Completed</font></p>")
 }
 
 
 if (message[1] == "copiedFail") {
 
-    errorCount++;
-    informationUpdate(message[0],message[3],message[4],message[2],"#ff2d2d","Copy to destination failed","<p><font color=\"#66ccff\">Completed</font></p>")
+errorCount++;
+informationUpdate(message[0],message[3],message[4],message[2],"#ff2d2d","Copy to destination failed","<p><font color=\"#66ccff\">Completed</font></p>")
 
 }
 
 
 if (message[1] == "originalReplaced") {
 
-    successfulCount++;
-    informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Original replaced","<p><font color=\"#66ccff\">Completed</font></p>")
+successfulCount++;
+informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Original replaced","<p><font color=\"#66ccff\">Completed</font></p>")
 
 }
 
@@ -2534,41 +2566,33 @@ informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c","Origina
 
 
 
-                    if (message[1] == "cancelled") {
+if (message[1] == "cancelled") {
 
-                        errorCount++;
-                        informationUpdate(message[0],message[3],message[4],message[2],"#ffda6d","Cancelled","<p>Cancelled</p>")
-                    }
+errorCount++;
+informationUpdate(message[0],message[3],message[4],message[2],"#ffda6d","Cancelled","<p>Cancelled</p>")
+}
 
 
-                    if (message[1] == "writeRequest") {
+if (message[1] == "writeRequest") {
 
 
 
 try{
-                        fs.writeFileSync(message[2], message[3], 'utf8');
+fs.writeFileSync(message[2], message[3], 'utf8');
 
-                    } catch (err) {}
+} catch (err) {}
 
-                    }
-
-
-
-
-                    if (message[1] == "appendRequest") {
-                        try{
-                        fs.appendFileSync(message[2], message[3], 'utf8');
-                    } catch (err) {}
-
-                    }
+}
 
 
 
 
+if (message[1] == "appendRequest") {
+try{
+fs.appendFileSync(message[2], message[3], 'utf8');
+} catch (err) {}
 
-
-
-                });
+}
 
 
 
@@ -2576,12 +2600,7 @@ try{
 
 
 
-            }
-
-
-
-
-        }
+});
 
 
 
@@ -2589,36 +2608,37 @@ try{
 
 
 
+}    
 
 
-        updateInfo = 1;
 
-       
 
-  
+updateInfo = 1;
 
-        if (mode == "scanandconvert") {
+
+
+
+
+if (mode == "scanandconvert") {
 
 if ( document.getElementById("scanOnOff").checked == true || document.getElementById("dailyRunTimeOnOff").checked == true ) {
-            document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Running</font></p>";
-            countDownOn = 1;
+document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Running</font></p>";
+countDownOn = 1;
 
-            }else {
-            countDownOn = 0;
-        }
-        } 
-
-
-
-        //  var elmnt = document.getElementById("worker4");
-        //  elmnt.scrollIntoView()
+}else {
+countDownOn = 0;
+}
+} 
 
 
+
+//  var elmnt = document.getElementById("worker4");
+//  elmnt.scrollIntoView()
 
 
 
 
-    }
+}
 
     function updateGraph(graphMode) {
 
@@ -2767,7 +2787,7 @@ if ( document.getElementById("scanOnOff").checked == true || document.getElement
     function runScan() {
 
 
-
+        
 
         var fs = require('fs');
 
@@ -2776,7 +2796,7 @@ if ( document.getElementById("scanOnOff").checked == true || document.getElement
         if (updateInfo == 1) {
 
 
-
+           
 
 
 
@@ -2848,10 +2868,16 @@ if ( document.getElementById("scanOnOff").checked == true || document.getElement
 
 
                 }
+              
 
-
+                console.log(workerStatusArray)
+                
 
                 if (CompletedSwitch == 1) {
+
+                    
+
+                   
 
                     AllComplete();
                 }
@@ -4746,8 +4772,8 @@ margin-left: 1px;
 
 
                 <input type='button' class="button2one" value='Scan only' onclick='convertFiles()' />
-                <input type='button' class="button2" value='Scan and convert'
-                    onclick='convertFiles("scanandconvert")' />
+                <input type='button' class="button2" value='Scan and convert' onclick='convertFiles("scanandconvert")' />
+                   
 
                 <div id="HBCLIStatus"></div>
 
@@ -4892,6 +4918,8 @@ margin-left: 1px;
                 <div id="timerDiv"></div>
 
 
+
+
                 <div id="worker1progress"> </div>
 
 
@@ -4939,6 +4967,9 @@ margin-left: 1px;
 
 
                 <div id="healthCheckDiv"></div>
+
+                
+                <input type='button' class="button2" id="convertSelectedButton" value='Convert selected files' onclick='launchWorkerModules("launchModules")' style="display: none;"/>
 
 
                 <div ALIGN="LEFT">
