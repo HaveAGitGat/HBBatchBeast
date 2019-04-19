@@ -718,8 +718,40 @@ function endCyle(){
     
         ];
         process.send(messageJSON);
+
+
+        var processFileY = true
+
+        var filterReason
+
+        Object.keys(jsonInfo.streams[0]).forEach(function(key) {
+
+            var messageJSON = [
+                "jsonInfo",
+                key,
+                jsonInfo.streams[0][key] 
+                ];
+                process.send(messageJSON);
+
+
+
+            if(jsonInfo.streams[0][key] == "h264"){
+                processFileY = false
+                filterReason = jsonInfo.streams[0][key]
+
+            }
+         //   console.log(key, obj[key]);
+
+
+
+        });
+
+
+
+//jsonInfo.streams[0]["codec_name"] == "h264"
+
    
-     if(jsonInfo.streams[0]["codec_name"] == "h264"){
+     if(processFileY == true){
 
         
         processFile();
@@ -731,7 +763,7 @@ function endCyle(){
 
         var message = [
             workerNumber,
-            "Skipped: File property filter",
+            "Skipped: File property filter:"+filterReason,
             globalQueueNumber,
             "Skip",
             errorLogFull
