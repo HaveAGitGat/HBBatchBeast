@@ -603,6 +603,26 @@ document.getElementById("titleWordFilter").value = fs.readFileSync(homePath + "/
 }
 
 
+// read include property filter
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/includePropertyFileFilter.txt")) {
+
+document.getElementById("includePropertyFileFilter").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/includePropertyFileFilter.txt", 'utf8');
+
+
+}
+
+
+// read exclude property filter
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/excludePropertyFileFilter.txt")) {
+
+document.getElementById("excludePropertyFileFilter").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/excludePropertyFileFilter.txt", 'utf8');
+
+
+}
+
+
 // read if to copy filtered files
 
 
@@ -1122,6 +1142,14 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/moveCorruptFileOnOff.txt', 0, 
         //save title word filter
 
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/titleWordFilter.txt', document.getElementById("titleWordFilter").value, 'utf8');
+
+         //save include property filter
+
+         fs.writeFileSync(homePath + '/HBBatchBeast/Config/includePropertyFileFilter.txt', document.getElementById("includePropertyFileFilter").value, 'utf8');
+
+          //save exclude property filter
+
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludePropertyFileFilter.txt', document.getElementById("excludePropertyFileFilter").value, 'utf8');
 
         //save copy filtered files or not
 
@@ -1906,8 +1934,6 @@ if (message[0] == "scanandconvert") {
 
             // };
 
-            console.log(document.getElementById("replaceOriginalFile").checked)
-
 
             var queueInfoBomb = [
 
@@ -1921,8 +1947,7 @@ if (message[0] == "scanandconvert") {
             presetArray,
             document.getElementById("titleWordFilter").value,
             document.getElementById("replaceOriginalFile").checked,
-            document.getElementById("includePropertyFileFilter").value,
-            document.getElementById("excludePropertyFileFilter").value,
+            
         
  ];
 
@@ -2379,6 +2404,8 @@ if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
          mode,
          document.getElementById("runPriority").checked,
          document.getElementById("tableQueueNumber"+(globalQueueNumberManager+1)).checked,
+         document.getElementById("includePropertyFileFilter").value+"",
+        document.getElementById("excludePropertyFileFilter").value+"",
 
      
                   ];

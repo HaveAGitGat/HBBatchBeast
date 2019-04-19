@@ -328,6 +328,9 @@ if(m[8]==true){
 
 itemChecked =m[9];
 
+fileFiltersIncludeArray = m[10]+"";
+fileFiltersExcludeArray = m[11]+"";
+
 
 
 //process.send(workerNumber+",processing,"+globalQueueNumber);
@@ -720,48 +723,67 @@ function endCyle(){
 
 
         var filterReason
+
+
+        var messageJSON = [
+            "fileFiltersIncludeArray",
+            fileFiltersIncludeArray,
+            ];
+            process.send(messageJSON);
        
 
+
+        if(fileFiltersIncludeArray != ""){
      
         var processFileY = false
-        fileFiltersIncludeArray = "codec_name: 'h264',codec_name: 'aac'"
+        filterReason = "Exclude1"
+       
+       
+
+     //   fileFiltersIncludeArray = "codec_name: 'h264',"
+
         fileFiltersIncludeArray = fileFiltersIncludeArray.split(',');
 
-
+        
         for (var i = 0; i < jsonInfo.streams.length; i++) {
         Object.keys(jsonInfo.streams[i]).forEach(function(key) {
 
-            var messageJSON = [
-                "jsonInfo",
-                key,
-                jsonInfo.streams[i][key] 
-                ];
-                process.send(messageJSON);
+
 
 
                 for (var j = 0; j < fileFiltersIncludeArray.length; j++) {
+
+
+                    var messageJSON = [
+                        "jsonInfo",
+                        key+": '"+jsonInfo.streams[i][key]+"'",
+                        "filter",
+                        fileFiltersIncludeArray[j],
+                        ];
+                        process.send(messageJSON);
+
+
+
+
+
+
+
             if(key+": '"+jsonInfo.streams[i][key]+"'" == fileFiltersIncludeArray[j]){
 
                 processFileY = true
                 filterReason = "Include: "+key+": '"+jsonInfo.streams[i][key]+"'"
 
 
-            }else{
-                processFileY = false
-                filterReason = "Exclude"
-
             }
         }
          //   console.log(key, obj[key]);
             });
         }
-
-
-
+    }else if(fileFiltersExcludeArray != ""){
 
 
         var processFileY = true
-        fileFiltersExcludeArray = "codec_name: 'h264',codec_name: 'aac'"
+     //   fileFiltersExcludeArray = "codec_name: 'h264',codec_name: 'aac'"
         fileFiltersExcludeArray = fileFiltersExcludeArray.split(',');
 
 
@@ -780,7 +802,7 @@ function endCyle(){
             if(key+": '"+jsonInfo.streams[i][key]+"'" == fileFiltersExcludeArray[j]){
 
                 processFileY = false
-                filterReason = "Exclude: "+key+": '"+jsonInfo.streams[i][key]+"'"
+                filterReason = "Exclude2: "+key+": '"+jsonInfo.streams[i][key]+"'"
 
 
             }
@@ -788,6 +810,24 @@ function endCyle(){
          //   console.log(key, obj[key]);
             });
         }
+
+
+
+
+    }else{
+
+
+        processFileY = true
+
+    }
+
+        
+
+
+
+
+
+
 
 
         
