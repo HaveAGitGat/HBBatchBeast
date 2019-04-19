@@ -1921,6 +1921,8 @@ if (message[0] == "scanandconvert") {
             presetArray,
             document.getElementById("titleWordFilter").value,
             document.getElementById("replaceOriginalFile").checked,
+            document.getElementById("includePropertyFileFilter").value,
+            document.getElementById("excludePropertyFileFilter").value,
         
  ];
 
@@ -4700,6 +4702,28 @@ margin-left: 1px;
                     <div style="text-align: right">
                         <textarea type="text" class="folderPaths" id="titleWordFilter"></textarea>
                     </div>
+
+
+
+                    <div style="text-align: left">
+                        <p>Convert only files with these properties:</p>
+                    </div>
+
+                    <div style="text-align: right">
+                        <textarea type="text" class="folderPaths" id="includePropertyFileFilter"></textarea>
+                    </div>
+
+
+                    <div style="text-align: left">
+                        <p>OR exclude files with these properties:</p>
+                    </div>
+
+                    <div style="text-align: right">
+                        <textarea type="text" class="folderPaths" id="excludePropertyFileFilter"></textarea>
+                    </div>
+
+
+
 
                     <div class="grid-itemleft">
                         <p>Copy filtered files to destination?</p>

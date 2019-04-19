@@ -179,6 +179,10 @@ var  replaceOriginalFile;
 var itemChecked;
 
 
+var fileFiltersIncludeArray
+var fileFiltersExcludeArray
+
+
 var  moveCorruptFileOnOff;
 var  corruptDestinationPath;
 
@@ -560,13 +564,7 @@ process.send(message);
 
 
    if(copyOnOff==true){
-
-
-
     // currentSourceLine + "\" -o \"" + currentDestinationLine
-  
-
-
     if (tempFolderSected == "1") {
 
         try {
@@ -720,31 +718,79 @@ function endCyle(){
         process.send(messageJSON);
 
 
-        var processFileY = true
 
         var filterReason
+       
 
-        Object.keys(jsonInfo.streams[0]).forEach(function(key) {
+     
+        var processFileY = false
+        fileFiltersIncludeArray = "codec_name: 'h264',codec_name: 'aac'"
+        fileFiltersIncludeArray = fileFiltersIncludeArray.split(',');
+
+
+        for (var i = 0; i < jsonInfo.streams.length; i++) {
+        Object.keys(jsonInfo.streams[i]).forEach(function(key) {
 
             var messageJSON = [
                 "jsonInfo",
                 key,
-                jsonInfo.streams[0][key] 
+                jsonInfo.streams[i][key] 
                 ];
                 process.send(messageJSON);
 
 
+                for (var j = 0; j < fileFiltersIncludeArray.length; j++) {
+            if(key+": '"+jsonInfo.streams[i][key]+"'" == fileFiltersIncludeArray[j]){
 
-            if(jsonInfo.streams[0][key] == "h264"){
+                processFileY = true
+                filterReason = "Include: "+key+": '"+jsonInfo.streams[i][key]+"'"
+
+
+            }else{
                 processFileY = false
-                filterReason = jsonInfo.streams[0][key]
+                filterReason = "Exclude"
 
             }
+        }
          //   console.log(key, obj[key]);
+            });
+        }
 
 
 
-        });
+
+
+        var processFileY = true
+        fileFiltersExcludeArray = "codec_name: 'h264',codec_name: 'aac'"
+        fileFiltersExcludeArray = fileFiltersExcludeArray.split(',');
+
+
+        for (var i = 0; i < jsonInfo.streams.length; i++) {
+        Object.keys(jsonInfo.streams[i]).forEach(function(key) {
+
+            var messageJSON = [
+                "jsonInfo",
+                key,
+                jsonInfo.streams[i][key] 
+                ];
+                process.send(messageJSON);
+
+
+                for (var j = 0; j < fileFiltersExcludeArray.length; j++) {
+            if(key+": '"+jsonInfo.streams[i][key]+"'" == fileFiltersExcludeArray[j]){
+
+                processFileY = false
+                filterReason = "Exclude: "+key+": '"+jsonInfo.streams[i][key]+"'"
+
+
+            }
+        }
+         //   console.log(key, obj[key]);
+            });
+        }
+
+
+        
 
 
 
@@ -761,25 +807,134 @@ function endCyle(){
 
      }else{
 
-        var message = [
-            workerNumber,
-            "Skipped: File property filter:"+filterReason,
-            globalQueueNumber,
-            "Skip",
-            errorLogFull
-            ];
-            process.send(message);
-
-        var f = fs.readFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
-        if (f == "1") {
-      
-var message = [
-workerNumber,
-"queueRequest",
-];
-process.send(message);
-        } else if (f == "0"){
+        if(copyOnOff==true){
+            // currentSourceLine + "\" -o \"" + currentDestinationLine
+            if (tempFolderSected == "1") {
+        
+                try {
+                 
+                   const fs = require('fs');
+                   fs.copyFileSync(currentSourceLine,currentDestinationFinalLine);
+        
+                   copySuccess();
+        
+                 } catch (err) { 
+                     copyFail();
+        
+                
+                 }
+        
+                }else{
+        
+                   try {
+        
+                        const fs = require('fs');
+                        fs.copyFileSync(currentSourceLine,currentDestinationLine);
+        
+                        copySuccess();
+        
+        
+        
+        
+                   }catch (err) {
+                       
+                    copyFail(); 
+                
+                }
+                
+                
+                
+              
+        
+        
+        
+                  
+        
+        
+                }
+        
+        function copySuccess(){
+            var message = [
+                workerNumber,
+                "copied",
+                globalQueueNumber,
+                "Copy",
+                errorLogFull
+                ];
+                process.send(message);
+        
+        
+                if (deleteSourceFilesOnOff == "1") {
+                        
+           
+                    if (fs.existsSync(currentSourceLine)) {
+            
+            fs.unlinkSync(currentSourceLine)
+            
+            
+            } 
+            }
+        
+        
+        
         }
+        
+        
+        function copyFail(){
+                var message = [
+                    workerNumber,
+                    "copiedFail",
+                    globalQueueNumber,
+                    "Copy",
+                    errorLogFull
+                    ];
+                    process.send(message);
+        
+                }
+        
+        endCyle();
+        
+           } else{
+        
+            var message = [
+                workerNumber,
+                "Skipped: File property filter:"+filterReason,
+                globalQueueNumber,
+                "Skip",
+                errorLogFull
+                ];
+                process.send(message);
+        
+        
+                endCyle();
+        
+           }
+        
+        function endCyle(){
+        
+        
+                
+                //process.send(workerNumber+",queueRequest");
+                
+                            var f = fs.readFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
+                            if (f == "1") {
+                          
+                var message = [
+                workerNumber,
+                "queueRequest",
+                ];
+                process.send(message);
+                            } else if (f == "0"){
+                            }
+        
+                        }
+                     
+
+
+        
+
+
+
 
     }
 
