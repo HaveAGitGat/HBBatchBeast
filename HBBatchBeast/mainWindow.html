@@ -1237,13 +1237,49 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFile.txt', 0, '
 
 
 
-    function convertFiles(processMode) {
+    function convertFiles(processMode,Bench) {
 
 //reset queue status
 var fs = require('fs');
 
 fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf8');
 
+
+if(Bench==1){
+
+    if (process.platform == 'win32' || process.platform == 'linux') {
+
+var homePath2 = __dirname
+
+
+}
+
+if (process.platform == 'darwin') {
+
+var homePath2 = home
+
+}
+
+document.getElementById("selectTemporaryConversionFolder").checked = false;
+document.getElementById("sourcePath").value = homePath2 + "/HBBatchBeast/Bench/Input"
+document.getElementById("destinationPath").value = homePath2 + "/HBBatchBeast/Bench/Output"
+document.getElementById("selectStandardPreset").checked = true;
+document.getElementById("selectCustomPreset").checked = true;
+document.getElementById("scanOnOff").checked = false;
+document.getElementById("dailyRunTimeOnOff").checked = false;
+document.getElementById("deleteSourceFiles").checked = false;
+document.getElementById("includedFileTypes").value = "mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,"
+document.getElementById("titleWordFilter").value = ""
+document.getElementById("includePropertyFileFilter").value = ""
+document.getElementById("excludePropertyFileFilter").value = ""
+document.getElementById("copyFilteredFiles").checked = false;
+document.getElementById("replaceOriginalFile").checked = false;
+document.getElementById("autoCreateFolders").checked = true;
+document.getElementById("customBatPath").value = "";
+
+
+
+}
 
 
 
@@ -1812,8 +1848,12 @@ if (message[0] == "scanandconvert") {
         }
 
 
-
+        if(Bench==1){
+           
+        }else{
             saveConfig();
+
+        }
 
 
             
@@ -3695,6 +3735,33 @@ workers[i].send(messageOut);
     }
 
 
+
+    function verifyBenchFiles(){
+
+
+        var fs = require('fs');
+
+        if (!fs.existsSync(homePath + "/HBBatchBeast/Bench/Input/Test1.mp4")) {
+
+
+
+
+           
+
+
+
+        }
+
+
+
+
+
+
+
+
+    }
+
+
 </script>
 
 
@@ -4950,6 +5017,8 @@ margin-left: 1px;
 
                         <input type="button" class="HaveAGitGat2" onclick="openURL('https://github.com/HaveAGitGat/HBBatchBeast/wiki')" value="Wiki help">
 
+
+                        <input type='button' class="button2" value='Benchmark' onclick='convertFiles("scanandconvert",1)' />
 
                     </centre>    
 
