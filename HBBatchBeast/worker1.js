@@ -532,7 +532,7 @@ if(itemChecked == false){
 
     var message = [
         workerNumber,
-        "skipped",
+        "Skipped: Not selected",
         globalQueueNumber,
         "Skip",
         errorLogFull
@@ -654,7 +654,7 @@ endCyle();
 
     var message = [
         workerNumber,
-        "skipped",
+        "Skipped: File title word filter",
         globalQueueNumber,
         "Skip",
         errorLogFull
@@ -784,32 +784,7 @@ var message = [
                 errorLogFull  += data;
 
 
-                if(str.includes("Video: hevc")){
 
-                    // var message = [
-                    //     workerNumber,
-                    //     "filterFound",
-                    //     str,
-                    //     //currentSourceLine+" ConversionError\n",
-                    //     ];
-                    //     process.send(message);
-                
-                    var infoArray = [
-                        "exitThread",
-                        "propertyFilter",
-
-                        ];     
-                       
-                       try{
-                       if(shellThreadModule != ""){
-                       shellThreadModule.send(infoArray); 
-                       }
-                       
-                       
-                       }catch (err){}
-                
-                
-                }
 
                    });
 
@@ -856,18 +831,6 @@ preset,
 errorLogFull
 ];
 process.send(message);
-
-
-}else if(message[1] == "propertyFilter"){
-
-    var message = [
-        workerNumber,
-        "skipped",
-        globalQueueNumber,
-        "Skip",
-        errorLogFull
-        ];
-        process.send(message)
 
 
 }else {

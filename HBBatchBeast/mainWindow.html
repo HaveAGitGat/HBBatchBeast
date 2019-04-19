@@ -2449,7 +2449,7 @@ queueTable.rows[currentRow].cells[4].innerHTML = message[3];
 }
 
 
-function informationUpdate(workerNumber,preset,errorLog,globalQueueNumber,backgroundColor,Status,Status2,Status3){
+function informationUpdate(workerNumber,preset,errorLog,globalQueueNumber,backgroundColor,Status,Status2){
 
 workerStatusFinishedArray[workerNumber-1] = "Finished"
 
@@ -2526,10 +2526,10 @@ informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Complet
 }
 
 
-if (message[1] == "skipped") {
+if (message[1].includes("Skipped")) {
 
 successfulCount++;
-informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c","Skipped","<p><font color=\"#66ccff\">Completed</font></p>")
+informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c",message[1],"<p><font color=\"#66ccff\">Completed</font></p>")
 }
 
 if (message[1] == "copied") {

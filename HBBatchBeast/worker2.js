@@ -69,15 +69,6 @@ if(infoArray[1] == "itemCancelled"){
         ];
     process.send(message);
 
-}else if(infoArray[1] == "propertyFilter"){
-
-    var message = [
-        "Exit",
-        "propertyFilter",
-        ];
-    process.send(message);
-
-
 }
 
 
