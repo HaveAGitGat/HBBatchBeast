@@ -22,7 +22,21 @@ var ffprobe = require('ffprobe'),
     var thisval
  
 ffprobe(filepath, { path: ffprobeStatic.path }, function (err, info) {
-  if (err) return done(err);
+  //if (err) return done(err);
+
+  if (err){
+    var message = [
+        "fileInfo",
+        info,
+        ];
+    process.send(message);
+    
+    process.exit()
+
+    
+  }
+
+
   //console.log(info);
 
   console.log(info);

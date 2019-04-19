@@ -712,28 +712,30 @@ function endCyle(){
        
     //jsonInfo.streams[0]["codec_name"]
 
-    var messageJSON = [
-        "jsonInfo",
-        jsonInfo,
-        jsonInfo.streams[0]["codec_name"],
+    // var messageJSON = [
+    //     "jsonInfo",
+    //     jsonInfo,
+    //     jsonInfo.streams[0]["codec_name"],
     
-        ];
-        process.send(messageJSON);
+    //     ];
+    //     process.send(messageJSON);
 
 
 
         var filterReason
 
 
-        var messageJSON = [
-            "fileFiltersIncludeArray",
-            fileFiltersIncludeArray,
-            ];
-            process.send(messageJSON);
+        // var messageJSON = [
+        //     "fileFiltersIncludeArray",
+        //     fileFiltersIncludeArray,
+        //     ];
+        //     process.send(messageJSON);
        
 
 
         if(fileFiltersIncludeArray != ""){
+
+            try{
      
         var processFileY = false
         filterReason = "Exclude1"
@@ -754,13 +756,13 @@ function endCyle(){
                 for (var j = 0; j < fileFiltersIncludeArray.length; j++) {
 
 
-                    var messageJSON = [
-                        "jsonInfo",
-                        key+": '"+jsonInfo.streams[i][key]+"'",
-                        "filter",
-                        fileFiltersIncludeArray[j],
-                        ];
-                        process.send(messageJSON);
+                    // var messageJSON = [
+                    //     "jsonInfo",
+                    //     key+": '"+jsonInfo.streams[i][key]+"'",
+                    //     "filter",
+                    //     fileFiltersIncludeArray[j],
+                    //     ];
+                    //     process.send(messageJSON);
 
 
 
@@ -779,7 +781,13 @@ function endCyle(){
          //   console.log(key, obj[key]);
             });
         }
-    }else if(fileFiltersExcludeArray != ""){
+    }catch(err){
+        var processFileY = true
+    }
+
+}else if(fileFiltersExcludeArray != ""){
+
+        try{
 
 
         var processFileY = true
@@ -790,12 +798,12 @@ function endCyle(){
         for (var i = 0; i < jsonInfo.streams.length; i++) {
         Object.keys(jsonInfo.streams[i]).forEach(function(key) {
 
-            var messageJSON = [
-                "jsonInfo",
-                key,
-                jsonInfo.streams[i][key] 
-                ];
-                process.send(messageJSON);
+            // var messageJSON = [
+            //     "jsonInfo",
+            //     key,
+            //     jsonInfo.streams[i][key] 
+            //     ];
+            //     process.send(messageJSON);
 
 
                 for (var j = 0; j < fileFiltersExcludeArray.length; j++) {
@@ -814,7 +822,12 @@ function endCyle(){
 
 
 
-    }else{
+    }catch(err){
+
+        var processFileY = true
+    }
+
+}else{
 
 
         processFileY = true
