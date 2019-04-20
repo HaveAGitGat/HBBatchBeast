@@ -732,8 +732,12 @@ function endCyle(){
         //     process.send(messageJSON);
        
 
+        if (mode == "healthCheck") {  
 
-        if(fileFiltersIncludeArray != ""){
+            var processFileY = true
+
+
+        }else if(fileFiltersIncludeArray != ""){
 
             try{
      
@@ -1125,8 +1129,12 @@ function endCyle(){
         
         
         //// exit code begin
+
+                
+        var fs = require('fs');
         
-        if (message[1] != 0) {
+   
+     if (message[1] != 0 || !fs.existsSync(currentDestinationLine)) {
         
         
         if (message[1] == "Cancelled") {
@@ -1378,6 +1386,8 @@ function endCyle(){
         
         
         }else{
+
+ if (mode == "healthCheck") {    
         
         
         var message = [
@@ -1387,22 +1397,20 @@ function endCyle(){
         currentSourceLine+"\n",
         ];
         process.send(message);
+
+    }
         
         
-        }
-        
-        
-        
-        
-        
-        
-        if(errorSwitch==0){
+       // }
         
         
         
         
         
         
+       // if(errorSwitch==0){
+        
+
         
         
         
@@ -1523,7 +1531,7 @@ function endCyle(){
         
             }
         
-             if(errorSwitch==0){
+          //   if(errorSwitch==0){
         
         
         
@@ -1558,12 +1566,12 @@ function endCyle(){
         
         
             
-             }
+        //     }
             
         
          }else{
         
-             if(errorSwitch==0){
+             //if(errorSwitch==0){
         
                
         var actionComplete=0
@@ -1596,14 +1604,14 @@ function endCyle(){
         
             
         
-              }
+             // }
          }
         
         
         // check to see if should delete source files
         if (deleteSourceFilesOnOff == "1") {
                  
-        if(errorSwitch==0){
+       // if(errorSwitch==0){
         var fs = require('fs');
             if (fs.existsSync(currentSourceLine)) {
         
@@ -1611,7 +1619,7 @@ function endCyle(){
         
         
                          }
-        }
+      //  }
         } 
         
         //check to see if original file should be replaced if new file is smaller
@@ -1809,8 +1817,8 @@ function endCyle(){
         
         
         
-        
-        }
+   
+        } //here2
         
         
         
