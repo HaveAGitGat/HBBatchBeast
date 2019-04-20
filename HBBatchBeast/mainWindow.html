@@ -195,6 +195,9 @@
 
     var successfulCount;
 
+    var cancelCount;
+    var otherCount;
+
 
 
     var queueView
@@ -1362,6 +1365,9 @@ document.getElementById("customBatPath").value = "";
         errorCount = 0;
         successfulCount = 0;
 
+        cancelCount = 0;
+        otherCount = 0;
+
         var g;
 
         var outPutPathStem
@@ -2241,6 +2247,7 @@ for (i = 0; i < tabcontent.length; i++) {
                 + "<th class=\"headcol\">Worker</th>"
                 + "<th class=\"headcol\">Status</th>"
                 + "<th class=\"headcol\">Process?</th>"
+                + "<th class=\"headcol\">Finish time</th>"
 
                 + "</tr>"
 
@@ -2288,6 +2295,7 @@ for (i = 0; i < tabcontent.length; i++) {
                     + "<td > - </td>"
                     + "<td > - </td>"
                     + "<td ><input id=\"tableQueueNumber"+tableQueueNumber+"\" type=\"checkbox\" checked=\"true\"></td>"
+                    + "<td > - </td>"
 
                     + "</tr>"
 
@@ -2535,9 +2543,12 @@ var currentRow = parseInt(globalQueueNumber) + 1
 //var currentRow = parseInt(message[2]) + 1
 
 if (queueView == "enabled") {
+queueTable.rows[currentRow].cells[2].innerHTML = preset;
 queueTable.rows[currentRow].cells[3].innerHTML = "";
 queueTable.rows[currentRow].cells[4].innerHTML = Status;
-queueTable.rows[currentRow].cells[2].innerHTML = preset;
+
+
+queueTable.rows[currentRow].cells[6].innerHTML = getTimeNow();
 
 queueTable.rows[currentRow].style.backgroundColor =backgroundColor;
 }
@@ -2557,6 +2568,7 @@ tempOutputQueueHTML += "<tr>"
                  + "<td>" + sessionNumber + "</td>"
                  + "<td>" + preset + "</td>"
                  + "<td>"+Status+ "</td>"
+                 + "<td>"+getTimeNow()+ "</td>"
                  + "</tr>";
 
 }else if(Status2 == "<p><font color=\"#ff2d2d\">Error</font></p>"){
@@ -2567,6 +2579,7 @@ tempOutputQueueHTML += "<tr>"
                  + "<td>" + sessionNumber + "</td>"
                  + "<td>" + preset + "</td>"
                  + "<td>"+Status+ "</td>"
+                 + "<td>"+getTimeNow()+ "</td>"
                  + "</tr>";    
 
 
@@ -2597,7 +2610,7 @@ informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Complet
 
 if (message[1].includes("Skipped")) {
 
-successfulCount++;
+otherCount++;
 informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c",message[1],"<p><font color=\"#66ccff\">Completed</font></p>")
 }
 
@@ -2637,7 +2650,7 @@ informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c","Origina
 
 if (message[1] == "cancelled") {
 
-errorCount++;
+cancelCount++;
 informationUpdate(message[0],message[3],message[4],message[2],"#ffda6d","Cancelled","<p>Cancelled</p>")
 }
 
@@ -2713,6 +2726,9 @@ countDownOn = 0;
 
         var successfulCount2;
         var errorCount2;
+        var cancelCount2;
+        var otherCount2;
+
         if(graphMode== "initialisation"){
 
            
@@ -2720,11 +2736,16 @@ countDownOn = 0;
 
             successfulCount2 =0;
             errorCount2= 0;
+            cancelCount2= 0;
+            otherCount2= 0;
 
         }else{
 
             successfulCount2 =successfulCount
             errorCount2= errorCount 
+
+            cancelCount2=cancelCount
+            otherCount2= otherCount
 
         }
 
@@ -2803,7 +2824,17 @@ countDownOn = 0;
                         backgroundColor: '#ef435d'
                     },
                     {
-                        values: [totalFilesGraph - (successfulCount + errorCount)],
+                        values: [(cancelCount2)],
+                        text: "Cancelled",
+                        backgroundColor: '#ffda6d'
+                    },
+                    {
+                        values: [(otherCount2)],
+                        text: "Other",
+                        backgroundColor: '#ffa24c'
+                    },
+                    {
+                        values: [totalFilesGraph - (successfulCount + errorCount+cancelCount+otherCount)],
                         text: "Remaining",
                         backgroundColor: '#50ADF5'
                     },
@@ -3760,6 +3791,38 @@ workers[i].send(messageOut);
 
 
     }
+
+
+    function selectAllItems(){
+
+
+        for (var i = 1; i <= (sourceQueueArray.length); i++) {
+document.getElementById("tableQueueNumber"+(i)).checked = true
+}
+    }
+
+
+    function deselectAllItems(){
+
+
+for (var i = 1; i <= (sourceQueueArray.length); i++) {
+document.getElementById("tableQueueNumber"+(i)).checked = false
+}
+}
+
+function invertAllItems(){
+for (var i = 1; i <= (sourceQueueArray.length); i++) {
+
+if(document.getElementById("tableQueueNumber"+(i)).checked == true){
+    document.getElementById("tableQueueNumber"+(i)).checked = false
+}else{
+    document.getElementById("tableQueueNumber"+(i)).checked = true
+
+}
+
+}
+}
+
 
 
 </script>
@@ -5104,7 +5167,16 @@ margin-left: 1px;
                 </div>
 
 
+
                 <div id="fullQueueDiv" style="display: none;">
+
+                    <div ALIGN="RIGHT">
+                        <input type='button' id="selectAllButton" class="infoButton" value='Select all' onclick='selectAllItems()'  />
+                        <input type='button' id="deselectAllButton" class="infoButton" value='Deselect all' onclick='deselectAllItems()'  />
+                        <input type='button' id="deselectAllButton" class="infoButton" value='Invert all' onclick='invertAllItems()'  />
+                    </div>
+
+
                     <p>Queue</p>
                     <div id="fullQueue">
 
@@ -5137,6 +5209,7 @@ margin-left: 1px;
                         <th class="headcol">Preset</th>
 
                         <th class="headcol">Status</th>
+                        <th class="headcol">Finish time</th>
 
 
                     </table>
