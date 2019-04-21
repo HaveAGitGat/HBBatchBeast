@@ -1137,6 +1137,7 @@ function endCyle(){
      if (message[1] != 0 || !fs.existsSync(currentDestinationLine)) {
         
         
+        
         if (message[1] == "Cancelled") {
         
         var message = [
