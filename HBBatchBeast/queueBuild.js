@@ -73,6 +73,7 @@ var writeNumber = 0;
 
         var queueView = "enabled"
         var presetArray2 = [];
+        var presetArray3 = [];
         var presetArray = [];
 
 
@@ -541,6 +542,7 @@ process.send(message);
                         } else {
                       
 sourceQueueArrayWrite += inputPathArray[i] + ",,," + presetArray2[i] + "\n";
+ presetArray3.push(presetArray2[i])
 sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
 
 if((sourceQueueArrayCounter + 1)%100==0){
@@ -634,6 +636,8 @@ destinationFinalQueueArrayWrite +=outputPathArrayFinal[i] + "\n";
 
 
  sourceQueueArrayWrite += inputPathArray[i] + ",,," + presetArray2[i] + "\n";
+
+ presetArray3.push(presetArray2[i])
 
 
 sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
@@ -768,7 +772,7 @@ var message = [
 "complete",
 totalFileFoundCounter,
 sourceQueueArray,
-presetArray2,
+presetArray3,
 skipOrCopyArray,
 
 ];
