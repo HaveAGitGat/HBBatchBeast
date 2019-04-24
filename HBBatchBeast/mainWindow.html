@@ -1983,6 +1983,7 @@ if (message[0] == "scanandconvert") {
 
             var queueInfoBomb = [
 
+            "queueInfoBomb",
             inputPathStemArray,
             outPutPathStemArray,
             outPutPathStemFinalArray,
@@ -2037,6 +2038,8 @@ if (message[0] == "scanandconvert") {
 
             queueBuildModule.on('message', function (message) {
 
+                console.log("Message:"+message);
+
                 if (message.error) {
     console.error(message.error);
   }
@@ -2074,6 +2077,14 @@ skipOrCopyArray=message[4];
 console.log(presetArray2)
 
     runEndSection();
+
+}
+
+if (message[0] == "exitRequest") {
+    var exitMessage = [
+"exitApproved",
+];
+queueBuildModule.send(exitMessage); 
 
 }
 

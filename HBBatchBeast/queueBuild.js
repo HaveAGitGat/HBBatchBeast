@@ -99,37 +99,37 @@ process.on('message', (queueInfoBomb) => {
 
 
 
-
-            inputPathStemArray=queueInfoBomb[0]
-            outPutPathStemArray=queueInfoBomb[1]
-            outPutPathStemFinalArray=queueInfoBomb[2]
+if(queueInfoBomb[0]=="queueInfoBomb"){
+            inputPathStemArray=queueInfoBomb[1]
+            outPutPathStemArray=queueInfoBomb[2]
+            outPutPathStemFinalArray=queueInfoBomb[3]
 
 
 //
 
          //   document.getElementById("selectTemporaryConversionFolder").checked=queueInfoBomb[3]
 
-tempConversionFolderCheckedOnOff=queueInfoBomb[3]
+tempConversionFolderCheckedOnOff=queueInfoBomb[4]
 
 
 
 
 //document.getElementById("includedFileTypes").value=queueInfoBomb[4]
-            supportedFileTypeArrayImport=queueInfoBomb[4]
+            supportedFileTypeArrayImport=queueInfoBomb[5]
 
 
   //document.getElementById("container").options[document.getElementById("container").selectedIndex].text=queueInfoBomb[5]
-            containerType=queueInfoBomb[5]
+            containerType=queueInfoBomb[6]
 
 
 
-            mode=queueInfoBomb[6]
+            mode=queueInfoBomb[7]
 
-            presetArray = queueInfoBomb[7]
+            presetArray = queueInfoBomb[8]
 
-            titleWordFilterArrayImport=queueInfoBomb[8]
+            titleWordFilterArrayImport=queueInfoBomb[9]
 
-            replaceOriginalFile = queueInfoBomb[9]
+            replaceOriginalFile = queueInfoBomb[10]
 
 
        
@@ -765,20 +765,27 @@ process.send(message);
 
 
 
-
-
-
 var message = [
 "complete",
 totalFileFoundCounter,
 sourceQueueArray,
 presetArray3,
 skipOrCopyArray,
-
 ];
 process.send(message);
 
+
+var message = [
+    "exitRequest",
+    ];
+    
+process.send(message);
+
+}
+
+if(queueInfoBomb[0]=="exitApproved"){
 process.exit();
+}
 
 
         });

@@ -777,7 +777,7 @@ function endCyle(){
             if(key+": '"+jsonInfo.streams[i][key]+"'" == fileFiltersIncludeArray[j]){
 
                 processFileY = true
-                filterReason = "Include: "+key+": '"+jsonInfo.streams[i][key]+"'"
+                filterReason = "Include: "+key+": '"+jsonInfo.streams[i][key]+"' "
 
 
             }
@@ -814,7 +814,7 @@ function endCyle(){
             if(key+": '"+jsonInfo.streams[i][key]+"'" == fileFiltersExcludeArray[j]){
 
                 processFileY = false
-                filterReason = "Exclude2: "+key+": '"+jsonInfo.streams[i][key]+"'"
+                filterReason = "Exclude2: "+key+": '"+jsonInfo.streams[i][key]+"' "
 
 
             }
