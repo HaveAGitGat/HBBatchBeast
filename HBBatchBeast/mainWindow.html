@@ -2013,7 +2013,7 @@ if (message[0] == "scanandconvert") {
             var childProcess = require("child_process");
             var queueBuildModulePath = "queueBuild.js"
 
-            //var queueBuildModule = childProcess.fork(path.join(__dirname, queueBuildModulePath ),[], { silent: true });
+           // var queueBuildModule = childProcess.fork(path.join(__dirname, queueBuildModulePath ),[], { silent: true });
             var queueBuildModule = childProcess.fork(path.join(__dirname, queueBuildModulePath ));
 
             // queueBuildModule.stdout.on('data', function(data) {
@@ -2444,6 +2444,14 @@ workers[i - 1].on('message', function (message) {
 
 
 console.log("Message:"+message);
+
+if (message[1] == "exitRequest") {
+    var exitMessage = [
+"exitApproved",
+];
+workers[message[0] - 1].send(exitMessage); 
+
+}
 
 
 if (message[1] == "queueRequest") { 

@@ -1132,10 +1132,25 @@ function endCyle(){
 
                 
         var fs = require('fs');
+
+        if(mode != "healthCheck" && !fs.existsSync(currentDestinationLine)){
+
+            errorLogFull  += "\n HBBB ALERT: NO OUTPUT FILE PRODUCED";
+
+            var message = [
+                workerNumber,
+                "error",
+                globalQueueNumber,
+                preset,
+                errorLogFull
+                ];
+                process.send(message);
+        
         
    
-     if (message[1] != 0 || !fs.existsSync(currentDestinationLine)) {
-        
+        } else if (message[1] != 0 ) {
+
+       
         
         
         if (message[1] == "Cancelled") {
@@ -1959,13 +1974,28 @@ actionComplete=1;
 
 
 
+var message = [
+    workerNumber,
+    "exitRequest",
+    ];
+    
+process.send(message);
 
 
 
 
-process.exit();
+
 
 }
+
+
+if(m[0] == "exitApproved"){
+
+    process.exit();
+
+}
+
+
 
 });
 

@@ -765,6 +765,9 @@ process.send(message);
 
 
 
+
+
+
 var message = [
 "complete",
 totalFileFoundCounter,
@@ -775,11 +778,15 @@ skipOrCopyArray,
 process.send(message);
 
 
+
 var message = [
     "exitRequest",
     ];
     
 process.send(message);
+
+
+//process.exit();
 
 }
 
