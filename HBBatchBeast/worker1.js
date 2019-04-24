@@ -722,7 +722,7 @@ function endCyle(){
 
 
 
-        var filterReason
+        var filterReason="";
 
 
         // var messageJSON = [
@@ -794,27 +794,32 @@ function endCyle(){
         try{
 
 
-        var processFileY = true
+        var processFileY = true  
+
+        var validateArray = []
      //   fileFiltersExcludeArray = "codec_name: 'h264',codec_name: 'aac'"
+
+     // codec_name: 'h264',codec_name: 'aac',channel_layout: 'stereo',codec_long_name: 'H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10'
         fileFiltersExcludeArray = fileFiltersExcludeArray.split(',');
 
 
         for (var i = 0; i < jsonInfo.streams.length; i++) {
         Object.keys(jsonInfo.streams[i]).forEach(function(key) {
 
-            // var messageJSON = [
-            //     "jsonInfo",
-            //     key,
-            //     jsonInfo.streams[i][key] 
-            //     ];
-            //     process.send(messageJSON);
+            var messageJSON = [
+                "jsonInfo",
+                key,
+                jsonInfo.streams[i][key] 
+                ];
+                process.send(messageJSON);
 
 
                 for (var j = 0; j < fileFiltersExcludeArray.length; j++) {
             if(key+": '"+jsonInfo.streams[i][key]+"'" == fileFiltersExcludeArray[j]){
 
                 processFileY = false
-                filterReason = "Exclude2: "+key+": '"+jsonInfo.streams[i][key]+"' "
+                filterReason += "Exclude2: "+key+": '"+jsonInfo.streams[i][key]+"' "
+                validateArray.push(true)
 
 
             }
@@ -822,6 +827,16 @@ function endCyle(){
          //   console.log(key, obj[key]);
             });
         }
+
+    
+
+            if(validateArray.length == fileFiltersExcludeArray.length ){
+                processFileY = false
+            }else{
+                processFileY = true
+            }
+
+        
 
 
 
