@@ -572,7 +572,7 @@ process.send(message);
 
         try {
          
-           const fs = require('fs');
+           var fs = require('fs');
            fs.copyFileSync(currentSourceLine,currentDestinationFinalLine);
 
            copySuccess();
@@ -587,7 +587,7 @@ process.send(message);
 
            try {
 
-                const fs = require('fs');
+                var fs = require('fs');
                 fs.copyFileSync(currentSourceLine,currentDestinationLine);
 
                 copySuccess();
@@ -885,7 +885,7 @@ function endCyle(){
         
                 try {
                  
-                   const fs = require('fs');
+                   var fs = require('fs');
                    fs.copyFileSync(currentSourceLine,currentDestinationFinalLine);
         
                    copySuccess();
@@ -900,7 +900,7 @@ function endCyle(){
         
                    try {
         
-                        const fs = require('fs');
+                        var fs = require('fs');
                         fs.copyFileSync(currentSourceLine,currentDestinationLine);
         
                         copySuccess();
@@ -987,6 +987,7 @@ function endCyle(){
         
                 
                 //process.send(workerNumber+",queueRequest");
+                var fs = require('fs');
                 
                             var f = fs.readFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
                             if (f == "1") {
@@ -1205,7 +1206,7 @@ function endCyle(){
            corruptDestinationPath = corruptDestinationPath +stringProcessingSlash +filePathEnd;
         
         
-        const fs = require('fs-extra')
+        var fs = require('fs-extra')
                fs.moveSync(currentSourceLine, corruptDestinationPath, { overwrite: true })
         
         
@@ -1540,7 +1541,7 @@ function endCyle(){
         
                //  fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
         
-        const fs = require('fs-extra')
+        var fs = require('fs-extra')
         fs.moveSync(currentDestinationLine, currentDestinationFinalLine, { overwrite: true })
         
         
@@ -1551,7 +1552,7 @@ function endCyle(){
          
               try{
         
-                  const fs = require('fs-extra')
+                  var fs = require('fs-extra')
         fs.moveSync(currentDestinationLine, currentDestinationFinalLine, { overwrite: true })
         
         
@@ -1694,7 +1695,7 @@ function endCyle(){
         try{
         
         
-        const fs = require('fs-extra')
+        var fs = require('fs-extra')
         fs.moveSync(currentDestinationFinalLine, currentSourceLine, { overwrite: true })
         
         
@@ -1744,20 +1745,40 @@ function endCyle(){
         
         
         
-         if(newFileSize < originalFileSize){
+      //   if(newFileSize < originalFileSize){
         
         
         try{
         
         //  var fs = require('fs');
         //fs.renameSync(currentDestinationLine, currentSourceLine) 
+
+       
         
+        var containerType =currentDestinationLine.slice(currentDestinationLine.lastIndexOf('.'),currentDestinationLine.length );
+
+
+       //outputPathArray.length
+
         
+        var fileName =currentSourceLine.slice(0, currentSourceLine.lastIndexOf('.'));
+
+        var newCurrentSourceLine = fileName+""+containerType
+
+        // var message = [
+        //     "New:"+newCurrentSourceLine,
+        //     ];
+        //     process.send(message);
+
+        var fs = require('fs');
+
+            fs.unlinkSync(currentSourceLine)
+
         
-        const fs = require('fs-extra')
-        fs.moveSync(currentDestinationLine, currentSourceLine, { overwrite: true })
+        var fs = require('fs-extra')
+        fs.moveSync(currentDestinationLine, newCurrentSourceLine, { overwrite: true })
         
-        
+
         
              
              
@@ -1785,20 +1806,20 @@ function endCyle(){
              
         
            
-           }else{
+        //   }else{
         
-               var message = [
-                   workerNumber,
-                   "originalNotReplaced",
-                   globalQueueNumber,
-                   preset,
-                   errorLogFull
-                   ];
-                   process.send(message);
+            //    var message = [
+            //        workerNumber,
+            //        "originalNotReplaced",
+            //        globalQueueNumber,
+            //        preset,
+            //        errorLogFull
+            //        ];
+            //        process.send(message);
         
         
         
-           }
+       //    }
         
         
         
