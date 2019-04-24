@@ -693,7 +693,7 @@ function endCyle(){
 }else{
 
 
-    infoExtractModule = childProcess.fork(path.join(__dirname, 'infoExtractor.js' ),[], { silent: true });
+    infoExtractModule = childProcess.fork(path.join(__dirname, 'mediaAnalyser.js' ),[], { silent: true });
 
     var extractCommand = [
         "analyseThis",
