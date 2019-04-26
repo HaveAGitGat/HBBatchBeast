@@ -25,7 +25,7 @@ const { app, BrowserWindow, Menu, ipcMain ,Tray} = electron;
 let mainWindow;
 
 //SET ENV
-process.env.NODE_ENV = "production";
+//process.env.NODE_ENV = "production";
 
 
 
@@ -43,7 +43,7 @@ app.on('ready', function () {
     mainWindow = new BrowserWindow({
         width: 1400,
         height: 1000,
-   frame: false,
+  // frame: false,
         title: 'HBBatchBeast'
 
 
@@ -223,7 +223,7 @@ if (process.platform == 'darwin') {
 
 //Add developer tools item if not in production
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV != 'production'|| process.env.NODE_ENV == 'production') {
     mainMenuTemplate.push({
         label: 'Developer Tools',
         submenu: [
