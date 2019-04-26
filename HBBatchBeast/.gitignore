@@ -4,5 +4,6 @@ node_modules
 release-builds
 HBBatchBeast
 test.js
+test2.js
 Dockerfile
 start.sh
