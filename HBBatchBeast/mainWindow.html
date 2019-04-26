@@ -2378,14 +2378,7 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
       
       hideTabs();
 
-function hideTabs(){
-      var i, tabcontent, tablinks;
-// Get all elements with class="tabcontent" and hide them
-tabcontent = document.getElementsByClassName("tabcontent");
-for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-}
-}
+
 
 
 
@@ -3847,6 +3840,11 @@ if (confirm('Are you sure you want to close the program? Any running conversions
         // Declare all variables
         var i, tabcontent, tablinks;
 
+        if( document.getElementById(tabName).style.display == "block"){
+           
+            document.getElementById(tabName).style.display = "none";
+        }else{
+
         // Get all elements with class="tabcontent" and hide them
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
@@ -3860,8 +3858,11 @@ if (confirm('Are you sure you want to close the program? Any running conversions
         }
 
         // Show the current tab, and add an "active" class to the button that opened the tab
+
         document.getElementById(tabName).style.display = "block";
+    
         evt.currentTarget.className += " active";
+    }
 
         textAreaHeight();
     }
@@ -4151,6 +4152,15 @@ if(document.getElementById("tableQueueNumber"+(i)).checked == true){
 }
 }
 
+
+function hideTabs(){
+      var i, tabcontent, tablinks;
+// Get all elements with class="tabcontent" and hide them
+tabcontent = document.getElementsByClassName("tabcontent");
+for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+}
+}
 
 
 </script>
@@ -4886,7 +4896,7 @@ margin-left: 1px;
                 <button class="tablinks" onclick="openTab(event, 'batchConversion')">Batch conversion & Folder watching</button>
 
 
-                <button class="tablinks" onclick="openTab(event, 'systemSettings')">System settings</button>
+                <button class="tablinks" onclick="openTab(event, 'systemSettings')">System</button>
 
 
                 <button class="tablinks" onclick="openTab(event, 'helpSection')">Help</button>
