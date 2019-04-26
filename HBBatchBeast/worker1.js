@@ -175,6 +175,7 @@ var  globalQueueNumber;
 var  skipOrCopy;
 var  copyOnOff;
 var  replaceOriginalFile;
+var  replaceOriginalFileAlways;
 
 var itemChecked;
 
@@ -330,6 +331,8 @@ itemChecked =m[9];
 
 fileFiltersIncludeArray = m[10]+"";
 fileFiltersExcludeArray = m[11]+"";
+
+replaceOriginalFileAlways = m[12];
 
 
 
@@ -830,7 +833,7 @@ function endCyle(){
 
     
 
-            if(validateArray.length == fileFiltersExcludeArray.length ){
+            if((validateArray.length+1) == fileFiltersExcludeArray.length ){
                 processFileY = false
             }else{
                 processFileY = true
@@ -1539,7 +1542,7 @@ function endCyle(){
             try {
              
         
-               //  fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
+               // dont use fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
         
         var fs = require('fs-extra')
         fs.moveSync(currentDestinationLine, currentDestinationFinalLine, { overwrite: true })
@@ -1664,7 +1667,7 @@ function endCyle(){
         
         
         
-        if (replaceOriginalFile == true) {
+        if (replaceOriginalFile == true  || replaceOriginalFileAlways == true) {
         
         
         var fs = require('fs');
@@ -1689,14 +1692,34 @@ function endCyle(){
         
         if (tempFolderSected == "1") {
         
-        if(newFinalFileSize < originalFileSize){
+        if(newFinalFileSize < originalFileSize || replaceOriginalFileAlways == true){
         
         
         try{
+            //
+
+            var containerType =currentDestinationFinalLine.slice(currentDestinationFinalLine.lastIndexOf('.'),currentDestinationFinalLine.length );
+        
+             var fileName =currentSourceLine.slice(0, currentSourceLine.lastIndexOf('.'));
+     
+             var newCurrentSourceLine = fileName+""+containerType
+     
+     
+             var fs = require('fs');
+     
+                 fs.unlinkSync(currentSourceLine)
+     
+             
+             var fs = require('fs-extra')
+             fs.moveSync(currentDestinationFinalLine, newCurrentSourceLine, { overwrite: true })
+            
+
+
+            //
         
         
-        var fs = require('fs-extra')
-        fs.moveSync(currentDestinationFinalLine, currentSourceLine, { overwrite: true })
+        //var fs = require('fs-extra')
+        //fs.moveSync(currentDestinationFinalLine, currentSourceLine, { overwrite: true })
         
         
         var message = [
@@ -1745,15 +1768,13 @@ function endCyle(){
         
         
         
-      //   if(newFileSize < originalFileSize){
+         if(newFileSize < originalFileSize || replaceOriginalFileAlways == true){
         
         
         try{
         
         //  var fs = require('fs');
-        //fs.renameSync(currentDestinationLine, currentSourceLine) 
-
-       
+        //dont use fs.renameSync(currentDestinationLine, currentSourceLine) 
         
         var containerType =currentDestinationLine.slice(currentDestinationLine.lastIndexOf('.'),currentDestinationLine.length );
 
@@ -1806,20 +1827,20 @@ function endCyle(){
              
         
            
-        //   }else{
+           }else{
         
-            //    var message = [
-            //        workerNumber,
-            //        "originalNotReplaced",
-            //        globalQueueNumber,
-            //        preset,
-            //        errorLogFull
-            //        ];
-            //        process.send(message);
+               var message = [
+                   workerNumber,
+                   "originalNotReplaced",
+                   globalQueueNumber,
+                   preset,
+                   errorLogFull
+                   ];
+                   process.send(message);
         
         
         
-       //    }
+           }
         
         
         
