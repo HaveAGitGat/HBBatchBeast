@@ -34,6 +34,8 @@ var outputFolderPathold = "";
 var sourceQueueArrayCounter = 0;
 var writeNumber = 0;
 
+var fsextra = require('fs-extra')
+
 
         var inputPathArray = [];
         var outputPathArray = [];
@@ -229,11 +231,11 @@ function traverseDir(inputPathStem) {
                 var thisFile = fullPath + "" // path/to/folder/test.mp4
 
                 fileTypeSplit = thisFile.split('.');    // 
-                fileType = fileTypeSplit[fileTypeSplit.length - 1]   // .mp4
+                fileType = fileTypeSplit[fileTypeSplit.length - 1]   // mp4
 
 
                 //Here we define supported file types
-                var supportedFileTypeArray = supportedFileTypeArrayImport
+                var supportedFileTypeArray = supportedFileTypeArrayImport +",srt,SRT"
 
                 supportedFileTypeArray = supportedFileTypeArray.split(',');
 
@@ -243,7 +245,7 @@ function traverseDir(inputPathStem) {
 
                 for (var j = 0; j < supportedFileTypeArray.length; j++) {
 
-                    if (fileType == supportedFileTypeArray[j]) {
+                    if (fileType.toLowerCase() == supportedFileTypeArray[j].toLowerCase()) {
                         supportedFileSwitch = 1;
                     }
 
@@ -356,7 +358,18 @@ process.send(message);
 
                     filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));   // test
 
-                    subfilePath = filePathEndFileType + containerType;   // "test" +".mp4"
+                    if( filePathEnd.includes('.srt') || filePathEnd.includes('.SRT') ){
+
+                        subfilePath = filePathEndFileType + ".srt";   // "test" +".srt"
+
+                    }else{
+
+                        subfilePath = filePathEndFileType + containerType;   // "test" +".mp4"
+
+
+                    }
+
+                   
 
                     LongsubfilePath = str.slice(0, str.lastIndexOf(stringProcessingSlash)); //  path/to/folder
 
@@ -397,12 +410,6 @@ process.send(message);
 
 
                        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
-
-
-
-
-
-
 
                             fileNotExistsCounter++
                         }
@@ -449,7 +456,12 @@ process.send(message);
                             try {
 
                                 if (mode == "scanandconvert") {
+
+
                                     shell.mkdir('-p', outputFolderPath);
+
+
+
                                 }
 
                            } catch (err) {}
@@ -568,28 +580,37 @@ process.send(message);
                     var stringProcessingSlash = "/";
                 }
 
-                pointer = inputPathArray[i].split(stringProcessingSlash);  
+                if(inputPathArray[i].includes('.srt') || inputPathArray[i].includes('.SRT')){
 
-                filePathEnd = pointer[pointer.length - 1]   //     test.mp4
+                    skipOrCopyArray[sourceQueueArrayCounter] = 1 ;
+                    
+                }else{
+                    pointer = inputPathArray[i].split(stringProcessingSlash);  
 
-                filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));   // test
-
-
-                var titleWordFilterArray = titleWordFilterArrayImport
-
-                titleWordFilterArray = titleWordFilterArray.split(',');
-
-                for (var j = 0; j < titleWordFilterArray.length; j++) {
-
-                    if (titleWordFilterArray[j] != "" ) {
-                    if (filePathEndFileType.indexOf(titleWordFilterArray[j]) >= 0 ) {
-                       // supportedFileSwitch = 0;
-
-                       skipOrCopyArray[sourceQueueArrayCounter] = 1 ;
-
+                    filePathEnd = pointer[pointer.length - 1]   //     test.mp4
+    
+                    filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));   // test
+    
+    
+                    var titleWordFilterArray = titleWordFilterArrayImport
+    
+                    titleWordFilterArray = titleWordFilterArray.split(',');
+    
+                    for (var j = 0; j < titleWordFilterArray.length; j++) {
+    
+                        if (titleWordFilterArray[j] != "" ) {
+                        if (filePathEndFileType.indexOf(titleWordFilterArray[j]) >= 0 ) {
+                           // supportedFileSwitch = 0;
+    
+                           skipOrCopyArray[sourceQueueArrayCounter] = 1 ;
+    
+                        }
                     }
+                    }
+
                 }
-                }
+
+
             }
 
 
@@ -666,6 +687,12 @@ if (mode != "healthCheck") {
                     var stringProcessingSlash = "/";
                 }
 
+                if(inputPathArray[i].includes('.srt') || inputPathArray[i].includes('.SRT')){
+
+                    skipOrCopyArray[sourceQueueArrayCounter] = 1 ;
+                    
+                }else{
+
                 pointer = inputPathArray[i].split(stringProcessingSlash);  
 
                 filePathEnd = pointer[pointer.length - 1]   //     test.mp4
@@ -688,6 +715,7 @@ if (mode != "healthCheck") {
                     }
                 }
                 }
+            }
             }
 
 
