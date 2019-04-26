@@ -701,6 +701,22 @@ if (f == "1") {
 }
 
 
+// read if to copy srt files
+
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/copySRTFiles.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/copySRTFiles.txt", 'utf8');
+if (f == "1") {
+    document.getElementById("copySRTFiles").checked = true;
+} else {
+    document.getElementById("copySRTFiles").checked = false;
+
+}
+
+}
+
+
 // read if auto create folders
 
 
@@ -1320,6 +1336,16 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludeAllFilesWithProperties.
         } else {
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/copyFilteredFiles.txt', 0, 'utf8');
     }
+
+
+            //save copy srt files
+
+            if (document.getElementById("copySRTFiles").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/copySRTFiles.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/copySRTFiles.txt', 0, 'utf8');
+}
 
 
             //save auto create folders or not
@@ -2162,6 +2188,15 @@ if (message[0] == "scanandconvert") {
 
             // };
 
+            if(document.getElementById("copySRTFiles").checked == true){
+                var fileFilterArray =document.getElementById("includedFileTypes").value +",srt,SRT"
+
+
+            }else{
+                var fileFilterArray = document.getElementById("includedFileTypes").value
+            }
+
+           
 
             var queueInfoBomb = [
 
@@ -2170,7 +2205,7 @@ if (message[0] == "scanandconvert") {
             outPutPathStemArray,
             outPutPathStemFinalArray,
             document.getElementById("selectTemporaryConversionFolder").checked,
-            document.getElementById("includedFileTypes").value,
+            fileFilterArray,
             document.getElementById("container").options[document.getElementById("container").selectedIndex].text,
             mode,
             presetArray,
@@ -5176,6 +5211,11 @@ margin-left: 1px;
                             <div class="grid-itemright"><input type="checkbox" id="replaceOriginalFileAlways" onchange="cbChange5(this)" class="cb5"></div>
 
 
+                            <div class="grid-itemleft">
+                                <p>Copy subtitle (srt) files to destination?</p>
+                            </div>
+        
+                            <div class="grid-itemright"><input type="checkbox" id="copySRTFiles"></div>
 
 
                             <div class="grid-itemleft">
