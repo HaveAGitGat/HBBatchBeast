@@ -128,6 +128,38 @@
     }
 
 
+function createViewMediaInfo() {
+
+//create new window
+
+viewMedia = new BrowserWindow({
+    width: 1500,
+    height: 500,
+    frame: false,
+    title: 'View Media Info'
+
+});
+
+//Load html into window
+
+viewMedia.loadURL(url.format({
+    pathname: path.join(__dirname, 'viewMediaInfo.html'),
+    protocol: 'file:',
+    slashes: true
+
+}));
+
+
+
+//Garbage collection handle
+viewMedia.on('close', function () {
+    viewMedia = null;
+
+});
+
+}
+
+
     //Global variables
 
     var fs = require('fs');
@@ -2188,7 +2220,7 @@ if (message[0] == "scanandconvert") {
 
             // };
 
-            if(document.getElementById("copySRTFiles").checked == true){
+            if(document.getElementById("copySRTFiles").checked == true && mode != "healthCheck"){
                 var fileFilterArray =document.getElementById("includedFileTypes").value +",srt,SRT"
 
 
@@ -5165,6 +5197,8 @@ margin-left: 1px;
                         <textarea type="text" class="folderPaths" id="excludePropertyFileFilter"></textarea>
                     </div>
 
+                    <input type="button" onclick="createViewMediaInfo()" value="Media info viewer tool" class="infoButton">
+
 
 
 
@@ -5411,6 +5445,9 @@ margin-left: 1px;
                         <input type="button" class="HaveAGitGat2" onclick="openURL('https://github.com/HaveAGitGat/HBBatchBeast/wiki')" value="Wiki help">
 
 
+                        <input type="button" class="HaveAGitGat" onclick="openURL('https://github.com/HaveAGitGat/HBBatchBeast')" value="An application by HaveAGitGat">
+
+
                         <input type='button' class="button2" value='Benchmark' onclick='convertFiles("scanandconvert",1)' style="display: none;" />
 
                     </center>    
@@ -5425,7 +5462,7 @@ margin-left: 1px;
 
                 
 
-
+                <center>
 
 
                 <div id="timerDiv"></div>
@@ -5449,6 +5486,8 @@ margin-left: 1px;
                     <div id='endTimeDiv'></div>
                 </div>
 
+
+             
                 <div id='myChartDiv' style="display: none;">
                     <div id='myChart'></div>
                 </div>
@@ -5496,7 +5535,7 @@ margin-left: 1px;
 
                 </div>
 
-
+       
 
                 <div id="fullQueueDiv" style="display: none;">
 
