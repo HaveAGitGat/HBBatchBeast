@@ -1,0 +1,17 @@
+Usage: electron-installer-dmg <path/to/.app> <appname>
+
+Create DMG installers for your electron apps.
+
+Usage:
+  electron-installer-dmg ./FooBar-darwin-x64/FooBar.app FooBar
+
+Options:
+  --out=<path>         The directory to put the DMG into. [Default: `process.cwd()`].
+  --icon=<path>        Path to the icon file that will be the app icon in the DMG window.
+  --icon-size=<px>     How big to make the icon for the app in the DMG. [Default: `80`].
+  --background=<path>  Path to a PNG image to use as the background of the DMG.
+  --format=<format>    Disk image format. [Default: `UDZO`].
+  --debug              Enable debug messages.
+  --overwrite          Overwrite any existing DMG.
+  -h --help            Show this screen.
+  --version            Show version.

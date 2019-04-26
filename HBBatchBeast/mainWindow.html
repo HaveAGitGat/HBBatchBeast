@@ -17,7 +17,7 @@
 
 
     //SET ENV
-  // process.env.NODE_ENV = "production";
+   process.env.NODE_ENV = "production";
 
     var home = require("os").homedir();
 
@@ -135,7 +135,7 @@ function createViewMediaInfo() {
 viewMedia = new BrowserWindow({
     width: 1500,
     height: 500,
-  //  frame: false,
+    frame: false,
     title: 'View Media Info'
 
 });
@@ -2139,9 +2139,9 @@ if (message[0] == "scanandconvert") {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/Processes/queueNumberPath.txt', "0", 'utf8');
 
-            var LocalStorage = require('node-localstorage').LocalStorage;
-            queueNumberPathStorage = new LocalStorage(homePath + '/HBBatchBeast/Config/Processes/queueNumberPath');
-            queueNumberPathStorage.setItem('myFirstKey', '0');
+            // var LocalStorage = require('node-localstorage').LocalStorage;
+            // queueNumberPathStorage = new LocalStorage(homePath + '/HBBatchBeast/Config/Processes/queueNumberPath');
+            // queueNumberPathStorage.setItem('myFirstKey', '0');
 
 
             // var temp = (parseInt(queueNumberPathStorage.getItem('myFirstKey'))+1)
@@ -4175,6 +4175,40 @@ for (i = 0; i < tabcontent.length; i++) {
 
 
 <style>
+
+::-webkit-scrollbar
+{
+  width: 12px;  /* for vertical scrollbars */
+  height: 12px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track
+{
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb
+{
+  background: #66ccff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     .folderPaths {
 
 

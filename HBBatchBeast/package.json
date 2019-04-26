@@ -1,44 +1,32 @@
 {
-  "name": "hbbatchbeast",
-  "productName": "hbbatchbeast",
-  "description": "A Handbrake GUI for recursive folder conversion and folder watching",
-  "version": "0.1.5",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "package-mac": "electron-packager . --overwrite --asar=true --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds --darwinDarkModeSupport=true",
-    "package-win": "electron-packager . hbbatchbeast --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"HBBatchBeast\"",
-    "package-linux": "electron-packager . hbbatchbeast --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds",
-    "create-installer-mac": "electron-installer-dmg ./release-builds/hbbatchbeast-darwin-x64/hbbatchbeast.app hbbatchbeast --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns",
-    "create-installer-win": "node installers/windows/createinstaller.js",
-    "create-debian-installer": "electron-installer-debian --src release-builds/hbbatchbeast-linux-x64/ --arch amd64 --config debian.json"
-  },
-  "author": "HaveAGitGat",
-  "license": "MIT",
-  "dependencies": {
-    "async": "^2.6.2",
-    "bcrypt": "^3.0.6",
-    "emailjs": "^2.2.0",
-    "ffmpeg": "0.0.4",
-    "ffmpeg-probe": "^1.0.6",
-    "ffprobe": "^1.1.0",
-    "ffprobe-static": "^3.0.0",
-    "fluent-ffmpeg": "^2.1.2",
-    "fs-extra": "^7.0.1",
-    "glob": "^7.1.3",
-    "inquirer-select-directory": "^1.2.0",
-    "mv": "^2.1.1",
-    "node-ffprobe": "^1.2.2",
-    "node-localstorage": "^1.3.1",
-    "opener": "^1.5.1",
-    "shelljs": "^0.8.3",
-    "shx": "^0.3.2",
-    "tree-kill": "^1.2.1"
-  },
-  "devDependencies": {
-    "electron": "^3.1.8",
-    "electron-installer-dmg": "^2.0.0",
-    "electron-packager": "^12.2.0",
-    "electron-winstaller": "^2.7.0"
-  }
+    "name": "hbbatchbeast",
+    "productName": "hbbatchbeast",
+    "description": "A Handbrake GUI for recursive folder conversion and folder watching",
+    "version": "0.1.5",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "package-mac": "electron-packager . --overwrite --asar=true --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds --darwinDarkModeSupport=true",
+        "package-win": "electron-packager . hbbatchbeast --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"HBBatchBeast\"",
+        "package-linux": "electron-packager . hbbatchbeast --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds",
+        "create-installer-mac": "electron-installer-dmg ./release-builds/hbbatchbeast-darwin-x64/hbbatchbeast.app hbbatchbeast --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns",
+        "create-installer-win": "node installers/windows/createinstaller.js",
+        "create-debian-installer": "electron-installer-debian --src release-builds/hbbatchbeast-linux-x64/ --arch amd64 --config debian.json"
+    },
+    "author": "HaveAGitGat",
+    "license": "MIT",
+    "dependencies": {
+        "emailjs": "^2.2.0",
+        "ffprobe": "^1.1.0",
+        "ffprobe-static": "^3.0.0",
+        "fs-extra": "^7.0.1",
+        "opener": "^1.5.1",
+        "shelljs": "^0.8.3"
+    },
+    "devDependencies": {
+        "electron": "^3.1.8",
+        "electron-installer-dmg": "^2.0.0",
+        "electron-packager": "^12.2.0",
+        "electron-winstaller": "^2.7.0"
+    }
 }
