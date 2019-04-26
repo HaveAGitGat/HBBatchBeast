@@ -625,6 +625,63 @@ document.getElementById("excludePropertyFileFilter").value = fs.readFileSync(hom
 
 }
 
+// read include any file properties
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/includeAnyFilesWithProperties.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/includeAnyFilesWithProperties.txt", 'utf8');
+if (f == "1") {
+    document.getElementById("includeAnyFilesWithProperties").checked = true;
+} else {
+    document.getElementById("includeAnyFilesWithProperties").checked = false;
+
+}
+
+}
+
+// read include all file properties
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/includeAllFilesWithProperties.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/includeAllFilesWithProperties.txt", 'utf8');
+if (f == "1") {
+    document.getElementById("includeAllFilesWithProperties").checked = true;
+} else {
+    document.getElementById("includeAllFilesWithProperties").checked = false;
+
+}
+
+}
+
+
+// read exclude any file properties
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/excludeAnyFilesWithProperties.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/excludeAnyFilesWithProperties.txt", 'utf8');
+if (f == "1") {
+    document.getElementById("excludeAnyFilesWithProperties").checked = true;
+} else {
+    document.getElementById("excludeAnyFilesWithProperties").checked = false;
+
+}
+
+}
+
+// read exclude all file properties
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/excludeAllFilesWithProperties.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/excludeAllFilesWithProperties.txt", 'utf8');
+if (f == "1") {
+    document.getElementById("excludeAllFilesWithProperties").checked = true;
+} else {
+    document.getElementById("excludeAllFilesWithProperties").checked = false;
+
+}
+
+}
+
 
 // read if to copy filtered files
 
@@ -692,6 +749,21 @@ if (f == "1") {
 
 }
 
+// read if to replace original file always
+
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/replaceOriginalFileAlways.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/replaceOriginalFileAlways.txt", 'utf8');
+if (f == "1") {
+    document.getElementById("replaceOriginalFileAlways").checked = true;
+} else {
+    document.getElementById("replaceOriginalFileAlways").checked = false;
+
+}
+
+}
+
 
 
         //read number of instances 
@@ -705,6 +777,19 @@ if (f == "1") {
             document.getElementById("instanceNumber").value = 4;
 
         }
+
+
+//read max queue view size  
+
+                if (fs.existsSync(homePath + "/HBBatchBeast/Config/queueSizeViewLimit.txt")) {
+
+document.getElementById("queueSizeViewLimit").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/queueSizeViewLimit.txt", 'utf8');
+
+
+} else {
+document.getElementById("queueSizeViewLimit").value = 1000;
+
+}
 
 
         // read bat file path
@@ -812,7 +897,7 @@ if (f == "1") {
         var checkboxDelete = document.querySelector("input[name=deleteSourceFilesname]");
 
         checkboxDelete.addEventListener('change', function () {
-            if (this.checked) {
+            if (this.checked ==true) {
 
 
                 //document.getElementById("deleteItemDiv2").style.backgroundColor = '#ef435d';
@@ -825,7 +910,7 @@ if (f == "1") {
 
 
 
-            } else {
+            } else if (this.checked ==false) {
 
                 document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,0.4)';
 
@@ -939,16 +1024,45 @@ if (f == "1") {
         textAreaHeight()
     }
 
+    function cbChange5(obj) {
+        document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,0.4)';
+
+        if (obj.checked == false) {
+            obj.checked = false;
+        } else if (obj.checked == true) {
+            var cbs = document.getElementsByClassName("cb5");
+            for (var i = 0; i < cbs.length; i++) {
+                cbs[i].checked = false;
+            }
+            obj.checked = true;
+        }
+    }
+
+    function cbChange6(obj) {
+
+        if (obj.checked == false) {
+            obj.checked = false;
+        } else if (obj.checked == true) {
+            var cbs = document.getElementsByClassName("cb6");
+            for (var i = 0; i < cbs.length; i++) {
+                cbs[i].checked = false;
+            }
+            obj.checked = true;
+        }
+    }
 
 
 
 
 
-    function showAlert(message) {
+
+    function showAlert(message,obj) {
 
         if (document.getElementById("deleteSourceFiles").checked == true) {
             alert(message);
         }
+
+        cbChange5(obj);
 
     }
 
@@ -1154,6 +1268,48 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/moveCorruptFileOnOff.txt', 0, 
 
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludePropertyFileFilter.txt', document.getElementById("excludePropertyFileFilter").value, 'utf8');
 
+
+             //save include any file properties
+
+             if (document.getElementById("includeAnyFilesWithProperties").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/includeAnyFilesWithProperties.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/includeAnyFilesWithProperties.txt', 0, 'utf8');
+}   
+
+
+             //save include all file properties
+
+             if (document.getElementById("includeAllFilesWithProperties").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/includeAllFilesWithProperties.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/includeAllFilesWithProperties.txt', 0, 'utf8');
+}  
+
+             //save exclude any file properties
+
+             if (document.getElementById("excludeAnyFilesWithProperties").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludeAnyFilesWithProperties.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludeAnyFilesWithProperties.txt', 0, 'utf8');
+}   
+
+
+             //save exclude all file properties
+
+             if (document.getElementById("excludeAllFilesWithProperties").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludeAllFilesWithProperties.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludeAllFilesWithProperties.txt', 0, 'utf8');
+}  
+
+
+
+
         //save copy filtered files or not
 
         if (document.getElementById("copyFilteredFiles").checked == true) {
@@ -1192,6 +1348,17 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFile.txt', 1, '
 } else {
 fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFile.txt', 0, 'utf8');
 }
+
+
+            //save replace original files or not
+
+if (document.getElementById("replaceOriginalFileAlways").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFileAlways.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFileAlways.txt', 0, 'utf8');
+}
+  
   
 
 
@@ -1199,6 +1366,12 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFile.txt', 0, '
         // save number of instances to use 
 
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/instanceNumber.txt', document.getElementById("instanceNumber").value, 'utf8');
+
+
+// save max queue view size limit
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueSizeViewLimit.txt', document.getElementById("queueSizeViewLimit").value, 'utf8');
+
 
 
         // save custom bat path
@@ -1277,6 +1450,7 @@ document.getElementById("includePropertyFileFilter").value = ""
 document.getElementById("excludePropertyFileFilter").value = ""
 document.getElementById("copyFilteredFiles").checked = false;
 document.getElementById("replaceOriginalFile").checked = false;
+document.getElementById("replaceOriginalFileAlways").checked = false;
 document.getElementById("autoCreateFolders").checked = true;
 document.getElementById("customBatPath").value = "";
 
@@ -1733,6 +1907,12 @@ fs.mkdirSync(outPutPathStemFinalArray[y] + validationSlash);
             }
 
 
+
+            
+
+
+
+
             
            // createViewError();
 
@@ -1994,6 +2174,7 @@ if (message[0] == "scanandconvert") {
             presetArray,
             document.getElementById("titleWordFilter").value,
             document.getElementById("replaceOriginalFile").checked,
+            
             
         
  ];
@@ -2362,9 +2543,9 @@ document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><f
 document.getElementById("pauseButtonDiv").style.display = 'block';
 document.getElementById("stopButtonDiv").style.display = 'block';
 
-if (totalFileFoundCounter >= 1000) {
+if (totalFileFoundCounter >= document.getElementById("queueSizeViewLimit").value ) {
     document.getElementById("fullQueueDiv").style.display = 'none';
-    document.getElementById("viewStatus").innerHTML = "<p style=\"color:red\">Large number of items in the queue! Queue view disabled.<\p>";
+    document.getElementById("viewStatus").innerHTML = "<p style=\"color:red\">Queue size view limit exceeded("+document.getElementById("queueSizeViewLimit").value+")! Queue view disabled.<\p>";
 
    queueView = "disabled";
 
@@ -2473,6 +2654,7 @@ if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
          document.getElementById("tableQueueNumber"+(globalQueueNumberManager+1)).checked,
          document.getElementById("includePropertyFileFilter").value+"",
         document.getElementById("excludePropertyFileFilter").value+"",
+        document.getElementById("replaceOriginalFileAlways").checked,
 
      
                   ];
@@ -2904,6 +3086,48 @@ countDownOn = 0;
 
 
     function runScan() {
+
+
+        // var includePropertyFileFilterVar = document.getElementById("includePropertyFileFilter").value
+        //     var excludePropertyFileFilterVar = document.getElementById("excludePropertyFileFilter").value
+
+        //     includePropertyFileFilterVar = includePropertyFileFilterVar.trim()
+        //     excludePropertyFileFilterVar=excludePropertyFileFilterVar.trim()
+
+        //     if(includePropertyFileFilterVar.charAt(includePropertyFileFilterVar.length - 1) != ","){
+        //         includePropertyFileFilterVar += ","
+        //     }
+
+        //     if(excludePropertyFileFilterVar.charAt(excludePropertyFileFilterVar.length - 1) != ","){
+        //         excludePropertyFileFilterVar += ","
+        //     }
+
+        //     document.getElementById("includePropertyFileFilter").value =includePropertyFileFilterVar
+        //     document.getElementById("excludePropertyFileFilter").value =excludePropertyFileFilterVar
+
+        var includePropertyFileFilterVar = ((document.getElementById("includePropertyFileFilter").value)).split(",");
+
+if(includePropertyFileFilterVar.length != 0){
+  document.getElementById("includeAllFilesWithPropertiesNumber").innerHTML =includePropertyFileFilterVar.length-1;
+    }else{
+        document.getElementById("includeAllFilesWithPropertiesNumber").innerHTML = "0" ;
+
+    }
+
+        var excludePropertyFileFilterVar = ((document.getElementById("excludePropertyFileFilter").value)).split(",");
+
+      if(excludePropertyFileFilterVar-1 != 0){
+        document.getElementById("excludeAllFilesWithPropertiesNumber").innerHTML =excludePropertyFileFilterVar.length-1;
+          }else{
+              document.getElementById("excludeAllFilesWithPropertiesNumber").innerHTML = "0" ;
+
+          }
+
+    
+
+
+
+
 
 
         
@@ -4799,22 +5023,7 @@ margin-left: 1px;
                         <div class="grid-itemright"><input type="checkbox" id="dailyRunTimeOnOff" onchange="cbChange4(this)" class="cb4"></div>
 
 
-                    <div class="grid-itemleft">
 
-                        <div id="deleteItemDiv">
-                            <p id="deleteSourceFilesdiv">Delete source files after conversion?:</p>
-                        </div>
-                    </div>
-
-                    <div class="grid-itemright">
-
-
-                        <div id="deleteItemDiv2">
-                            <input type="checkbox" name="deleteSourceFilesname" id="deleteSourceFiles"
-                                onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!')">
-                        </div>
-
-                    </div>
 
 
 
@@ -4872,7 +5081,7 @@ margin-left: 1px;
 
 
                     <div style="text-align: left">
-                        <p>File title word filter:</p>
+                        <p>Exclude file names which include any of these words:</p>
                     </div>
 
                     <div style="text-align: right">
@@ -4882,7 +5091,7 @@ margin-left: 1px;
 
 
                     <div style="text-align: left">
-                        <p>Convert only files with these properties:</p>
+                        <p>Include files with any <input type="checkbox" id="includeAnyFilesWithProperties"  onchange="cbChange6(this)" class="cb6"> or all <input type="checkbox" id="includeAllFilesWithProperties"  onchange="cbChange6(this)" class="cb6"> of these <span id="includeAllFilesWithPropertiesNumber" style="display:inline"></span> properties:</p>
                     </div>
 
                     <div style="text-align: right">
@@ -4891,7 +5100,7 @@ margin-left: 1px;
 
 
                     <div style="text-align: left">
-                        <p>OR exclude files with these properties:</p>
+                        <p>Exclude files with any <input type="checkbox" id="excludeAnyFilesWithProperties"  onchange="cbChange6(this)" class="cb6"> or all <input type="checkbox" id="excludeAllFilesWithProperties"  onchange="cbChange6(this)" class="cb6"> of these <span id="excludeAllFilesWithPropertiesNumber" style="display:inline"></span> properties:</p>
                     </div>
 
                     <div style="text-align: right">
@@ -4902,10 +5111,30 @@ margin-left: 1px;
 
 
                     <div class="grid-itemleft">
-                        <p>Copy filtered files to destination?</p>
+                        <p>Copy excluded files to destination?</p>
                     </div>
 
                     <div class="grid-itemright"><input type="checkbox" id="copyFilteredFiles"></div>
+
+
+
+
+                    <div class="grid-itemleft">
+
+                        <div id="deleteItemDiv">
+                            <p id="deleteSourceFilesdiv">Delete source files after conversion?:</p>
+                        </div>
+                    </div>
+
+                    <div class="grid-itemright">
+
+
+                        <div id="deleteItemDiv2">
+                            <input type="checkbox" name="deleteSourceFilesname" id="deleteSourceFiles"
+                                onchange="showAlert('SOURCE FILES WILL BE DELETED AFTER CONVERSION! Please test before proper use!',this)" class="cb5">
+                        </div>
+
+                    </div>
 
 
 
@@ -4913,7 +5142,7 @@ margin-left: 1px;
                             <p>Replace original file if converted file is smaller?(Compress attempt)</p>
                         </div>
     
-                        <div class="grid-itemright"><input type="checkbox" id="replaceOriginalFile"></div>
+                        <div class="grid-itemright"><input type="checkbox" id="replaceOriginalFile" onchange="cbChange5(this)" class="cb5"></div>
 
                       
                                 <input type="button" onclick="viewLogs('originalFileReplacedList')" value="View compress attempt cache" class="infoButton">
@@ -4922,6 +5151,14 @@ margin-left: 1px;
                             <input type="button" onclick="clearOriginalFileCompressAttemptCache()" value="Clear compress attempt cache" class="infoButton">
                        
        
+                            <div class="grid-itemleft">
+                                <p>Replace original file always?</p>
+                            </div>
+        
+                            <div class="grid-itemright"><input type="checkbox" id="replaceOriginalFileAlways" onchange="cbChange5(this)" class="cb5"></div>
+
+
+
 
                             <div class="grid-itemleft">
                                     <p>Automatically create temp/destination folders if they don't exist?</p>
@@ -5051,6 +5288,11 @@ margin-left: 1px;
                         <div class="grid-itemleft">
                             <p>Number of simultaneous Handbrake instances to use?(Recommended <=4):</p> </div> <div
                                     class="grid-itemright"><input type="text" class="infoBox" id="instanceNumber">
+                        </div>
+
+                        <div class="grid-itemleft">
+                            <p>Queue size view limit?(Recommended <=1000):</p> </div> <div
+                                    class="grid-itemright"><input type="text" class="infoBox" id="queueSizeViewLimit">
                         </div>
 
 
