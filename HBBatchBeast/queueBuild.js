@@ -235,7 +235,7 @@ function traverseDir(inputPathStem) {
 
 
                 //Here we define supported file types
-                var supportedFileTypeArray = supportedFileTypeArrayImport +",srt,SRT"
+                var supportedFileTypeArray = supportedFileTypeArrayImport
 
                 supportedFileTypeArray = supportedFileTypeArray.split(',');
 
@@ -455,7 +455,7 @@ process.send(message);
 
                             try {
 
-                                if (mode == "scanandconvert") {
+                                if (mode != "healthCheck") {
 
 
                                     shell.mkdir('-p', outputFolderPath);
@@ -487,7 +487,7 @@ process.send(message);
 
                                 try {
 
-                                    if (mode == "scanandconvert") {
+                                    if (mode != "healthCheck") {
                                         shell.mkdir('-p', outputFolderPathFinal);
 
                                     }
