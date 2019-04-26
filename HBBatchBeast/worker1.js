@@ -581,7 +581,7 @@ process.send(message);
 }else if(skipOrCopy==1){
 
 
-   if(copyOnOff==true){
+   if(copyOnOff ==true ||  currentSourceLine.includes('.srt') || currentSourceLine.includes('.SRT') ){
     // currentSourceLine + "\" -o \"" + currentDestinationLine
     if (tempFolderSected == "1") {
 
@@ -1754,7 +1754,7 @@ function endCyle(){
         
         var message = [
         workerNumber,
-        "originalReplaced",
+        "Original replaced",
         globalQueueNumber,
         preset,
         errorLogFull
@@ -1763,14 +1763,25 @@ function endCyle(){
         
         }catch(err){
         
-           var message = [
-           workerNumber,
-           "originalNotReplaced",
-           globalQueueNumber,
-           preset,
-           errorLogFull
-           ];
-           process.send(message);
+        //    var message = [
+        //    workerNumber,
+        //    "originalNotReplaced",
+        //    globalQueueNumber,
+        //    preset,
+        //    errorLogFull
+        //    ];
+        //    process.send(message);
+
+        errorLogFull  += "\n HBBB ALERT: Error replacing original file";
+
+        var message = [
+            workerNumber,
+            "error",
+            globalQueueNumber,
+            preset,
+            errorLogFull
+            ];
+            process.send(message);
         
         
         }
@@ -1779,15 +1790,15 @@ function endCyle(){
         
         
         }else{
-        
-        var message = [
-           workerNumber,
-           "originalNotReplaced",
-           globalQueueNumber,
-           preset,
-           errorLogFull
-           ];
-           process.send(message);
+
+           var message = [
+            workerNumber,
+            "Original not replaced: New file is larger",
+            globalQueueNumber,
+            preset,
+            errorLogFull
+            ];
+            process.send(message);
         
         
         
@@ -1835,7 +1846,7 @@ function endCyle(){
              
              var message = [
                workerNumber,
-               "originalReplaced",
+               "Original replaced",
                globalQueueNumber,
                preset,
                errorLogFull
@@ -1844,14 +1855,16 @@ function endCyle(){
         
         }catch(err){
         
-                   var message = [
-                   workerNumber,
-                   "originalNotReplaced",
-                   globalQueueNumber,
-                   preset,
-                   errorLogFull
-                   ];
-                   process.send(message);
+            errorLogFull  += "\n HBBB ALERT: Error replacing original file";
+
+            var message = [
+                workerNumber,
+                "error",
+                globalQueueNumber,
+                preset,
+                errorLogFull
+                ];
+                process.send(message);
         
         }
              
@@ -1861,7 +1874,7 @@ function endCyle(){
         
                var message = [
                    workerNumber,
-                   "originalNotReplaced",
+                   "Original not replaced: New file is larger",
                    globalQueueNumber,
                    preset,
                    errorLogFull
