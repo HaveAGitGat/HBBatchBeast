@@ -4634,6 +4634,13 @@ color: black;
 
     }
 
+    .grid-container3 {
+        display: grid;
+        grid-template-columns: 15% 70% 15%;
+        background-color: #1A2933;
+
+    }
+
 
 
 
@@ -4662,7 +4669,7 @@ color: black;
     .titleSpan {
         display: inline-block;
         font-family: "Elianto-Regular";
-        font-size: 4em;
+        font-size: 1.5em;
 
 
         background: -webkit-linear-gradient(#66ccff, rgb(255, 255, 255));
@@ -4789,41 +4796,38 @@ margin-left: 1px;
     </header>
 
     <div id="main">
-        <div ALIGN="LEFT">
+
+
+            <div class="grid-container3">
+        
+        <div ALIGN="LEFT" style="display:inline">
 
             <img src="./assets/Images/Refresh.png" alt="Italian Trulli" style="width:50x;height:25px;"
                 onclick="location.reload()">
 
         </div>
 
-        <center>
-
-
-                <img src="./assets/Images/paypaldonateimage2.gif" alt="Italian Trulli" style="width:50x;height:25px;"
-                onclick="openURL('https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=97L64UK77NTZL&source=url')">
-
-
-            <center>
-
-
-
-
-                <div class="titleDiv">
-                    <span style="color:#1A2933;">____________</span><span class="titleSpan">HBBatchBeast</span> <span>
-                        for HandBrake</span>
+        <center >
+                <div class="titleDiv" style="display:inline">
+                    <span class="titleSpan"  onclick="openURL('https://github.com/HaveAGitGat/HBBatchBeast')">HBBatchBeast </span>
                 </div>
 
+           
+               </center>
+          
 
 
+   
+            <div ALIGN="RIGHT" >
+                <img src="./assets/Images/paypaldonateimage2.gif" alt="Italian Trulli" style="width:50x;height:25px;"
+                onclick="openURL('https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=97L64UK77NTZL&source=url')">
+            </div>
 
-            </center>
+        </div>
+           
+      
 
-            <input type="button" class="HaveAGitGat" onclick="openURL('https://github.com/HaveAGitGat/HBBatchBeast')" value="by HaveAGitGat">
-                
-
-
-
-
+<center> 
 
             <p>Source folder - see help tab for monitoring multiple folders</p>
 
@@ -4833,7 +4837,7 @@ margin-left: 1px;
                 onclick="selectFolder('sourcePath')">
 
 
-
+            </center> 
 
 
             <!-- Tab links -->
@@ -4860,6 +4864,7 @@ margin-left: 1px;
             <!-- Tab content -->
             <div id="batchConversion" class="tabcontent">
 
+                <center>
 
                 <div class="grid-container">
 
@@ -5289,13 +5294,17 @@ margin-left: 1px;
 
                     <input type="button" onclick="viewFolder('')" value="View HB console output"  class="infoButton">     
 
-
+                </center>
 
             </div>
 
-            <div id="mediaHealthCheck" class="tabcontent">
-                <input type='button' class="button2one1" value='Health check' onclick='convertFiles("healthCheck")' />
+     
 
+            <div id="mediaHealthCheck" class="tabcontent">
+                    <center>
+              
+                <input type='button' class="button2one1" value='Health check' onclick='convertFiles("healthCheck")' />
+            
 
                 <p></p>
                 <p></p>
@@ -5334,12 +5343,14 @@ margin-left: 1px;
 
                             <input type="button" onclick="clearHealthyFileCache()" value="Clear healthy file cache" class="infoButton">
                         <input type="button" onclick="viewLogs('ErrorLog')" value="View error log" class="infoButton">
-
+                    </center>
             </div>
 
-            <center>
+           
 
                 <div id="systemSettings" class="tabcontent">
+
+                        <center>
 
                     <div class="grid-container">
 
@@ -5388,12 +5399,12 @@ margin-left: 1px;
 
 
 
-
+                </center>
                 </div>
 
                 <div id="helpSection" class="tabcontent">
 
-                <centre>
+                <center>
 
    
 
@@ -5402,7 +5413,7 @@ margin-left: 1px;
 
                         <input type='button' class="button2" value='Benchmark' onclick='convertFiles("scanandconvert",1)' style="display: none;" />
 
-                    </centre>    
+                    </center>    
 
 
 
@@ -5543,8 +5554,14 @@ margin-left: 1px;
     </div>
 
 
+  
 
 
 </body>
 
+
+
+
+
 </html>
+
