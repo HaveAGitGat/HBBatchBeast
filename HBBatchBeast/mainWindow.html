@@ -2656,6 +2656,12 @@ if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
         document.getElementById("excludePropertyFileFilter").value+"",
         document.getElementById("replaceOriginalFileAlways").checked,
 
+        document.getElementById("includeAnyFilesWithProperties").checked,
+        document.getElementById("includeAllFilesWithProperties").checked,
+        document.getElementById("excludeAnyFilesWithProperties").checked,
+        document.getElementById("excludeAllFilesWithProperties").checked,
+
+
      
                   ];
 
@@ -4712,7 +4718,7 @@ margin-left: 1px;
         <div id="drag-region">
 
             <div id="window-title">
-                <span>HBBatchBeast 2.0.9</span>
+                <span>HBBatchBeast 2.1.0</span>
             </div>
 
 
@@ -5072,7 +5078,7 @@ margin-left: 1px;
 
 
                     <div style="text-align: left">
-                        <p>File type filter:</p>
+                        <p>Include these file types:</p>
                     </div>
 
                     <div style="text-align: right">
