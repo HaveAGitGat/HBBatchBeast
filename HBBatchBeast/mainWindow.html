@@ -55,7 +55,7 @@
 
     process.on('uncaughtException', function (err) {
         console.error(err.stack);
-        var fs = require('fs');
+        
         fs.appendFileSync(homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt', "Main thread error: " + err.stack + "\r\n", 'utf8');
         //process.exit();
     });
@@ -129,6 +129,8 @@
 
 
     //Global variables
+
+    var fs = require('fs');
 
     let workers = [];
 
@@ -239,7 +241,7 @@
 
 
 
-        var fs = require('fs');
+        
 
         //show custom bat path div if on Windows
 
@@ -830,7 +832,7 @@ document.getElementById("queueSizeViewLimit").value = 1000;
 
         /* read multiple lines of text file
         
-        var fs = require('fs');
+        
         var array = fs.readFileSync('file.txt').toString().split("\n");
         for(i in array) {
          
@@ -1094,7 +1096,7 @@ ipcRenderer.on('item:ready',function(e,item){
 
     function saveConfig() {
 
-        var fs = require('fs');
+        
 
 
 
@@ -1416,7 +1418,7 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueSizeViewLimit.txt', docum
     function convertFiles(processMode,Bench) {
 
 //reset queue status
-var fs = require('fs');
+
 
 fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf8');
 
@@ -1572,7 +1574,7 @@ document.getElementById("customBatPath").value = "";
 
 
 
-        var fs = require('fs');
+        
 
         if (process.platform == 'win32') {
 
@@ -2187,7 +2189,7 @@ if (message[0] == "scanandconvert") {
 
             // launch Queue builder module
 
-            var fs = require('fs');
+            
 
 
             var path = require("path");
@@ -2337,7 +2339,7 @@ for (i = 0; i < tabcontent.length; i++) {
        
 
 
-        var fs = require('fs');
+        
         document.getElementById("queueButton").style.display = 'block';
         document.getElementById("outputButton").style.display = 'block';
 
@@ -2467,6 +2469,14 @@ for (i = 0; i < tabcontent.length; i++) {
 
                     }
 
+                    if(currentSourceLine.includes('.srt') || currentSourceLine.includes('.SRT')){
+
+                        tablePreset ="<td >" + "<font color=\"#ff2d2d\">Copy srt"+ "</td>";
+
+
+
+                    }
+
                  
 
 
@@ -2527,7 +2537,7 @@ for (i = 0; i < tabcontent.length; i++) {
 
         document.getElementById("convertSelectedButton").style.display = 'none';
 
-        var fs = require('fs');
+        
 
 
 
@@ -2836,17 +2846,19 @@ informationUpdate(message[0],message[3],message[4],message[2],"#ff2d2d","Copy to
 }
 
 
-if (message[1] == "originalReplaced") {
+//if (message[1] == "originalReplaced") {
+if (message[1].includes("Original replaced")) {      
 
 successfulCount++;
-informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Original replaced","<p><font color=\"#66ccff\">Completed</font></p>")
+informationUpdate(message[0],message[3],message[4],message[2],"#59ff74",message[1],"<p><font color=\"#66ccff\">Completed</font></p>")
 
 }
 
-if (message[1] == "originalNotReplaced") {
+//if (message[1] == "originalNotReplaced") {
+if (message[1].includes("Original not replaced")) {    
 
 successfulCount++;
-informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c","Original not replaced","<p><font color=\"#66ccff\">Completed</font></p>")
+informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c",message[1],"<p><font color=\"#66ccff\">Completed</font></p>")
 
 }
 
@@ -3138,7 +3150,7 @@ if(includePropertyFileFilterVar.length != 0){
 
         
 
-        var fs = require('fs');
+        
 
 
 
@@ -3581,7 +3593,7 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
 
         var opener = require("opener");
 
-        var fs = require('fs');
+        
 
         if (fs.existsSync(logPath)) {
 
@@ -3659,7 +3671,7 @@ if (process.platform == 'linux' || process.platform == 'darwin') {
 
 var opener = require("opener");
 
-var fs = require('fs');
+
 
 if (fs.existsSync(logPath)) {
 
@@ -3926,7 +3938,7 @@ alert("All worker processes have been stopped.")
 
                     queueStatusPaused=1;
 
-        var fs = require('fs');
+        
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "0", 'utf8');
 
         
@@ -3954,7 +3966,7 @@ alert("All worker processes have been stopped.")
                 document.getElementById("continueButtonDiv").style.display = 'none';
                  document.getElementById("continueButtonGreyDiv").style.display = 'none';
 
-        var fs = require('fs');
+        
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf8');
 
         for (var i = 0; i < workers.length; i++) {
@@ -3994,13 +4006,13 @@ workers[i].send(messageOut);
 
 
     function clearHealthyFileCache(){
-        var fs = require('fs');
+        
         fs.writeFileSync(homePath + '/HBBatchBeast/Logs/healthyFileList.txt', "", 'utf8');
         alert("Healthy file cache cleared!")
     }
 
     function clearOriginalFileCompressAttemptCache(){
-        var fs = require('fs');
+        
         fs.writeFileSync(homePath + '/HBBatchBeast/Logs/originalFileReplacedList.txt', "", 'utf8');
         alert("Cache cleared!")
     }
@@ -4019,7 +4031,7 @@ workers[i].send(messageOut);
     function verifyBenchFiles(){
 
 
-        var fs = require('fs');
+        
 
         if (!fs.existsSync(homePath + "/HBBatchBeast/Bench/Input/Test1.mp4")) {
 
