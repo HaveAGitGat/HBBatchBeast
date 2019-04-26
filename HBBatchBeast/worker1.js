@@ -183,6 +183,11 @@ var itemChecked;
 var fileFiltersIncludeArray
 var fileFiltersExcludeArray
 
+var includeAnyFilesWithProperties 
+var includeAllFilesWithProperties
+var excludeAnyFilesWithProperties 
+var excludeAllFilesWithProperties 
+
 
 var  moveCorruptFileOnOff;
 var  corruptDestinationPath;
@@ -333,6 +338,13 @@ fileFiltersIncludeArray = m[10]+"";
 fileFiltersExcludeArray = m[11]+"";
 
 replaceOriginalFileAlways = m[12];
+
+
+
+includeAnyFilesWithProperties = m[13];
+includeAllFilesWithProperties = m[14];
+excludeAnyFilesWithProperties = m[15];
+excludeAllFilesWithProperties = m[16];
 
 
 
@@ -740,11 +752,12 @@ function endCyle(){
             var processFileY = true
 
 
-        }else if(fileFiltersIncludeArray != ""){
+        }else if(includeAnyFilesWithProperties == true || includeAllFilesWithProperties ==true){
 
             try{
      
         var processFileY = false
+        var validateArray = []
         filterReason = "Exclude1"
        
        
@@ -777,10 +790,11 @@ function endCyle(){
 
 
 
-            if(key+": '"+jsonInfo.streams[i][key]+"'" == fileFiltersIncludeArray[j]){
+            if( fileFiltersIncludeArray[j].includes(key+": '"+jsonInfo.streams[i][key]+"'")){
 
                 processFileY = true
                 filterReason = "Include: "+key+": '"+jsonInfo.streams[i][key]+"' "
+                validateArray.push(true)
 
 
             }
@@ -788,11 +802,25 @@ function endCyle(){
          //   console.log(key, obj[key]);
             });
         }
+
+        if(includeAllFilesWithProperties ==true){
+            if((validateArray.length+1) == fileFiltersIncludeArray.length ){
+                processFileY = true
+            }else{
+                processFileY = false
+            }
+        }
+
+
+
+
+
+
     }catch(err){
         var processFileY = true
     }
 
-}else if(fileFiltersExcludeArray != ""){
+}else if(excludeAnyFilesWithProperties == true || excludeAllFilesWithProperties ==true){
 
         try{
 
@@ -809,16 +837,16 @@ function endCyle(){
         for (var i = 0; i < jsonInfo.streams.length; i++) {
         Object.keys(jsonInfo.streams[i]).forEach(function(key) {
 
-            var messageJSON = [
-                "jsonInfo",
-                key,
-                jsonInfo.streams[i][key] 
-                ];
-                process.send(messageJSON);
+            // var messageJSON = [
+            //     "jsonInfo",
+            //     key,
+            //     jsonInfo.streams[i][key] 
+            //     ];
+            //     process.send(messageJSON);
 
 
                 for (var j = 0; j < fileFiltersExcludeArray.length; j++) {
-            if(key+": '"+jsonInfo.streams[i][key]+"'" == fileFiltersExcludeArray[j]){
+            if(fileFiltersExcludeArray[j].includes(key+": '"+jsonInfo.streams[i][key]+"'")){
 
                 processFileY = false
                 filterReason += "Exclude2: "+key+": '"+jsonInfo.streams[i][key]+"' "
@@ -833,11 +861,13 @@ function endCyle(){
 
     
 
+        if(excludeAllFilesWithProperties ==true){
             if((validateArray.length+1) == fileFiltersExcludeArray.length ){
                 processFileY = false
             }else{
                 processFileY = true
             }
+        }
 
         
 
