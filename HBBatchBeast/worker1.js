@@ -758,7 +758,7 @@ function endCyle(){
      
         var processFileY = false
         var validateArray = []
-        filterReason = "Exclude1"
+        filterReason = "Excluded, does not meet 'Include' conditions"
        
        
 
@@ -849,7 +849,7 @@ function endCyle(){
             if(fileFiltersExcludeArray[j].includes(key+": '"+jsonInfo.streams[i][key]+"'")){
 
                 processFileY = false
-                filterReason += "Exclude2: "+key+": '"+jsonInfo.streams[i][key]+"' "
+                filterReason += "Exclude: "+key+": '"+jsonInfo.streams[i][key]+"' "
                 validateArray.push(true)
 
 
