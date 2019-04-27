@@ -1,5 +1,5 @@
 //SET ENV
-//process.env.NODE_ENV = "production";
+process.env.NODE_ENV = "production";
 
 var shell = require('shelljs');
 
@@ -94,10 +94,8 @@ if(process.platform=='win32'){
 
 
 var fullPath=__dirname;
-
 fullPath = fullPath.slice(0,fullPath.lastIndexOf(stringProcessingSlash));
 fullPath = fullPath.slice(0,fullPath.lastIndexOf(stringProcessingSlash));
-
 var fullPath2 = fullPath+ "\\HandBrakeCLI.exe"
 
 
@@ -708,6 +706,12 @@ function endCyle(){
 }else{
 
 
+    var message = [
+       "Here1",
+        ];
+        process.send(message);
+
+
     infoExtractModule = childProcess.fork(path.join(__dirname, 'mediaAnalyser.js' ),[], { silent: true });
 
     var extractCommand = [
@@ -718,10 +722,16 @@ function endCyle(){
     infoExtractModule.send(extractCommand); 
 
 
+
+
     infoExtractModule.on('message', function (message) {
 
    
        if (message[0] == "fileInfo") {
+
+
+
+
 
       var jsonInfo =message[1]
        
@@ -748,6 +758,8 @@ function endCyle(){
        
 
         if (mode == "healthCheck") {  
+
+
 
             var processFileY = true
 
@@ -904,8 +916,10 @@ function endCyle(){
    
      if(processFileY == true){
 
-        
+    
         processFile();
+
+
 
 
 
@@ -1048,6 +1062,10 @@ function endCyle(){
 
         //
         
+        var message = [
+            "Here7",
+             ];
+             process.send(message);
         
                     var path = require("path");
                     var childProcess = require("child_process");
@@ -1058,6 +1076,12 @@ function endCyle(){
         
             shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ),[], { silent: true });
               // var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ));
+
+
+              var message = [
+                "Here8",
+                 ];
+                 process.send(message);
         
         
                             shellThreadModule.send(infoArray); 
@@ -1276,7 +1300,10 @@ function endCyle(){
         
         
         
-        
+        var message = [
+            "Here9",
+             ];
+             process.send(message);
         
         
         
