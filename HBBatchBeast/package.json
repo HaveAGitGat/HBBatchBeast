@@ -6,10 +6,10 @@
     "main": "main.js",
     "scripts": {
         "start": "electron .",
-        "package-mac": "electron-packager . --overwrite --asar=true  --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds --darwinDarkModeSupport=true",
-        "package-win": "electron-packager . hbbatchbeast --overwrite --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"HBBatchBeast\" --asar.unpackDir=node_modules/ffprobe-static",
-        "package-linux": "electron-packager . hbbatchbeast --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds",
-        "create-installer-mac": "electron-installer-dmg ./release-builds/hbbatchbeast-darwin-x64/hbbatchbeast.app hbbatchbeast --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns",
+        "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds --darwinDarkModeSupport=true --asar.unpackDir=node_modules/ffprobe-static",
+        "package-win": "electron-packager . hbbatchbeast --overwrite  --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"HBBatchBeast\" --asar.unpackDir=node_modules/ffprobe-static",
+        "package-linux": "electron-packager . hbbatchbeast --overwrite--platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds --asar.unpackDir=node_modules/ffprobe-static",
+        "create-installer-mac": "electron-installer-dmg ./release-builds/hbbatchbeast-darwin-x64/hbbatchbeast.app hbbatchbeast --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns ",
         "create-installer-win": "node installers/windows/createinstaller.js",
         "create-debian-installer": "electron-installer-debian --src release-builds/hbbatchbeast-linux-x64/ --arch amd64 --config debian.json"
     },
@@ -18,7 +18,6 @@
     "dependencies": {
         "async": "^2.6.2",
         "bcrypt": "^3.0.6",
-        "electron-builder": "^20.39.0",
         "emailjs": "^2.2.0",
         "ffmpeg": "0.0.4",
         "ffmpeg-probe": "^1.0.6",
