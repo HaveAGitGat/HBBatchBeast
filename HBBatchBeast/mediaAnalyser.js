@@ -15,7 +15,10 @@ if(infoArray[0]=="analyseThis"){
 
 var filepath = infoArray[1]
 
-process.env.NODE_ENV = "production";
+if (__dirname.includes('.asar')) { // If dev
+  process.env.NODE_ENV = "production";
+}
+
 
   
 if(process.platform=='win32'){
