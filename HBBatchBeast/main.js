@@ -48,7 +48,7 @@ app.on('ready', function () {
     mainWindow = new BrowserWindow({
         width: 1400,
         height: 1000,
-  // frame: false,
+   frame: false,
         title: 'HBBatchBeast'
 
 
