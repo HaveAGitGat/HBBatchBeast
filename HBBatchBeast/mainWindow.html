@@ -137,7 +137,7 @@ function createViewMediaInfo() {
 viewMedia = new BrowserWindow({
     width: 1500,
     height: 500,
-  //frame: false,
+  frame: false,
     title: 'View Media Info'
 
 });
@@ -1141,7 +1141,7 @@ function showAlert3(filepath) {
 
     filePath=decodeURI(filepath)
 
-console.log(filePath);
+
 
     var ffprobe = require('ffprobe'),
   ffprobeStatic = require('ffprobe-static');
@@ -1161,7 +1161,7 @@ console.log(filePath);
     var JSONBomb ="USE CTRL+C TO COPY THIS TEXT"+" \n\n";
 ffprobe(filePath, { path: ffprobeStaticPath }, function (err, jsonInfo) {
   if (err){
-    console.log("Error")
+   // console.log("Error")
   }
 
 
@@ -2091,21 +2091,21 @@ fs.mkdirSync(outPutPathStemFinalArray[y] + validationSlash);
                 timenow = h + ':' + m 
 
 
-                console.log(dailyRunTime+"   "+timenow)
+            //   /  console.log(dailyRunTime+"   "+timenow)
 
-                console.log(dailyRunTime.charAt(0))
-                console.log(dailyRunTime.charAt(1))
-                console.log(dailyRunTime.charAt(2))
-                console.log(dailyRunTime.charAt(3))
-                console.log(dailyRunTime.charAt(4))
+                // console.log(dailyRunTime.charAt(0))
+                // console.log(dailyRunTime.charAt(1))
+                // console.log(dailyRunTime.charAt(2))
+                // console.log(dailyRunTime.charAt(3))
+                // console.log(dailyRunTime.charAt(4))
 
-                console.log("")
+                // console.log("")
 
-                console.log(timenow.charAt(0))
-                console.log(timenow.charAt(1))
-                console.log(timenow.charAt(2))
-                console.log(timenow.charAt(3))
-                console.log(timenow.charAt(4))
+                // console.log(timenow.charAt(0))
+                // console.log(timenow.charAt(1))
+                // console.log(timenow.charAt(2))
+                // console.log(timenow.charAt(3))
+                // console.log(timenow.charAt(4))
                       
             
 
@@ -2352,7 +2352,7 @@ if (message[0] == "scanandconvert") {
 
             queueBuildModule.on('message', function (message) {
 
-                console.log("Message:"+message);
+             //   console.log("Message:"+message);
 
                 if (message.error) {
     console.error(message.error);
@@ -2388,7 +2388,7 @@ sourceQueueArray=message[2];
 presetArray2=message[3];
 skipOrCopyArray=message[4];
 
-console.log(presetArray2)
+//console.log(presetArray2)
 
     runEndSection();
 
@@ -2733,7 +2733,7 @@ workers.push(childProcess.fork(path.join(__dirname, workerPath ),[], { silent: t
 
 
 workers[i - 1].stdout.on('data', function(data) {
-console.log('stdout: ' + data);
+//console.log('stdout: ' + data);
 //Here is where the output goes
 });
 
@@ -2763,7 +2763,7 @@ workers[i - 1].on("error", console.error.bind(console));
 workers[i - 1].on('message', function (message) {
 
 
-console.log("Message:"+message);
+//console.log("Message:"+message);
 
 if (message[1] == "exitRequest") {
     var exitMessage = [
@@ -2815,7 +2815,7 @@ if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
 }
     //  workers[message[0] - 1].send(message);
 
-    console.log(messageOut)
+    //console.log(messageOut)
 
     workers[message[0] - 1].send(messageOut);
 
