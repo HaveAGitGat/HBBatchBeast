@@ -48,57 +48,22 @@ function analyseFile(thispath){
 
   process.env.NODE_ENV = "production";
 
-  
-if(process.platform=='win32'){
-
-var stringProcessingSlash ="\\";
-        }
-
-        if(process.platform == 'linux' || process.platform == 'darwin'){
-            var stringProcessingSlash ="/";
-        }
   var filepath = thispath;
+  
   var ffprobe = require('ffprobe'),
   ffprobeStatic = require('ffprobe-static');
   var path = require("path");
 
-  var ffprobeStaticPath = ''
 
-if(process.platform=='win32'){
+var ffprobeStaticPath = ''
 
 if(process.env.NODE_ENV == 'production'){
 
-    //production
-var fullPath=__dirname;
-fullPath = fullPath.slice(0,fullPath.lastIndexOf(stringProcessingSlash));
-fullPath = fullPath.slice(0,fullPath.lastIndexOf(stringProcessingSlash));
-ffprobeStaticPath = fullPath+ "\\ffprobe.exe"
+ffprobeStaticPath = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
 
 }else{
-
-    //development
-    ffprobeStaticPath = require('ffprobe-static').path
-
-}
-
-}
-
-if(process.platform == 'linux' || process.platform == 'darwin'){
-
-  if(process.env.NODE_ENV == 'production'){
-//development && //production
 ffprobeStaticPath = require('ffprobe-static').path
-
-  }else{
-
-
-  }
-
-
 }
-
-
-
 
 
 //ffprobe(filepath, { path: ffprobeStatic.path }, function (err, info) {
