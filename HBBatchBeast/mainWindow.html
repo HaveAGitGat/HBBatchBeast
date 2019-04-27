@@ -137,7 +137,7 @@ function createViewMediaInfo() {
 viewMedia = new BrowserWindow({
     width: 1500,
     height: 500,
-  //  frame: false,
+  //frame: false,
     title: 'View Media Info'
 
 });
@@ -160,26 +160,6 @@ viewMedia.on('close', function () {
 });
 
 
-if (process.env.NODE_ENV != 'production'|| process.env.NODE_ENV == 'production') {
-    mainMenuTemplate.push({
-        label: 'Developer Tools',
-        submenu: [
-            {
-                label: 'Toggle DevTools',
-                accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
-                click(item, focusedWindow) {
-                    focusedWindow.toggleDevTools();
-                }
-            },
-            {
-                role: 'reload'
-            }
-        ]
-
-    });
-
-
-}
 
 }
 
@@ -2516,6 +2496,9 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
                 + "<col width=\"auto\">"
                 + "<col width=\"auto\">"
                 + "<col width=\"auto\">"
+                + "<col width=\"auto\">"
+                + "<col width=\"auto\">"
+                + "<col width=\"auto\">"
                 + "<tr>"
 
                 + "<th class=\"headcol\">Source file</th>"
@@ -2523,7 +2506,8 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
                 + "<th class=\"headcol\">Queue no.</th>"
                 + "<th class=\"headcol\">Preset</th>"
                 + "<th class=\"headcol\">Worker</th>"
-                + "<th class=\"headcol\">Status</th>"
+                + "<th class=\"headcol\">FFMPEG</th>"
+                + "<th class=\"headcol\">HB Status</th>"
                 + "<th class=\"headcol\">Process?</th>"
                 + "<th class=\"headcol\">Finish time</th>"
 
@@ -2578,6 +2562,7 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
 
                     + "<td>" + tableQueueNumber + "</td>"
                     + tablePreset 
+                    + "<td > - </td>"
                     + "<td > - </td>"
                     + "<td > - </td>"
                     + "<td ><input id=\"tableQueueNumber"+tableQueueNumber+"\" type=\"checkbox\" checked=\"true\"></td>"
@@ -2790,7 +2775,11 @@ var currentRow = parseInt(message[2]) + 1
 
 if (queueView == "enabled") {
  queueTable.rows[currentRow].cells[3].innerHTML = "Worker " + message[0];
- queueTable.rows[currentRow].cells[4].innerHTML = message[3];
+
+
+//done
+ queueTable.rows[currentRow].cells[5].innerHTML = message[3];
+
  queueTable.rows[currentRow].style.backgroundColor = "#ffa24c";
 }
 
@@ -2818,7 +2807,8 @@ document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><f
 var currentRow = parseInt(message[2]) + 1
 
 if (queueView == "enabled") {
-queueTable.rows[currentRow].cells[4].innerHTML = message[3];
+//done    
+queueTable.rows[currentRow].cells[5].innerHTML = message[3];
 }
 
 
@@ -2846,10 +2836,11 @@ var currentRow = parseInt(globalQueueNumber) + 1
 if (queueView == "enabled") {
 queueTable.rows[currentRow].cells[2].innerHTML = preset;
 queueTable.rows[currentRow].cells[3].innerHTML = "";
-queueTable.rows[currentRow].cells[4].innerHTML = Status;
 
+//[4] ffmpeg
 
-queueTable.rows[currentRow].cells[6].innerHTML = getTimeNow();
+queueTable.rows[currentRow].cells[5].innerHTML = Status;
+queueTable.rows[currentRow].cells[7].innerHTML = getTimeNow();
 
 queueTable.rows[currentRow].style.backgroundColor =backgroundColor;
 }
@@ -2868,6 +2859,10 @@ tempOutputQueueHTML += "<tr>"
                  + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
                  + "<td>" + sessionNumber + "</td>"
                  + "<td>" + preset + "</td>"
+
+                 + "<td>" +  queueTable.rows[currentRow].cells[4].innerHTML + "</td>"
+                
+
                  + "<td>"+Status+ "</td>"
                  + "<td>"+getTimeNow()+ "</td>"
                  + "</tr>";
@@ -2879,6 +2874,7 @@ tempOutputQueueHTML += "<tr>"
                  + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
                  + "<td>" + sessionNumber + "</td>"
                  + "<td>" + preset + "</td>"
+                 + "<td>" +  queueTable.rows[currentRow].cells[4].innerHTML + "</td>"
                  + "<td>"+Status+ "</td>"
                  + "<td>"+getTimeNow()+ "</td>"
                  + "</tr>";    
@@ -2950,6 +2946,16 @@ informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c",message[
 
 }
 }catch(err){}
+
+
+if (message[1] == "FFMPEG") {
+
+    var currentRow = parseInt(message[2]) + 1
+    if (queueView == "enabled") {
+        queueTable.rows[currentRow].cells[4].innerHTML = message[3];
+    }
+
+}
 
 
 
@@ -3414,42 +3420,42 @@ for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
 
 
 
-if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Completed")) {
+if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Completed")) {
     sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
 
 
 
-} else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Error")) {
+} else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Error")) {
 
     sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
 
 
-} else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Cancelled")) {
+} else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Cancelled")) {
 
 sessionConversionsTable.rows[i].style.backgroundColor = "#ffda6d";
 
 
-}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Skipped")) {
+}else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Skipped")) {
 
 sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
 
 
-}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Copied to destination")) {
+}else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Copied to destination")) {
 
 sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
 
 
-}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Copy to destination failed")) {
+}else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Copy to destination failed")) {
 
 sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
 
 
-}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Original replaced")) {
+}else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Original replaced")) {
 
 sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
 
 
-}else if ((sessionConversionsTable.rows[i].cells[3].innerHTML).toString().includes("Original not replaced")) {
+}else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Original not replaced")) {
 
 sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
 
@@ -5522,7 +5528,7 @@ margin-left: 1px;
 
 
                         <input type='button' class="button2" value='Benchmark' onclick='convertFiles("scanandconvert",1)' style="display: none;" />
-
+                        <p ><font color="#66ccff">Contact:HBBatchBeast@gmail.com</font></p>
                     </center>    
 
 
@@ -5645,12 +5651,16 @@ margin-left: 1px;
                         <col width="auto">
                         <col width="auto">
                         <col width="auto">
+                        <col width="auto">
 
                         <th class="headcol">Source file</th>
                         <th class="headcol">No.</th>
+
                         <th class="headcol">Preset</th>
 
-                        <th class="headcol">Status</th>
+                        <th class="headcol">FFMPEG</th>
+
+                        <th class="headcol">HB Status</th>
                         <th class="headcol">Finish time</th>
 
 
@@ -5665,8 +5675,6 @@ margin-left: 1px;
 
     </div>
 
-
-  
 
 
 </body>
