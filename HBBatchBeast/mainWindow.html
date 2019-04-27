@@ -197,6 +197,8 @@ viewMedia.on('close', function () {
     var startDate
     var unConvertedFiles;
 
+    var FFprobeArray=[]
+
 
     //
 
@@ -1133,6 +1135,63 @@ document.getElementById("queueSizeViewLimit").value = 1000;
 
 }
 
+function showAlert3(filepath) {
+
+     
+
+    filePath=decodeURI(filepath)
+
+console.log(filePath);
+
+    var ffprobe = require('ffprobe'),
+  ffprobeStatic = require('ffprobe-static');
+  var path = require("path");
+  var ffprobeStaticPath = ''
+
+  if(process.env.NODE_ENV == 'production'){
+  
+  ffprobeStaticPath = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
+  
+  }else{
+  ffprobeStaticPath = require('ffprobe-static').path
+  }
+
+    var thisval
+ 
+    var JSONBomb ="USE CTRL+C TO COPY THIS TEXT"+" \n\n";
+ffprobe(filePath, { path: ffprobeStaticPath }, function (err, jsonInfo) {
+  if (err){
+    console.log("Error")
+  }
+
+
+
+    try{
+            
+            for (var i = 0; i < jsonInfo.streams.length; i++) {
+                Object.keys(jsonInfo.streams[i]).forEach(function(key) {
+                    JSONBomb += key+": '"+jsonInfo.streams[i][key]+"' \n"
+                });
+            }
+            
+       alert(JSONBomb);
+
+    }catch(err){
+
+        JSONBomb += "Could not extract info"
+
+        alert(JSONBomb);
+
+   }
+
+
+});
+
+
+
+
+}
+
 ipcRenderer.on('item:ready',function(e,item){
 
             
@@ -1588,6 +1647,7 @@ document.getElementById("customBatPath").value = "";
         skipOrCopyArray = [];
 
         errorArray = [];
+        FFprobeArray=[];
         sourceQueueFileSizeArray = []
         var outputPathArrayFinal = [];
 
@@ -2506,7 +2566,7 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
                 + "<th class=\"headcol\">Queue no.</th>"
                 + "<th class=\"headcol\">Preset</th>"
                 + "<th class=\"headcol\">Worker</th>"
-                + "<th class=\"headcol\">FFMPEG</th>"
+                + "<th class=\"headcol\">FFPROBE</th>"
                 + "<th class=\"headcol\">HB Status</th>"
                 + "<th class=\"headcol\">Process?</th>"
                 + "<th class=\"headcol\">Finish time</th>"
@@ -2837,7 +2897,7 @@ if (queueView == "enabled") {
 queueTable.rows[currentRow].cells[2].innerHTML = preset;
 queueTable.rows[currentRow].cells[3].innerHTML = "";
 
-//[4] ffmpeg
+//[4] FFPROBE
 
 queueTable.rows[currentRow].cells[5].innerHTML = Status;
 queueTable.rows[currentRow].cells[7].innerHTML = getTimeNow();
@@ -2860,7 +2920,7 @@ tempOutputQueueHTML += "<tr>"
                  + "<td>" + sessionNumber + "</td>"
                  + "<td>" + preset + "</td>"
 
-                 + "<td>" +  queueTable.rows[currentRow].cells[4].innerHTML + "</td>"
+                 + "<td>" + FFprobeArray[globalQueueNumber] + "</td>"
                 
 
                  + "<td>"+Status+ "</td>"
@@ -2874,7 +2934,7 @@ tempOutputQueueHTML += "<tr>"
                  + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
                  + "<td>" + sessionNumber + "</td>"
                  + "<td>" + preset + "</td>"
-                 + "<td>" +  queueTable.rows[currentRow].cells[4].innerHTML + "</td>"
+                 + "<td>" + FFprobeArray[globalQueueNumber] + "</td>"
                  + "<td>"+Status+ "</td>"
                  + "<td>"+getTimeNow()+ "</td>"
                  + "</tr>";    
@@ -2948,12 +3008,19 @@ informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c",message[
 }catch(err){}
 
 
-if (message[1] == "FFMPEG") {
+if (message[1] == "FFPROBE") {
 
     var currentRow = parseInt(message[2]) + 1
     if (queueView == "enabled") {
-        queueTable.rows[currentRow].cells[4].innerHTML = message[3];
+
+        
+        queueTable.rows[currentRow].cells[4].innerHTML = "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert3('"+encodeURI(message[4])+"')\" value=\""+message[3]+"\">" 
+       
+       // message[3];
+
+      //  "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+sessionNumber+"')\" value=\"Error (Click for info)\">"
     }
+    FFprobeArray.push("<input type=\"button\" class=\"infoButton\" onclick=\"showAlert3('"+encodeURI(message[4])+"')\" value=\""+message[3]+"\">")
 
 }
 
@@ -5528,7 +5595,7 @@ margin-left: 1px;
 
 
                         <input type='button' class="button2" value='Benchmark' onclick='convertFiles("scanandconvert",1)' style="display: none;" />
-                        <p ><font color="#66ccff">Contact:HBBatchBeast@gmail.com</font></p>
+                        <p ><font color="#66ccff">Contact: HBBatchBeast@gmail.com</font></p>
                     </center>    
 
 
@@ -5658,7 +5725,7 @@ margin-left: 1px;
 
                         <th class="headcol">Preset</th>
 
-                        <th class="headcol">FFMPEG</th>
+                        <th class="headcol">FFPROBE</th>
 
                         <th class="headcol">HB Status</th>
                         <th class="headcol">Finish time</th>
