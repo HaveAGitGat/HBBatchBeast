@@ -15,13 +15,60 @@ if(infoArray[0]=="analyseThis"){
 
 var filepath = infoArray[1]
 
+process.env.NODE_ENV = "production";
 
-var ffprobe = require('ffprobe'),
-    ffprobeStatic = require('ffprobe-static');
+  
+if(process.platform=='win32'){
+
+var stringProcessingSlash ="\\";
+        }
+
+        if(process.platform == 'linux' || process.platform == 'darwin'){
+            var stringProcessingSlash ="/";
+        }
+
+  var ffprobe = require('ffprobe'),
+  ffprobeStatic = require('ffprobe-static');
+  var path = require("path");
+
+  var ffprobeStaticPath = ''
+
+if(process.platform=='win32'){
+
+if(process.env.NODE_ENV == 'production'){
+
+    //production
+var fullPath=__dirname;
+fullPath = fullPath.slice(0,fullPath.lastIndexOf(stringProcessingSlash));
+fullPath = fullPath.slice(0,fullPath.lastIndexOf(stringProcessingSlash));
+ffprobeStaticPath = fullPath+ "\\ffprobe.exe"
+
+}else{
+
+    //development
+    ffprobeStaticPath = require('ffprobe-static').path
+
+}
+
+}
+
+if(process.platform == 'linux' || process.platform == 'darwin'){
+
+  if(process.env.NODE_ENV == 'production'){
+//development && //production
+var handBrakeCLIPath = "HandBrakeCLI -i \""
+
+  }else{
+
+
+  }
+
+
+}
 
     var thisval
  
-ffprobe(filepath, { path: ffprobeStatic.path }, function (err, info) {
+ffprobe(filepath, { path: ffprobeStaticPath }, function (err, info) {
   //if (err) return done(err);
 
   if (err){
