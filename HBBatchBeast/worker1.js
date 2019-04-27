@@ -180,6 +180,8 @@ var  replaceOriginalFileAlways;
 
 var itemChecked;
 
+var FFprobeVar="";
+
 
 var fileFiltersIncludeArray
 var fileFiltersExcludeArray
@@ -709,10 +711,7 @@ function endCyle(){
 }else{
 
 
-    var message = [
-       "Here1",
-        ];
-        process.send(message);
+  
 
 
     infoExtractModule = childProcess.fork(path.join(__dirname, 'mediaAnalyser.js' ),[], { silent: true });
@@ -759,6 +758,7 @@ function endCyle(){
         //     ];
         //     process.send(messageJSON);
        
+        var JSONBomb ="";
 
         if (mode == "healthCheck") {
             
@@ -766,6 +766,7 @@ function endCyle(){
             
                 for (var i = 0; i < jsonInfo.streams.length; i++) {
                     Object.keys(jsonInfo.streams[i]).forEach(function(key) {
+                       // JSONBomb += key+": '"+jsonInfo.streams[i][key]+"' \n"
                     });
                 }
                 
@@ -773,20 +774,27 @@ function endCyle(){
 
             var message = [
                 workerNumber,
-                "FFMPEG",
+                "FFPROBE",
                 globalQueueNumber,
                 "OK",
+                currentSourceLine,
+        
              
                 ];
                 process.send(message);
+                
 
         }catch(err){
 
+   
+
             var message = [
                 workerNumber,
-                "FFMPEG",
+                "FFPROBE",
                 globalQueueNumber,
                 "Fail",
+                currentSourceLine,
+              
              
                 ];
                 process.send(message);
@@ -821,7 +829,7 @@ function endCyle(){
         for (var i = 0; i < jsonInfo.streams.length; i++) {
         Object.keys(jsonInfo.streams[i]).forEach(function(key) {
 
-
+         
 
 
                 for (var j = 0; j < fileFiltersIncludeArray.length; j++) {
@@ -866,20 +874,25 @@ function endCyle(){
 
         var message = [
             workerNumber,
-            "FFMPEG",
+            "FFPROBE",
             globalQueueNumber,
             "OK",
+            currentSourceLine,
+           
          
             ];
             process.send(message);
 
 
     }catch(err){
+        
         var message = [
             workerNumber,
-            "FFMPEG",
+            "FFPROBE",
             globalQueueNumber,
             "Fail",
+            currentSourceLine,
+           
          
             ];
             process.send(message);
@@ -903,6 +916,7 @@ function endCyle(){
 
         for (var i = 0; i < jsonInfo.streams.length; i++) {
         Object.keys(jsonInfo.streams[i]).forEach(function(key) {
+   
 
             // var messageJSON = [
             //     "jsonInfo",
@@ -940,9 +954,11 @@ function endCyle(){
 
         var message = [
             workerNumber,
-            "FFMPEG",
+            "FFPROBE",
             globalQueueNumber,
             "OK",
+            currentSourceLine,
+      
          
             ];
             process.send(message);
@@ -950,11 +966,14 @@ function endCyle(){
 
     }catch(err){
 
+
         var message = [
             workerNumber,
-            "FFMPEG",
+            "FFPROBE",
             globalQueueNumber,
             "Fail",
+            currentSourceLine,
+       
          
             ];
             process.send(message);
@@ -968,6 +987,7 @@ function endCyle(){
             
         for (var i = 0; i < jsonInfo.streams.length; i++) {
             Object.keys(jsonInfo.streams[i]).forEach(function(key) {
+               
             });
         }
         
@@ -975,20 +995,25 @@ function endCyle(){
 
     var message = [
         workerNumber,
-        "FFMPEG",
+        "FFPROBE",
         globalQueueNumber,
         "OK",
+        currentSourceLine,
+       
      
         ];
         process.send(message);
 
 }catch(err){
 
+
     var message = [
         workerNumber,
-        "FFMPEG",
+        "FFPROBE",
         globalQueueNumber,
         "Fail",
+        currentSourceLine,
+       
      
         ];
         process.send(message);
@@ -1166,10 +1191,7 @@ function endCyle(){
 
         //
         
-        var message = [
-            "Here7",
-             ];
-             process.send(message);
+        
         
                     var path = require("path");
                     var childProcess = require("child_process");
@@ -1182,10 +1204,7 @@ function endCyle(){
               // var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ));
 
 
-              var message = [
-                "Here8",
-                 ];
-                 process.send(message);
+         
         
         
                             shellThreadModule.send(infoArray); 
@@ -1404,10 +1423,7 @@ function endCyle(){
         
         
         
-        var message = [
-            "Here9",
-             ];
-             process.send(message);
+ 
         
         
         
@@ -2065,7 +2081,7 @@ function endCyle(){
         
         
    
-        } //here2
+        } 
         
         
         
