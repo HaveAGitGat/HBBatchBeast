@@ -17,7 +17,7 @@
 
 
     //SET ENV
-   //process.env.NODE_ENV = "production";
+   process.env.NODE_ENV = "production";
 
     var home = require("os").homedir();
 
@@ -135,7 +135,7 @@ function createViewMediaInfo() {
 viewMedia = new BrowserWindow({
     width: 1500,
     height: 500,
-    frame: false,
+  //  frame: false,
     title: 'View Media Info'
 
 });
@@ -156,6 +156,28 @@ viewMedia.on('close', function () {
     viewMedia = null;
 
 });
+
+
+if (process.env.NODE_ENV != 'production'|| process.env.NODE_ENV == 'production') {
+    mainMenuTemplate.push({
+        label: 'Developer Tools',
+        submenu: [
+            {
+                label: 'Toggle DevTools',
+                accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
+                click(item, focusedWindow) {
+                    focusedWindow.toggleDevTools();
+                }
+            },
+            {
+                role: 'reload'
+            }
+        ]
+
+    });
+
+
+}
 
 }
 
@@ -2884,12 +2906,13 @@ informationUpdate(message[0],message[3],message[4],message[2],"#59ff74","Complet
 
 }
 
-
+try{
 if (message[1].includes("Skipped")) {
 
 otherCount++;
 informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c",message[1],"<p><font color=\"#66ccff\">Completed</font></p>")
 }
+}catch(err){}
 
 if (message[1] == "copied") {
 
@@ -2907,20 +2930,24 @@ informationUpdate(message[0],message[3],message[4],message[2],"#ff2d2d","Copy to
 
 
 //if (message[1] == "originalReplaced") {
+    try{
 if (message[1].includes("Original replaced")) {      
 
 successfulCount++;
 informationUpdate(message[0],message[3],message[4],message[2],"#59ff74",message[1],"<p><font color=\"#66ccff\">Completed</font></p>")
 
 }
+}catch(err){}
 
 //if (message[1] == "originalNotReplaced") {
+try{    
 if (message[1].includes("Original not replaced")) {    
 
 successfulCount++;
 informationUpdate(message[0],message[3],message[4],message[2],"#ffa24c",message[1],"<p><font color=\"#66ccff\">Completed</font></p>")
 
 }
+}catch(err){}
 
 
 
