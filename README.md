@@ -6,6 +6,8 @@
 
 Demo video - https://youtu.be/mHMXfInoqfE
 
+Contact: HBBatchBeast@gmail.com
+
 A free GUI application for Handbrake on Windows, macOS and Linux with an emphasis on multi Handbrake instance batch conversion (including recursive folder scans and folder watching). The destination folder structure is kept the same as the source folder structure. Media in subfolders is also converted. Multiple folders can be monitored and different conversion presets can be specified for each folder. There is also a health check feature which can scan for corrupt video files using Handbrakes's '--scan' feature, although this
 is not always accurate.
 
@@ -34,13 +36,13 @@ Step 1: Make sure you have HandbrakeCLI installed. The easiest way is using Homb
 
 a.Copy the following line into a terminal:
 
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+**/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"**
 
 Press enter and wait for it to complete.
 
 b.Copy the following line into a terminal:
 
-brew install handbrake
+**brew install handbrake**
 
 Press enter and wait for it to complete.
 
@@ -68,19 +70,19 @@ Step 1: Make sure you have HandbrakeCLI installed - do the following:
 
 a.Copy the following line into a terminal:
 
-sudo add-apt-repository ppa:stebbins/handbrake-releases
+**sudo add-apt-repository ppa:stebbins/handbrake-releases**
 
 Press enter and wait for it to complete.
 
 b.Copy the following line into a terminal:
 
-sudo apt-get update
+**sudo apt-get update**
 
 Press enter and wait for it to complete.
 
 c.Copy the following line into a terminal:
 
-sudo apt-get install handbrake-cli handbrake-gtk
+**sudo apt-get install handbrake-cli handbrake-gtk**
 
 Press enter and wait for it to complete.
 
