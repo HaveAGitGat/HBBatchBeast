@@ -760,7 +760,43 @@ function endCyle(){
         //     process.send(messageJSON);
        
 
-        if (mode == "healthCheck") {  
+        if (mode == "healthCheck") {
+            
+            try{
+            
+                for (var i = 0; i < jsonInfo.streams.length; i++) {
+                    Object.keys(jsonInfo.streams[i]).forEach(function(key) {
+                    });
+                }
+                
+          
+
+            var message = [
+                workerNumber,
+                "FFMPEG",
+                globalQueueNumber,
+                "OK",
+             
+                ];
+                process.send(message);
+
+        }catch(err){
+
+            var message = [
+                workerNumber,
+                "FFMPEG",
+                globalQueueNumber,
+                "Fail",
+             
+                ];
+                process.send(message);
+
+
+
+        }
+
+
+
 
 
 
@@ -828,10 +864,26 @@ function endCyle(){
 
 
 
-
+        var message = [
+            workerNumber,
+            "FFMPEG",
+            globalQueueNumber,
+            "OK",
+         
+            ];
+            process.send(message);
 
 
     }catch(err){
+        var message = [
+            workerNumber,
+            "FFMPEG",
+            globalQueueNumber,
+            "Fail",
+         
+            ];
+            process.send(message);
+
         var processFileY = true
     }
 
@@ -886,15 +938,64 @@ function endCyle(){
 
         
 
-
+        var message = [
+            workerNumber,
+            "FFMPEG",
+            globalQueueNumber,
+            "OK",
+         
+            ];
+            process.send(message);
 
 
     }catch(err){
+
+        var message = [
+            workerNumber,
+            "FFMPEG",
+            globalQueueNumber,
+            "Fail",
+         
+            ];
+            process.send(message);
 
         var processFileY = true
     }
 
 }else{
+
+    try{
+            
+        for (var i = 0; i < jsonInfo.streams.length; i++) {
+            Object.keys(jsonInfo.streams[i]).forEach(function(key) {
+            });
+        }
+        
+  
+
+    var message = [
+        workerNumber,
+        "FFMPEG",
+        globalQueueNumber,
+        "OK",
+     
+        ];
+        process.send(message);
+
+}catch(err){
+
+    var message = [
+        workerNumber,
+        "FFMPEG",
+        globalQueueNumber,
+        "Fail",
+     
+        ];
+        process.send(message);
+
+
+
+}
 
 
         processFileY = true
