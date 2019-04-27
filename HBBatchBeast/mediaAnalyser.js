@@ -56,7 +56,7 @@ if(process.platform == 'linux' || process.platform == 'darwin'){
 
   if(process.env.NODE_ENV == 'production'){
 //development && //production
-var handBrakeCLIPath = "HandBrakeCLI -i \""
+ffprobeStaticPath = require('ffprobe-static').path
 
   }else{
 
