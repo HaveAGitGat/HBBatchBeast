@@ -1,5 +1,8 @@
 //SET ENV
-process.env.NODE_ENV = "production";
+if (__dirname.includes('.asar')) { // If dev
+    process.env.NODE_ENV = "production";
+  }
+
 
 var shell = require('shelljs');
 
