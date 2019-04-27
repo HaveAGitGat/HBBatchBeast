@@ -19,22 +19,9 @@ if (__dirname.includes('.asar')) { // If dev
   process.env.NODE_ENV = "production";
 }
 
-
-  
-if(process.platform=='win32'){
-
-var stringProcessingSlash ="\\";
-        }
-
-        if(process.platform == 'linux' || process.platform == 'darwin'){
-            var stringProcessingSlash ="/";
-        }
-
   var ffprobe = require('ffprobe'),
   ffprobeStatic = require('ffprobe-static');
   var path = require("path");
-
-
   var ffprobeStaticPath = ''
 
   if(process.env.NODE_ENV == 'production'){
