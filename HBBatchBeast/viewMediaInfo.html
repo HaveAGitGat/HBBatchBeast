@@ -27,7 +27,6 @@
 
 
 const electron=require('electron');
-
 const {ipcRenderer}=electron
 
 
@@ -43,15 +42,68 @@ window.onload = function () {
 }
 
 
+
+
 function analyseFile(thispath){
 
-  var filepath = thispath;
-var ffprobe = require('ffprobe'),
-    ffprobeStatic = require('ffprobe-static');
+  process.env.NODE_ENV = "production";
 
   
- 
-ffprobe(filepath, { path: ffprobeStatic.path }, function (err, info) {
+if(process.platform=='win32'){
+
+var stringProcessingSlash ="\\";
+        }
+
+        if(process.platform == 'linux' || process.platform == 'darwin'){
+            var stringProcessingSlash ="/";
+        }
+  var filepath = thispath;
+  var ffprobe = require('ffprobe'),
+  ffprobeStatic = require('ffprobe-static');
+  var path = require("path");
+
+  var ffprobeStaticPath = ''
+
+if(process.platform=='win32'){
+
+if(process.env.NODE_ENV == 'production'){
+
+    //production
+var fullPath=__dirname;
+fullPath = fullPath.slice(0,fullPath.lastIndexOf(stringProcessingSlash));
+fullPath = fullPath.slice(0,fullPath.lastIndexOf(stringProcessingSlash));
+ffprobeStaticPath = fullPath+ "\\ffprobe.exe"
+
+}else{
+
+    //development
+    ffprobeStaticPath = require('ffprobe-static').path
+
+}
+
+}
+
+if(process.platform == 'linux' || process.platform == 'darwin'){
+
+  if(process.env.NODE_ENV == 'production'){
+//development && //production
+var handBrakeCLIPath = "HandBrakeCLI -i \""
+
+  }else{
+
+
+  }
+
+
+}
+
+
+
+
+
+//ffprobe(filepath, { path: ffprobeStatic.path }, function (err, info) {
+
+  ffprobe(filepath, { path: ffprobeStaticPath }, function (err, info) {
 
 if (err){
   document.getElementById("errorTextArea").value += "FFMPEG encountered an error while reading the file: "+err
