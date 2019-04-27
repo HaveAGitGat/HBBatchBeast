@@ -31,40 +31,16 @@ var stringProcessingSlash ="\\";
   ffprobeStatic = require('ffprobe-static');
   var path = require("path");
 
+
   var ffprobeStaticPath = ''
 
-if(process.platform=='win32'){
-
-if(process.env.NODE_ENV == 'production'){
-
-    //production
-var fullPath=__dirname;
-fullPath = fullPath.slice(0,fullPath.lastIndexOf(stringProcessingSlash));
-fullPath = fullPath.slice(0,fullPath.lastIndexOf(stringProcessingSlash));
-ffprobeStaticPath = fullPath+ "\\ffprobe.exe"
-
-}else{
-
-    //development
-    ffprobeStaticPath = require('ffprobe-static').path
-
-}
-
-}
-
-if(process.platform == 'linux' || process.platform == 'darwin'){
-
   if(process.env.NODE_ENV == 'production'){
-//development && //production
-ffprobeStaticPath = require('ffprobe-static').path
-
+  
+  ffprobeStaticPath = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
+  
   }else{
-
-
+  ffprobeStaticPath = require('ffprobe-static').path
   }
-
-
-}
 
     var thisval
  
