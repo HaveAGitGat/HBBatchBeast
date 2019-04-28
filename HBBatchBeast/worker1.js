@@ -453,16 +453,43 @@ actionComplete=1;
 }
 }
 
+process.send(["here1",0]);
 
+var path = require("path");
+
+
+process.send(["here1",0]);
 
 if(process.env.NODE_ENV == 'production'){
-var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+
+
+//var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
+//var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+
+
+var ffmpegPath = (path.join(__dirname, '\\node_modules\\@ffmpeg-installer\\win32-x64\\ffmpeg.exe' )).replace('app.asar', 'app.asar.unpacked')
+
 
 }else{
 
-var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
+    var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+
+
 
 }
+
+process.send(["here2",0]);
+
+
+
+
+if (mode == "healthCheck") {
+    handBrakeMode=true;
+    FFmpegMode=false;
+}
+
+
+
 
 
 var workerCommand="";
@@ -527,7 +554,7 @@ workerCommand =ffmpegPath + " -i \"" + currentSourceLine + "\" "+preset+" \"" + 
       }
     
 
-
+ 
 
 
 
