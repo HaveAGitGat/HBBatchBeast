@@ -262,6 +262,27 @@ viewMedia.on('close', function () {
         }
 
 
+        console.log((__dirname).replace('app.asar', 'app.asar.unpacked'))
+
+
+      //  var ffmpegPath = (path.join(__dirname, '\\node_modules\\@ffmpeg-installer\\win32-x64\\ffmpeg.exe' )).replace('app.asar', 'app.asar.unpacked')
+
+       // console.log(ffmpegPath)
+
+
+       try{
+
+        var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+        console.log(ffmpegPath)
+       }catch(err){
+
+        console.log(err)
+
+
+       }
+
+
+
 
 
 
@@ -2887,7 +2908,7 @@ workers[i - 1].on("error", console.error.bind(console));
 workers[i - 1].on('message', function (message) {
 
 
-//console.log("Message:"+message);
+console.log("Message:"+message);
 
 if (message[1] == "exitRequest") {
     var exitMessage = [
