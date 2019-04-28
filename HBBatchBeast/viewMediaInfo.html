@@ -90,7 +90,7 @@ ffprobeStaticPath = require('ffprobe-static').path
   ffprobe(filepath, { path: ffprobeStaticPath }, function (err, info) {
 
 if (err){
-  document.getElementById("errorTextArea").value += "FFprobe encountered an error while reading the file: "+err
+  document.getElementById("errorTextArea").value += "FFprobe encountered an error while reading the file. Error: "+err
 
 }
   
