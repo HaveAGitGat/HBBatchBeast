@@ -34,6 +34,11 @@ var outputFolderPathold = "";
 var sourceQueueArrayCounter = 0;
 var writeNumber = 0;
 
+var minimumFileSizeOnOff
+var minimumFileSize
+var maximumFileSizeOnOff
+var maximumFileSize
+
 var fsextra = require('fs-extra')
 var fs = require('fs');
 
@@ -134,6 +139,12 @@ tempConversionFolderCheckedOnOff=queueInfoBomb[4]
             titleWordFilterArrayImport=queueInfoBomb[9]
 
             replaceOriginalFile = queueInfoBomb[10]
+
+             minimumFileSizeOnOff = queueInfoBomb[11]
+            minimumFileSize = queueInfoBomb[12]
+
+            maximumFileSizeOnOff = queueInfoBomb[13]
+            maximumFileSize = queueInfoBomb[14]
 
 
        
@@ -281,6 +292,38 @@ if (thisFile == healthyFileArray[j]) {
                         }
     }
 }
+     }
+
+
+
+     // check if min file size is reached
+
+     if (mode != "healthCheck") {
+
+                        if(minimumFileSizeOnOff==true || maximumFileSizeOnOff==true){
+
+                            var singleFileSize = fs.statSync(thisFile)
+                            var singleFileSize = singleFileSize.size
+                var fileSizeInGbytes = singleFileSize / 1000000.0;
+
+                if(minimumFileSizeOnOff==true){
+                if(fileSizeInGbytes<minimumFileSize){
+                    supportedFileSwitch = 0;
+                }
+            }
+
+            if(maximumFileSizeOnOff==true){
+                if(fileSizeInGbytes>maximumFileSize){
+                    supportedFileSwitch = 0;
+                }
+            }
+
+
+                
+                        }
+
+
+
      }
                 
 
