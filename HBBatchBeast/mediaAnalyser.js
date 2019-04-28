@@ -15,7 +15,7 @@ if(infoArray[0]=="analyseThis"){
 
 var filepath = infoArray[1]
 
-if (__dirname.includes('.asar')) { // If dev
+if (__dirname.includes('.asar')) { 
   process.env.NODE_ENV = "production";
 }
 
