@@ -469,10 +469,15 @@ if(process.env.NODE_ENV == 'production'){
 if(process.platform=='win32'){
 
 var ffmpegPath = (path.join(__dirname, '\\node_modules\\@ffmpeg-installer\\win32-x64\\ffmpeg.exe' )).replace('app.asar', 'app.asar.unpacked')
-}else{
-    
 
-    var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
+}else if(process.platform=='linux'){
+
+
+   // var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
+
+
+   var ffmpegPath = (path.join(__dirname, '\\node_modules\\@ffmpeg-installer\\linux-x64/ffmpeg' )).replace('app.asar', 'app.asar.unpacked')
+    
 
 
 }
