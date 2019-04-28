@@ -3045,7 +3045,7 @@ workers[i - 1].on("error", console.error.bind(console));
 workers[i - 1].on('message', function (message) {
 
 
-console.log("Message:"+message);
+//console.log("Message:"+message);
 
 if (message[1] == "exitRequest") {
     var exitMessage = [
