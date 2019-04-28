@@ -175,6 +175,18 @@ ipcMain.on('item:ready',function(e,item){
 });
 
 
+
+ipcMain.on('mediaview:ready',function(e,item){
+
+    
+
+
+    mainWindow.webContents.send('mediaview:ready', "Test" );
+
+
+});
+
+
   
 
 
