@@ -471,7 +471,7 @@ if(process.platform =='win32'){
 var ffmpegPath = (path.join(__dirname, '\\node_modules\\@ffmpeg-installer\\win32-x64\\ffmpeg.exe' )).replace('app.asar', 'app.asar.unpacked')
 
 
-}else if(process.platform == 'linux'){
+}else{
 
 
     var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
