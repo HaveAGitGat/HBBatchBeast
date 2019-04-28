@@ -712,7 +712,36 @@ if (f == "1") {
         }
 
 
-        // filter out keywords
+      
+
+        // read if minimum file size limit on or off
+
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/minimumFileSizeOnOff.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/minimumFileSizeOnOff.txt", 'utf8');
+if (f == "1") {
+    document.getElementById("minimumFileSizeOnOff").checked = true;
+} else {
+    document.getElementById("minimumFileSizeOnOff").checked = false;
+
+}
+
+}
+
+
+
+// read min file size
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/minimumFileSize.txt")) {
+
+document.getElementById("minimumFileSize").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/minimumFileSize.txt", 'utf8');
+
+
+}
+
+
+        // read filter out keywords
 
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/titleWordFilter.txt")) {
 
@@ -1518,6 +1547,25 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/moveCorruptFileOnOff.txt', 0, 
         //define included file types
 
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/includedFileTypes.txt', document.getElementById("includedFileTypes").value, 'utf8');
+
+
+
+        //save min file size on or off
+
+        if (document.getElementById("minimumFileSizeOnOff").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/minimumFileSizeOnOff.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/minimumFileSizeOnOff.txt', 0, 'utf8');
+}
+
+
+
+        //save min file size
+
+        fs.writeFileSync(homePath + '/HBBatchBeast/Config/minimumFileSize.txt', document.getElementById("minimumFileSize").value, 'utf8');
+
+
 
 
         //save title word filter
@@ -5486,9 +5534,13 @@ margin-left: 1px;
                         <textarea type="text" class="folderPaths" id="includedFileTypes"></textarea>
                     </div>
 
-                    <div class="text-align: left">
-                        <p>Exclude files smaller than (GB):</p> </div> <div
-                         class="text-align: right"><input type="text" class="infoBox" id="minimumFileSize">
+                    <div style="text-align: left">
+                        <p>Exclude files smaller than (GB):<input type="checkbox" id="minimumFileSizeOnOff" class="cb6"></p>
+                    
+                    </div><div style="text-align: right">
+                        
+                         
+                         <input type="text" class="infoBox" id="minimumFileSize">
                     </div>
 
 
