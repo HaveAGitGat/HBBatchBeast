@@ -135,9 +135,9 @@ function createViewMediaInfo() {
 //create new window
 
 viewMedia = new BrowserWindow({
-    width: 1500,
-    height: 500,
-  frame: false,
+    width: 500,
+    height: 1000,
+ frame: false,
     title: 'View Media Info'
 
 });
@@ -1319,71 +1319,100 @@ document.getElementById("standardPresetDiv").style.display = 'none';
 
 }
 
+
+ipcRenderer.on('item:ready',function(e,item){
+
+            
+ViewError.webContents.send('item:Error', fullErrorLogArray[errorIndex] );  
+
+// /fullErrorLogArray[message]
+
+});
+
+
+
+
+
+
+ipcRenderer.on('mediaview:ready',function(e,item){  
+    
+
+viewMedia.webContents.send('item:filepath', itemfilePath );  
+
+itemfilePath="";
+// /fullErrorLogArray[message]
+
+});
+
+
+var itemfilePath ="";
+
 function showAlert3(filepath) {
 
      
+    createViewMediaInfo()
 
-    filePath=decodeURI(filepath)
+    //filePath=decodeURI(filepath)
+
+    itemfilePath=decodeURI(filepath)
 
 
 
-    var ffprobe = require('ffprobe'),
-  ffprobeStatic = require('ffprobe-static');
-  var path = require("path");
-  var ffprobeStaticPath = ''
 
-  if(process.env.NODE_ENV == 'production'){
+
+//     var ffprobe = require('ffprobe'),
+//   ffprobeStatic = require('ffprobe-static');
+//   var path = require("path");
+//   var ffprobeStaticPath = ''
+
+//   if(process.env.NODE_ENV == 'production'){
   
-  ffprobeStaticPath = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
+//   ffprobeStaticPath = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
   
-  }else{
-  ffprobeStaticPath = require('ffprobe-static').path
-  }
+//   }else{
+//   ffprobeStaticPath = require('ffprobe-static').path
+//   }
 
-    var thisval
+//     var thisval
  
-    var JSONBomb ="USE CTRL+C TO COPY THIS TEXT"+" \n\n";
-ffprobe(filePath, { path: ffprobeStaticPath }, function (err, jsonInfo) {
-  if (err){
-   // console.log("Error")
-  }
+//     var JSONBomb ="USE CTRL+C TO COPY THIS TEXT"+" \n\n" +filePath+" \n\n";
+// ffprobe(filePath, { path: ffprobeStaticPath }, function (err, jsonInfo) {
+//   if (err){
+//    // console.log("Error")
+//   }
 
 
 
-    try{
+//     try{
             
-            for (var i = 0; i < jsonInfo.streams.length; i++) {
-                Object.keys(jsonInfo.streams[i]).forEach(function(key) {
-                    JSONBomb += key+": '"+jsonInfo.streams[i][key]+"' \n"
-                });
-            }
+//             for (var i = 0; i < jsonInfo.streams.length; i++) {
+//                 Object.keys(jsonInfo.streams[i]).forEach(function(key) {
+//                     JSONBomb += key+": '"+jsonInfo.streams[i][key]+"' \n"
+//                 });
+//             }
             
-       alert(JSONBomb);
+//        alert(JSONBomb);
 
-    }catch(err){
+//     }catch(err){
 
-        JSONBomb += "Could not extract info"
+//         JSONBomb += "Could not extract info"
 
-        alert(JSONBomb);
+//         alert(JSONBomb);
 
-   }
+//    }
 
 
-});
+// });
 
 
 
 
 }
 
-ipcRenderer.on('item:ready',function(e,item){
 
-            
-    ViewError.webContents.send('item:Error', fullErrorLogArray[errorIndex] );  
 
-// /fullErrorLogArray[message]
-    
-});
+
+
 
 
 
@@ -3276,7 +3305,7 @@ if (message[1] == "FFPROBE") {
 
       //  "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+sessionNumber+"')\" value=\"Error (Click for info)\">"
     }
-    FFprobeArray.push("<input type=\"button\" class=\"infoButton\" onclick=\"showAlert3('"+encodeURI(message[4])+"')\" value=\""+message[3]+"\">")
+    FFprobeArray[currentRow-1]="<input type=\"button\" class=\"infoButton\" onclick=\"showAlert3('"+encodeURI(message[4])+"')\" value=\""+message[3]+"\">"
 
 }
 
