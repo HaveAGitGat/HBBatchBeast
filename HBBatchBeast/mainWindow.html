@@ -729,6 +729,20 @@ if (f == "1") {
 
 }
 
+        // read if maximum file size limit on or off
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/maximumFileSizeOnOff.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/maximumFileSizeOnOff.txt", 'utf8');
+if (f == "1") {
+    document.getElementById("maximumFileSizeOnOff").checked = true;
+} else {
+    document.getElementById("maximumFileSizeOnOff").checked = false;
+
+}
+
+}
+
 
 
 // read min file size
@@ -739,6 +753,16 @@ document.getElementById("minimumFileSize").value = fs.readFileSync(homePath + "/
 
 
 }
+
+// read max file size
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/maximumFileSize.txt")) {
+
+document.getElementById("maximumFileSize").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/maximumFileSize.txt", 'utf8');
+
+
+}
+
 
 
         // read filter out keywords
@@ -1560,10 +1584,25 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/minimumFileSizeOnOff.txt', 0, 
 }
 
 
+        //save max file size on or off
+
+        if (document.getElementById("maximumFileSizeOnOff").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/maximumFileSizeOnOff.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/maximumFileSizeOnOff.txt', 0, 'utf8');
+}
+
+
 
         //save min file size
 
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/minimumFileSize.txt', document.getElementById("minimumFileSize").value, 'utf8');
+
+
+                //save max file size
+
+                fs.writeFileSync(homePath + '/HBBatchBeast/Config/maximumFileSize.txt', document.getElementById("maximumFileSize").value, 'utf8');
 
 
 
@@ -2515,6 +2554,12 @@ if (message[0] == "scanandconvert") {
             presetArray,
             document.getElementById("titleWordFilter").value,
             document.getElementById("replaceOriginalFile").checked,
+            document.getElementById("minimumFileSizeOnOff").checked,
+            document.getElementById("minimumFileSize").value,
+            document.getElementById("maximumFileSizeOnOff").checked,
+            document.getElementById("maximumFileSize").value,
+
+            
             
             
         
@@ -5535,12 +5580,19 @@ margin-left: 1px;
                     </div>
 
                     <div style="text-align: left">
-                        <p>Exclude files smaller than (GB):<input type="checkbox" id="minimumFileSizeOnOff" class="cb6"></p>
+                        <p>Exclude files smaller than (MB):<input type="checkbox" id="minimumFileSizeOnOff" ></p>
                     
-                    </div><div style="text-align: right">
-                        
-                         
-                         <input type="text" class="infoBox" id="minimumFileSize">
+                    </div>
+                    <div style="text-align: right">
+                    <input type="text" class="infoBox" id="minimumFileSize">
+                    </div>
+
+                    <div style="text-align: left">
+                    <p>Exclude files larger than (MB):<input type="checkbox" id="maximumFileSizeOnOff" ></p>
+                    
+                    </div>
+                    <div style="text-align: right">
+                    <input type="text" class="infoBox" id="maximumFileSize">
                     </div>
 
 
