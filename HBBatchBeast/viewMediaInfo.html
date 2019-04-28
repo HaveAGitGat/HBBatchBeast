@@ -35,6 +35,8 @@ window.onload = function () {
   document.getElementById("informationWindow").innerHTML = ""
 
 
+  ipcRenderer.send('mediaview:ready',"Test");
+
 
 
 
@@ -43,8 +45,22 @@ window.onload = function () {
 
 
 
+ipcRenderer.on('item:filepath',function(e,itemfilePath){
+
+
+  if(itemfilePath != ""){
+  analyseFile(itemfilePath);
+  }
+
+});
+
+
+
+
 
 function analyseFile(thispath){
+
+  document.getElementById("errorTextArea").value +=thispath +"\n\n"
 
   if (__dirname.includes('.asar')) { // If dev
     process.env.NODE_ENV = "production";
@@ -74,7 +90,7 @@ ffprobeStaticPath = require('ffprobe-static').path
   ffprobe(filepath, { path: ffprobeStaticPath }, function (err, info) {
 
 if (err){
-  document.getElementById("errorTextArea").value += "FFMPEG encountered an error while reading the file: "+err
+  document.getElementById("errorTextArea").value += "FFprobe encountered an error while reading the file: "+err
 
 }
   
