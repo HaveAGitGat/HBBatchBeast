@@ -8,7 +8,7 @@
         "start": "electron .",
         "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds --darwinDarkModeSupport=true  --asar.unpackDir={node_modules/ffprobe-static,node_modules/@ffmpeg-installer}",
         "package-win": "electron-packager . hbbatchbeast --overwrite  --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"HBBatchBeast\" --asar.unpackDir={node_modules/ffprobe-static,node_modules/@ffmpeg-installer}",
-        "package-linux": "electron-packager . hbbatchbeast --overwrite--platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds  --asar.unpackDir={node_modules/ffprobe-static,node_modules/@ffmpeg-installer}",
+        "package-linux": "electron-packager . hbbatchbeast --overwrite --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds  --asar.unpackDir={node_modules/ffprobe-static,node_modules/@ffmpeg-installer}",
         "create-installer-mac": "electron-installer-dmg ./release-builds/hbbatchbeast-darwin-x64/hbbatchbeast.app hbbatchbeast --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns ",
         "create-installer-win": "node installers/windows/createinstaller.js",
         "create-debian-installer": "electron-installer-debian --src release-builds/hbbatchbeast-linux-x64/ --arch amd64 --config debian.json"
