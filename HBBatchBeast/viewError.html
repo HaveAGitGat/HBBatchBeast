@@ -115,6 +115,25 @@ const remote = require('electron').remote;
 </script>
 
 <style>
+
+::-webkit-scrollbar
+{
+  width: 12px;  /* for vertical scrollbars */
+  height: 12px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track
+{
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb
+{
+  background: #66ccff;
+}
+
+
+
 * {margin: 0; padding: 0; border: 0; vertical-align: baseline;}
 html {box-sizing: border-box;}
 *, *:before, *:after {box-sizing: inherit;}
