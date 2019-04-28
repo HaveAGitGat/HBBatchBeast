@@ -35,6 +35,8 @@ var sourceQueueArrayCounter = 0;
 var writeNumber = 0;
 
 var fsextra = require('fs-extra')
+var fs = require('fs');
+
 
 
         var inputPathArray = [];
@@ -159,7 +161,7 @@ if (process.platform == 'darwin'){
 
  if (mode == "healthCheck") {                    
 
-var fs = require('fs');
+
 var healthyFileArray = "";
 healthyFileArray = fs.readFileSync(homePath + "/HBBatchBeast/Logs/healthyFileList.txt", 'utf8');
 healthyFileArray = healthyFileArray.toString().split("\n");
@@ -169,7 +171,7 @@ healthyFileArray = healthyFileArray.toString().split("\n");
 
  if (mode != "healthCheck") { 
      
-        var fs = require('fs');
+  
         var replacedFileArray = "";
         replacedFileArray = fs.readFileSync(homePath + "/HBBatchBeast/Logs/originalFileReplacedList.txt", 'utf8');
         replacedFileArray = replacedFileArray.toString().split("\n");
@@ -205,7 +207,7 @@ topFolder = inputPathStemSplit[inputPathStemSplit.length - 1] // comma removed s
 topFolderCharLength = topFolder.length   //
 
 
-var fs = require('fs');
+
 var path = require('path');
 
 try {
