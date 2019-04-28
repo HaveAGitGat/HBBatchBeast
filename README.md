@@ -2,7 +2,7 @@
 
 [![Reddit](https://img.shields.io/badge/Reddit-HBBatchBeast-FF5700.svg?style=flat-square)](https://www.reddit.com/r/HBBatchBeast/)[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=97L64UK77NTZL&source=url)
 
-![Screenshot](https://i.imgur.com/XMLxDxs.png)
+![Screenshot](https://imgur.com/a/f4Ijm40)
 
 Demo video - https://youtu.be/mHMXfInoqfE
 
