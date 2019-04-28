@@ -281,6 +281,21 @@ viewMedia.on('close', function () {
 
        }
 
+       
+       try{
+
+
+        var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
+console.log(ffmpegPath)
+}catch(err){
+
+console.log(err)
+
+
+}
+
+
+
 
 
 
