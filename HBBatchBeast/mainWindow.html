@@ -4962,7 +4962,12 @@ color: black;
         grid-template-columns: repeat(3, 46px);
         position: absolute;
         top: 0;
-        right: 0;
+
+
+ /* set right 0 if not macos */
+right: 0;
+
+        /* left: 0; */
         height: 100%;
         font-family: "Segoe MDL2 Assets";
         font-size: 10px;
@@ -4996,7 +5001,7 @@ color: black;
 
 
 
-
+        /* reverse order if not macos */
 
     #window-controls #min-button {
         grid-column: 1;
@@ -5012,13 +5017,23 @@ color: black;
     }
 
     #window-title {
+
+        /* delete if not macos */
+        /* top: 0;
+        right: 0;
+        position: absolute; */
+       
+
+
         grid-column: 1;
         display: flex;
+        overflow-x: hidden;
+
         align-items: center;
         font-family: "Segoe UI", sans-serif;
         font-size: 12px;
         margin-left: 8px;
-        overflow-x: hidden;
+      
 
 
     }
@@ -5234,10 +5249,10 @@ margin-left: 1px;
     <header id="titlebar">
         <div id="drag-region">
 
+
             <div id="window-title">
                 <span>HBBatchBeast 2.1.0</span>
             </div>
-
 
             <div id="window-controls">
                 <div class="button" id="min-button">
@@ -5253,6 +5268,8 @@ margin-left: 1px;
                     <span>&#xE8BB;</span>
                 </div>
             </div>
+
+
 
         </div>
 
