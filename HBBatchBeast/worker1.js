@@ -490,7 +490,7 @@ var ffmpegPath = (path.join(__dirname, '\\node_modules\\@ffmpeg-installer\\win32
 }
 
 
-var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
+//var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
 
 process.send(["here2",0]);
 
