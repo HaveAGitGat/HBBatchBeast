@@ -191,6 +191,9 @@ var includeAllFilesWithProperties
 var excludeAnyFilesWithProperties 
 var excludeAllFilesWithProperties 
 
+var handBrakeMode
+var FFmpegMode
+
 
 var  moveCorruptFileOnOff;
 var  corruptDestinationPath;
@@ -349,6 +352,9 @@ includeAllFilesWithProperties = m[14];
 excludeAnyFilesWithProperties = m[15];
 excludeAllFilesWithProperties = m[16];
 
+ handBrakeMode = m[17];
+ FFmpegMode = m[18];
+
 
 
 //process.send(workerNumber+",processing,"+globalQueueNumber);
@@ -449,19 +455,31 @@ actionComplete=1;
 
 
 
+if(process.env.NODE_ENV == 'production'){
+var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+
+}else{
+
+var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
+
+}
 
 
 var workerCommand="";
 
 if(process.platform=='win32'){
 
-  
-workerCommand =handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset;
 
-//workerCommand =" /Low"+handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset;
+if(handBrakeMode==true){
+
+    workerCommand =handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" " + preset;
+
+}else if(FFmpegMode==true){
+
+    workerCommand =ffmpegPath + " -i \"" + currentSourceLine + "\" "+preset+" \"" + currentDestinationLine + "\" " ;
 
 
-
+}
     }
     
     if(process.platform == 'linux' ){
@@ -469,8 +487,20 @@ workerCommand =handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + cu
 
    // workerCommand ='nice -n 20 HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" ' + preset;
 
+   if(handBrakeMode==true){
 
     workerCommand ="nice -n "+runPriority+" HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
+
+}else if(FFmpegMode==true){
+
+    workerCommand =ffmpegPath + " -i \"" + currentSourceLine + "\" "+preset+" \"" + currentDestinationLine + "\" " ;
+
+}
+
+
+
+
+    
 
     //20 low priority, 0 = default = highest priority (without sudo)
 
@@ -485,7 +515,13 @@ workerCommand =handBrakeCLIPath + " -i \"" + currentSourceLine + "\" -o \"" + cu
 
  //workerCommand ="/usr/local/bin/HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
 
- workerCommand ="/usr/local/bin/HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
+ 
+ if(handBrakeMode==true){
+workerCommand ="/usr/local/bin/HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
+}else if(FFmpegMode==true){
+workerCommand =ffmpegPath + " -i \"" + currentSourceLine + "\" "+preset+" \"" + currentDestinationLine + "\" " ;
+}
+
 
 
       }
