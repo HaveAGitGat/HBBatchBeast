@@ -528,6 +528,46 @@ document.getElementById("corruptDestinationPath").value = fs.readFileSync(homePa
         }
 
 
+
+        // read handbrake mode
+
+
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/handBrakeMode.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/handBrakeMode.txt", 'utf8');
+
+
+if (f == "1") {
+    document.getElementById("handBrakeMode").checked = true;
+    document.getElementById("standardPresetOptionDiv").style.display = 'block';
+
+} else {
+    document.getElementById("handBrakeMode").checked = false;
+
+}
+}
+
+
+//
+
+
+// read ffmpeg mode
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Config/FFmpegMode.txt")) {
+
+var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/FFmpegMode.txt", 'utf8');
+
+
+if (f == "1") {
+    document.getElementById("FFmpegMode").checked = true;
+
+} else {
+    document.getElementById("FFmpegMode").checked = false;
+
+}
+}
+
+
         //read preset  and set select menu value
 
 
@@ -1108,6 +1148,61 @@ document.getElementById("queueSizeViewLimit").value = 1000;
     }
 
 
+function cbChange7(obj) {
+
+if (obj.checked == false) {
+    obj.checked = false;
+} else if (obj.checked == true) {
+    var cbs = document.getElementsByClassName("cb7");
+    for (var i = 0; i < cbs.length; i++) {
+        cbs[i].checked = false;
+    }
+    obj.checked = true;
+}
+
+
+
+document.getElementById("standardPresetOptionDiv").style.display = 'none';
+
+document.getElementById("selectStandardPreset").checked = false
+//document.getElementById("selectCustomPreset").checked = false
+
+        if (document.getElementById("handBrakeMode").checked == true) {
+    document.getElementById("standardPresetOptionDiv").style.display = 'block';
+
+        }else if(document.getElementById("FFmpegMode").checked == true){
+    document.getElementById("selectCustomPreset").checked = true       
+        }
+
+
+
+
+//cb1
+
+document.getElementById("standardPresetDiv").style.display = 'none';
+        document.getElementById("customPresetDiv").style.display = 'none';
+
+        if (document.getElementById("selectStandardPreset").checked == true) {
+            document.getElementById("standardPresetDiv").style.display = 'block';
+        }
+
+        if (document.getElementById("selectCustomPreset").checked == true) {
+
+            document.getElementById("customPresetDiv").style.display = 'block';
+        }
+
+
+
+
+
+
+
+
+
+        textAreaHeight()
+}
+
+
 
 
 
@@ -1282,6 +1377,26 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTimeOnOff.txt', 0, 'ut
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/tempDestinationOnOff.txt', 0, 'utf8');
 
         }
+
+        // save handbrake mode
+
+        if (document.getElementById("handBrakeMode").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/handBrakeMode.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/handBrakeMode.txt', 0, 'utf8');
+
+}
+
+// save ffmpeg mode
+
+        if (document.getElementById("FFmpegMode").checked == true) {
+
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/FFmpegMode.txt', 1, 'utf8');
+} else {
+fs.writeFileSync(homePath + '/HBBatchBeast/Config/FFmpegMode.txt', 0, 'utf8');
+
+}
 
         //save preset     
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/preset.txt', document.getElementById("preset").value, 'utf8');
@@ -2006,6 +2121,15 @@ fs.mkdirSync(outPutPathStemFinalArray[y] + validationSlash);
             }
 
             if (mode != "healthCheck") {
+
+                if (document.getElementById("handBrakeMode").checked == false && document.getElementById("FFmpegMode").checked == false) {
+
+                alert("Please select to use HandBrake or FFmpeg!");
+                break validationSection;
+                    }
+
+
+
                 if (document.getElementById("selectStandardPreset").checked == false && document.getElementById("selectCustomPreset").checked == false) {
 
                     alert("Please select a standard preset or input a custom one!");
@@ -2567,7 +2691,7 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
                 + "<th class=\"headcol\">Preset</th>"
                 + "<th class=\"headcol\">Worker</th>"
                 + "<th class=\"headcol\">FFPROBE</th>"
-                + "<th class=\"headcol\">HB Status</th>"
+                + "<th class=\"headcol\">Status</th>"
                 + "<th class=\"headcol\">Process?</th>"
                 + "<th class=\"headcol\">Finish time</th>"
 
@@ -2799,6 +2923,9 @@ if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
         document.getElementById("includeAllFilesWithProperties").checked,
         document.getElementById("excludeAnyFilesWithProperties").checked,
         document.getElementById("excludeAllFilesWithProperties").checked,
+        document.getElementById("handBrakeMode").checked,
+        document.getElementById("FFmpegMode").checked,
+
 
 
      
@@ -5103,12 +5230,18 @@ margin-left: 1px;
                     </div>
                 </div>
 
+        
+        
+<p>HandBrake:<input type="checkbox" id="handBrakeMode" class="cb7" onchange="cbChange7(this)">FFmpeg:<input type="checkbox" id="FFmpegMode" class="cb7" onchange="cbChange7(this)"></p>
+  
+                
 
 
 
-
-
+<div id="standardPresetOptionDiv"  style="display: none;">   
                 <div class="grid-container">
+
+              
                     <div class="grid-itemleft">
                         <p>Standard preset:</p>
                     </div>
@@ -5116,6 +5249,8 @@ margin-left: 1px;
                     <div class="grid-itemright"> <input type="checkbox" id="selectStandardPreset" class="cb1"
                             onchange="cbChange1(this)">
                     </div>
+                </div>
+            </div>
 
                     <div class="grid-itemleft">
                         <p> Custom preset:</p>
@@ -5125,7 +5260,7 @@ margin-left: 1px;
                             onchange="cbChange1(this)">
                     </div>
 
-                </div>
+              
 
 
 
@@ -5727,7 +5862,7 @@ margin-left: 1px;
 
                         <th class="headcol">FFPROBE</th>
 
-                        <th class="headcol">HB Status</th>
+                        <th class="headcol">Status</th>
                         <th class="headcol">Finish time</th>
 
 
