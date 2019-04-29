@@ -2183,6 +2183,53 @@ break validationSection;
 
                 if (mode != "healthCheck") {
 
+
+
+
+
+                    if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
+                      
+         
+                        if (outPutPathStemFinalArray[y].includes(inputPathStemArray[y])){
+
+
+                    alert("Destination folder " + (y + 1) + " " + outPutPathStemFinalArray[y] + " appears to be the same as or is within source folder " + (y + 1) +" "+inputPathStemArray[y] +" which will prevent HBBB from functioning correctly. Please change the destination folder to a folder outside of the source folder. \n\n If you're wanting to use the 'Replace original files feature', please select a destination folder that is not the same as, or within, the source folder, and then check the 'Replace original files always' checkbox in the advanced settings section. Uncheck the temporary 'Temporary conversion folder' checkbox as it will serve no use in this case. Files will be converted into the destination folder and then moved back into the source folder.");
+                    break validationSection; 
+                            
+
+
+                        }
+         
+                        
+         
+         
+                         }else{
+
+
+if (outPutPathStemArray[y].includes(inputPathStemArray[y])){
+
+
+alert("Destination folder " + (y + 1) + " " + outPutPathStemArray[y] + " appears to be the same as or is within source folder " + (y + 1) +" "+inputPathStemArray[y] +" which will prevent HBBB from functioning correctly. Please change the destination folder to a folder outside of the source folder.  \n\n If you're wanting to use the 'Replace original files feature', please select a destination folder that is not the same as, or within, the source folder, and then check the 'Replace original files always' checkbox in the advanced settings section. Uncheck the temporary 'Temporary conversion folder' checkbox as it will serve no use in this case. Files will be converted into the destination folder and then moved back into the source folder. ");
+break validationSection; 
+        
+
+
+    }
+         
+         
+         
+         
+                         }
+         
+
+
+
+
+
+
+
+
+
                     if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
 
                         if (fs.existsSync(outPutPathStemArray[y] + validationSlash) == false || outPutPathStemArray[y] == "") {
@@ -2261,6 +2308,11 @@ fs.mkdirSync(outPutPathStemFinalArray[y] + validationSlash);
 
 
                     }
+
+
+
+
+
                 } else {
                     outPutPathStemArray[y] = "";
                     outPutPathStemFinalArray[y] = "";
@@ -2270,7 +2322,32 @@ fs.mkdirSync(outPutPathStemFinalArray[y] + validationSlash);
                 }
 
 
+
+
+
+
+
+
+
             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             if (mode != "healthCheck") {
 
