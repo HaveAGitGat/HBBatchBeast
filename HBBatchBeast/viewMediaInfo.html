@@ -68,24 +68,15 @@ function analyseFile(thispath){
 
 
   var filepath = thispath;
-  
   var ffprobe = require('ffprobe'),
-  ffprobeStatic = require('ffprobe-static');
+      ffprobeStatic = require('ffprobe-static');
   var path = require("path");
-
-
-var ffprobeStaticPath = ''
+  var ffprobeStaticPath = ''
 
 if(process.env.NODE_ENV == 'production'){
-
 ffprobeStaticPath = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
+}else{ffprobeStaticPath = require('ffprobe-static').path}
 
-}else{
-ffprobeStaticPath = require('ffprobe-static').path
-}
-
-
-//ffprobe(filepath, { path: ffprobeStatic.path }, function (err, info) {
 
   ffprobe(filepath, { path: ffprobeStaticPath }, function (err, info) {
 
@@ -93,10 +84,14 @@ if (err){
   document.getElementById("errorTextArea").value += "FFprobe encountered an error while reading the file. Error: "+err
 
 }
-  
+console.log(info)  
+
   for (var i = 0; i < info.streams.length; i++) {
         Object.keys(info.streams[i]).forEach(function(key) {
-          document.getElementById("errorTextArea").value += key+": '"+info.streams[i][key]+"' \n"
+          
+          document.getElementById("errorTextArea").value += key+": '"+info.streams[i][key]+"', \n"
+
+
             });
         }
 
@@ -105,25 +100,6 @@ if (err){
 });
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
-
-
-
-
 
 
 
