@@ -195,9 +195,14 @@ viewMedia.on('close', function () {
     var mode = "";
 
     var startDate
+    var endDate
+
+
     var unConvertedFiles;
 
     var FFprobeArray=[]
+
+    var Bench
 
 
     //
@@ -293,6 +298,9 @@ console.log(err)
 
 
 }
+
+
+
 
 
 
@@ -1803,13 +1811,17 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueSizeViewLimit.txt', docum
 
 
 
-    function convertFiles(processMode,Bench) {
+    function convertFiles(processMode,Benchmark) {
 
 //reset queue status
 
 
+
+
 fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf8');
 
+
+Bench =Benchmark
 
 if(Bench==1){
 
@@ -1829,18 +1841,35 @@ var homePath2 = home
 document.getElementById("selectTemporaryConversionFolder").checked = false;
 document.getElementById("sourcePath").value = homePath2 + "/HBBatchBeast/Bench/Input"
 document.getElementById("destinationPath").value = homePath2 + "/HBBatchBeast/Bench/Output"
+
+document.getElementById("handBrakeMode").checked = true;
+document.getElementById("FFmpegMode").checked = false;
+
+
 document.getElementById("selectStandardPreset").checked = true;
-document.getElementById("selectCustomPreset").checked = true;
+document.getElementById("selectCustomPreset").checked = false;
 document.getElementById("scanOnOff").checked = false;
 document.getElementById("dailyRunTimeOnOff").checked = false;
 document.getElementById("deleteSourceFiles").checked = false;
 document.getElementById("includedFileTypes").value = "mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,"
+
+document.getElementById("minimumFileSizeOnOff").checked = false;
+document.getElementById("maximumFileSizeOnOff").checked = false;
+
+
 document.getElementById("titleWordFilter").value = ""
 document.getElementById("includePropertyFileFilter").value = ""
 document.getElementById("excludePropertyFileFilter").value = ""
 document.getElementById("copyFilteredFiles").checked = false;
+
+document.getElementById("deleteSourceFiles").checked = false;
+
+
 document.getElementById("replaceOriginalFile").checked = false;
 document.getElementById("replaceOriginalFileAlways").checked = false;
+
+document.getElementById("copySRTFiles").checked = false;
+
 document.getElementById("autoCreateFolders").checked = true;
 document.getElementById("customBatPath").value = "";
 
@@ -2925,7 +2954,7 @@ document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + mes
                 + "<th class=\"headcol\">Queue no.</th>"
                 + "<th class=\"headcol\">Preset</th>"
                 + "<th class=\"headcol\">Worker</th>"
-                + "<th class=\"headcol\">FFPROBE</th>"
+                + "<th class=\"headcol\">FFprobe</th>"
                 + "<th class=\"headcol\">Status</th>"
                 + "<th class=\"headcol\">Process?</th>"
                 + "<th class=\"headcol\">Finish time</th>"
@@ -3084,17 +3113,15 @@ updateGraph('initialisation');
 for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
 
 
-workers.push(childProcess.fork(path.join(__dirname, workerPath ),[], { silent: true }));
-
-
-//  workers.push(childProcess.fork(path.join(__dirname, workerPath)));
+//workers.push(childProcess.fork(path.join(__dirname, workerPath ),[], { silent: true }));
+ workers.push(childProcess.fork(path.join(__dirname, workerPath)));
 
 
 
-workers[i - 1].stdout.on('data', function(data) {
-//console.log('stdout: ' + data);
-//Here is where the output goes
-});
+// workers[i - 1].stdout.on('data', function(data) {
+// //console.log('stdout: ' + data);
+// //Here is where the output goes
+// });
 
 
 
@@ -3140,6 +3167,8 @@ console.log(globalQueueNumberManager)
 if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
 
      var messageOut = [
+
+     // need to update continue Queue function
          "queueNumber",
          globalQueueNumberManager,
          skipOrCopyArray[globalQueueNumberManager],
@@ -3686,7 +3715,7 @@ if(includePropertyFileFilterVar.length != 0){
 
 
             if (mode == "scanandconvert" || mode == "healthCheck") {
-                var endDate = new Date();
+                 endDate = new Date();
                 var seconds2 = (endDate.getTime() - startDate.getTime()) / 1000;
 
                 var time = Math.round(seconds2);
@@ -3781,6 +3810,20 @@ if(includePropertyFileFilterVar.length != 0){
 
 
             function AllComplete() {
+
+
+
+      
+
+
+
+
+
+
+
+
+
+
 
                 //push conversion queue to output table
 
@@ -3941,7 +3984,60 @@ sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
                 fs.appendFileSync(homePath + "/HBBatchBeast/Logs/Scans.txt", "Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + convertedFiles1 + "-------Preset:" + preset + ". \r\n", 'utf8');
                 document.getElementById("sessionConversions").style.display = 'block';
                 document.getElementById("endTimeDiv").innerHTML = "<p>End time: " + getTimeNow() + "<\p>";
-                updateInfo = 0;
+               
+               
+                   
+               
+                    if(Bench == 1){
+
+            
+
+
+                endDate = new Date();
+                var seconds2 = (endDate.getTime() - startDate.getTime()) / 1000;
+               // var time = Math.round(seconds2);
+
+
+
+                //
+                var today = new Date();
+                var dd = today.getDate();
+                var mm = today.getMonth() + 1;
+                var yyyy = today.getFullYear();
+                if (dd < 10) {
+                    dd = '0' + dd
+                }
+                if (mm < 10) {
+                    mm = '0' + mm
+                }
+                today = dd + '/' + mm + '/' + yyyy;
+                today2 = dd + '-' + mm + '-' + yyyy;
+
+                var d = new Date(),
+                    h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
+                    m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+                s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
+                timenow = h + '-' + m + '-' + s;
+
+//os
+ 
+
+                
+                    }
+
+
+                    Bench =0
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+                    updateInfo = 0;
                 sourceQueueArray = [];
                 AllCompleted = 1;
                 clearInterval(windowRefresh);
@@ -4511,9 +4607,33 @@ alert("All worker processes have been stopped.")
 
   if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
 var messageOut = [
-    "queueNumber",
-    globalQueueNumberManager,
-    skipOrCopyArray[globalQueueNumberManager],
+
+//Make sure same normal queue ouput message
+        "queueNumber",
+         globalQueueNumberManager,
+         skipOrCopyArray[globalQueueNumberManager],
+         document.getElementById("copyFilteredFiles").checked,
+         document.getElementById("replaceOriginalFile").checked,
+         document.getElementById("moveCorruptFileOnOff").checked,
+         document.getElementById("corruptDestinationPath").value,
+         mode,
+         document.getElementById("runPriority").checked,
+         document.getElementById("tableQueueNumber"+(globalQueueNumberManager+1)).checked,
+         document.getElementById("includePropertyFileFilter").value+"",
+        document.getElementById("excludePropertyFileFilter").value+"",
+        document.getElementById("replaceOriginalFileAlways").checked,
+
+        document.getElementById("includeAnyFilesWithProperties").checked,
+        document.getElementById("includeAllFilesWithProperties").checked,
+        document.getElementById("excludeAnyFilesWithProperties").checked,
+        document.getElementById("excludeAllFilesWithProperties").checked,
+        document.getElementById("handBrakeMode").checked,
+        document.getElementById("FFmpegMode").checked,
+
+
+
+
+
              ];
 
     globalQueueNumberManager++;
@@ -4560,21 +4680,179 @@ workers[i].send(messageOut);
 
 
 
+
+    var benchFileProperties =[
+
+"index: '0'", 
+"codec_name: 'h264'", 
+"codec_long_name: 'H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10'", 
+"profile: 'Main'", 
+"codec_type: 'video'", 
+"codec_time_base: '1/50'", 
+"codec_tag_string: 'avc1'", 
+"codec_tag: '0x31637661'", 
+"width: '1280'", 
+"height: '720'", 
+"coded_width: '1280'", 
+"coded_height: '720'", 
+"has_b_frames: '0'", 
+"sample_aspect_ratio: '1:1'", 
+"display_aspect_ratio: '16:9'", 
+"pix_fmt: 'yuv420p'", 
+"level: '31'", 
+"chroma_location: 'left'", 
+"refs: '1'", 
+"is_avc: 'true'", 
+"nal_length_size: '4'", 
+"r_frame_rate: '25/1'", 
+"avg_frame_rate: '25/1'", 
+"time_base: '1/12800'", 
+"start_pts: '0'", 
+"start_time: '0.000000'", 
+"duration_ts: '67584'", 
+"duration: '5.280000'", 
+"bit_rate: '1205959'", 
+"bits_per_raw_sample: '8'", 
+"nb_frames: '132'", 
+"disposition: '[object Object]'", 
+"tags: '[object Object]'", 
+"index: '1'", 
+"codec_name: 'aac'", 
+"codec_long_name: 'AAC (Advanced Audio Coding)'", 
+"profile: 'LC'", 
+"codec_type: 'audio'", 
+"codec_time_base: '1/48000'", 
+"codec_tag_string: 'mp4a'", 
+"codec_tag: '0x6134706d'", 
+"sample_fmt: 'fltp'", 
+"sample_rate: '48000'", 
+"channels: '6'", 
+"channel_layout: '5.1'", 
+"bits_per_sample: '0'", 
+"r_frame_rate: '0/0'", 
+"avg_frame_rate: '0/0'", 
+"time_base: '1/48000'", 
+"start_pts: '0'", 
+"start_time: '0.000000'", 
+"duration_ts: '254976'", 
+"duration: '5.312000'", 
+"bit_rate: '384828'", 
+"max_bit_rate: '400392'", 
+"nb_frames: '249'", 
+"disposition: '[object Object]'", 
+"tags: '[object Object]'",
+
+    ]
+
+
+
     function verifyBenchFiles(){
 
+        var home = require("os").homedir();
+    if (process.platform == 'win32' || process.platform == 'linux') {
+        var homePath = "."
+    }
+    if (process.platform == 'darwin') {
+        var homePath = home
+    }
 
+var fs = require('fs');
+const download = require('download');
+
+        cleanupFiles()     
+
+  var ffprobe = require('ffprobe'),
+      ffprobeStatic = require('ffprobe-static');
+  var path = require("path");
+  var ffprobeStaticPath = ''
+
+if(process.env.NODE_ENV == 'production'){
+ffprobeStaticPath = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
+}else{ffprobeStaticPath = require('ffprobe-static').path}
+
+if (fs.existsSync(homePath + "/HBBatchBeast/Bench/Input/Test1.mp4")) {        
+
+    var fileObject 
+
+ffprobe(homePath + "/HBBatchBeast/Bench/Input/Test1.mp4", { path: ffprobeStaticPath }, function (err, info) {
+if (err){
+ console.log("FFprobe encountered an error while trying to read Test1.mp4")
+
+}
+fileObject  = info
+
+ FFprobeDone()
+
+
+});
+
+function FFprobeDone(){
+    var redownloadFilesVar = false
+
+    try{
+var k =0
+for (var i = 0; i < fileObject.streams.length; i++) {
+      Object.keys(fileObject.streams[i]).forEach(function(key) {
         
+          if(   benchFileProperties[k]    != key+": '"+fileObject.streams[i][key]+"'" ){
+               redownloadFilesVar = true
 
-        if (!fs.existsSync(homePath + "/HBBatchBeast/Bench/Input/Test1.mp4")) {
-
-
-
-
-           
+          }
+          k++
 
 
+          });
+      }
+      
+    }catch(err){
+        console.log("FFprobe encountered an error while trying to read Test1.mp4")
+        redownloadFilesVar = true
+    }
 
-        }
+if(redownloadFilesVar == true){
+
+console.log("Test1.mp4 does not match template properties. Redownloading files.")
+redownloadFiles()
+
+}else{
+console.log("Test1.mp4 matches template properties. Copying files.")
+
+copyFiles()
+}
+    
+}
+
+
+
+
+}else{
+ 
+    console.log("Test1.mp4 does not exist.Redownloading files.")
+    redownloadFiles()
+}
+
+
+
+
+
+
+
+function redownloadFiles(){
+
+
+download('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4', homePath + "/HBBatchBeast/Bench/Input/").then(() => {
+ //   download('http://downloads.4ksamples.com/videos/sample-Elysium.2013.2160p.mkv', homePath + "/HBBatchBeast/Bench/Input/").then(() => {
+    
+
+    console.log('done!');
+fs.renameSync(homePath + "/HBBatchBeast/Bench/Input/big_buck_bunny_720p_1mb.mp4", homePath + "/HBBatchBeast/Bench/Input/Test1.mp4")
+
+console.log("Files downloaded. Now copying.")
+
+copyFiles()
+});
+}
+
 
 
 
@@ -4584,6 +4862,28 @@ workers[i].send(messageOut);
 
 
     }
+
+
+    
+function copyFiles(){
+fs.copyFileSync(homePath + "/HBBatchBeast/Bench/Input/Test1.mp4",homePath + "/HBBatchBeast/Bench/Input/Test2.mp4");
+fs.copyFileSync(homePath + "/HBBatchBeast/Bench/Input/Test1.mp4",homePath + "/HBBatchBeast/Bench/Input/Test3.mp4");
+fs.copyFileSync(homePath + "/HBBatchBeast/Bench/Input/Test1.mp4",homePath + "/HBBatchBeast/Bench/Input/Test4.mp4");
+convertFiles("scanandconvert",1)  
+}
+
+
+
+function cleanupFiles(){
+if (fs.existsSync(homePath + "/HBBatchBeast/Bench/Input/Test2.mp4")) {fs.unlinkSync(homePath + "/HBBatchBeast/Bench/Input/Test2.mp4")}
+if (fs.existsSync(homePath + "/HBBatchBeast/Bench/Input/Test3.mp4")) {fs.unlinkSync(homePath + "/HBBatchBeast/Bench/Input/Test3.mp4")} 
+if (fs.existsSync(homePath + "/HBBatchBeast/Bench/Input/Test4.mp4")) {fs.unlinkSync(homePath + "/HBBatchBeast/Bench/Input/Test4.mp4")}     
+
+try{fs.unlinkSync(homePath + "/HBBatchBeast/Bench/Output/Test1.mp4")}catch(err){}
+try{fs.unlinkSync(homePath + "/HBBatchBeast/Bench/Output/Test2.mp4")}catch(err){}
+try{fs.unlinkSync(homePath + "/HBBatchBeast/Bench/Output/Test3.mp4")}catch(err){}
+try{fs.unlinkSync(homePath + "/HBBatchBeast/Bench/Output/Test4.mp4")}catch(err){}
+}
 
 
     function selectAllItems(){
@@ -4650,7 +4950,6 @@ for (i = 0; i < tabcontent.length; i++) {
 {
   background: rgba(0, 0, 0, 0.1);
 }
-
 ::-webkit-scrollbar-thumb
 {
   background: #66ccff;
@@ -5997,7 +6296,7 @@ margin-left: 1px;
                         <input type="button" class="HaveAGitGat" onclick="openURL('https://github.com/HaveAGitGat/HBBatchBeast')" value="An application by HaveAGitGat">
 
 
-                        <input type='button' class="button2" value='Benchmark' onclick='convertFiles("scanandconvert",1)' style="display: none;" />
+                        <input type='button' class="button2" value='Benchmark' onclick='verifyBenchFiles()' style="display: none;" />
                         <p ><font color="#66ccff">Contact: HBBatchBeast@gmail.com</font></p>
                     </center>    
 
@@ -6128,7 +6427,7 @@ margin-left: 1px;
 
                         <th class="headcol">Preset</th>
 
-                        <th class="headcol">FFPROBE</th>
+                        <th class="headcol">FFprobe</th>
 
                         <th class="headcol">Status</th>
                         <th class="headcol">Finish time</th>
