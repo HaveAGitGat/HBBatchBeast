@@ -6,7 +6,7 @@
     "main": "main.js",
     "scripts": {
         "start": "electron .",
-        "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds --darwinDarkModeSupport=true  --asar.unpackDir=node_modules",
+        "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds --darwinDarkModeSupport=true  --asar.unpackDir='{node_modules/ffprobe-static,node_modules/@ffmpeg-installer}'",
         "package-win": "electron-packager . hbbatchbeast --overwrite  --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"HBBatchBeast\" --asar.unpackDir={node_modules/ffprobe-static,node_modules/@ffmpeg-installer}",
         "package-linux": "electron-packager . hbbatchbeast --overwrite --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds  --asar.unpackDir={node_modules/ffprobe-static,node_modules/@ffmpeg-installer}",
         "create-installer-mac": "electron-installer-dmg ./release-builds/hbbatchbeast-darwin-x64/hbbatchbeast.app hbbatchbeast --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns ",
@@ -19,6 +19,7 @@
         "@ffmpeg-installer/ffmpeg": "^1.0.17",
         "async": "^2.6.2",
         "bcrypt": "^3.0.6",
+        "download": "^7.1.0",
         "emailjs": "^2.2.0",
         "ffmpeg": "0.0.4",
         "ffmpeg-probe": "^1.0.6",
@@ -32,6 +33,7 @@
         "node-ffprobe": "^1.2.2",
         "node-localstorage": "^1.3.1",
         "opener": "^1.5.1",
+        "request": "^2.88.0",
         "shelljs": "^0.8.3",
         "shx": "^0.3.2",
         "tree-kill": "^1.2.1"
@@ -39,7 +41,7 @@
     "devDependencies": {
         "electron": "^3.1.8",
         "electron-installer-dmg": "^2.0.0",
-        "electron-packager": "^12.2.0",
+        "electron-packager": "^13.1.1",
         "electron-winstaller": "^2.7.0"
     }
 }
