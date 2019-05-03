@@ -505,6 +505,7 @@ if (mode == "healthCheck") {
 
 
 var presetSplit
+presetSplit = preset.split(',')
 
 var workerCommand="";
 
@@ -517,8 +518,7 @@ if(handBrakeMode==true){
 
 }else if(FFmpegMode==true){
 
-    presetSplit = preset.split(',')
- ;
+
   // workerCommand =ffmpegPath + " -i \"" + currentSourceLine + "\" "+preset+" \"" + currentDestinationLine + "\" " ;
 
   workerCommand =ffmpegPath + " "+presetSplit[0]+" -i \"" + currentSourceLine + "\" "+presetSplit[1]+" \"" + currentDestinationLine + "\" " 
