@@ -453,12 +453,12 @@ actionComplete=1;
 }
 }
 
-process.send(["here1",0]);
+
 
 var path = require("path");
 
 
-process.send(["here1",0]);
+
 
 if(process.env.NODE_ENV == 'production'){
 
@@ -492,7 +492,7 @@ var ffmpegPath = (path.join(__dirname, '\\node_modules\\@ffmpeg-installer\\win32
 
 //var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
 
-process.send(["here2",0]);
+
 
 
 
@@ -504,7 +504,7 @@ if (mode == "healthCheck") {
 
 
 
-
+var presetSplit
 
 var workerCommand="";
 
@@ -517,8 +517,11 @@ if(handBrakeMode==true){
 
 }else if(FFmpegMode==true){
 
-    workerCommand =ffmpegPath + " -i \"" + currentSourceLine + "\" "+preset+" \"" + currentDestinationLine + "\" " ;
+    presetSplit = preset.split(',')
+ ;
+  // workerCommand =ffmpegPath + " -i \"" + currentSourceLine + "\" "+preset+" \"" + currentDestinationLine + "\" " ;
 
+  workerCommand =ffmpegPath + " "+presetSplit[0]+"-i \"" + currentSourceLine + "\" "+presetSplit[1]+" \"" + currentDestinationLine + "\" " 
 
 }
     }
@@ -534,7 +537,9 @@ if(handBrakeMode==true){
 
 }else if(FFmpegMode==true){
 
-    workerCommand =ffmpegPath + " -i \"" + currentSourceLine + "\" "+preset+" \"" + currentDestinationLine + "\" " ;
+  //  workerCommand =ffmpegPath + " -i '" + currentSourceLine + "' "+preset+" '" + currentDestinationLine + "' " ;
+    
+    workerCommand =ffmpegPath + " "+presetSplit[0]+"-i '" + currentSourceLine + "' "+presetSplit[1]+" '" + currentDestinationLine + "' " 
 
 }
 
@@ -560,7 +565,11 @@ if(handBrakeMode==true){
  if(handBrakeMode==true){
 workerCommand ="/usr/local/bin/HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
 }else if(FFmpegMode==true){
-workerCommand =ffmpegPath + " -i \"" + currentSourceLine + "\" "+preset+" \"" + currentDestinationLine + "\" " ;
+
+
+    //workerCommand =ffmpegPath + " -i '" + currentSourceLine + "' "+preset+" '" + currentDestinationLine + "' " ;
+    
+    workerCommand =ffmpegPath + " "+presetSplit[0]+"-i '" + currentSourceLine + "' "+presetSplit[1]+" '" + currentDestinationLine + "' " 
 }
 
 
@@ -600,10 +609,7 @@ workerCommand =ffmpegPath + " -i \"" + currentSourceLine + "\" "+preset+" \"" + 
  ////
 
 
-             var infoArray = [
- "processFile",                
- workerCommand
- ];
+
 
 
             var fs = require('fs');
@@ -611,6 +617,8 @@ workerCommand =ffmpegPath + " -i \"" + currentSourceLine + "\" "+preset+" \"" + 
            
 
             var errorLogFull =""
+            errorLogFull +="Command: \n\n"
+            errorLogFull +=workerCommand +"\n\n"
 
 
             var path = require("path");
@@ -787,7 +795,8 @@ function endCyle(){
 
 }else{
 
-
+  
+      
   
 
 
@@ -805,12 +814,13 @@ function endCyle(){
 
     infoExtractModule.on('message', function (message) {
 
+        
    
        if (message[0] == "fileInfo") {
 
 
 
-
+       
 
       var jsonInfo =message[1]
        
@@ -1122,7 +1132,7 @@ function endCyle(){
    
      if(processFileY == true){
 
-    
+      
         processFile();
 
 
@@ -1268,7 +1278,7 @@ function endCyle(){
 
         //
         
-        
+       
         
                     var path = require("path");
                     var childProcess = require("child_process");
@@ -1281,16 +1291,26 @@ function endCyle(){
               // var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ));
 
 
-         
+  
+
+            
+
+              var infoArray = [
+                "processFile",                
+                workerCommand
+                ];
         
         
                             shellThreadModule.send(infoArray); 
+
+                
         
                shellThreadModule.stdout.on('data', function(data) {    
                   //  console.log('stdoutWorker: ' + data);
         
         
-        
+           
+                 
         //log console output to text file
         
         var str =""+data;
@@ -1353,6 +1373,7 @@ function endCyle(){
           });
         
                shellThreadModule.stderr.on('data', function(data) {
+
                    // console.log('stderrorWorker: ' + data);
         
         var str =""+data;
@@ -1383,6 +1404,8 @@ function endCyle(){
         
         
         shellThreadModule.on('message', function (message) {
+
+      
         
         if (message.error) {
         console.error(message.error);
