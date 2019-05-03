@@ -5341,10 +5341,10 @@ color: black;
         top: 0;
 
 
- /* set right 0 if not macos */
-/* right: 0; */
+ /* set left 0 if macos */
+right: 0;
 
-        left: 0;
+        /* left: 0; */
         height: 100%;
         font-family: "Segoe MDL2 Assets";
         font-size: 10px;
@@ -5381,7 +5381,7 @@ color: black;
         /* reverse order if not macos */
 
     #window-controls #min-button {
-        grid-column: 3;
+        grid-column: 1;
     }
 
     #window-controls #max-button,
@@ -5390,15 +5390,15 @@ color: black;
     }
 
     #window-controls #close-button {
-        grid-column: 1;
+        grid-column: 3;
     }
 
     #window-title {
 
-        /* delete if not macos */
-        top: 0;
+        /* include if  macos */
+        /* top: 0;
         right: 0;
-        position: absolute;
+        position: absolute; */
        
 
 

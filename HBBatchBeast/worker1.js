@@ -521,7 +521,7 @@ if(handBrakeMode==true){
  ;
   // workerCommand =ffmpegPath + " -i \"" + currentSourceLine + "\" "+preset+" \"" + currentDestinationLine + "\" " ;
 
-  workerCommand =ffmpegPath + " "+presetSplit[0]+"-i \"" + currentSourceLine + "\" "+presetSplit[1]+" \"" + currentDestinationLine + "\" " 
+  workerCommand =ffmpegPath + " "+presetSplit[0]+" -i \"" + currentSourceLine + "\" "+presetSplit[1]+" \"" + currentDestinationLine + "\" " 
 
 }
     }
@@ -539,7 +539,7 @@ if(handBrakeMode==true){
 
   //  workerCommand =ffmpegPath + " -i '" + currentSourceLine + "' "+preset+" '" + currentDestinationLine + "' " ;
     
-    workerCommand =ffmpegPath + " "+presetSplit[0]+"-i '" + currentSourceLine + "' "+presetSplit[1]+" '" + currentDestinationLine + "' " 
+    workerCommand =ffmpegPath + " "+presetSplit[0]+" -i '" + currentSourceLine + "' "+presetSplit[1]+" '" + currentDestinationLine + "' " 
 
 }
 
@@ -569,7 +569,7 @@ workerCommand ="/usr/local/bin/HandBrakeCLI -i '" + currentSourceLine + "' -o '"
 
     //workerCommand =ffmpegPath + " -i '" + currentSourceLine + "' "+preset+" '" + currentDestinationLine + "' " ;
     
-    workerCommand =ffmpegPath + " "+presetSplit[0]+"-i '" + currentSourceLine + "' "+presetSplit[1]+" '" + currentDestinationLine + "' " 
+    workerCommand =ffmpegPath + " "+presetSplit[0]+" -i '" + currentSourceLine + "' "+presetSplit[1]+" '" + currentDestinationLine + "' " 
 }
 
 
