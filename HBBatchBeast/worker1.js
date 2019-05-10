@@ -6,9 +6,6 @@ if (__dirname.includes('.asar')) { // If dev
 
 var shell = require('shelljs');
 
-// var workerCommand = 'for p in $(pgrep ^HandBrakeCLI$); do renice -n 20 -p $p; done'
-//var workerCommand = 'for p in $(pgrep ^ffmpeg$); do renice -n 20 -p $p; done'
-
 
 
 var home = require("os").homedir();
