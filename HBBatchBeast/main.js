@@ -48,7 +48,7 @@ app.on('ready', function () {
     mainWindow = new BrowserWindow({
         width: 1400,
         height: 1000,
-        frame: false,
+       frame: false,
         title: 'HBBatchBeast'
 
 
@@ -177,13 +177,14 @@ ipcMain.on('item:ready',function(e,item){
 
 
 ipcMain.on('mediaview:ready',function(e,item){
-
-    
-
-
     mainWindow.webContents.send('mediaview:ready', "Test" );
+});
 
 
+
+
+ipcMain.on('benchstatus:ready',function(e,item){
+    mainWindow.webContents.send('benchstatus:ready',"Test");
 });
 
 
