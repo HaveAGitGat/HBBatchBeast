@@ -635,6 +635,20 @@ process.on('message', (m) => {
 
             if (itemChecked == false) {
 
+                
+
+                var message = [
+                    workerNumber,
+                    "appendRequest",
+                    homePath + "/HBBatchBeast/Logs/CommandList.txt",
+                    workerCommand+"\n",
+                    //currentSourceLine+" ConversionError\n",
+                ];
+                process.send(message);
+
+
+
+
                 var message = [
                     workerNumber,
                     "Skipped: Not selected",
