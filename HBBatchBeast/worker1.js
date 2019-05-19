@@ -203,6 +203,8 @@ var shellThreadModule;
 
 var infoExtractModule;
 
+var frameCount
+
 
 
 process.on('uncaughtException', function (err) {
@@ -327,7 +329,7 @@ process.on('message', (m) => {
 
         mode = m[7];
 
-      
+
 
         itemChecked = m[9];
 
@@ -724,7 +726,7 @@ process.on('message', (m) => {
                                 workerNumber,
                                 "deleteThisFile",
                                 globalQueueNumber,
-                                
+
                             ];
                             process.send(message);
 
@@ -834,6 +836,12 @@ process.on('message', (m) => {
 
                         //     ];
                         //     process.send(messageJSON);
+
+                        try {
+                            frameCount = jsonInfo.streams[0]["nb_frames"]
+
+
+                        } catch (err) { }
 
 
 
@@ -1206,17 +1214,17 @@ process.on('message', (m) => {
                                             workerNumber,
                                             "deleteThisFile",
                                             globalQueueNumber,
-                                            
+
                                         ];
                                         process.send(message);
-            
-            
-            
+
+
+
                                         // if (fs.existsSync(currentSourceLine)) {
-            
+
                                         //     fs.unlinkSync(currentSourceLine)
-            
-            
+
+
                                         // }
 
                                     }
@@ -1315,7 +1323,7 @@ process.on('message', (m) => {
                             shellThreadModule.send(infoArray);
 
 
-                            
+
 
 
                             shellThreadModule.stdout.on('data', function (data) {
@@ -1342,33 +1350,68 @@ process.on('message', (m) => {
 
                                 // send percentage update to GUI
 
+                                if (handBrakeMode == true) {
+
+                                    if (str.includes("%")) {
+                                        if (str.length >= 7) {
+                                            n = str.indexOf("%");
 
 
 
-                                if (str.includes("%")) {
-                                    if (str.length >= 7) {
-                                        n = str.indexOf("%");
+                                            if (n >= 6) {
+
+                                                var output = str.substring(n - 6, n + 1)
+
+                                                console.log(output)
+                                                var message = [
+                                                    workerNumber,
+                                                    "percentage",
+                                                    globalQueueNumber,
+                                                    output
+                                                ];
+                                                process.send(message);
 
 
-
-                                        if (n >= 6) {
-
-                                            var output = str.substring(n - 6, n + 1)
-
-                                            console.log(output)
-                                            var message = [
-                                                workerNumber,
-                                                "percentage",
-                                                globalQueueNumber,
-                                                output
-                                            ];
-                                            process.send(message);
-
+                                            }
 
                                         }
+                                    }
 
+
+
+                                } else if (FFmpegMode == true) {
+
+
+                                    if (str.includes("frame=")) {
+                                        if (str.length >= 6) {
+                                            n = str.indexOf("fps");
+
+                                            if (n >= 6) {
+
+                                                var output = str.substring(6, n)
+
+                                                try {
+                                                    output = ((output / frameCount) * 100).toFixed(2) + "%"
+                                                } catch (err) { }
+
+                                                console.log(output)
+                                                var message = [
+                                                    workerNumber,
+                                                    "percentage",
+                                                    globalQueueNumber,
+                                                    output
+                                                ];
+                                                process.send(message);
+
+
+                                            }
+
+                                        }
                                     }
                                 }
+
+
+
 
 
                                 if (str.includes("Exit code:")) {
@@ -1401,6 +1444,83 @@ process.on('message', (m) => {
                                 process.send(message);
 
                                 errorLogFull += data;
+
+
+
+
+                                // send percentage update to GUI
+
+                                if (handBrakeMode == true) {
+
+                                    if (str.includes("%")) {
+                                        if (str.length >= 7) {
+                                            n = str.indexOf("%");
+
+
+
+                                            if (n >= 6) {
+
+                                                var output = str.substring(n - 6, n + 1)
+
+                                                console.log(output)
+                                                var message = [
+                                                    workerNumber,
+                                                    "percentage",
+                                                    globalQueueNumber,
+                                                    output
+                                                ];
+                                                process.send(message);
+
+
+                                            }
+
+                                        }
+                                    }
+
+
+
+                                } else if (FFmpegMode == true) {
+
+                                    if (str.includes("frame=")) {
+                                        if (str.length >= 6) {
+                                            n = str.indexOf("fps");
+
+                                            if (n >= 6) {
+
+                                                var output = str.substring(6, n)
+
+                                                try {
+                                                    output = ((output / frameCount) * 100).toFixed(2) + "%"
+                                                } catch (err) { }
+
+                                                console.log(output)
+                                                var message = [
+                                                    workerNumber,
+                                                    "percentage",
+                                                    globalQueueNumber,
+                                                    output
+                                                ];
+                                                process.send(message);
+
+
+                                            }
+
+                                        }
+                                    }
+
+                                }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1941,12 +2061,12 @@ process.on('message', (m) => {
                                                 workerNumber,
                                                 "deleteThisFile",
                                                 globalQueueNumber,
-                                                
+
                                             ];
                                             process.send(message);
-                
-                
-        
+
+
+
 
                                             // // if(errorSwitch==0){
                                             // var fs = require('fs');
@@ -2010,11 +2130,11 @@ process.on('message', (m) => {
                                                             var fs = require('fs');
 
 
-                                                            errorLogFull +="\n Deleting original file: "+currentSourceLine
+                                                            errorLogFull += "\n Deleting original file: " + currentSourceLine
                                                             fs.unlinkSync(currentSourceLine)
 
 
-                                                            errorLogFull +="\n Moving new file to original folder: "+currentDestinationFinalLine+" to "+newCurrentSourceLine
+                                                            errorLogFull += "\n Moving new file to original folder: " + currentDestinationFinalLine + " to " + newCurrentSourceLine
                                                             var fs = require('fs-extra')
                                                             fs.moveSync(currentDestinationFinalLine, newCurrentSourceLine, { overwrite: true })
 
@@ -2054,7 +2174,7 @@ process.on('message', (m) => {
                                                                 "error",
                                                                 globalQueueNumber,
                                                                 preset,
-                                                                errorLogFull+"\n"+err.stack
+                                                                errorLogFull + "\n" + err.stack
                                                             ];
                                                             process.send(message);
 
@@ -2110,11 +2230,11 @@ process.on('message', (m) => {
                                                             var fs = require('fs');
 
 
-                                                            errorLogFull +="\n Deleting original file: "+currentSourceLine
+                                                            errorLogFull += "\n Deleting original file: " + currentSourceLine
                                                             fs.unlinkSync(currentSourceLine)
 
 
-                                                            errorLogFull +="\n Moving new file to original folder: "+currentDestinationLine+" to "+newCurrentSourceLine
+                                                            errorLogFull += "\n Moving new file to original folder: " + currentDestinationLine + " to " + newCurrentSourceLine
                                                             var fs = require('fs-extra')
                                                             fs.moveSync(currentDestinationLine, newCurrentSourceLine, { overwrite: true })
 
@@ -2140,7 +2260,7 @@ process.on('message', (m) => {
                                                                 "error",
                                                                 globalQueueNumber,
                                                                 preset,
-                                                                errorLogFull+"\n"+err.stack
+                                                                errorLogFull + "\n" + err.stack
                                                             ];
                                                             process.send(message);
 
