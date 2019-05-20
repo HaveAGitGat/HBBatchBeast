@@ -13,7 +13,7 @@
 <script>
 
 
-var zingchart = require("zingchart")
+    var zingchart = require("zingchart")
 
 
     //SET ENV
@@ -346,7 +346,7 @@ var zingchart = require("zingchart")
 
     var workerProgressArray = []
 
-    var deleteArray =[]
+    var deleteArray = []
 
 
 
@@ -356,7 +356,7 @@ var zingchart = require("zingchart")
 
     window.onload = function () {
 
-        
+
 
 
         document.getElementById("remoteMonitoringSpan").style.color = '#ef435d';
@@ -404,22 +404,22 @@ var zingchart = require("zingchart")
                     if (process.platform == 'win32') {
 
                         var downloadLink = Status.windowsLink
-                        
+
 
                     } else if (process.platform == 'linux') {
-                      
+
                         var downloadLink = Status.linuxLink
 
                     } else if (process.platform == 'darwin') {
                         var downloadLink = Status.macOSLink
-                       
+
                     }
 
 
-                   // 
-                   // document.getElementById("downloadID").innerHTML = "<input type=\"button\" class=\"infoButton\"  onclick=\"openURL('https://github.com/HaveAGitGat/HBBatchBeast/releases/download/" + Status.version + "/hbbatchbeast-" + systemType + "-v" + Status.version + systemFileType + "')\" value=\"Download\">"
+                    // 
+                    // document.getElementById("downloadID").innerHTML = "<input type=\"button\" class=\"infoButton\"  onclick=\"openURL('https://github.com/HaveAGitGat/HBBatchBeast/releases/download/" + Status.version + "/hbbatchbeast-" + systemType + "-v" + Status.version + systemFileType + "')\" value=\"Download\">"
 
-                   document.getElementById("downloadID").innerHTML = Status.version +" <input type=\"button\" class=\"infoButton\"  onclick=\"openURL('"+downloadLink+"')\" value=\"Download\">"
+                    document.getElementById("downloadID").innerHTML = Status.version + " <input type=\"button\" class=\"infoButton\"  onclick=\"openURL('" + downloadLink + "')\" value=\"Download\">"
                     document.getElementById("newVersionDiv").style.display = 'block';
 
                 }
@@ -1150,20 +1150,20 @@ var zingchart = require("zingchart")
         }
 
 
-                // read auto start
+        // read auto start
 
 
-                if (fs.existsSync(homePath + "/HBBatchBeast/Config/autoStart.txt")) {
+        if (fs.existsSync(homePath + "/HBBatchBeast/Config/autoStart.txt")) {
 
-var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/autoStart.txt", 'utf8');
-if (f == "1") {
-    document.getElementById("autoStart").checked = true;
-} else {
-    document.getElementById("autoStart").checked = false;
+            var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/autoStart.txt", 'utf8');
+            if (f == "1") {
+                document.getElementById("autoStart").checked = true;
+            } else {
+                document.getElementById("autoStart").checked = false;
 
-}
+            }
 
-}
+        }
 
 
         // read bat file path
@@ -1340,7 +1340,7 @@ if (f == "1") {
         }
 
 
-      
+
 
 
     }
@@ -1991,14 +1991,14 @@ if (f == "1") {
 
 
 
-               //save auto start
+        //save auto start
 
-               if (document.getElementById("autoStart").checked == true) {
+        if (document.getElementById("autoStart").checked == true) {
 
-fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoStart.txt', 1, 'utf8');
-} else {
-fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoStart.txt', 0, 'utf8');
-}
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoStart.txt', 1, 'utf8');
+        } else {
+            fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoStart.txt', 0, 'utf8');
+        }
 
 
         // save custom bat path
@@ -2092,10 +2092,10 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoStart.txt', 0, 'utf8');
             document.getElementById("selectStandardPreset").checked = true;
             document.getElementById("selectCustomPreset").checked = false;
 
-            document.getElementById("preset").selectedIndex=0
+            document.getElementById("preset").selectedIndex = 0
 
 
-            document.getElementById("container").selectedIndex=0
+            document.getElementById("container").selectedIndex = 0
 
 
             document.getElementById("scanOnOff").checked = false;
@@ -2136,12 +2136,12 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoStart.txt', 0, 'utf8');
             document.getElementById("runPriority").checked = false;
 
 
-            document.getElementById("instanceNumber").value ="4"
+            document.getElementById("instanceNumber").value = "4"
 
             document.getElementById("autoStart").checked = false;
 
 
-            
+
 
 
 
@@ -2259,7 +2259,7 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoStart.txt', 0, 'utf8');
         timeoutCounter = 0
         workerProgressArray = []
 
-        deleteArray=[];
+        deleteArray = [];
 
 
 
@@ -3949,7 +3949,7 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoStart.txt', 0, 'utf8');
             exportOther = otherCount2
 
 
-         //   apiStatusSend();
+            //   apiStatusSend();
 
 
 
@@ -4043,7 +4043,7 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoStart.txt', 0, 'utf8');
 
 
             if (document.getElementById("runPriority").checked == true) {
-            setProcessPriority();
+                setProcessPriority();
 
             }
 
@@ -4200,15 +4200,15 @@ fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoStart.txt', 0, 'utf8');
 
 
 
-for(i=0;i<deleteArray.length;i++){
+                for (i = 0; i < deleteArray.length; i++) {
 
-if (fs.existsSync(deleteArray[i])) {
+                    if (fs.existsSync(deleteArray[i])) {
 
-try{fs.unlinkSync(deleteArray[i])}catch(err){}
+                        try { fs.unlinkSync(deleteArray[i]) } catch (err) { }
 
 
-}
-}
+                    }
+                }
 
 
 
@@ -4395,78 +4395,78 @@ try{fs.unlinkSync(deleteArray[i])}catch(err){}
                     homePath2 + "/Documents/HBBatchBeast/Bench/Output/Test1.mp4"
 
 
-                    if(  fs.existsSync(homePath2 + "/Documents/HBBatchBeast/Bench/Output/Test1.mp4") &&fs.existsSync(homePath2 + "/Documents/HBBatchBeast/Bench/Output/Test2.mp4") &&fs.existsSync(homePath2 + "/Documents/HBBatchBeast/Bench/Output/Test3.mp4") &&  fs.existsSync(homePath2 + "/Documents/HBBatchBeast/Bench/Output/Test4.mp4")    ){
+                    if (fs.existsSync(homePath2 + "/Documents/HBBatchBeast/Bench/Output/Test1.mp4") && fs.existsSync(homePath2 + "/Documents/HBBatchBeast/Bench/Output/Test2.mp4") && fs.existsSync(homePath2 + "/Documents/HBBatchBeast/Bench/Output/Test3.mp4") && fs.existsSync(homePath2 + "/Documents/HBBatchBeast/Bench/Output/Test4.mp4")) {
 
                         endDate = new Date();
-                    var seconds2 = (endDate.getTime() - startDate.getTime()) / 1000;
-                    // var time = Math.round(seconds2);
+                        var seconds2 = (endDate.getTime() - startDate.getTime()) / 1000;
+                        // var time = Math.round(seconds2);
 
 
 
-                    //
-                    var today = new Date();
-                    var dd = today.getDate();
-                    var mm = today.getMonth() + 1;
-                    var yyyy = today.getFullYear();
-                    if (dd < 10) {
-                        dd = '0' + dd
-                    }
-                    if (mm < 10) {
-                        mm = '0' + mm
-                    }
-                    today = dd + '/' + mm + '/' + yyyy;
-                    today2 = dd + '-' + mm + '-' + yyyy;
+                        //
+                        var today = new Date();
+                        var dd = today.getDate();
+                        var mm = today.getMonth() + 1;
+                        var yyyy = today.getFullYear();
+                        if (dd < 10) {
+                            dd = '0' + dd
+                        }
+                        if (mm < 10) {
+                            mm = '0' + mm
+                        }
+                        today = dd + '/' + mm + '/' + yyyy;
+                        today2 = dd + '-' + mm + '-' + yyyy;
 
-                    var d = new Date(),
-                        h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
-                        m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
-                    s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
-                    timenow = h + '-' + m + '-' + s;
+                        var d = new Date(),
+                            h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
+                            m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+                        s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
+                        timenow = h + '-' + m + '-' + s;
 
-                    //os
-                    if (confirm('Benchmark completed in ' + seconds2 + ' seconds. Would you like to submit this result to HBBatchBeast.io? The following data will be sent: \n\n Processor model and clock speed  \n RAM \n Completion time \n Completion date')) {
-                        var os = require("os");
-                        var request = require('request')
-
-
-                        request.post(serverStem + 'api/', {
-                            json: {
-
-                                "ProcessorName": os.cpus()[0].model,
-                                "RAM": os.totalmem() / 1000000000,
-                                "ProcessorTime": seconds2,
-                                "ProcessorDate": today2 + "," + timenow
-                            }
-                        }, (error, res, body) => {
-                            if (error) {
-                                console.error(error)
-                                viewBench.webContents.send('benchstatus:message', "Error submitting benchmark");
-                                return
-                            }
-                            console.log(`statusCode: ${res.statusCode}`)
-                            console.log(body)
-                            viewBench.webContents.send('benchstatus:message', "Benchmark submitted");
-                        })
-
-                    }
-
-                    viewBench.webContents.send('benchstatus:message', "Cleaning up files");
-
-                    cleanupFiles()
-
-                    viewBench.webContents.send('benchstatus:message', "Finished");
-                    try {
-                        viewBench.close();
-                    } catch (err) { }
-
-                    location.reload()
-
-                    Bench = 0
+                        //os
+                        if (confirm('Benchmark completed in ' + seconds2 + ' seconds. Would you like to submit this result to HBBatchBeast.io? The following data will be sent: \n\n Processor model and clock speed  \n RAM \n Completion time \n Completion date')) {
+                            var os = require("os");
+                            var request = require('request')
 
 
+                            request.post(serverStem + 'api/', {
+                                json: {
+
+                                    "ProcessorName": os.cpus()[0].model,
+                                    "RAM": os.totalmem() / 1000000000,
+                                    "ProcessorTime": seconds2,
+                                    "ProcessorDate": today2 + "," + timenow
+                                }
+                            }, (error, res, body) => {
+                                if (error) {
+                                    console.error(error)
+                                    viewBench.webContents.send('benchstatus:message', "Error submitting benchmark");
+                                    return
+                                }
+                                console.log(`statusCode: ${res.statusCode}`)
+                                console.log(body)
+                                viewBench.webContents.send('benchstatus:message', "Benchmark submitted");
+                            })
+
+                        }
+
+                        viewBench.webContents.send('benchstatus:message', "Cleaning up files");
+
+                        cleanupFiles()
+
+                        viewBench.webContents.send('benchstatus:message', "Finished");
+                        try {
+                            viewBench.close();
+                        } catch (err) { }
+
+                        location.reload()
+
+                        Bench = 0
 
 
-                    }else{
+
+
+                    } else {
 
                         alert("Benchmark failed!");
                         location.reload()
@@ -5139,7 +5139,7 @@ try{fs.unlinkSync(deleteArray[i])}catch(err){}
 
 
 
-//big buck bunny
+    //big buck bunny
     // var benchFileProperties = [
 
     //     "index: '0'",
@@ -5208,36 +5208,36 @@ try{fs.unlinkSync(deleteArray[i])}catch(err){}
 
 
     var benchFileProperties = [
-"index: '0'", 
-"codec_name: 'hevc'", 
-"codec_long_name: 'H.265 / HEVC (High Efficiency Video Coding)'", 
-"profile: 'Main'", 
-"codec_type: 'video'", 
-"codec_time_base: '1/24'", 
-"codec_tag_string: 'hvc1'", 
-"codec_tag: '0x31637668'", 
-"width: '3840'", 
-"height: '2160'", 
-"coded_width: '3840'", 
-"coded_height: '2160'", 
-"has_b_frames: '2'", 
-"pix_fmt: 'yuv420p'", 
-"level: '180'", 
-"color_range: 'tv'", 
-"refs: '1'", 
-"r_frame_rate: '24/1'", 
-"avg_frame_rate: '24/1'", 
-"time_base: '1/24000'", 
-"start_pts: '2000'", 
-"start_time: '0.083333'", 
-"duration_ts: '240000'", 
-"duration: '10.000000'", 
-"bit_rate: '2010185'", 
-"nb_frames: '240'", 
-"disposition: '[object Object]'", 
-"tags: '[object Object]'",
+        "index: '0'",
+        "codec_name: 'hevc'",
+        "codec_long_name: 'H.265 / HEVC (High Efficiency Video Coding)'",
+        "profile: 'Main'",
+        "codec_type: 'video'",
+        "codec_time_base: '1/24'",
+        "codec_tag_string: 'hvc1'",
+        "codec_tag: '0x31637668'",
+        "width: '3840'",
+        "height: '2160'",
+        "coded_width: '3840'",
+        "coded_height: '2160'",
+        "has_b_frames: '2'",
+        "pix_fmt: 'yuv420p'",
+        "level: '180'",
+        "color_range: 'tv'",
+        "refs: '1'",
+        "r_frame_rate: '24/1'",
+        "avg_frame_rate: '24/1'",
+        "time_base: '1/24000'",
+        "start_pts: '2000'",
+        "start_time: '0.083333'",
+        "duration_ts: '240000'",
+        "duration: '10.000000'",
+        "bit_rate: '2010185'",
+        "nb_frames: '240'",
+        "disposition: '[object Object]'",
+        "tags: '[object Object]'",
 
-]
+    ]
 
 
     ipcRenderer.on('benchstatus:ready', function (e, item) {
@@ -5355,10 +5355,10 @@ try{fs.unlinkSync(deleteArray[i])}catch(err){}
         viewBench.webContents.send('benchstatus:message', "Downloading benchmark files");
 
         const download = require('download');
-       
-         download('https://s3.amazonaws.com/x265.org/video/BigBuckBunny_2000hevc.mp4', homePath2 + "/Documents/HBBatchBeast/Bench/Input/").then(() => {
-        //download('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4', homePath2 + "/Documents/HBBatchBeast/Bench/Input/").then(() => {
-         //   download('http://downloads.4ksamples.com/videos/sample-Elysium.2013.2160p.mkv', homePath2 + "/Documents/HBBatchBeast/Bench/Input/").then(() => {
+
+        download('https://s3.amazonaws.com/x265.org/video/BigBuckBunny_2000hevc.mp4', homePath2 + "/Documents/HBBatchBeast/Bench/Input/").then(() => {
+            //download('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4', homePath2 + "/Documents/HBBatchBeast/Bench/Input/").then(() => {
+            //   download('http://downloads.4ksamples.com/videos/sample-Elysium.2013.2160p.mkv', homePath2 + "/Documents/HBBatchBeast/Bench/Input/").then(() => {
             console.log('done!');
             fs.renameSync(homePath2 + "/Documents/HBBatchBeast/Bench/Input/BigBuckBunny_2000hevc.mp4", homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test1.mp4")
             console.log("Files downloaded. Now copying.")
@@ -5473,13 +5473,13 @@ try{fs.unlinkSync(deleteArray[i])}catch(err){}
 
         if (document.getElementById("remoteViewOnOFF").checked == true) {
 
-           var allWorkerPercentages="";
+            var allWorkerPercentages = "";
 
-           for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
+            for (var i = 1; i <= document.getElementById("instanceNumber").value; i++) {
 
-            try{
-            allWorkerPercentages+= "Worker " +i+": "+document.getElementById("worker" + i + "Percentage").innerHTML+"  ";
-            }catch(err){}
+                try {
+                    allWorkerPercentages += "Worker " + i + ": " + document.getElementById("worker" + i + "Percentage").innerHTML + "  ";
+                } catch (err) { }
             }
 
             var request = require('request')
@@ -5495,7 +5495,7 @@ try{fs.unlinkSync(deleteArray[i])}catch(err){}
                     "Error": exportError,
                     "Cancelled": exportCancelled,
                     "Other": exportOther,
-                    "Percentages":allWorkerPercentages,
+                    "Percentages": allWorkerPercentages,
                     "LastCompletedTime": exportLastCompletedTime
 
                 }
@@ -5542,48 +5542,48 @@ try{fs.unlinkSync(deleteArray[i])}catch(err){}
 
 
         if (process.platform == 'win32') {
-        if (document.getElementById("handBrakeMode").checked) {
+            if (document.getElementById("handBrakeMode").checked) {
 
-            var workerCommand = 'wmic process where name=\"HandBrakeCLI.exe\" CALL setpriority \"Below normal\"'
+                var workerCommand = 'wmic process where name=\"HandBrakeCLI.exe\" CALL setpriority \"Below normal\"'
 
-        } else if (document.getElementById("FFmpegMode").checked) {
-            var workerCommand = 'wmic process where name=\"ffmpeg.exe\" CALL setpriority \"Below normal\"'
+            } else if (document.getElementById("FFmpegMode").checked) {
+                var workerCommand = 'wmic process where name=\"ffmpeg.exe\" CALL setpriority \"Below normal\"'
 
+            }
         }
-    }
 
 
 
 
-    if (process.platform == 'linux') {
-        if (document.getElementById("handBrakeMode").checked) {
+        if (process.platform == 'linux') {
+            if (document.getElementById("handBrakeMode").checked) {
 
-            var workerCommand = 'for p in $(pgrep ^HandBrakeCLI$); do renice -n 20 -p $p; done'
+                var workerCommand = 'for p in $(pgrep ^HandBrakeCLI$); do renice -n 20 -p $p; done'
 
-        } else if (document.getElementById("FFmpegMode").checked) {
-            var workerCommand = 'for p in $(pgrep ^ffmpeg$); do renice -n 20 -p $p; done'
+            } else if (document.getElementById("FFmpegMode").checked) {
+                var workerCommand = 'for p in $(pgrep ^ffmpeg$); do renice -n 20 -p $p; done'
 
+            }
         }
-    }
-      
 
 
 
 
-    if (process.platform == 'darwin') {
-        if (document.getElementById("handBrakeMode").checked) {
 
-            var workerCommand = 'for p in $(pgrep ^HandBrakeCLI$); do renice -n 20 -p $p; done'
+        if (process.platform == 'darwin') {
+            if (document.getElementById("handBrakeMode").checked) {
 
-        } else if (document.getElementById("FFmpegMode").checked) {
-            var workerCommand = 'for p in $(pgrep ^ffmpeg$); do renice -n 20 -p $p; done'
+                var workerCommand = 'for p in $(pgrep ^HandBrakeCLI$); do renice -n 20 -p $p; done'
 
+            } else if (document.getElementById("FFmpegMode").checked) {
+                var workerCommand = 'for p in $(pgrep ^ffmpeg$); do renice -n 20 -p $p; done'
+
+            }
         }
-    }
-      
-        
 
-       
+
+
+
 
         priorityModule = childProcess.fork(path.join(__dirname, priorityModulePath), [], { silent: true });
 
@@ -6285,6 +6285,14 @@ try{fs.unlinkSync(deleteArray[i])}catch(err){}
 
         padding-right: 30%;
         padding-left: 30%;
+        text-align: left;
+    }
+
+
+    .para {
+
+        padding-right: 20%;
+        padding-left: 20%;
         text-align: left;
     }
 </style>
@@ -7035,7 +7043,7 @@ try{fs.unlinkSync(deleteArray[i])}catch(err){}
 
             <center>
 
-
+                    <p> This feature allows monitoring of batch conversion status using any web-browser. Useful when running servers etc.</p>
 
                 <div style="text-align: left">
                     <p>API Key:</p>
@@ -7049,6 +7057,8 @@ try{fs.unlinkSync(deleteArray[i])}catch(err){}
 
 
                 <div class="remoteTab">
+
+                 
                     <p>If enabled, the following anonymous data will be sent to HBBatchBeast.io:</p>
                     <p>API key</p>
                     <p>Current status ('Searching', 'Running', 'Finished' etc)</p>
@@ -7086,8 +7096,24 @@ try{fs.unlinkSync(deleteArray[i])}catch(err){}
 
             <center>
 
-                <p>This will download a h265 4k sample file (2.5MB) and run a benchmark using 4 HandBrake instances with preset "Very
-                    Fast 1080p30"</p>
+                <center>
+
+                    <div class="para">
+                        <p>A basic benchmarking utility built mainly to see how 16+ core processors perform using
+                            multiple HandBrake instances although it can be run on any type of processor.</p>
+
+                        <p>This will download a h265 4k sample file (2.5MB) and run a benchmark using 4 HandBrake
+                            instances with preset "Very
+                            Fast 1080p30"</p>
+
+                        <p>Results can be uploaded to hbbatchbeast.io if you choose.</p>
+
+                    </div>
+
+                    <button onclick="window.location.replace('/overallresults')" class="infoButton">Benchmark
+                        results</button>
+
+                </center>
 
                 <input type='button' class="button2" value='Benchmark' onclick='verifyBenchFiles()'
                     style="display: block;" />
