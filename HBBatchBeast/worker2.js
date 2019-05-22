@@ -45,7 +45,6 @@ process.on('message', (infoArray) => {
 
     if (infoArray[0] == "exitThread") {
 
-
         if (infoArray[1] == "itemCancelled") {
 
             var message = [
@@ -56,9 +55,7 @@ process.on('message', (infoArray) => {
 
         }
 
-
         try {
-
 
             if (process.platform == 'win32') {
                 var killCommand = 'taskkill /PID ' + shellWorker.pid + ' /T /F'

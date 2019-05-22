@@ -5,27 +5,19 @@ if (__dirname.includes('.asar')) { // If dev
 
 
 var shell = require('shelljs');
-
-
-
 var home = require("os").homedir();
+var fs = require('fs');
 
 
 if (process.platform == 'win32' || process.platform == 'linux') {
 
     var homePath = "."
-
-
 }
 
 if (process.platform == 'darwin') {
 
     var homePath = home
-
 }
-
-var fs = require('fs');
-
 
 function sleep(milliseconds) {
     var start = new Date().getTime();
@@ -43,7 +35,6 @@ function sleep(milliseconds) {
 function LogError(lineProcess) {
 
     //fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/ErrorLogs/Worker"+workerNumber+"ErrorLog.txt", lineProcess, 'utf8');   
-
     //process.send(workerNumber+",appendRequest,"+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/ErrorLogs/Worker"+workerNumber+"ErrorLog.txt"+","+ lineProcess);
 
     var message = [
@@ -61,7 +52,6 @@ function LogError(lineProcess) {
 
 function consoleLog(lineProcess) {
     //fs.appendFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Console/Worker"+workerNumber+"ConsoleLog.txt", lineProcess, 'utf8');  
-
     //process.send(workerNumber+",appendRequest,"+homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Console/Worker"+workerNumber+"ConsoleLog.txt"+","+ lineProcess);
 
     var message = [
@@ -111,11 +101,7 @@ if (fs.existsSync(homePath + "/HBBatchBeast/Config/deleteSourceFilesOnOff.txt"))
 
 }
 
-
-
 //handbrake CLI path
-
-
 if (process.platform == 'win32') {
 
     if (process.env.NODE_ENV == 'production') {
@@ -147,8 +133,6 @@ if (fs.existsSync(homePath + "/HBBatchBeast/Config/customBatPath.txt")) {
 
 }
 
-
-
 var iStreamSource = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/sourceQueue.txt", 'utf8')
 iStreamSource = iStreamSource.toString().split("\n");
 var iStreamDestination = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/destinationQueue.txt", 'utf8')
@@ -163,9 +147,6 @@ if (tempFolderSected == "1") {
     var iStreamDestinationFinal = fs.readFileSync(homePath + "/HBBatchBeast/Config/Processes/destinationFinalQueue.txt", 'utf8');
     iStreamDestinationFinal = iStreamDestinationFinal.toString().split("\n");
 }
-
-
-
 
 //Global variables
 
@@ -207,7 +188,7 @@ var frameCount
 
 
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', function(err) {
     console.error(err.stack);
 
     // var tempPath=homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt'
@@ -272,7 +253,7 @@ process.on('message', (m) => {
             }
 
 
-        } catch (err) { }
+        } catch (err) {}
 
 
     }
@@ -287,9 +268,6 @@ process.on('message', (m) => {
 
 
         //workerNumber =process.argv[2]
-
-
-
         //process.send(workerNumber+",queueRequest");
 
         var message = [
@@ -300,68 +278,35 @@ process.on('message', (m) => {
 
     }
 
-
-
-
     //workerNumber =m.substring(m.indexOf(":")+1);
-
     //if(m.charAt(0) == "q"){
 
     if (m[0] == "queueNumber") {
 
-
-
-
-
         //globalQueueNumber=m.substring(m.indexOf(":")+1);
 
         globalQueueNumber = m[1];
-
         skipOrCopy = m[2];
-
         copyOnOff = m[3];
-
         replaceOriginalFile = m[4];
-
-
         moveCorruptFileOnOff = m[5];
         corruptDestinationPath = m[6];
-
         mode = m[7];
-
-
-
         itemChecked = m[9];
-
         fileFiltersIncludeArray = m[10] + "";
         fileFiltersExcludeArray = m[11] + "";
-
         replaceOriginalFileAlways = m[12];
-
-
-
         includeAnyFilesWithProperties = m[13];
         includeAllFilesWithProperties = m[14];
         excludeAnyFilesWithProperties = m[15];
         excludeAllFilesWithProperties = m[16];
-
         handBrakeMode = m[17];
         FFmpegMode = m[18];
 
 
-
         //process.send(workerNumber+",processing,"+globalQueueNumber);
-
-
-
         var currentLineNumber = globalQueueNumber;
-
-
-
-
-
         //for (var i = 0; i <= globalQueueNumber; i++) {}
-
 
         var currentSourceLine = iStreamSource[globalQueueNumber].split(",,,");
         currentSourceLine = currentSourceLine[0];
@@ -375,29 +320,12 @@ process.on('message', (m) => {
             var currentDestinationFinalLine = iStreamDestinationFinal[globalQueueNumber];
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         if (currentLineNumber == globalQueueNumber) {
-
-
 
             var actionComplete = 0
             while (actionComplete == 0) {
 
                 try {
-
 
                     // var tempPath=homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"FileName.txt"
                     // var tempMessage=currentDestinationLine
@@ -413,11 +341,8 @@ process.on('message', (m) => {
 
                     //fs.writeFileSync(homePath+"/HBBatchBeast/Config/Processes/WorkerStatus/Worker"+workerNumber+"FileName.txt", currentDestinationLine, 'utf8');
 
-
-
                     actionComplete = 1;
-                } catch (err) {
-                }
+                } catch (err) {}
             }
 
 
@@ -431,7 +356,6 @@ process.on('message', (m) => {
                     // var tempMessage=globalQueueNumber
                     // process.send(workerNumber+",writeRequest,"+tempPath+","+tempMessage); 
 
-
                     var message = [
                         workerNumber,
                         "writeRequest",
@@ -442,8 +366,7 @@ process.on('message', (m) => {
 
 
                     actionComplete = 1;
-                } catch (err) {
-                }
+                } catch (err) {}
             }
 
 
@@ -462,48 +385,28 @@ process.on('message', (m) => {
                 if (process.platform == 'win32') {
 
                     var ffmpegPath = (path.join(__dirname, '\\node_modules\\@ffmpeg-installer\\win32-x64\\ffmpeg.exe')).replace('app.asar', 'app.asar.unpacked')
-
-
                 } else {
-
-
                     var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
-
-
                     //var ffmpegPath = (path.join(__dirname, '\\node_modules\\@ffmpeg-installer\\linux-x64/ffmpeg' )).replace('app.asar', 'app.asar.unpacked')
-
                 }
 
             } else {
-
                 var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
-
-
-
             }
 
 
             //var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
-
-
-
-
-
 
             if (mode == "healthCheck") {
                 handBrakeMode = true;
                 FFmpegMode = false;
             }
 
-
-
             var presetSplit
             presetSplit = preset.split(',')
-
             var workerCommand = "";
 
             if (process.platform == 'win32') {
-
 
                 if (handBrakeMode == true) {
 
@@ -511,9 +414,7 @@ process.on('message', (m) => {
 
                 } else if (FFmpegMode == true) {
 
-
                     // workerCommand =ffmpegPath + " -i \"" + currentSourceLine + "\" "+preset+" \"" + currentDestinationLine + "\" " ;
-
                     workerCommand = ffmpegPath + " " + presetSplit[0] + " -i \"" + currentSourceLine + "\" " + presetSplit[1] + " \"" + currentDestinationLine + "\" "
 
                 }
@@ -521,7 +422,6 @@ process.on('message', (m) => {
 
             if (process.platform == 'linux') {
                 //workerCommand ="HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
-
                 // workerCommand ='nice -n 20 HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" ' + preset;
 
                 if (handBrakeMode == true) {
@@ -531,48 +431,29 @@ process.on('message', (m) => {
                 } else if (FFmpegMode == true) {
 
                     //  workerCommand =ffmpegPath + " -i '" + currentSourceLine + "' "+preset+" '" + currentDestinationLine + "' " ;
-
                     workerCommand = ffmpegPath + " " + presetSplit[0] + " -i '" + currentSourceLine + "' " + presetSplit[1] + " '" + currentDestinationLine + "' "
 
                 }
 
-
-
-
-
-
                 //20 low priority, 0 = default = highest priority (without sudo)
-
                 //nice -n -20
-
                 //workerCommand ='HandBrakeCLI -i \"" + currentSourceLine + "\" -o \"" + currentDestinationLine + "\" ' + preset;
             }
 
 
             if (process.platform == 'darwin') {
 
-
                 //workerCommand ="/usr/local/bin/HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
-
 
                 if (handBrakeMode == true) {
                     workerCommand = "/usr/local/bin/HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
                 } else if (FFmpegMode == true) {
 
-
                     //workerCommand =ffmpegPath + " -i '" + currentSourceLine + "' "+preset+" '" + currentDestinationLine + "' " ;
 
                     workerCommand = ffmpegPath + " " + presetSplit[0] + " -i '" + currentSourceLine + "' " + presetSplit[1] + " '" + currentDestinationLine + "' "
                 }
-
-
-
             }
-
-
-
-
-
 
             var today = new Date();
             var dd = today.getDate();
@@ -594,31 +475,13 @@ process.on('message', (m) => {
             timenow = h + '-' + m + '-' + s;
 
 
-
             var errorSwitch = 0;
-
-
-
-            ////
-
-
-
-
-
             var fs = require('fs');
-
-
-
             var errorLogFull = ""
             errorLogFull += "Command: \n\n"
             errorLogFull += workerCommand + "\n\n"
-
-
             var path = require("path");
             var childProcess = require("child_process");
-
-
-
 
             // Send ipc to state shell processing is starting
             var message = [
@@ -628,26 +491,17 @@ process.on('message', (m) => {
                 "Running"
             ];
             process.send(message);
-            //
-
-
-
-
+    
             if (itemChecked == false) {
-
-                
 
                 var message = [
                     workerNumber,
                     "appendRequest",
                     homePath + "/HBBatchBeast/Logs/CommandList.txt",
-                    workerCommand+"\n",
+                    workerCommand + "\n",
                     //currentSourceLine+" ConversionError\n",
                 ];
                 process.send(message);
-
-
-
 
                 var message = [
                     workerNumber,
@@ -658,7 +512,6 @@ process.on('message', (m) => {
                 ];
                 process.send(message);
 
-
                 var f = fs.readFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
                 if (f == "1") {
 
@@ -667,34 +520,22 @@ process.on('message', (m) => {
                         "queueRequest",
                     ];
                     process.send(message);
-                } else if (f == "0") {
-                }
-
-
-
+                } else if (f == "0") {}
 
             } else if (skipOrCopy == 1) {
-
 
                 if (copyOnOff == true || currentSourceLine.includes('.srt') || currentSourceLine.includes('.SRT')) {
                     // currentSourceLine + "\" -o \"" + currentDestinationLine
                     if (tempFolderSected == "1") {
 
                         try {
-
                             var fs = require('fs');
                             fs.copyFileSync(currentSourceLine, currentDestinationFinalLine);
-
                             copySuccess();
-
                         } catch (err) {
                             copyFail();
-
-
                         }
-
                     } else {
-
                         try {
 
                             var fs = require('fs');
@@ -702,24 +543,10 @@ process.on('message', (m) => {
 
                             copySuccess();
 
-
-
-
                         } catch (err) {
 
                             copyFail();
-
                         }
-
-
-
-
-
-
-
-
-
-
                     }
 
                     function copySuccess() {
@@ -732,7 +559,6 @@ process.on('message', (m) => {
                         ];
                         process.send(message);
 
-
                         if (deleteSourceFilesOnOff == "1") {
 
 
@@ -744,18 +570,10 @@ process.on('message', (m) => {
                             ];
                             process.send(message);
 
-
-
                             // if (fs.existsSync(currentSourceLine)) {
-
                             //     fs.unlinkSync(currentSourceLine)
-
-
                             // }
                         }
-
-
-
                     }
 
 
@@ -768,7 +586,6 @@ process.on('message', (m) => {
                             errorLogFull
                         ];
                         process.send(message);
-
                     }
 
                     endCyle();
@@ -803,21 +620,13 @@ process.on('message', (m) => {
                             "queueRequest",
                         ];
                         process.send(message);
-                    } else if (f == "0") {
-                    }
-
+                    } else if (f == "0") {}
                 }
-
-
-
             } else {
 
-
-
-
-
-
-                infoExtractModule = childProcess.fork(path.join(__dirname, 'mediaAnalyser.js'), [], { silent: true });
+                infoExtractModule = childProcess.fork(path.join(__dirname, 'mediaAnalyser.js'), [], {
+                    silent: true
+                });
 
                 var extractCommand = [
                     "analyseThis",
@@ -825,19 +634,9 @@ process.on('message', (m) => {
                 ];
 
                 infoExtractModule.send(extractCommand);
-
-
-
-
-                infoExtractModule.on('message', function (message) {
-
-
+                infoExtractModule.on('message', function(message) {
 
                     if (message[0] == "fileInfo") {
-
-
-
-
 
                         var jsonInfo = message[1]
 
@@ -850,17 +649,13 @@ process.on('message', (m) => {
 
                         //     ];
                         //     process.send(messageJSON);
-
                         try {
                             frameCount = jsonInfo.streams[0]["nb_frames"]
 
 
-                        } catch (err) { }
-
-
+                        } catch (err) {}
 
                         var filterReason = "";
-
 
                         // var messageJSON = [
                         //     "fileFiltersIncludeArray",
@@ -869,18 +664,15 @@ process.on('message', (m) => {
                         //     process.send(messageJSON);
 
                         var JSONBomb = "";
-
                         if (mode == "healthCheck") {
 
                             try {
 
                                 for (var i = 0; i < jsonInfo.streams.length; i++) {
-                                    Object.keys(jsonInfo.streams[i]).forEach(function (key) {
+                                    Object.keys(jsonInfo.streams[i]).forEach(function(key) {
                                         // JSONBomb += key+": '"+jsonInfo.streams[i][key]+"' \n"
                                     });
                                 }
-
-
 
                                 var message = [
                                     workerNumber,
@@ -893,10 +685,7 @@ process.on('message', (m) => {
                                 ];
                                 process.send(message);
 
-
                             } catch (err) {
-
-
 
                                 var message = [
                                     workerNumber,
@@ -904,22 +693,11 @@ process.on('message', (m) => {
                                     globalQueueNumber,
                                     "Fail",
                                     currentSourceLine,
-
-
                                 ];
                                 process.send(message);
-
-
-
                             }
 
-
-
-
-
-
                             var processFileY = true
-
 
                         } else if (includeAnyFilesWithProperties == true || includeAllFilesWithProperties == true) {
 
@@ -929,21 +707,14 @@ process.on('message', (m) => {
                                 var validateArray = []
                                 filterReason = "Excluded, does not meet 'Include' conditions"
 
-
-
                                 //   fileFiltersIncludeArray = "codec_name: 'h264',"
 
                                 fileFiltersIncludeArray = fileFiltersIncludeArray.split(',');
 
-
                                 for (var i = 0; i < jsonInfo.streams.length; i++) {
-                                    Object.keys(jsonInfo.streams[i]).forEach(function (key) {
-
-
-
+                                    Object.keys(jsonInfo.streams[i]).forEach(function(key) {
 
                                         for (var j = 0; j < fileFiltersIncludeArray.length; j++) {
-
 
                                             // var messageJSON = [
                                             //     "jsonInfo",
@@ -953,18 +724,11 @@ process.on('message', (m) => {
                                             //     ];
                                             //     process.send(messageJSON);
 
-
-
-
-
-
-
                                             if (fileFiltersIncludeArray[j].includes(key + ": '" + jsonInfo.streams[i][key] + "'")) {
 
                                                 processFileY = true
                                                 filterReason = "Include: " + key + ": '" + jsonInfo.streams[i][key] + "' "
                                                 validateArray.push(true)
-
 
                                             }
                                         }
@@ -980,16 +744,12 @@ process.on('message', (m) => {
                                     }
                                 }
 
-
-
                                 var message = [
                                     workerNumber,
                                     "FFPROBE",
                                     globalQueueNumber,
                                     "OK",
                                     currentSourceLine,
-
-
                                 ];
                                 process.send(message);
 
@@ -1002,8 +762,6 @@ process.on('message', (m) => {
                                     globalQueueNumber,
                                     "Fail",
                                     currentSourceLine,
-
-
                                 ];
                                 process.send(message);
 
@@ -1014,18 +772,15 @@ process.on('message', (m) => {
 
                             try {
 
-
                                 var processFileY = true
-
                                 var validateArray = []
                                 //   fileFiltersExcludeArray = "codec_name: 'h264',codec_name: 'aac'"
-
                                 // codec_name: 'h264',codec_name: 'aac',channel_layout: 'stereo',codec_long_name: 'H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10'
                                 fileFiltersExcludeArray = fileFiltersExcludeArray.split(',');
 
 
                                 for (var i = 0; i < jsonInfo.streams.length; i++) {
-                                    Object.keys(jsonInfo.streams[i]).forEach(function (key) {
+                                    Object.keys(jsonInfo.streams[i]).forEach(function(key) {
 
 
                                         // var messageJSON = [
@@ -1035,7 +790,6 @@ process.on('message', (m) => {
                                         //     ];
                                         //     process.send(messageJSON);
 
-
                                         for (var j = 0; j < fileFiltersExcludeArray.length; j++) {
                                             if (fileFiltersExcludeArray[j].includes(key + ": '" + jsonInfo.streams[i][key] + "'")) {
 
@@ -1043,14 +797,11 @@ process.on('message', (m) => {
                                                 filterReason += "Exclude: " + key + ": '" + jsonInfo.streams[i][key] + "' "
                                                 validateArray.push(true)
 
-
                                             }
                                         }
                                         //   console.log(key, obj[key]);
                                     });
                                 }
-
-
 
                                 if (excludeAllFilesWithProperties == true) {
                                     if ((validateArray.length + 1) == fileFiltersExcludeArray.length) {
@@ -1060,22 +811,16 @@ process.on('message', (m) => {
                                     }
                                 }
 
-
-
                                 var message = [
                                     workerNumber,
                                     "FFPROBE",
                                     globalQueueNumber,
                                     "OK",
                                     currentSourceLine,
-
-
                                 ];
                                 process.send(message);
 
-
                             } catch (err) {
-
 
                                 var message = [
                                     workerNumber,
@@ -1083,7 +828,6 @@ process.on('message', (m) => {
                                     globalQueueNumber,
                                     "Fail",
                                     currentSourceLine,
-
 
                                 ];
                                 process.send(message);
@@ -1096,12 +840,10 @@ process.on('message', (m) => {
                             try {
 
                                 for (var i = 0; i < jsonInfo.streams.length; i++) {
-                                    Object.keys(jsonInfo.streams[i]).forEach(function (key) {
+                                    Object.keys(jsonInfo.streams[i]).forEach(function(key) {
 
                                     });
                                 }
-
-
 
                                 var message = [
                                     workerNumber,
@@ -1109,14 +851,10 @@ process.on('message', (m) => {
                                     globalQueueNumber,
                                     "OK",
                                     currentSourceLine,
-
-
                                 ];
                                 process.send(message);
 
                             } catch (err) {
-
-
                                 var message = [
                                     workerNumber,
                                     "FFPROBE",
@@ -1127,44 +865,13 @@ process.on('message', (m) => {
 
                                 ];
                                 process.send(message);
-
-
-
                             }
-
-
                             processFileY = true
-
                         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         //jsonInfo.streams[0]["codec_name"] == "h264"
-
-
                         if (processFileY == true) {
-
-
                             processFile();
-
-
-
-
-
-
                         } else {
-
                             if (copyOnOff == true) {
                                 // currentSourceLine + "\" -o \"" + currentDestinationLine
                                 if (tempFolderSected == "1") {
@@ -1188,27 +895,12 @@ process.on('message', (m) => {
 
                                         var fs = require('fs');
                                         fs.copyFileSync(currentSourceLine, currentDestinationLine);
-
                                         copySuccess();
-
-
-
 
                                     } catch (err) {
 
                                         copyFail();
-
                                     }
-
-
-
-
-
-
-
-
-
-
                                 }
 
                                 function copySuccess() {
@@ -1221,7 +913,6 @@ process.on('message', (m) => {
                                     ];
                                     process.send(message);
 
-
                                     if (deleteSourceFilesOnOff == "1") {
 
                                         var message = [
@@ -1232,21 +923,12 @@ process.on('message', (m) => {
                                         ];
                                         process.send(message);
 
-
-
                                         // if (fs.existsSync(currentSourceLine)) {
-
                                         //     fs.unlinkSync(currentSourceLine)
-
-
                                         // }
 
                                     }
-
-
-
                                 }
-
 
                                 function copyFail() {
                                     var message = [
@@ -1257,7 +939,6 @@ process.on('message', (m) => {
                                         errorLogFull
                                     ];
                                     process.send(message);
-
                                 }
 
                                 endCyle();
@@ -1272,15 +953,11 @@ process.on('message', (m) => {
                                     errorLogFull
                                 ];
                                 process.send(message);
-
-
+                                
                                 endCyle();
-
                             }
 
                             function endCyle() {
-
-
 
                                 //process.send(workerNumber+",queueRequest");
                                 var fs = require('fs');
@@ -1293,59 +970,30 @@ process.on('message', (m) => {
                                         "queueRequest",
                                     ];
                                     process.send(message);
-                                } else if (f == "0") {
-                                }
+                                } else if (f == "0") {}
 
                             }
-
-
-
-
-
-
-
-
                         }
 
                         function processFile() {
-
                             //
-
-
-
                             var path = require("path");
                             var childProcess = require("child_process");
                             var shellThreadPath = "worker2.js"
-
                             //
-
-
-                            shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath), [], { silent: true });
+                            shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath), [], {
+                                silent: true
+                            });
                             // var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ));
-
-
-
-
-
 
                             var infoArray = [
                                 "processFile",
                                 workerCommand
                             ];
 
-
                             shellThreadModule.send(infoArray);
-
-
-
-
-
-                            shellThreadModule.stdout.on('data', function (data) {
+                            shellThreadModule.stdout.on('data', function(data) {
                                 //  console.log('stdoutWorker: ' + data);
-
-
-
-
                                 //log console output to text file
 
                                 var str = "" + data;
@@ -1359,9 +1007,6 @@ process.on('message', (m) => {
                                 ];
                                 process.send(message);
 
-
-
-
                                 // send percentage update to GUI
 
                                 if (handBrakeMode == true) {
@@ -1369,8 +1014,6 @@ process.on('message', (m) => {
                                     if (str.includes("%")) {
                                         if (str.length >= 7) {
                                             n = str.indexOf("%");
-
-
 
                                             if (n >= 6) {
 
@@ -1387,14 +1030,9 @@ process.on('message', (m) => {
 
 
                                             }
-
                                         }
                                     }
-
-
-
                                 } else if (FFmpegMode == true) {
-
 
                                     if (str.includes("frame=")) {
                                         if (str.length >= 6) {
@@ -1406,7 +1044,7 @@ process.on('message', (m) => {
 
                                                 try {
                                                     output = ((output / frameCount) * 100).toFixed(2) + "%"
-                                                } catch (err) { }
+                                                } catch (err) {}
 
                                                 console.log(output)
                                                 var message = [
@@ -1419,33 +1057,21 @@ process.on('message', (m) => {
 
 
                                             }
-
                                         }
                                     }
                                 }
-
-
-
-
-
                                 if (str.includes("Exit code:")) {
-
                                     //console.log(str)
-
                                 }
-
 
                                 if (str.includes("stderr:")) {
 
-
                                 }
-
                             });
 
-                            shellThreadModule.stderr.on('data', function (data) {
+                            shellThreadModule.stderr.on('data', function(data) {
 
                                 // console.log('stderrorWorker: ' + data);
-
                                 var str = "" + data;
 
                                 var message = [
@@ -1458,10 +1084,6 @@ process.on('message', (m) => {
                                 process.send(message);
 
                                 errorLogFull += data;
-
-
-
-
                                 // send percentage update to GUI
 
                                 if (handBrakeMode == true) {
@@ -1505,7 +1127,7 @@ process.on('message', (m) => {
 
                                                 try {
                                                     output = ((output / frameCount) * 100).toFixed(2) + "%"
-                                                } catch (err) { }
+                                                } catch (err) {}
 
                                                 console.log(output)
                                                 var message = [
@@ -1527,30 +1149,18 @@ process.on('message', (m) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
                             });
 
 
 
 
-                            shellThreadModule.on("exit", function (code, ) {
+                            shellThreadModule.on("exit", function(code, ) {
                                 //  console.log('shellThreadExited:', code,);
 
                             });
 
 
-                            shellThreadModule.on('message', function (message) {
+                            shellThreadModule.on('message', function(message) {
 
 
 
@@ -1627,14 +1237,16 @@ process.on('message', (m) => {
                                                     }
 
                                                     pointer = currentSourceLine.split(stringProcessingSlash);
-                                                    filePathEnd = pointer[pointer.length - 1]   //     test.mp4
+                                                    filePathEnd = pointer[pointer.length - 1] //     test.mp4
 
 
                                                     corruptDestinationPath = corruptDestinationPath + stringProcessingSlash + filePathEnd;
 
 
                                                     var fs = require('fs-extra')
-                                                    fs.moveSync(currentSourceLine, corruptDestinationPath, { overwrite: true })
+                                                    fs.moveSync(currentSourceLine, corruptDestinationPath, {
+                                                        overwrite: true
+                                                    })
 
 
                                                 }
@@ -1655,28 +1267,7 @@ process.on('message', (m) => {
 
 
 
-
-
-
-
                                         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1704,8 +1295,7 @@ process.on('message', (m) => {
                                                 process.send(message);
 
                                                 actionComplete = 1;
-                                            } catch (err) {
-                                            }
+                                            } catch (err) {}
                                         }
 
                                         var actionComplete = 0
@@ -1728,8 +1318,7 @@ process.on('message', (m) => {
                                                 process.send(message);
 
                                                 actionComplete = 1;
-                                            } catch (err) {
-                                            }
+                                            } catch (err) {}
                                         }
 
                                         var actionComplete = 0
@@ -1752,20 +1341,8 @@ process.on('message', (m) => {
                                                 process.send(message);
 
                                                 actionComplete = 1;
-                                            } catch (err) {
-                                            }
+                                            } catch (err) {}
                                         }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1794,8 +1371,7 @@ process.on('message', (m) => {
 
 
                                                     actionComplete = 1;
-                                                } catch (err) {
-                                                }
+                                                } catch (err) {}
                                             }
 
 
@@ -1823,12 +1399,8 @@ process.on('message', (m) => {
                                                     process.send(message);
 
                                                     actionComplete = 1;
-                                                } catch (err) {
-                                                }
+                                                } catch (err) {}
                                             }
-
-
-
 
 
 
@@ -1865,15 +1437,7 @@ process.on('message', (m) => {
 
 
 
-
-
                                         // if(errorSwitch==0){
-
-
-
-
-
-
 
 
 
@@ -1898,8 +1462,7 @@ process.on('message', (m) => {
 
 
                                                 actionComplete = 1;
-                                            } catch (err) {
-                                            }
+                                            } catch (err) {}
                                         }
 
 
@@ -1923,10 +1486,8 @@ process.on('message', (m) => {
                                                 process.send(message);
 
                                                 actionComplete = 1;
-                                            } catch (err) {
-                                            }
+                                            } catch (err) {}
                                         }
-
 
 
 
@@ -1942,7 +1503,7 @@ process.on('message', (m) => {
 
 
                                             try {
-                                                require('child_process').execSync(path, function (err, stdout, stderr) {
+                                                require('child_process').execSync(path, function(err, stdout, stderr) {
                                                     if (err) {
                                                         // Ooops.
 
@@ -1954,7 +1515,7 @@ process.on('message', (m) => {
                                                     //runScan();
 
                                                 });
-                                            } catch (err) { }
+                                            } catch (err) {}
 
                                         }
 
@@ -1969,7 +1530,9 @@ process.on('message', (m) => {
                                                 // dont use fs.renameSync(currentDestinationLine, currentDestinationFinalLine)
 
                                                 var fs = require('fs-extra')
-                                                fs.moveSync(currentDestinationLine, currentDestinationFinalLine, { overwrite: true })
+                                                fs.moveSync(currentDestinationLine, currentDestinationFinalLine, {
+                                                    overwrite: true
+                                                })
 
 
 
@@ -1980,12 +1543,14 @@ process.on('message', (m) => {
                                                 try {
 
                                                     var fs = require('fs-extra')
-                                                    fs.moveSync(currentDestinationLine, currentDestinationFinalLine, { overwrite: true })
+                                                    fs.moveSync(currentDestinationLine, currentDestinationFinalLine, {
+                                                        overwrite: true
+                                                    })
 
 
 
 
-                                                } catch (err) { }
+                                                } catch (err) {}
 
 
                                             }
@@ -2016,11 +1581,8 @@ process.on('message', (m) => {
 
 
                                                     actionComplete = 1;
-                                                } catch (err) {
-                                                }
+                                                } catch (err) {}
                                             }
-
-
 
 
 
@@ -2055,10 +1617,8 @@ process.on('message', (m) => {
 
 
                                                     actionComplete = 1;
-                                                } catch (err) {
-                                                }
+                                                } catch (err) {}
                                             }
-
 
 
 
@@ -2150,7 +1710,9 @@ process.on('message', (m) => {
 
                                                             errorLogFull += "\n Moving new file to original folder: " + currentDestinationFinalLine + " to " + newCurrentSourceLine
                                                             var fs = require('fs-extra')
-                                                            fs.moveSync(currentDestinationFinalLine, newCurrentSourceLine, { overwrite: true })
+                                                            fs.moveSync(currentDestinationFinalLine, newCurrentSourceLine, {
+                                                                overwrite: true
+                                                            })
 
 
 
@@ -2250,8 +1812,9 @@ process.on('message', (m) => {
 
                                                             errorLogFull += "\n Moving new file to original folder: " + currentDestinationLine + " to " + newCurrentSourceLine
                                                             var fs = require('fs-extra')
-                                                            fs.moveSync(currentDestinationLine, newCurrentSourceLine, { overwrite: true })
-
+                                                            fs.moveSync(currentDestinationLine, newCurrentSourceLine, {
+                                                                overwrite: true
+                                                            })
 
 
 
@@ -2345,13 +1908,7 @@ process.on('message', (m) => {
 
 
 
-
                                     }
-
-
-
-
-
 
 
 
@@ -2376,12 +1933,6 @@ process.on('message', (m) => {
 
 
 
-
-
-
-
-
-
                                     /// exit finish
 
                                 }
@@ -2395,19 +1946,12 @@ process.on('message', (m) => {
 
 
 
-
-
-
                     }
 
 
                 });
 
             }
-
-
-
-
 
 
 
@@ -2452,8 +1996,7 @@ process.on('message', (m) => {
 
 
                 actionComplete = 1;
-            } catch (err) {
-            }
+            } catch (err) {}
         }
 
 
@@ -2479,8 +2022,7 @@ process.on('message', (m) => {
 
 
                 actionComplete = 1;
-            } catch (err) {
-            }
+            } catch (err) {}
         }
 
 
@@ -2492,8 +2034,6 @@ process.on('message', (m) => {
         ];
 
         process.send(message);
-
-
 
 
 
@@ -2510,6 +2050,3 @@ process.on('message', (m) => {
 
 
 });
-
-
-
