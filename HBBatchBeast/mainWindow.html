@@ -14,8 +14,6 @@
 
 
     var zingchart = require("zingchart")
-
-
     //SET ENV
     if (__dirname.includes('.asar')) { // If dev
         process.env.NODE_ENV = "production";
@@ -27,40 +25,24 @@
     }
 
 
-
-
     var home = require("os").homedir();
-
-
     if (process.platform == 'win32' || process.platform == 'linux') {
-
         var homePath = "."
-
-
     }
 
     if (process.platform == 'darwin') {
-
         var homePath = home
-
     }
 
 
 
     if (process.platform == 'win32' || process.platform == 'linux') {
-
         var homePath2 = home
-
-
     }
 
     if (process.platform == 'darwin') {
-
         var homePath2 = home
-
     }
-
-
 
     //timenow
 
@@ -73,8 +55,6 @@
         timenow = h + ':' + m + ':' + s;
 
         return timenow
-
-
     }
 
     function getDateNow() {
@@ -96,7 +76,6 @@
         mm = months[mm - 1];
         today = dd + '/' + mm + '/' + yyyy;
         today2 = dd + '-' + mm + '-' + yyyy;
-
         return today2
     }
 
@@ -128,13 +107,8 @@
     const path = require('path');
     const BrowserWindow = electron.remote.BrowserWindow;
 
-
-
     const electron2 = require('electron');
     const { ipcRenderer } = electron2;
-
-
-
 
     function createViewError() {
 
@@ -167,7 +141,6 @@
 
     }
 
-
     function createViewMediaInfo() {
 
         //create new window
@@ -186,7 +159,6 @@
             pathname: path.join(__dirname, 'viewMediaInfo.html'),
             protocol: 'file:',
             slashes: true
-
         }));
 
 
@@ -194,13 +166,11 @@
         //Garbage collection handle
         viewMedia.on('close', function () {
             viewMedia = null;
-
         });
 
 
 
     }
-
 
     function createviewBenchStatus() {
 
@@ -211,7 +181,6 @@
             height: 500,
             frame: false,
             title: 'Benchmark Status'
-
         });
 
         //Load html into window
@@ -220,7 +189,6 @@
             pathname: path.join(__dirname, 'viewBenchStatus.html'),
             protocol: 'file:',
             slashes: true
-
         }));
 
 
@@ -228,7 +196,6 @@
         //Garbage collection handle
         viewBench.on('close', function () {
             viewBench = null;
-
         });
 
 
@@ -239,45 +206,28 @@
     //Global variables
 
     var fs = require('fs');
-
     let workers = [];
-
     var timerModule = "";
-
     var viewSwitch = 0;
-
     var cp
     var globalQueueNumberManager = 0;
-
     var fileNotExistsCounter = 0;
     var totalFileFoundCounter = 0;
     var totalFileSize = 0;
-
     var inputPathArray = [];
     var outputPathArray = [];
-
     var sourceQueueArray = [];
-
     var skipOrCopyArray = [];
-
     var errorArray = [];
     var sourceQueueFileSizeArray = []
     var presetArray2 = [];
-
     var mode = "";
-
     var startDate
     var endDate
-
-
     var unConvertedFiles;
-
     var FFprobeArray = []
-
     var Bench
 
-
-    //
     var exportStatus
     var exportRemaining
     var exportSuccess
@@ -285,57 +235,28 @@
     var exportCancelled
     var exportOther
     var exportLastCompletedTime
-
     var windowRefresh = window.setInterval("runScan();", 1000);
-
-
-
-
     var updateInfo = 0;
-
     var CompletedSwitch = 1;
-
-
     var countDownOn = 0;
-
     var QueueNumber1Old
-
     var colourSwitch = 0
-
     var sessionNumber = 0;
-
-
-
-
-
     var AllCompleted = 0;
 
-
     var timerSeconds
-
     var errorCount;
-
     var successfulCount;
-
     var cancelCount;
     var otherCount;
 
-
-
     var queueView
-
     var fullErrorLogArray = [];
-
     var tempOutputQueueHTML;
-
     var workerStatusFinishedArray = [];
-
     var queueStatusPaused = 0;
-
     var timeoutCounter
-
     var workerProgressArray = []
-
     var deleteArray = []
 
 
@@ -345,9 +266,6 @@
 
 
     window.onload = function () {
-
-
-
 
         document.getElementById("remoteMonitoringSpan").style.color = '#ef435d';
 
@@ -392,17 +310,13 @@
 
 
                     if (process.platform == 'win32') {
-
                         var downloadLink = Status.windowsLink
-
-
                     } else if (process.platform == 'linux') {
 
                         var downloadLink = Status.linuxLink
 
                     } else if (process.platform == 'darwin') {
                         var downloadLink = Status.macOSLink
-
                     }
 
 
@@ -415,16 +329,6 @@
                 }
 
             })
-
-
-
-
-
-
-
-
-
-
 
 
         if (process.platform == 'win32') {
@@ -441,14 +345,11 @@
 
         //testing
         try {
-
             var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
             console.log(ffmpegPath)
         } catch (err) {
 
             console.log(err)
-
-
         }
 
 
@@ -458,10 +359,7 @@
             var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
             console.log(ffmpegPath)
         } catch (err) {
-
             console.log(err)
-
-
         }
         //
 
@@ -493,11 +391,7 @@
         //show custom bat path div if on Windows
 
         if (process.platform == 'win32') {
-
             document.getElementById("customBatPathDiv").style.display = 'block';
-
-
-
         }
 
 
@@ -513,7 +407,6 @@
         if (!fs.existsSync(homePath + "/HBBatchBeast")) {
             fs.mkdirSync(homePath + "/HBBatchBeast");
             //  alert('Directory created!')
-
         }
 
 
@@ -522,23 +415,19 @@
         if (!fs.existsSync(homePath + "/HBBatchBeast/Config")) {
             fs.mkdirSync(homePath + "/HBBatchBeast/Config");
             //  alert('Directory created!')
-
         }
 
         if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Email")) {
             fs.mkdirSync(homePath + "/HBBatchBeast/Config/Email");
-
         }
 
 
         if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes")) {
             fs.mkdirSync(homePath + "/HBBatchBeast/Config/Processes");
-
         }
 
         if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles")) {
             fs.mkdirSync(homePath + "/HBBatchBeast/Config/Processes/BatchFiles");
-
         }
 
 
@@ -551,24 +440,20 @@
 
         if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus")) {
             fs.mkdirSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus");
-
         }
 
 
         if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/Console")) {
             fs.mkdirSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/Console");
-
         }
 
         if (!fs.existsSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/ErrorLogs")) {
             fs.mkdirSync(homePath + "/HBBatchBeast/Config/Processes/WorkerStatus/ErrorLogs");
-
         }
 
 
         if (!fs.existsSync(homePath + "/HBBatchBeast/Logs")) {
             fs.mkdirSync(homePath + "/HBBatchBeast/Logs");
-
         }
 
 
@@ -600,19 +485,9 @@
         }
 
 
-
-
-
-
-
-
         //read scan interval
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/scanInterval.txt")) {
-
             document.getElementById("timer").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/scanInterval.txt", 'utf8');
-
-
-
         } else {
 
             document.getElementById("timer").value = 300;
@@ -622,9 +497,7 @@
         // read daily run time:
 
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/dailyRunTime.txt")) {
-
             document.getElementById("dailyRunTime").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/dailyRunTime.txt", 'utf8');
-
         }
 
 
@@ -635,17 +508,12 @@
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/periodicScanningOnOff.txt", 'utf8');
             if (f == "1") {
                 document.getElementById("scanOnOff").checked = true;
-
                 document.getElementById("showHideScanInterval").style.display = 'block';
                 document.getElementById("showHideDailyRunTime").style.display = 'none';
-
-
             } else {
                 document.getElementById("scanOnOff").checked = false;
                 document.getElementById("showHideScanInterval").style.display = 'none';
-
             }
-
         }
 
 
@@ -653,84 +521,56 @@
         // read daily scan on/off
 
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/dailyRunTimeOnOff.txt")) {
-
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/dailyRunTimeOnOff.txt", 'utf8');
             if (f == "1") {
                 document.getElementById("dailyRunTimeOnOff").checked = true;
                 document.getElementById("showHideScanInterval").style.display = 'none';
                 document.getElementById("showHideDailyRunTime").style.display = 'block';
-
             } else {
                 document.getElementById("dailyRunTimeOnOff").checked = false;
                 document.getElementById("showHideDailyRunTime").style.display = 'none';
-
             }
-
         }
 
 
 
 
         // read recent destination path
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/recentDestination.txt")) {
-
             document.getElementById("destinationPath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/recentDestination.txt", 'utf8');
-
-
         }
 
 
         // read recent source path
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/recentSource.txt")) {
 
             document.getElementById("sourcePath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/recentSource.txt", 'utf8');
         }
 
         //read temp destination path
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/tempDestinationPath.txt")) {
 
             document.getElementById("tempDestinationPath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/tempDestinationPath.txt", 'utf8');
-
-
         }
-
 
 
         //read corrupt file folder
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/corruptDestinationPath.txt")) {
-
             document.getElementById("corruptDestinationPath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/corruptDestinationPath.txt", 'utf8');
-
-
         }
 
         //set temp destination path on/off
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/tempDestinationOnOff.txt")) {
-
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/tempDestinationOnOff.txt", 'utf8');
-
-
             if (f == "1") {
                 document.getElementById("selectTemporaryConversionFolder").checked = true;
                 document.getElementById("tempConversionFolderDiv").style.display = 'block';
             } else {
                 document.getElementById("selectTemporaryConversionFolder").checked = false;
-
             }
-
         }
 
-
-
         // read handbrake mode
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/handBrakeMode.txt")) {
 
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/handBrakeMode.txt", 'utf8');
@@ -746,51 +586,29 @@
             }
         }
 
-
-        //
-
-
         // read ffmpeg mode
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/FFmpegMode.txt")) {
-
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/FFmpegMode.txt", 'utf8');
-
-
             if (f == "1") {
                 document.getElementById("FFmpegMode").checked = true;
-
             } else {
                 document.getElementById("FFmpegMode").checked = false;
-
             }
         }
 
-
         //read preset  and set select menu value
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/preset.txt")) {
-
             document.getElementById("preset").selectedIndex = fs.readFileSync(homePath + "/HBBatchBeast/Config/preset.txt", 'utf8');
         }
 
         // read custom preset
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/customPreset.txt")) {
-
             document.getElementById("customPresets").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/customPreset.txt", 'utf8');
-
         }
 
         //read if custom preset is on or off
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/customPresetOnOff.txt")) {
-
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/customPresetOnOff.txt", 'utf8');
-
-
             if (f == 0) {
                 document.getElementById("selectStandardPreset").checked = true;
                 document.getElementById("selectCustomPreset").checked = false;
@@ -801,49 +619,30 @@
                 document.getElementById("selectStandardPreset").checked = false;
                 document.getElementById("customPresetDiv").style.display = 'block';
                 document.getElementById("standardPresetDiv").style.display = 'none';
-
             }
-
         }
 
 
         //read container value
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/container.txt")) {
-
             document.getElementById("container").selectedIndex = fs.readFileSync(homePath + "/HBBatchBeast/Config/container.txt", 'utf8');
-
-
         }
 
 
         // read whether to delete source files or not
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/deleteSourceFilesOnOff.txt")) {
-
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/deleteSourceFilesOnOff.txt", 'utf8');
-
-
             if (f == "1") {
                 document.getElementById("deleteSourceFiles").checked = true;
-
             } else {
                 document.getElementById("deleteSourceFiles").checked = false;
-
             }
         }
 
 
         // read whether to move corrupt files into folder or not
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/moveCorruptFileOnOff.txt")) {
-
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/moveCorruptFileOnOff.txt", 'utf8');
-
-
             if (f == "1") {
                 document.getElementById("moveCorruptFileOnOff").checked = true;
 
@@ -853,126 +652,77 @@
             }
         }
 
-
-
-
         //read file types to scan for
-
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/includedFileTypes.txt")) {
-
             document.getElementById("includedFileTypes").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/includedFileTypes.txt", 'utf8');
-
-
         } else {
-
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/includedFileTypes.txt', "mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,", 'utf8');
-
             document.getElementById("includedFileTypes").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/includedFileTypes.txt", 'utf8');
-
-
         }
 
 
 
 
         // read if minimum file size limit on or off
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/minimumFileSizeOnOff.txt")) {
-
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/minimumFileSizeOnOff.txt", 'utf8');
             if (f == "1") {
                 document.getElementById("minimumFileSizeOnOff").checked = true;
             } else {
                 document.getElementById("minimumFileSizeOnOff").checked = false;
-
             }
-
         }
 
         // read if maximum file size limit on or off
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/maximumFileSizeOnOff.txt")) {
-
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/maximumFileSizeOnOff.txt", 'utf8');
             if (f == "1") {
                 document.getElementById("maximumFileSizeOnOff").checked = true;
             } else {
                 document.getElementById("maximumFileSizeOnOff").checked = false;
-
             }
-
         }
 
-
-
         // read min file size
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/minimumFileSize.txt")) {
-
             document.getElementById("minimumFileSize").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/minimumFileSize.txt", 'utf8');
-
-
         }
 
         // read max file size
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/maximumFileSize.txt")) {
-
             document.getElementById("maximumFileSize").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/maximumFileSize.txt", 'utf8');
-
-
         }
 
 
 
         // read filter out keywords
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/titleWordFilter.txt")) {
-
             document.getElementById("titleWordFilter").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/titleWordFilter.txt", 'utf8');
-
-
         }
 
 
         // read include property filter
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/includePropertyFileFilter.txt")) {
-
             document.getElementById("includePropertyFileFilter").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/includePropertyFileFilter.txt", 'utf8');
-
-
         }
 
 
         // read exclude property filter
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/excludePropertyFileFilter.txt")) {
-
             document.getElementById("excludePropertyFileFilter").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/excludePropertyFileFilter.txt", 'utf8');
-
-
         }
 
         // read include any file properties
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/includeAnyFilesWithProperties.txt")) {
-
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/includeAnyFilesWithProperties.txt", 'utf8');
             if (f == "1") {
                 document.getElementById("includeAnyFilesWithProperties").checked = true;
             } else {
                 document.getElementById("includeAnyFilesWithProperties").checked = false;
-
             }
-
         }
 
         // read include all file properties
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/includeAllFilesWithProperties.txt")) {
 
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/includeAllFilesWithProperties.txt", 'utf8');
@@ -987,7 +737,6 @@
 
 
         // read exclude any file properties
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/excludeAnyFilesWithProperties.txt")) {
 
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/excludeAnyFilesWithProperties.txt", 'utf8');
@@ -995,29 +744,21 @@
                 document.getElementById("excludeAnyFilesWithProperties").checked = true;
             } else {
                 document.getElementById("excludeAnyFilesWithProperties").checked = false;
-
             }
-
         }
 
         // read exclude all file properties
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/excludeAllFilesWithProperties.txt")) {
-
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/excludeAllFilesWithProperties.txt", 'utf8');
             if (f == "1") {
                 document.getElementById("excludeAllFilesWithProperties").checked = true;
             } else {
                 document.getElementById("excludeAllFilesWithProperties").checked = false;
-
             }
-
         }
 
 
         // read if to copy filtered files
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/copyFilteredFiles.txt")) {
 
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/copyFilteredFiles.txt", 'utf8');
@@ -1025,15 +766,11 @@
                 document.getElementById("copyFilteredFiles").checked = true;
             } else {
                 document.getElementById("copyFilteredFiles").checked = false;
-
             }
-
         }
 
 
         // read if to copy srt files
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/copySRTFiles.txt")) {
 
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/copySRTFiles.txt", 'utf8');
@@ -1043,13 +780,10 @@
                 document.getElementById("copySRTFiles").checked = false;
 
             }
-
         }
 
 
         // read if auto create folders
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/autoCreateFolders.txt")) {
 
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/autoCreateFolders.txt", 'utf8');
@@ -1057,34 +791,25 @@
                 document.getElementById("autoCreateFolders").checked = true;
             } else {
                 document.getElementById("autoCreateFolders").checked = false;
-
             }
-
         }
 
 
 
         // read if run at low priority
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/runPriority.txt")) {
-
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/runPriority.txt", 'utf8');
             if (f == "1") {
                 document.getElementById("runPriority").checked = true;
             } else {
                 document.getElementById("runPriority").checked = false;
-
             }
-
         }
 
 
 
 
         // read if to replace original file if converted file is smaller
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/replaceOriginalFile.txt")) {
 
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/replaceOriginalFile.txt", 'utf8');
@@ -1092,14 +817,10 @@
                 document.getElementById("replaceOriginalFile").checked = true;
             } else {
                 document.getElementById("replaceOriginalFile").checked = false;
-
             }
-
         }
 
         // read if to replace original file always
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/replaceOriginalFileAlways.txt")) {
 
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/replaceOriginalFileAlways.txt", 'utf8');
@@ -1107,102 +828,60 @@
                 document.getElementById("replaceOriginalFileAlways").checked = true;
             } else {
                 document.getElementById("replaceOriginalFileAlways").checked = false;
-
             }
-
         }
 
-
-
         //read number of instances 
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/instanceNumber.txt")) {
-
             document.getElementById("instanceNumber").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/instanceNumber.txt", 'utf8');
-
-
         } else {
             document.getElementById("instanceNumber").value = 4;
-
         }
 
 
         //read max queue view size  
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/queueSizeViewLimit.txt")) {
-
             document.getElementById("queueSizeViewLimit").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/queueSizeViewLimit.txt", 'utf8');
-
-
         } else {
             document.getElementById("queueSizeViewLimit").value = 1000;
 
         }
 
-
         // read auto start
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/autoStart.txt")) {
-
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/autoStart.txt", 'utf8');
             if (f == "1") {
                 document.getElementById("autoStart").checked = true;
             } else {
                 document.getElementById("autoStart").checked = false;
-
             }
-
         }
 
 
         // read bat file path
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/customBatPath.txt")) {
-
             document.getElementById("customBatPath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/customBatPath.txt", 'utf8');
-
-
         }
 
-
         //read email address
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/Email/emailAddress.txt")) {
-
             document.getElementById("emailAddress").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/Email/emailAddress.txt", 'utf8');
-
         }
 
 
         //read SMTP server
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/Email/SMTPServer.txt")) {
-
             document.getElementById("SMTPServer").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/Email/SMTPServer.txt", 'utf8');
-
         }
 
-
-
-
-
         // read apiKEY
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/apiKEY.txt")) {
             document.getElementById("apiKEY").innerHTML = fs.readFileSync(homePath + "/HBBatchBeast/Config/apiKEY.txt", 'utf8');
         } else {
             generateNewAPIKey();
         }
 
-
         // read remoteview on off
-
-
         if (fs.existsSync(homePath + "/HBBatchBeast/Config/remoteViewOnOFF.txt")) {
 
             var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/remoteViewOnOFF.txt", 'utf8');
@@ -1217,47 +896,29 @@
             }
         }
 
-
-
-
-
-
         /* read multiple lines of text file
-        
-        
         var array = fs.readFileSync('file.txt').toString().split("\n");
         for(i in array) {
-         
         }
-        
-        
         */
 
 
         //document.getElementById("timer").value= "6";
-
         if (process.platform == 'win32') {
 
             var stringProcessingSlash = "\\";
         }
-
         if (process.platform == 'linux' || process.platform == 'darwin') {
             var stringProcessingSlash = "/";
         }
 
-
         var fullPath = __dirname;
-
-
-
         //fullPath = fullPath.slice(0,fullPath.lastIndexOf('\\'));
         //fullPath = fullPath.slice(0,fullPath.lastIndexOf('\\'));
         fullPath = fullPath.slice(0, fullPath.lastIndexOf(stringProcessingSlash));
         fullPath = fullPath.slice(0, fullPath.lastIndexOf(stringProcessingSlash));
 
         var fullPath2 = fullPath + "\\HandBrakeCLI.exe"
-
-
         // if (process.platform == 'win32') {
 
         //     if (process.env.NODE_ENV == 'production') {
@@ -1292,22 +953,10 @@
 
         checkboxDelete.addEventListener('change', function () {
             if (this.checked == true) {
-
-
                 //document.getElementById("deleteItemDiv2").style.backgroundColor = '#ef435d';
-
-
                 document.getElementById("deleteSourceFilesdiv").style.color = '#ef435d';
-
-
-
-
-
-
             } else if (this.checked == false) {
-
                 document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,0.4)';
-
             }
         });
 
@@ -1315,24 +964,14 @@
         cbChange2();
 
         if (document.getElementById("deleteSourceFiles").checked == true) {
-
             document.getElementById("deleteSourceFilesdiv").style.color = '#ef435d';
         } else {
-
             document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,0.4)';
-
         }
-
 
         if (document.getElementById("autoStart").checked == true) {
             convertFiles('scanandconvert');
-
         }
-
-
-
-
-
     }
 
 
@@ -1356,7 +995,6 @@
         }
 
         if (document.getElementById("selectCustomPreset").checked == true) {
-
             document.getElementById("customPresetDiv").style.display = 'block';
         }
 
@@ -1369,13 +1007,9 @@
     function cbChange2() {
 
         if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-
             document.getElementById("tempConversionFolderDiv").style.display = 'block';
             document.getElementById("ShowHide1").style.display = 'none';
             document.getElementById("ShowHide2").style.display = 'block';
-
-
-
         } else {
             document.getElementById("tempConversionFolderDiv").style.display = 'none';
             document.getElementById("ShowHide1").style.display = 'block';
@@ -1390,7 +1024,6 @@
         if (document.getElementById("advancedSettings").style.display == 'block') {
             document.getElementById("advancedSettings").style.display = 'none';
         } else {
-
             document.getElementById("advancedSettings").style.display = 'block'
         }
         textAreaHeight()
@@ -1419,7 +1052,6 @@
         }
 
         if (document.getElementById("dailyRunTimeOnOff").checked == true) {
-
             document.getElementById("showHideDailyRunTime").style.display = 'block';
         }
 
@@ -1469,7 +1101,6 @@
 
 
         document.getElementById("standardPresetOptionDiv").style.display = 'none';
-
         document.getElementById("selectStandardPreset").checked = false
         //document.getElementById("selectCustomPreset").checked = false
 
@@ -1493,17 +1124,8 @@
         }
 
         if (document.getElementById("selectCustomPreset").checked == true) {
-
             document.getElementById("customPresetDiv").style.display = 'block';
         }
-
-
-
-
-
-
-
-
 
         textAreaHeight()
     }
@@ -1518,30 +1140,21 @@
         if (document.getElementById("deleteSourceFiles").checked == true) {
             alert(message);
         }
-
         cbChange5(obj);
-
     }
 
     var errorIndex
 
     function showAlert2(message) {
 
-
         createViewError();
-
         errorIndex = message
-
         //sleep(1000);    
-
     }
 
 
     ipcRenderer.on('item:ready', function (e, item) {
-
-
         ViewError.webContents.send('item:Error', fullErrorLogArray[errorIndex]);
-
         // /fullErrorLogArray[message]
 
     });
@@ -1553,12 +1166,9 @@
 
     ipcRenderer.on('mediaview:ready', function (e, item) {
 
-
         viewMedia.webContents.send('item:filepath', itemfilePath);
-
         itemfilePath = "";
         // /fullErrorLogArray[message]
-
     });
 
 
@@ -1566,16 +1176,10 @@
 
     function showAlert3(filepath) {
 
-
         createViewMediaInfo()
 
         //filePath=decodeURI(filepath)
-
         itemfilePath = decodeURI(filepath)
-
-
-
-
 
         //     var ffprobe = require('ffprobe'),
         //   ffprobeStatic = require('ffprobe-static');
@@ -1620,10 +1224,6 @@
 
 
         // });
-
-
-
-
     }
 
 
@@ -1637,15 +1237,6 @@
 
     function saveConfig() {
 
-
-
-
-
-
-
-
-
-
         /* var dir = homePath+'/HBBatchBeast/Config';
         
         if (!fs.existsSync(dir)){
@@ -1654,17 +1245,13 @@
         }
         */
 
-
         // save scan interval
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/scanInterval.txt', document.getElementById("timer").value, 'utf8');
 
         // save daily run time
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTime.txt', document.getElementById("dailyRunTime").value, 'utf8');
 
-
-
         //periodic scanning
-
         if (document.getElementById("scanOnOff").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/periodicScanningOnOff.txt', 1, 'utf8');
@@ -1673,9 +1260,7 @@
 
         }
 
-
         //daily scanning
-
         if (document.getElementById("dailyRunTimeOnOff").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTimeOnOff.txt', 1, 'utf8');
@@ -1684,10 +1269,7 @@
 
         }
 
-
-
         //save source destination
-
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/recentSource.txt', document.getElementById("sourcePath").value, 'utf8');
 
         //save destination path
@@ -1703,8 +1285,6 @@
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/corruptDestinationPath.txt', document.getElementById("corruptDestinationPath").value, 'utf8');
 
         //save enable/disble temporary destination
-
-
         if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/tempDestinationOnOff.txt', 1, 'utf8');
@@ -1714,7 +1294,6 @@
         }
 
         // save handbrake mode
-
         if (document.getElementById("handBrakeMode").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/handBrakeMode.txt', 1, 'utf8');
@@ -1724,7 +1303,6 @@
         }
 
         // save ffmpeg mode
-
         if (document.getElementById("FFmpegMode").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/FFmpegMode.txt', 1, 'utf8');
@@ -1738,7 +1316,6 @@
 
 
         //save custom preset enable/disable
-
         if (document.getElementById("selectStandardPreset").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/customPresetOnOff.txt', 0, 'utf8');
@@ -1749,7 +1326,6 @@
 
 
         //save if to move corrupt files into folder
-
         if (document.getElementById("moveCorruptFileOnOff").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/moveCorruptFileOnOff.txt', 1, 'utf8');
@@ -1759,10 +1335,6 @@
         }
 
 
-
-
-
-
         //save custom preset string
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/customPreset.txt', document.getElementById("customPresets").value, 'utf8');
 
@@ -1770,10 +1342,7 @@
         // save container selection
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/container.txt', document.getElementById("container").value, 'utf8');
 
-
-
         // define what preset string for conversion will be
-
         if (document.getElementById("selectStandardPreset").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/presetString.txt', "-Z \"" + document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text + "\"", 'utf8');
@@ -1781,24 +1350,17 @@
         }
 
         // define what preset string for conversion will be
-
-
         if (document.getElementById("selectCustomPreset").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/presetString.txt', document.getElementById("customPresets").value, 'utf8');
-
         }
 
 
         // save delete source files
-
-
         if (mode == "healthCheck") {
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/deleteSourceFilesOnOff.txt', 0, 'utf8');
 
         } else {
-
-
 
             if (document.getElementById("deleteSourceFiles").checked == true) {
 
@@ -1809,19 +1371,12 @@
             }
         }
 
-
-
-
-
-
         //define included file types
-
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/includedFileTypes.txt', document.getElementById("includedFileTypes").value, 'utf8');
 
 
 
         //save min file size on or off
-
         if (document.getElementById("minimumFileSizeOnOff").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/minimumFileSizeOnOff.txt', 1, 'utf8');
@@ -1831,43 +1386,32 @@
 
 
         //save max file size on or off
-
         if (document.getElementById("maximumFileSizeOnOff").checked == true) {
-
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/maximumFileSizeOnOff.txt', 1, 'utf8');
         } else {
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/maximumFileSizeOnOff.txt', 0, 'utf8');
         }
 
 
-
         //save min file size
-
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/minimumFileSize.txt', document.getElementById("minimumFileSize").value, 'utf8');
 
 
         //save max file size
-
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/maximumFileSize.txt', document.getElementById("maximumFileSize").value, 'utf8');
 
 
-
-
         //save title word filter
-
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/titleWordFilter.txt', document.getElementById("titleWordFilter").value, 'utf8');
 
         //save include property filter
-
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/includePropertyFileFilter.txt', document.getElementById("includePropertyFileFilter").value, 'utf8');
 
         //save exclude property filter
-
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludePropertyFileFilter.txt', document.getElementById("excludePropertyFileFilter").value, 'utf8');
 
 
         //save include any file properties
-
         if (document.getElementById("includeAnyFilesWithProperties").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/includeAnyFilesWithProperties.txt', 1, 'utf8');
@@ -1875,9 +1419,7 @@
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/includeAnyFilesWithProperties.txt', 0, 'utf8');
         }
 
-
         //save include all file properties
-
         if (document.getElementById("includeAllFilesWithProperties").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/includeAllFilesWithProperties.txt', 1, 'utf8');
@@ -1886,7 +1428,6 @@
         }
 
         //save exclude any file properties
-
         if (document.getElementById("excludeAnyFilesWithProperties").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludeAnyFilesWithProperties.txt', 1, 'utf8');
@@ -1896,7 +1437,6 @@
 
 
         //save exclude all file properties
-
         if (document.getElementById("excludeAllFilesWithProperties").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludeAllFilesWithProperties.txt', 1, 'utf8');
@@ -1908,7 +1448,6 @@
 
 
         //save copy filtered files or not
-
         if (document.getElementById("copyFilteredFiles").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/copyFilteredFiles.txt', 1, 'utf8');
@@ -1918,7 +1457,6 @@
 
 
         //save copy srt files
-
         if (document.getElementById("copySRTFiles").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/copySRTFiles.txt', 1, 'utf8');
@@ -1928,7 +1466,6 @@
 
 
         //save auto create folders or not
-
         if (document.getElementById("autoCreateFolders").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoCreateFolders.txt', 1, 'utf8');
@@ -1938,7 +1475,6 @@
 
 
         //save run priority
-
         if (document.getElementById("runPriority").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/runPriority.txt', 1, 'utf8');
@@ -1948,7 +1484,6 @@
 
 
         //save replace original files or not
-
         if (document.getElementById("replaceOriginalFile").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFile.txt', 1, 'utf8');
@@ -1958,7 +1493,6 @@
 
 
         //save replace original files or not
-
         if (document.getElementById("replaceOriginalFileAlways").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFileAlways.txt', 1, 'utf8');
@@ -1966,23 +1500,14 @@
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFileAlways.txt', 0, 'utf8');
         }
 
-
-
-
-
         // save number of instances to use 
-
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/instanceNumber.txt', document.getElementById("instanceNumber").value, 'utf8');
 
 
         // save max queue view size limit
-
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueSizeViewLimit.txt', document.getElementById("queueSizeViewLimit").value, 'utf8');
 
-
-
         //save auto start
-
         if (document.getElementById("autoStart").checked == true) {
 
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoStart.txt', 1, 'utf8');
@@ -1992,41 +1517,28 @@
 
 
         // save custom bat path
-
-
         fs.writeFileSync(homePath + "/HBBatchBeast/Config/customBatPath.txt", document.getElementById("customBatPath").value, 'utf8');
 
 
 
         //email address
-
         fs.writeFileSync(homePath + "/HBBatchBeast/Config/Email/emailAddress.txt", document.getElementById("emailAddress").value, 'utf8');
 
         //SMTP server
-
         fs.writeFileSync(homePath + "/HBBatchBeast/Config/Email/SMTPServer.txt", document.getElementById("SMTPServer").value, 'utf8');
 
 
         // save api key
-
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/apiKEY.txt', document.getElementById("apiKEY").innerHTML, 'utf8');
 
 
         // save remote view
-
         if (document.getElementById("remoteViewOnOFF").checked == true) {
-
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/remoteViewOnOFF.txt', 1, 'utf8');
         } else {
             fs.writeFileSync(homePath + '/HBBatchBeast/Config/remoteViewOnOFF.txt', 0, 'utf8');
 
         }
-
-
-
-
-
-
     }
 
 
@@ -2045,10 +1557,6 @@
     function convertFiles(processMode, Benchmark) {
 
         //reset queue status
-
-
-
-
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf8');
 
 
@@ -2057,16 +1565,11 @@
         if (Bench == 1) {
 
             if (process.platform == 'win32' || process.platform == 'linux') {
-
                 homePath2 = home
-
-
             }
 
             if (process.platform == 'darwin') {
-
                 homePath2 = home
-
             }
 
             document.getElementById("selectTemporaryConversionFolder").checked = false;
@@ -2130,12 +1633,6 @@
 
             document.getElementById("autoStart").checked = false;
 
-
-
-
-
-
-
         }
 
 
@@ -2143,7 +1640,6 @@
 
 
         //reset divs
-
         document.getElementById("totalFilesDiv").innerHTML = ""
         document.getElementById("buildQueueDiv").innerHTML = ""
         document.getElementById("totalUnconvertedFilesDiv").innerHTML = ""
@@ -2158,7 +1654,6 @@
 
 
         //set countdown timer
-
         timerSeconds = document.getElementById("timer").value
 
 
@@ -2180,21 +1675,10 @@
         document.getElementById("continueButtonDiv").style.display = 'none';
         document.getElementById("continueButtonGreyDiv").style.display = 'none';
 
-
-
-
         document.getElementById('healthCheckDiv').innerHTML = "";
-
-
-
-
-
 
         globalQueueNumberManager = 0;
         AllCompleted = 0;
-
-
-
 
 
         workers = [];
@@ -2250,19 +1734,6 @@
         workerProgressArray = []
 
         deleteArray = [];
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         if (process.platform == 'win32') {
@@ -4016,6 +3487,17 @@
 
         }
 
+        
+        //check if nvenc detected
+        if(document.getElementById("customPresets").value.includes("nvenc")){
+            document.getElementById("custompresetNotification").style.display = 'block';
+        }else{
+            document.getElementById("custompresetNotification").style.display = 'none';
+        }
+
+
+     
+
 
 
 
@@ -4078,7 +3560,7 @@
 
                     timeoutCounter++
 
-                    if (timeoutCounter == 120) {
+                    if (timeoutCounter == 180) {
 
                         for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
 
@@ -4124,9 +3606,6 @@
 
                 document.getElementById("myChartDiv").style.display = 'none';
             }
-
-
-
 
             if (sourceQueueArray.length == 0) {
 
@@ -4492,8 +3971,6 @@
         if (countDownOn == 1 && AllCompleted == "1") {
 
             if (mode == "scanandconvert") {
-
-
                 if (timerSeconds % 2 == 0) {
                     if (process.platform == 'win32') {
                         ipcRenderer.send('item:add', 'iconwatching');
@@ -6610,8 +6087,14 @@
 
                 </div>
 
+                <div id="custompresetNotification" style="display: none;">
+                        <p><font color="#66ccff">nvenc detected, please make sure to lower the number of HandBrakeCLI instances to 2 or below (for most graphics cards) or you may encounter errors due to not enough VRAM.</font></p>
+              </div>
+
 
                 <div class="grid-container">
+
+                  
 
                     <div class="grid-itemleft">
                         <p>Container:</p>
@@ -7105,8 +6588,7 @@
 
                     </div>
 
-                    <button onclick="window.location.replace('/overallresults')" class="infoButton">Benchmark
-                        results</button>
+            
 
                 </center>
 
