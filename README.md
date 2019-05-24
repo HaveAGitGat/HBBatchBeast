@@ -1,6 +1,8 @@
 # HBBatchBeast for HandBrake and FFmpeg/FFprobe (Windows, macOS and Linux)
 
-[![Reddit](https://img.shields.io/badge/Reddit-HBBatchBeast-FF5700.svg?style=flat-square)](https://www.reddit.com/r/HBBatchBeast/)[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=97L64UK77NTZL&source=url)
+[![Reddit](https://img.shields.io/badge/Reddit-HBBatchBeast-FF5700.svg?style=flat-square)](https://www.reddit.com/r/HBBatchBeast/)[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=97L64UK77NTZL&source=url)[![Discord](https://img.shields.io/badge/Discord-Chat-green.svg)](https://discord.gg/MSsgDqJ)
+
+
 
 ![Screenshot](https://i.imgur.com/p3MwnpI.png)
 
