@@ -3,6 +3,7 @@ Logs
 node_modules
 release-builds
 HBBatchBeast
+translations/translate.js
 test.js
 test2.js
 Dockerfile
