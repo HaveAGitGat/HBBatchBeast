@@ -102,6 +102,8 @@
     process.on('uncaughtException', function (err) {
         console.error(err.stack);
 
+        updateConsole(err.stack);
+
         fs.appendFileSync(homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt', "Main thread error: " + err.stack + "\r\n", 'utf8');
         //process.exit();
     });
@@ -293,9 +295,27 @@
 
     var workerStatusArray = []
 
+    var consoleDivListener
+
+    var consoleItemCount = 0
 
 
 
+
+function updateConsole(message){
+
+    consoleItemCount++
+
+    if(consoleItemCount >= 200){
+
+        document.getElementById('consoleDiv').removeChild(document.getElementById('consoleDiv').getElementsByTagName('p')[0]);
+        
+    }
+
+    document.getElementById("consoleDiv").innerHTML += "<p>"+"["+ getTimeNow()+"]"+ message + "</p>"
+
+    document.getElementById("consoleBar").scrollTop = document.getElementById("consoleBar").scrollHeight
+}
 
 function setLanguage(){
 
@@ -315,7 +335,7 @@ var selConf
 
     window.onload = function () {
 
-                // save strings to json
+                // save lang strings to json
                 var language_text = {}
 
 
@@ -392,6 +412,9 @@ jsonConfig = {
 }
 
 
+
+
+
     selLang = document.getElementById('language_select');
     selLang.value = jsonConfig.lang
     selLang.addEventListener("change", setLanguage);
@@ -403,7 +426,7 @@ jsonConfig = {
     selConf.addEventListener("change", setConfig);
 
 
-    //load strings from json
+    //load lang strings from json
 
     var new_language = JSON.parse(fs.readFileSync('./translations/' + selLang.value + '.json', 'utf8'))
 
@@ -1975,6 +1998,18 @@ jsonConfig = {
 
     function convertFiles(processMode, Benchmark) {
 
+
+        if(processMode == "healthCheck"){
+            updateConsole(""+"Commencing health check"+ "")
+        }
+        if(processMode == "scanandconvert"){
+            updateConsole(""+"Commencing scan and convert"+ "")
+        }
+        if(processMode == "scanonly"){
+            updateConsole(""+"Commencing scan only"+ "")
+        }
+
+
         //reset queue status
         fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', "1", 'utf8');
 
@@ -2164,7 +2199,9 @@ jsonConfig = {
             var validationSlash = "";
         }
 
-
+  
+        updateConsole(""+"Validating configuration settings"+ "")
+ 
 
         //validate config inputs
         validationSection:
@@ -2704,11 +2741,19 @@ jsonConfig = {
             }
 
 
+            updateConsole(""+"Configuration settings validated"+ "")
+           
+
+
             if (Bench == 1) {
                // saveConfig();
 
             } else {
+                updateConsole(""+"Saving configuration settings"+ "")
+   
+              
                 saveConfig();
+               
 
             }
 
@@ -2854,8 +2899,15 @@ jsonConfig = {
             var childProcess = require("child_process");
             var queueBuildModulePath = "/modules/queueBuild.js"
 
+
+            updateConsole(""+"Launching file scanner"+ "")
+
             // var queueBuildModule = childProcess.fork(path.join(__dirname, queueBuildModulePath ),[], { silent: true });
+            
             var queueBuildModule = childProcess.fork(path.join(__dirname, queueBuildModulePath));
+
+            updateConsole(""+"File scanner launched successfully"+ "")
+
 
             // queueBuildModule.stdout.on('data', function(data) {
             //         console.log('stdout: ' + data);
@@ -2864,8 +2916,12 @@ jsonConfig = {
 
             queueBuildModule.send(queueInfoBomb);
 
+            
+
             queueBuildModule.on("exit", function (code, signal, ) {
                 console.log('Child exited:', code, signal);
+ 
+                updateConsole(""+"File scanner exited"+ "")
 
             });
             //   queueBuildModule.on("error", console.error.bind(console));
@@ -2896,6 +2952,14 @@ jsonConfig = {
 
                 }
 
+                if (message[0] == "consoleMessage") {
+
+                  
+                    updateConsole(""+message[1]+ "")
+
+
+                }
+
 
 
 
@@ -2908,7 +2972,9 @@ jsonConfig = {
 
 
                 if (message[0] == "complete") {
-
+             
+                    updateConsole(""+"File scanner finished"+ "")
+                
 
                     totalFileFoundCounter = message[1];
                     sourceQueueArray = message[2];
@@ -2919,7 +2985,7 @@ jsonConfig = {
 
            
             
-
+                
                     runEndSection();
 
                 }
@@ -2933,7 +2999,7 @@ jsonConfig = {
                 }
 
                 if (message[0] == "totalFiles") {
-                    document.getElementById("totalFilesDiv").innerHTML = "<p>Total files found: " + message[1] + "<\p>";
+                    document.getElementById("totalFilesDiv").innerHTML = "<p>Files found: " + message[1] + "<\p>";
                 }
 
                 if (message[0] == "buildQueue") {
@@ -3186,6 +3252,10 @@ jsonConfig = {
 
         if (mode == "scanandconvert" || mode == "healthCheck") {
 
+          
+            updateConsole(""+"Launching worker modules"+ "")
+ 
+
             launchWorkerModules();
 
         }// end if
@@ -3262,6 +3332,9 @@ jsonConfig = {
             //workers.push(childProcess.fork(path.join(__dirname, workerPath ),[], { silent: true }));
             workers.push(childProcess.fork(path.join(__dirname, workerPath)));
 
+   
+            updateConsole(""+"Worker "+i +" launched"+ "")
+
 
 
             // workers[i - 1].stdout.on('data', function(data) {
@@ -3284,6 +3357,8 @@ jsonConfig = {
 
             workers[i - 1].on("exit", function (code, signal) {
 
+                
+
             });
             workers[i - 1].on("error", console.error.bind(console));
 
@@ -3295,7 +3370,7 @@ jsonConfig = {
             workers[i - 1].on('message', function (message) {
 
 
-                console.log("Message:" + message);
+              //  console.log("Message:" + message);
 
                 if (message[1] == "deleteThisFile") {
 
@@ -3313,6 +3388,13 @@ jsonConfig = {
                     workers[message[0] - 1].send(exitMessage);
 
                 }
+
+                
+                if (message[1] == "consoleMessage") {
+                    updateConsole("Worker "+message[0]+":"+message[2]+"");
+                }
+
+              
 
 
                 if (message[1] == "queueRequest") {
@@ -3847,6 +3929,8 @@ jsonConfig = {
     function runScan() {
 
 
+
+
         // var includePropertyFileFilterVar = document.getElementById("includePropertyFileFilter").value
         //     var excludePropertyFileFilterVar = document.getElementById("excludePropertyFileFilter").value
 
@@ -3961,6 +4045,8 @@ jsonConfig = {
 
                             if (workerProgressArray[j - 1] == document.getElementById("worker" + (j) + "Status").innerHTML) {
 
+                                updateConsole(""+"Worker " +j+ " 180 second timeout, cancelling item"+ "")
+
                                 cancelItemProcess(j)
 
                             }
@@ -4003,6 +4089,8 @@ jsonConfig = {
 
             if (sourceQueueArray.length == 0) {
 
+                updateConsole(""+"All workers complete " + "")
+
                 AllComplete();
 
             }
@@ -4022,7 +4110,7 @@ jsonConfig = {
 
 
 
-
+                    updateConsole(""+"All workers complete " + "")
 
                     AllComplete();
                 }
@@ -4044,12 +4132,24 @@ jsonConfig = {
 
 
 
-
+               
                 for (i = 0; i < deleteArray.length; i++) {
 
                     if (fs.existsSync(deleteArray[i])) {
 
-                        try { fs.unlinkSync(deleteArray[i]) } catch (err) { }
+                        try { 
+
+                            updateConsole(""+"Deleting source file:"+ deleteArray[i]+ "")
+                            
+                            fs.unlinkSync(deleteArray[i]) 
+
+                            
+                        
+                        
+                        
+                        } catch (err) {
+                            updateConsole(""+"Deleting source file failed:"+ deleteArray[i]+ "")
+                         }
 
 
                     }
@@ -4068,6 +4168,8 @@ jsonConfig = {
 
                 //push conversion queue to output table
 
+
+                updateConsole(""+"Updating output table"+"")
                 document.getElementById('sessionConversionsTable').innerHTML += tempOutputQueueHTML;
 
                 //notify
@@ -4099,6 +4201,7 @@ jsonConfig = {
 
                     }
 
+                   
                     emailAlert();
 
                 } else {
@@ -4364,6 +4467,8 @@ jsonConfig = {
                 AllCompleted = 1;
                 clearInterval(windowRefresh);
                 windowRefresh = window.setInterval("runScan();", 1000)
+
+                updateConsole(""+"Finished"+"")
             }
         }
 
@@ -4811,6 +4916,7 @@ jsonConfig = {
 
                     if (emailMode == "Test") {
                         alert("Error sending email! Please check your settings.")
+                        updateConsole(""+"Error sending email! Please check your settings."+"")
                     }
                 }
             });
@@ -4818,6 +4924,7 @@ jsonConfig = {
             if (emailMode == "Test") {
 
                 alert("Test email sent!")
+                updateConsole(""+"Test email sent!"+"")
 
             }
 
@@ -5466,6 +5573,23 @@ jsonConfig = {
 
     }
 
+
+
+        function toggleConsole() {
+
+            if (document.getElementById("consoleBar").style.height == "50%") {
+                document.getElementById("consoleBar").style.height = "5%";
+                document.getElementById("main").style.marginBottom = "0";
+
+            }else{
+                document.getElementById("consoleBar").style.height = "50%";
+            document.getElementById("main").style.marginBottom = "250px";
+
+
+            }
+
+}
+
 </script>
 
 
@@ -5492,19 +5616,6 @@ jsonConfig = {
     ::-webkit-scrollbar-thumb {
         background: #66ccff;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -6197,6 +6308,63 @@ border-radius: 5px;
 
 
 
+
+
+.consoleBarClass {
+  height: 5%;
+  width: 100%;
+  position: fixed;
+  z-index: 1;
+  bottom:0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.2s;
+  /* padding-top: 250px; */
+}
+
+.consoleBarClass a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.consoleBarClass a:hover {
+  color: #f1f1f1;
+}
+
+.consoleBarClass .closebtn {
+  position: fixed;
+  bottom: 0;
+  right: 25px;
+  font-size: 1em;
+  margin-left: 50px;
+}
+
+
+
+#main {
+  transition: margin-left .5s;
+  padding: 16px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
+}
+
+
+.consoleDivClass {
+}
+.consoleDivClass p {
+  color: white;
+  font-family:monospace;
+}
+
 </style>
 
 
@@ -6272,6 +6440,18 @@ border-radius: 5px;
                    
 
             </div>
+
+            <div id="consoleBar" class="consoleBarClass">
+            <a href="javascript:void(0)" class="closebtn" onclick="toggleConsole()">↕</a>
+            <p>Console<p>
+            <div id="consoleDiv" class="consoleDivClass"></div>
+            
+          
+                  </div>
+
+                
+                
+
 
             <center>
                 <div class="titleDiv" style="display:inline">
@@ -7021,7 +7201,7 @@ border-radius: 5px;
 
 
 
-                <input type='button' class="button2one" value='Scan only' onclick='convertFiles()' />
+                <input type='button' class="button2one" value='Scan only' onclick='convertFiles("scanonly")' />
                 <input type='button' class="button2" value='Scan and convert'
                     onclick='convertFiles("scanandconvert")' />
 
