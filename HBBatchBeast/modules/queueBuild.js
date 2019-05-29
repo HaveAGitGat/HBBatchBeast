@@ -107,7 +107,20 @@ process.on('message', (queueInfoBomb) => {
 
 
 
+
     if (queueInfoBomb[0] == "queueInfoBomb") {
+
+
+        var message = [
+            "consoleMessage",
+            "File scanner received info",
+        ];
+        process.send(message);
+    
+
+
+
+
         inputPathStemArray = queueInfoBomb[1]
         outPutPathStemArray = queueInfoBomb[2]
         outPutPathStemFinalArray = queueInfoBomb[3]
@@ -295,7 +308,7 @@ process.on('message', (queueInfoBomb) => {
 
 
 
-                            // check if min file size is reached
+                            // check if min/max file size is reached
 
                             if (mode != "healthCheck") {
 
@@ -343,6 +356,13 @@ process.on('message', (queueInfoBomb) => {
                                 inputPathArray[inputPathArrayCounter] = thisFile + "";
 
 
+                                // var message = [
+                                //     "consoleMessage",
+                                //     "Valid file found: "+thisFile+"",
+                                // ];
+                                // process.send(message);
+
+
 
 
                             
@@ -361,6 +381,12 @@ process.on('message', (queueInfoBomb) => {
                                     var message = [
                                         "totalFiles",
                                         (totalFileFoundCounter + 1),
+                                    ];
+                                    process.send(message);
+
+                                    var message = [
+                                        "consoleMessage",
+                                        "Valid files found:"+(totalFileFoundCounter + 1),
                                     ];
                                     process.send(message);
 
@@ -441,24 +467,18 @@ process.on('message', (queueInfoBomb) => {
 
 
                                 if (tempConversionFolderCheckedOnOff == true) {
-
-
-
-
                                     if (fs.existsSync(outputPathArrayFinal[inputPathArrayCounter])) {
-
-
                                     } else {
 
-
-                                        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
+                                        // var message = [
+                                        //     "consoleMessage",
+                                        //     "File does not exist: "+outputPathArrayFinal[inputPathArrayCounter] +"",
+                                        // ];
+                                        // process.send(message);
+                                       
 
                                         fileNotExistsCounter++
                                     }
-
-
-
-
                                     //ELSE if temp folder unchecked
                                 } else {
 
@@ -470,8 +490,12 @@ process.on('message', (queueInfoBomb) => {
 
                                     } else {
 
-                                        //    fs.writeFileSync(homePath + '/HBBatchBeast/Config/unconvertedFilesFound.txt', (fileNotExistsCounter + 1), 'utf8');
-
+                                       
+                                        // var message = [
+                                        //     "consoleMessage",
+                                        //     "File does not exist: "+outputPathArray[inputPathArrayCounter]+"",
+                                        // ];
+                                        // process.send(message);
 
 
                                         fileNotExistsCounter++
@@ -581,7 +605,11 @@ process.on('message', (queueInfoBomb) => {
 
 
 
-
+        var message = [
+            "consoleMessage",
+            "Building queue",
+        ];
+        process.send(message);
 
 
 
@@ -603,6 +631,12 @@ process.on('message', (queueInfoBomb) => {
                             var message = [
                                 "buildQueue",
                                 (sourceQueueArrayCounter + 1),
+                            ];
+                            process.send(message);
+
+                            var message = [
+                                "consoleMessage",
+                                "Building queue:"+(sourceQueueArrayCounter + 1),
                             ];
                             process.send(message);
 
@@ -712,6 +746,11 @@ process.on('message', (queueInfoBomb) => {
                             var message = [
                                 "buildQueue",
                                 (sourceQueueArrayCounter + 1),
+                            ];
+                            process.send(message);
+                            var message = [
+                                "consoleMessage",
+                                "Building queue:"+(sourceQueueArrayCounter + 1),
                             ];
                             process.send(message);
 
