@@ -55,18 +55,18 @@ function updateConsole(workerNumber, text) {
 
 if (process.platform == 'win32') {
 
-    var stringProcessingSlash = "\\";
+    global.stringProcessingSlash = "\\";
 }
 
 if (process.platform == 'linux' || process.platform == 'darwin') {
-    var stringProcessingSlash = "/";
+    global.stringProcessingSlash = "/";
 }
 
 
 
 var fullPath = __dirname;
-fullPath = fullPath.slice(0, fullPath.lastIndexOf(stringProcessingSlash));
-fullPath = fullPath.slice(0, fullPath.lastIndexOf(stringProcessingSlash));
+fullPath = fullPath.slice(0, fullPath.lastIndexOf(global.stringProcessingSlash));
+fullPath = fullPath.slice(0, fullPath.lastIndexOf(global.stringProcessingSlash));
 var fullPath2 = fullPath + "\\HandBrakeCLI.exe"
 
 
@@ -160,7 +160,7 @@ var preset
 process.on('uncaughtException', function (err) {
     console.error(err.stack);
 
-
+    updateConsole(workerNumber, ":" + err.stack)
 
 
     var message = [
@@ -451,7 +451,7 @@ process.on('message', (m) => {
             ];
             process.send(message);
 
-            updateConsole(workerNumber,"Skipped: Not selected - "+currentSourceLine)
+            updateConsole(workerNumber, "Skipped: Not selected - " + currentSourceLine)
 
             var f = fs.readFileSync(homePath + '/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
             if (f == "1") {
@@ -471,26 +471,26 @@ process.on('message', (m) => {
 
                     try {
 
-                        updateConsole(workerNumber,"Copying file:"+currentSourceLine +" to "+currentDestinationFinalLine)
+                        updateConsole(workerNumber, "Copying file:" + currentSourceLine + " to " + currentDestinationFinalLine)
 
                         fs.copyFileSync(currentSourceLine, currentDestinationFinalLine);
-                        updateConsole(workerNumber,"Copy successful:"+currentSourceLine +" to "+currentDestinationFinalLine)
+                        updateConsole(workerNumber, "Copy successful:" + currentSourceLine + " to " + currentDestinationFinalLine)
                         copySuccess();
                     } catch (err) {
-                        updateConsole(workerNumber,"Copy failed:"+currentSourceLine +" to "+currentDestinationFinalLine)
+                        updateConsole(workerNumber, "Copy failed:" + currentSourceLine + " to " + currentDestinationFinalLine)
                         copyFail();
                     }
                 } else {
                     try {
 
-                        updateConsole(workerNumber,"Copying file:"+currentSourceLine +" to "+currentDestinationLine)
+                        updateConsole(workerNumber, "Copying file:" + currentSourceLine + " to " + currentDestinationLine)
 
                         fs.copyFileSync(currentSourceLine, currentDestinationLine);
-                        updateConsole(workerNumber,"Copy successful:"+currentSourceLine +" to "+currentDestinationLine)
+                        updateConsole(workerNumber, "Copy successful:" + currentSourceLine + " to " + currentDestinationLine)
                         copySuccess();
 
                     } catch (err) {
-                        updateConsole(workerNumber,"Copy failed:"+currentSourceLine +" to "+currentDestinationLine)
+                        updateConsole(workerNumber, "Copy failed:" + currentSourceLine + " to " + currentDestinationLine)
                         copyFail();
                     }
                 }
@@ -547,9 +547,9 @@ process.on('message', (m) => {
                 ];
                 process.send(message);
 
-                updateConsole(workerNumber,"Skipped: File title word filter:"+currentSourceLine)
+                updateConsole(workerNumber, "Skipped: File title word filter:" + currentSourceLine)
 
-              
+
 
 
                 endCyle();
@@ -574,43 +574,34 @@ process.on('message', (m) => {
             }
         } else {
 
-            updateConsole(workerNumber,"Launching FFprobe:"+currentSourceLine)
+            updateConsole(workerNumber, "Launching FFprobe:" + currentSourceLine)
 
             infoExtractModule = childProcess.fork(path.join(__dirname, 'mediaAnalyser.js'), [], {
                 silent: true
             });
 
-            updateConsole(workerNumber,"FFprobe launched successfully:"+currentSourceLine)
+            updateConsole(workerNumber, "FFprobe launched successfully:" + currentSourceLine)
 
             var extractCommand = [
                 "analyseThis",
                 currentSourceLine,
             ];
 
-            
+
 
             infoExtractModule.send(extractCommand);
 
-            updateConsole(workerNumber,"Sent to FFprobe:"+currentSourceLine)
+            updateConsole(workerNumber, "Sent to FFprobe:" + currentSourceLine)
 
 
             infoExtractModule.on('message', function (message) {
 
                 if (message[0] == "fileInfo") {
 
-                    updateConsole(workerNumber,"FFprobe response received:"+currentSourceLine)
+                    updateConsole(workerNumber, "FFprobe response received:" + currentSourceLine)
 
                     var jsonInfo = message[1]
 
-                    //jsonInfo.streams[0]["codec_name"]
-
-                    // var messageJSON = [
-                    //     "jsonInfo",
-                    //     jsonInfo,
-                    //     jsonInfo.streams[0]["codec_name"],
-
-                    //     ];
-                    //     process.send(messageJSON);
                     try {
                         frameCount = jsonInfo.streams[0]["nb_frames"]
 
@@ -619,11 +610,6 @@ process.on('message', (m) => {
 
                     var filterReason = "";
 
-                    // var messageJSON = [
-                    //     "fileFiltersIncludeArray",
-                    //     fileFiltersIncludeArray,
-                    //     ];
-                    //     process.send(messageJSON);
 
                     var JSONBomb = "";
                     if (mode == "healthCheck") {
@@ -646,7 +632,7 @@ process.on('message', (m) => {
 
                             ];
                             process.send(message);
-                            updateConsole(workerNumber,"FFprobe OK:"+currentSourceLine)
+                            updateConsole(workerNumber, "FFprobe OK:" + currentSourceLine)
 
                         } catch (err) {
 
@@ -658,7 +644,7 @@ process.on('message', (m) => {
                                 currentSourceLine,
                             ];
                             process.send(message);
-                            updateConsole(workerNumber,"FFprobe Fail:"+currentSourceLine)
+                            updateConsole(workerNumber, "FFprobe Fail:" + currentSourceLine)
                         }
 
                         var processFileY = true
@@ -671,7 +657,7 @@ process.on('message', (m) => {
                             var validateArray = []
                             filterReason = "Excluded, does not meet 'Include' conditions"
 
-                            //   fileFiltersIncludeArray = "codec_name: 'h264',"
+
 
                             fileFiltersIncludeArray = fileFiltersIncludeArray.split(',');
 
@@ -680,13 +666,6 @@ process.on('message', (m) => {
 
                                     for (var j = 0; j < fileFiltersIncludeArray.length; j++) {
 
-                                        // var messageJSON = [
-                                        //     "jsonInfo",
-                                        //     key+": '"+jsonInfo.streams[i][key]+"'",
-                                        //     "filter",
-                                        //     fileFiltersIncludeArray[j],
-                                        //     ];
-                                        //     process.send(messageJSON);
 
                                         if (fileFiltersIncludeArray[j].includes(key + ": '" + jsonInfo.streams[i][key] + "'")) {
 
@@ -696,7 +675,7 @@ process.on('message', (m) => {
 
                                         }
                                     }
-                                    //   console.log(key, obj[key]);
+
                                 });
                             }
 
@@ -716,7 +695,7 @@ process.on('message', (m) => {
                                 currentSourceLine,
                             ];
                             process.send(message);
-                            updateConsole(workerNumber,"FFprobe OK:"+currentSourceLine)
+                            updateConsole(workerNumber, "FFprobe OK:" + currentSourceLine)
 
 
                         } catch (err) {
@@ -729,7 +708,7 @@ process.on('message', (m) => {
                                 currentSourceLine,
                             ];
                             process.send(message);
-                            updateConsole(workerNumber,"FFprobe Fail:"+currentSourceLine)
+                            updateConsole(workerNumber, "FFprobe Fail:" + currentSourceLine)
 
                             var processFileY = true
                         }
@@ -777,7 +756,7 @@ process.on('message', (m) => {
                                 currentSourceLine,
                             ];
                             process.send(message);
-                            updateConsole(workerNumber,"FFprobe OK:"+currentSourceLine)
+                            updateConsole(workerNumber, "FFprobe OK:" + currentSourceLine)
 
                         } catch (err) {
 
@@ -790,7 +769,7 @@ process.on('message', (m) => {
 
                             ];
                             process.send(message);
-                            updateConsole(workerNumber,"FFprobe Fail:"+currentSourceLine)
+                            updateConsole(workerNumber, "FFprobe Fail:" + currentSourceLine)
 
                             var processFileY = true
                         }
@@ -813,7 +792,7 @@ process.on('message', (m) => {
                                 currentSourceLine,
                             ];
                             process.send(message);
-                            updateConsole(workerNumber,"FFprobe OK:"+currentSourceLine)
+                            updateConsole(workerNumber, "FFprobe OK:" + currentSourceLine)
 
                         } catch (err) {
                             var message = [
@@ -825,7 +804,7 @@ process.on('message', (m) => {
 
                             ];
                             process.send(message);
-                            updateConsole(workerNumber,"FFprobe Fail:"+currentSourceLine)
+                            updateConsole(workerNumber, "FFprobe Fail:" + currentSourceLine)
                         }
                         processFileY = true
                     }
@@ -839,13 +818,13 @@ process.on('message', (m) => {
 
                                 try {
 
-                                    updateConsole(workerNumber,"Copying file:"+currentSourceLine +" to "+currentDestinationFinalLine)
+                                    updateConsole(workerNumber, "Copying file:" + currentSourceLine + " to " + currentDestinationFinalLine)
                                     fs.copyFileSync(currentSourceLine, currentDestinationFinalLine);
-                                    updateConsole(workerNumber,"Copy successful:"+currentSourceLine +" to "+currentDestinationFinalLine)
+                                    updateConsole(workerNumber, "Copy successful:" + currentSourceLine + " to " + currentDestinationFinalLine)
                                     copySuccess();
 
                                 } catch (err) {
-                                    updateConsole(workerNumber,"Copy failed:"+currentSourceLine +" to "+currentDestinationFinalLine)
+                                    updateConsole(workerNumber, "Copy failed:" + currentSourceLine + " to " + currentDestinationFinalLine)
                                     copyFail();
 
 
@@ -856,13 +835,13 @@ process.on('message', (m) => {
                                 try {
 
 
-                                    updateConsole(workerNumber,"Copying file:"+currentSourceLine +" to "+currentDestinationLine)
+                                    updateConsole(workerNumber, "Copying file:" + currentSourceLine + " to " + currentDestinationLine)
                                     fs.copyFileSync(currentSourceLine, currentDestinationLine);
-                                    updateConsole(workerNumber,"Copy successful:"+currentSourceLine +" to "+currentDestinationLine)
+                                    updateConsole(workerNumber, "Copy successful:" + currentSourceLine + " to " + currentDestinationLine)
                                     copySuccess();
 
                                 } catch (err) {
-                                    updateConsole(workerNumber,"Copy failed:"+currentSourceLine +" to "+currentDestinationLine)
+                                    updateConsole(workerNumber, "Copy failed:" + currentSourceLine + " to " + currentDestinationLine)
                                     copyFail();
                                 }
                             }
@@ -946,20 +925,20 @@ process.on('message', (m) => {
                         var shellThreadPath = "worker2.js"
 
                         //
-                        updateConsole(workerNumber,"Launching sub-worker:")
+                        updateConsole(workerNumber, "Launching sub-worker:")
 
                         shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath), [], {
                             silent: true
                         });
                         // var shellThreadModule = childProcess.fork(path.join(__dirname, shellThreadPath ));
-                        updateConsole(workerNumber,"Launching sub-worker launched successfully:")
+                        updateConsole(workerNumber, "Launching sub-worker launched successfully:")
 
                         var infoArray = [
                             "processFile",
                             workerCommand
                         ];
 
-                        updateConsole(workerNumber,"Sending command to sub-worker:"+workerCommand)
+                        updateConsole(workerNumber, "Sending command to sub-worker:" + workerCommand)
                         shellThreadModule.send(infoArray);
                         shellThreadModule.stdout.on('data', function (data) {
                             //  console.log('stdoutWorker: ' + data);
@@ -980,42 +959,27 @@ process.on('message', (m) => {
 
                             if (handBrakeMode == true) {
 
-                                if (str.includes("%")) {
-                                    if (str.length >= 7) {
-                                        n = str.indexOf("%");
+                                var numbers = "0123456789"
+                                var n = str.indexOf("%")
+                                if (str.length >= 7 && str.indexOf("%") >= 7 && numbers.includes(str.charAt(n - 6))) {
 
-                                        if (n >= 6) {
-
-                                            var numbers = "0123456789"
-
-                                            if (numbers.includes(str.charAt(n - 5))) {
-                                                var output = str.substring(n - 5, n + 1)
-
-                                            }else if (numbers.includes(str.charAt(n - 4))) {
-                                                var output = str.substring(n - 4, n + 1)
-
-                                            }else if (numbers.includes(str.charAt(n - 3))) {
-                                                var output = str.substring(n - 3, n + 1)
-
-                                            }else if (numbers.includes(str.charAt(n - 2))) {
-                                                var output = str.substring(n - 2, n + 1)
-
-                                            }
-
-                                            
-
-                                            console.log(output)
-                                            var message = [
-                                                workerNumber,
-                                                "percentage",
-                                                globalQueueNumber,
-                                                output
-                                            ];
-                                            process.send(message);
+                                    var output = str.substring(n - 6, n + 1)
 
 
-                                        }
-                                    }
+
+
+                                    console.log(output)
+                                    var message = [
+                                        workerNumber,
+                                        "percentage",
+                                        globalQueueNumber,
+                                        output
+                                    ];
+                                    process.send(message);
+
+
+
+
                                 }
                             } else if (FFmpegMode == true) {
 
@@ -1073,45 +1037,26 @@ process.on('message', (m) => {
 
                             if (handBrakeMode == true) {
 
-                                if (str.includes("%")) {
-                                    if (str.length >= 7) {
-                                        n = str.indexOf("%");
+                                var numbers = "0123456789"
+                                var n = str.indexOf("%")
+                                if (str.length >= 7 && str.indexOf("%") >= 7 && numbers.includes(str.charAt(n - 6))) {
+
+                                    var output = str.substring(n - 6, n + 1)
+
+
+                                    console.log(output)
+                                    var message = [
+                                        workerNumber,
+                                        "percentage",
+                                        globalQueueNumber,
+                                        output
+                                    ];
+                                    process.send(message);
 
 
 
-                                        if (n >= 6) {
-
-                                            
-                                            var numbers = "0123456789"
-
-                                            if (numbers.includes(str.charAt(n - 5))) {
-                                                var output = str.substring(n - 5, n + 1)
-
-                                            }else if (numbers.includes(str.charAt(n - 4))) {
-                                                var output = str.substring(n - 4, n + 1)
-
-                                            }else if (numbers.includes(str.charAt(n - 3))) {
-                                                var output = str.substring(n - 3, n + 1)
-
-                                            }else if (numbers.includes(str.charAt(n - 2))) {
-                                                var output = str.substring(n - 2, n + 1)
-
-                                            }
 
 
-                                            console.log(output)
-                                            var message = [
-                                                workerNumber,
-                                                "percentage",
-                                                globalQueueNumber,
-                                                output
-                                            ];
-                                            process.send(message);
-
-
-                                        }
-
-                                    }
                                 }
 
 
@@ -1157,7 +1102,7 @@ process.on('message', (m) => {
 
                         shellThreadModule.on("exit", function (code, ) {
                             //  console.log('shellThreadExited:', code,);
-                            updateConsole(workerNumber,"Sub-worker exited")
+                            updateConsole(workerNumber, "Sub-worker exited")
 
                         });
 
@@ -1177,7 +1122,7 @@ process.on('message', (m) => {
                             if (message[0] == "Exit") {
 
 
-                                updateConsole(workerNumber,"Sub-worker exit status received")
+                                updateConsole(workerNumber, "Sub-worker exit status received")
 
                                 shellThreadModule = "";
 
@@ -1193,9 +1138,9 @@ process.on('message', (m) => {
 
                                 if (mode != "healthCheck" && !fs.existsSync(currentDestinationLine)) {
 
-                                    updateConsole(workerNumber,"HBBB ALERT: NO OUTPUT FILE PRODUCED"+currentDestinationLine)
+                                    updateConsole(workerNumber, "HBBB ALERT: NO OUTPUT FILE PRODUCED" + currentDestinationLine)
 
-                         
+
 
                                     errorLogFull += "\n HBBB ALERT: NO OUTPUT FILE PRODUCED";
 
@@ -1226,7 +1171,7 @@ process.on('message', (m) => {
                                         ];
                                         process.send(message);
 
-                                    updateConsole(workerNumber,"Item cancelled:"+currentSourceLine)
+                                        updateConsole(workerNumber, "Item cancelled:" + currentSourceLine)
 
 
                                     } else {
@@ -1251,18 +1196,18 @@ process.on('message', (m) => {
                                                 filePathEnd = pointer[pointer.length - 1] //     test.mp4
 
 
-                                                        updateConsole(workerNumber,"Item cancelled:"+currentSourceLine)
+                                                updateConsole(workerNumber, "Item cancelled:" + currentSourceLine)
                                                 corruptDestinationPath = corruptDestinationPath + stringProcessingSlash + filePathEnd;
 
 
-                                                updateConsole(workerNumber,"Moving corrupt file:"+currentSourceLine +" to "+corruptDestinationPath)
+                                                updateConsole(workerNumber, "Moving corrupt file:" + currentSourceLine + " to " + corruptDestinationPath)
 
                                                 fsextra.moveSync(currentSourceLine, corruptDestinationPath, {
                                                     overwrite: true
                                                 })
 
-                                                updateConsole(workerNumber,"Moving corrupt file successful:"+currentSourceLine +" to "+corruptDestinationPath)
-                                              
+                                                updateConsole(workerNumber, "Moving corrupt file successful:" + currentSourceLine + " to " + corruptDestinationPath)
+
 
 
                                             }
@@ -1280,7 +1225,7 @@ process.on('message', (m) => {
                                         ];
                                         process.send(message);
 
-                                        updateConsole(workerNumber,"Sub worker error when processing:"+currentSourceLine)
+                                        updateConsole(workerNumber, "Sub worker error when processing:" + currentSourceLine)
 
 
                                     }
@@ -1405,7 +1350,7 @@ process.on('message', (m) => {
 
 
                                         try {
-                                            updateConsole(workerNumber,"Launching bat file:"+path)
+                                            updateConsole(workerNumber, "Launching bat file:" + path)
                                             require('child_process').execSync(path, function (err, stdout, stderr) {
                                                 if (err) {
                                                     // Ooops.
@@ -1418,12 +1363,12 @@ process.on('message', (m) => {
 
                                             });
 
-                                            updateConsole(workerNumber,"Bat file launched succcesfully:"+path)
+                                            updateConsole(workerNumber, "Bat file launched succcesfully:" + path)
                                         } catch (err) {
 
-                                            updateConsole(workerNumber,"Launching bat file failed:"+path)
+                                            updateConsole(workerNumber, "Launching bat file failed:" + path)
 
-                                         }
+                                        }
 
                                     }
 
@@ -1436,13 +1381,13 @@ process.on('message', (m) => {
 
 
                                             // dont use fs.renameSync(
-                                                updateConsole(workerNumber,"Moving file:"+currentDestinationLine+" to "+currentDestinationFinalLine)
+                                            updateConsole(workerNumber, "Moving file:" + currentDestinationLine + " to " + currentDestinationFinalLine)
 
                                             fsextra.moveSync(currentDestinationLine, currentDestinationFinalLine, {
                                                 overwrite: true
                                             })
 
-                                            updateConsole(workerNumber,"File moved successfully:"+currentDestinationLine+" to "+currentDestinationFinalLine)
+                                            updateConsole(workerNumber, "File moved successfully:" + currentDestinationLine + " to " + currentDestinationFinalLine)
 
 
 
@@ -1452,20 +1397,20 @@ process.on('message', (m) => {
 
                                             try {
 
-                                                updateConsole(workerNumber,"Moving file:"+currentDestinationLine+" to "+currentDestinationFinalLine)
+                                                updateConsole(workerNumber, "Moving file:" + currentDestinationLine + " to " + currentDestinationFinalLine)
                                                 fsextra.moveSync(currentDestinationLine, currentDestinationFinalLine, {
                                                     overwrite: true
                                                 })
 
-                                                updateConsole(workerNumber,"File moved successfully:"+currentDestinationLine+" to "+currentDestinationFinalLine)
+                                                updateConsole(workerNumber, "File moved successfully:" + currentDestinationLine + " to " + currentDestinationFinalLine)
 
 
 
 
                                             } catch (err) {
-                                                updateConsole(workerNumber,"Moving file failed:"+currentDestinationLine+" to "+currentDestinationFinalLine)
+                                                updateConsole(workerNumber, "Moving file failed:" + currentDestinationLine + " to " + currentDestinationFinalLine)
 
-                                             }
+                                            }
 
 
                                         }
@@ -1546,7 +1491,7 @@ process.on('message', (m) => {
                                         process.send(message);
 
 
-                                        updateConsole(workerNumber,"File queued for deletion:"+currentSourceLine)
+                                        updateConsole(workerNumber, "File queued for deletion:" + currentSourceLine)
 
 
 
@@ -1594,11 +1539,19 @@ process.on('message', (m) => {
                                                     try {
                                                         //
 
-                                                        var containerType = currentDestinationFinalLine.slice(currentDestinationFinalLine.lastIndexOf('.'), currentDestinationFinalLine.length);
+                                                        //var containerType = currentDestinationFinalLine.slice(currentDestinationFinalLine.lastIndexOf('.'), currentDestinationFinalLine.length);
 
-                                                        var fileName = currentSourceLine.slice(0, currentSourceLine.lastIndexOf('.'));
+                                                        // var fileName = currentSourceLine.slice(0, currentSourceLine.lastIndexOf('.'));
 
-                                                        var newCurrentSourceLine = fileName + "" + containerType
+                                                        //
+
+
+
+                                                        var newFilePath = currentSourceLine.slice(0, currentSourceLine.lastIndexOf(global.stringProcessingSlash));
+                                                        var newFileSubPath = currentDestinationFinalLine.slice(currentDestinationFinalLine.lastIndexOf(global.stringProcessingSlash), currentDestinationFinalLine.length);
+                                                        //
+
+                                                        var newCurrentSourceLine = newFilePath + global.stringProcessingSlash + newFileSubPath
 
 
 
@@ -1611,7 +1564,7 @@ process.on('message', (m) => {
 
                                                         errorLogFull += "\n Moving new file to original folder: " + currentDestinationFinalLine + " to " + newCurrentSourceLine
 
-                                                        updateConsole(workerNumber,"Moving file:"+currentSourceLine +" to "+newCurrentSourceLine)
+                                                        updateConsole(workerNumber, "Moving file:" + currentSourceLine + " to " + newCurrentSourceLine)
 
                                                         fsextra.moveSync(currentDestinationFinalLine, newCurrentSourceLine, {
                                                             overwrite: true
@@ -1634,7 +1587,7 @@ process.on('message', (m) => {
                                                             errorLogFull
                                                         ];
                                                         process.send(message);
-                                                        updateConsole(workerNumber,"Original file replaced:"+currentSourceLine +" to "+newCurrentSourceLine)
+                                                        updateConsole(workerNumber, "Original file replaced:" + currentSourceLine + " to " + newCurrentSourceLine)
 
                                                     } catch (err) {
 
@@ -1651,7 +1604,7 @@ process.on('message', (m) => {
                                                         ];
                                                         process.send(message);
 
-                                                        updateConsole(workerNumber,"Error replacing original file:"+currentSourceLine +" to "+newCurrentSourceLine)
+                                                        updateConsole(workerNumber, "Error replacing original file:" + currentSourceLine + " to " + newCurrentSourceLine)
 
 
                                                     }
@@ -1670,7 +1623,7 @@ process.on('message', (m) => {
                                                     ];
                                                     process.send(message);
 
-                                                    updateConsole(workerNumber,"Original not replaced: New file is larger:"+currentSourceLine +" to "+newCurrentSourceLine)
+                                                    updateConsole(workerNumber, "Original not replaced: New file is larger:" + currentSourceLine + " to " + newCurrentSourceLine)
 
 
 
@@ -1689,15 +1642,20 @@ process.on('message', (m) => {
                                                         //  
                                                         //dont use fs.renameSync(currentDestinationLine, currentSourceLine) 
 
-                                                        var containerType = currentDestinationLine.slice(currentDestinationLine.lastIndexOf('.'), currentDestinationLine.length);
+                                                        //var containerType = currentDestinationLine.slice(currentDestinationLine.lastIndexOf('.'), currentDestinationLine.length);
+                                                        //var fileName = currentSourceLine.slice(0, currentSourceLine.lastIndexOf('.'));
+
+                                                        //global.stringProcessingSlash = "\\"
 
 
 
+                                                        var newFilePath = currentSourceLine.slice(0, currentSourceLine.lastIndexOf(global.stringProcessingSlash));
+                                                        var newFileSubPath = currentDestinationLine.slice(currentDestinationLine.lastIndexOf(global.stringProcessingSlash) + 1, currentDestinationLine.length);
+                                                        //
 
+                                                        var newCurrentSourceLine = newFilePath + global.stringProcessingSlash + newFileSubPath
 
-                                                        var fileName = currentSourceLine.slice(0, currentSourceLine.lastIndexOf('.'));
-
-                                                        var newCurrentSourceLine = fileName + "" + containerType
+                                                        // var newCurrentSourceLine = fileName + "" + containerType
 
 
 
@@ -1710,7 +1668,7 @@ process.on('message', (m) => {
 
                                                         errorLogFull += "\n Moving new file to original folder: " + currentDestinationLine + " to " + newCurrentSourceLine
 
-                                                        updateConsole(workerNumber,"Moving file:"+currentDestinationLine +" to "+newCurrentSourceLine)
+                                                        updateConsole(workerNumber, "Moving file:" + currentDestinationLine + " to " + newCurrentSourceLine)
                                                         fsextra.moveSync(currentDestinationLine, newCurrentSourceLine, {
                                                             overwrite: true
                                                         })
@@ -1726,7 +1684,7 @@ process.on('message', (m) => {
                                                             errorLogFull
                                                         ];
                                                         process.send(message);
-                                                        updateConsole(workerNumber,"Original file replaced:"+currentDestinationLine +" to "+newCurrentSourceLine)
+                                                        updateConsole(workerNumber, "Original file replaced:" + currentDestinationLine + " to " + newCurrentSourceLine)
 
                                                     } catch (err) {
 
@@ -1740,7 +1698,7 @@ process.on('message', (m) => {
                                                             errorLogFull + "\n" + err.stack
                                                         ];
                                                         process.send(message);
-                                                        updateConsole(workerNumber,"Error replacing original file:"+currentDestinationLine +" to "+newCurrentSourceLine)
+                                                        updateConsole(workerNumber, "Error replacing original file:" + currentDestinationLine + " to " + newCurrentSourceLine)
 
                                                     }
 
@@ -1756,7 +1714,7 @@ process.on('message', (m) => {
                                                         errorLogFull
                                                     ];
                                                     process.send(message);
-                                                    updateConsole(workerNumber,"Original not replaced: New file is larger:"+currentDestinationLine +" to "+newCurrentSourceLine)
+                                                    updateConsole(workerNumber, "Original not replaced: New file is larger:" + currentDestinationLine + " to " + newCurrentSourceLine)
 
 
                                                 }
@@ -1886,7 +1844,7 @@ process.on('message', (m) => {
 
         process.send(message);
 
-        updateConsole(workerNumber,"Exit request")
+        updateConsole(workerNumber, "Exit request")
 
 
 
@@ -1896,11 +1854,11 @@ process.on('message', (m) => {
 
     if (m[0] == "exitApproved") {
 
-        updateConsole(workerNumber,"Exiting")
+        updateConsole(workerNumber, "Exiting")
 
         process.exit();
 
-        
+
 
     }
 
