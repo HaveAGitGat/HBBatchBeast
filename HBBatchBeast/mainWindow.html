@@ -14,8 +14,32 @@
 
     "use strict";
 
+    //2 functions to catch/display any errors as early as possible.
+
+    function updateConsole(message) {
+
+        consoleItemCount++
+
+        if (consoleItemCount >= 200) {
+
+            document.getElementById('consoleDiv').removeChild(document.getElementById('consoleDiv').getElementsByTagName('p')[0]);
+
+        }
+
+        document.getElementById("consoleDiv").innerHTML += "<p>" + "[" + getTimeNow() + "]" + message + "</p>"
+
+        document.getElementById("consoleBar").scrollTop = document.getElementById("consoleBar").scrollHeight
+    }
 
 
+    process.on('uncaughtException', function (err) {
+        console.error(err.stack);
+
+        updateConsole(err.stack);
+
+        fs.appendFileSync(homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt', "Main thread error: " + err.stack + "\r\n", 'utf8');
+        //process.exit();
+    });
 
 
 
@@ -99,14 +123,7 @@
     }
 
 
-    process.on('uncaughtException', function (err) {
-        console.error(err.stack);
 
-        updateConsole(err.stack);
-
-        fs.appendFileSync(homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt', "Main thread error: " + err.stack + "\r\n", 'utf8');
-        //process.exit();
-    });
 
 
 
@@ -307,11 +324,13 @@
 
             document.getElementById("consoleBar").style.height = "50%";
             document.body.style.height = "50%";
+            updateConsole("<font color=\"red\">------------------------------------------------------</font>")
             updateConsole("<font color=\"lightblue\">" + document.getElementById(id).innerHTML + "</font>")
             prevTip = id
 
         } else if (document.getElementById("consoleBar").style.height == "50%") {
             if (id != prevTip) {
+                updateConsole("<font color=\"red\">------------------------------------------------------</font>")
                 updateConsole("<font color=\"lightblue\">" + document.getElementById(id).innerHTML + "</font>")
                 prevTip = id
 
@@ -329,20 +348,7 @@
 
 
 
-    function updateConsole(message) {
 
-        consoleItemCount++
-
-        if (consoleItemCount >= 200) {
-
-            document.getElementById('consoleDiv').removeChild(document.getElementById('consoleDiv').getElementsByTagName('p')[0]);
-
-        }
-
-        document.getElementById("consoleDiv").innerHTML += "<p>" + "[" + getTimeNow() + "]" + message + "</p>"
-
-        document.getElementById("consoleBar").scrollTop = document.getElementById("consoleBar").scrollHeight
-    }
 
     function setLanguage() {
 
@@ -893,435 +899,7 @@
         jsonConfig.configs[selected_config_no].tab_system.smtp_server == undefined ? document.getElementById("SMTPServer").value = "" : document.getElementById("SMTPServer").value = jsonConfig.configs[selected_config_no].tab_system.smtp_server;
 
 
-        ///
 
-
-
-
-
-
-
-        // //read scan interval
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/scanInterval.txt")) {
-        //     document.getElementById("timer").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/scanInterval.txt", 'utf8');
-        // } else {
-
-        //     document.getElementById("timer").value = 300;
-        // }
-
-
-        // // read daily run time:
-
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/dailyRunTime.txt")) {
-        //     document.getElementById("dailyRunTime").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/dailyRunTime.txt", 'utf8');
-        // }
-
-
-        // read periodic scanning on/off
-
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/periodicScanningOnOff.txt")) {
-
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/periodicScanningOnOff.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("scanOnOff").checked = true;
-        //         document.getElementById("showHideScanInterval").style.display = 'block';
-        //         document.getElementById("showHideDailyRunTime").style.display = 'none';
-        //     } else {
-        //         document.getElementById("scanOnOff").checked = false;
-        //         document.getElementById("showHideScanInterval").style.display = 'none';
-        //     }
-        // }
-
-
-
-        // // read daily scan on/off
-
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/dailyRunTimeOnOff.txt")) {
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/dailyRunTimeOnOff.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("dailyRunTimeOnOff").checked = true;
-        //         document.getElementById("showHideScanInterval").style.display = 'none';
-        //         document.getElementById("showHideDailyRunTime").style.display = 'block';
-        //     } else {
-        //         document.getElementById("dailyRunTimeOnOff").checked = false;
-        //         document.getElementById("showHideDailyRunTime").style.display = 'none';
-        //     }
-        // }
-
-
-
-
-        // // read recent destination path
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/recentDestination.txt")) {
-        //     document.getElementById("destinationPath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/recentDestination.txt", 'utf8');
-        // }
-
-
-        // // read recent source path
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/recentSource.txt")) {
-
-        //     document.getElementById("sourcePath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/recentSource.txt", 'utf8');
-        // }
-
-        // //read temp destination path
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/tempDestinationPath.txt")) {
-
-        //     document.getElementById("tempDestinationPath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/tempDestinationPath.txt", 'utf8');
-        // }
-
-
-        // //read corrupt file folder
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/corruptDestinationPath.txt")) {
-        //     document.getElementById("corruptDestinationPath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/corruptDestinationPath.txt", 'utf8');
-        // }
-
-        //set temp destination path on/off
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/tempDestinationOnOff.txt")) {
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/tempDestinationOnOff.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("selectTemporaryConversionFolder").checked = true;
-        //         document.getElementById("tempConversionFolderDiv").style.display = 'block';
-        //     } else {
-        //         document.getElementById("selectTemporaryConversionFolder").checked = false;
-        //     }
-        // }
-
-        // read handbrake mode
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/handBrakeMode.txt")) {
-
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/handBrakeMode.txt", 'utf8');
-
-
-        //     if (f == "1") {
-        //         document.getElementById("handBrakeMode").checked = true;
-        //         document.getElementById("standardPresetOptionDiv").style.display = 'block';
-
-        //     } else {
-        //         document.getElementById("handBrakeMode").checked = false;
-
-        //     }
-        // }
-
-        // read ffmpeg mode
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/FFmpegMode.txt")) {
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/FFmpegMode.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("FFmpegMode").checked = true;
-        //     } else {
-        //         document.getElementById("FFmpegMode").checked = false;
-        //     }
-        // }
-
-        // //read preset  and set select menu value
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/preset.txt")) {
-        //     document.getElementById("preset").selectedIndex = fs.readFileSync(homePath + "/HBBatchBeast/Config/preset.txt", 'utf8');
-        // }
-
-        // // read custom preset
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/customPreset.txt")) {
-        //     document.getElementById("customPresets").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/customPreset.txt", 'utf8');
-        // }
-
-        // //read if custom preset is on or off
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/customPresetOnOff.txt")) {
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/customPresetOnOff.txt", 'utf8');
-        //     if (f == 0) {
-        //         document.getElementById("selectStandardPreset").checked = true;
-        //         document.getElementById("selectCustomPreset").checked = false;
-        //         document.getElementById("customPresetDiv").style.display = 'none';
-        //         document.getElementById("standardPresetDiv").style.display = 'block';
-        //     } else {
-        //         document.getElementById("selectCustomPreset").checked = true
-        //         document.getElementById("selectStandardPreset").checked = false;
-        //         document.getElementById("customPresetDiv").style.display = 'block';
-        //         document.getElementById("standardPresetDiv").style.display = 'none';
-        //     }
-        // }
-
-
-        // //read container value
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/container.txt")) {
-        //     document.getElementById("container").selectedIndex = fs.readFileSync(homePath + "/HBBatchBeast/Config/container.txt", 'utf8');
-        // }
-
-
-        // // read whether to delete source files or not
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/deleteSourceFilesOnOff.txt")) {
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/deleteSourceFilesOnOff.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("deleteSourceFiles").checked = true;
-        //     } else {
-        //         document.getElementById("deleteSourceFiles").checked = false;
-        //     }
-        // }
-
-
-        // // read whether to move corrupt files into folder or not
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/moveCorruptFileOnOff.txt")) {
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/moveCorruptFileOnOff.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("moveCorruptFileOnOff").checked = true;
-
-        //     } else {
-        //         document.getElementById("moveCorruptFileOnOff").checked = false;
-
-        //     }
-        // }
-
-        //read file types to scan for
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/includedFileTypes.txt")) {
-        //     document.getElementById("includedFileTypes").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/includedFileTypes.txt", 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/includedFileTypes.txt', "mp4,mkv,mov,m4v,mpg,mpeg,avi,flv,webm,wmv,vob,evo,mts,m2ts,ts,iso,", 'utf8');
-        //     document.getElementById("includedFileTypes").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/includedFileTypes.txt", 'utf8');
-        // }
-
-
-
-
-        // // read if minimum file size limit on or off
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/minimumFileSizeOnOff.txt")) {
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/minimumFileSizeOnOff.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("minimumFileSizeOnOff").checked = true;
-        //     } else {
-        //         document.getElementById("minimumFileSizeOnOff").checked = false;
-        //     }
-        // }
-
-        // // read if maximum file size limit on or off
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/maximumFileSizeOnOff.txt")) {
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/maximumFileSizeOnOff.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("maximumFileSizeOnOff").checked = true;
-        //     } else {
-        //         document.getElementById("maximumFileSizeOnOff").checked = false;
-        //     }
-        // }
-
-        // // read min file size
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/minimumFileSize.txt")) {
-        //     document.getElementById("minimumFileSize").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/minimumFileSize.txt", 'utf8');
-        // }
-
-        // // read max file size
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/maximumFileSize.txt")) {
-        //     document.getElementById("maximumFileSize").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/maximumFileSize.txt", 'utf8');
-        // }
-
-
-
-        // // read filter out keywords
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/titleWordFilter.txt")) {
-        //     document.getElementById("titleWordFilter").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/titleWordFilter.txt", 'utf8');
-        // }
-
-
-        // // read include property filter
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/includePropertyFileFilter.txt")) {
-        //     document.getElementById("includePropertyFileFilter").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/includePropertyFileFilter.txt", 'utf8');
-        // }
-
-
-        // // read exclude property filter
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/excludePropertyFileFilter.txt")) {
-        //     document.getElementById("excludePropertyFileFilter").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/excludePropertyFileFilter.txt", 'utf8');
-        // }
-
-        // // read include any file properties
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/includeAnyFilesWithProperties.txt")) {
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/includeAnyFilesWithProperties.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("includeAnyFilesWithProperties").checked = true;
-        //     } else {
-        //         document.getElementById("includeAnyFilesWithProperties").checked = false;
-        //     }
-        // }
-
-        // // read include all file properties
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/includeAllFilesWithProperties.txt")) {
-
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/includeAllFilesWithProperties.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("includeAllFilesWithProperties").checked = true;
-        //     } else {
-        //         document.getElementById("includeAllFilesWithProperties").checked = false;
-
-        //     }
-
-        // }
-
-
-        // // read exclude any file properties
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/excludeAnyFilesWithProperties.txt")) {
-
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/excludeAnyFilesWithProperties.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("excludeAnyFilesWithProperties").checked = true;
-        //     } else {
-        //         document.getElementById("excludeAnyFilesWithProperties").checked = false;
-        //     }
-        // }
-
-        // // read exclude all file properties
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/excludeAllFilesWithProperties.txt")) {
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/excludeAllFilesWithProperties.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("excludeAllFilesWithProperties").checked = true;
-        //     } else {
-        //         document.getElementById("excludeAllFilesWithProperties").checked = false;
-        //     }
-        // }
-
-
-        // // read if to copy filtered files
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/copyFilteredFiles.txt")) {
-
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/copyFilteredFiles.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("copyFilteredFiles").checked = true;
-        //     } else {
-        //         document.getElementById("copyFilteredFiles").checked = false;
-        //     }
-        // }
-
-
-        // // read if to copy srt files
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/copySRTFiles.txt")) {
-
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/copySRTFiles.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("copySRTFiles").checked = true;
-        //     } else {
-        //         document.getElementById("copySRTFiles").checked = false;
-
-        //     }
-        // }
-
-
-        // // read if auto create folders
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/autoCreateFolders.txt")) {
-
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/autoCreateFolders.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("autoCreateFolders").checked = true;
-        //     } else {
-        //         document.getElementById("autoCreateFolders").checked = false;
-        //     }
-        // }
-
-
-
-        // // read if run at low priority
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/runPriority.txt")) {
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/runPriority.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("runPriority").checked = true;
-        //     } else {
-        //         document.getElementById("runPriority").checked = false;
-        //     }
-        // }
-
-
-
-
-        // // read if to replace original file if converted file is smaller
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/replaceOriginalFile.txt")) {
-
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/replaceOriginalFile.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("replaceOriginalFile").checked = true;
-        //     } else {
-        //         document.getElementById("replaceOriginalFile").checked = false;
-        //     }
-        // }
-
-        // // read if to replace original file always
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/replaceOriginalFileAlways.txt")) {
-
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/replaceOriginalFileAlways.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("replaceOriginalFileAlways").checked = true;
-        //     } else {
-        //         document.getElementById("replaceOriginalFileAlways").checked = false;
-        //     }
-        // }
-
-        // //read number of instances 
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/instanceNumber.txt")) {
-        //     document.getElementById("instanceNumber").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/instanceNumber.txt", 'utf8');
-        // } else {
-        //     document.getElementById("instanceNumber").value = 4;
-        // }
-
-
-        // //read max queue view size  
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/queueSizeViewLimit.txt")) {
-        //     document.getElementById("queueSizeViewLimit").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/queueSizeViewLimit.txt", 'utf8');
-        // } else {
-        //     document.getElementById("queueSizeViewLimit").value = 1000;
-
-        // }
-
-        // // read auto start
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/autoStart.txt")) {
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/autoStart.txt", 'utf8');
-        //     if (f == "1") {
-        //         document.getElementById("autoStart").checked = true;
-        //     } else {
-        //         document.getElementById("autoStart").checked = false;
-        //     }
-        // }
-
-
-        // // read bat file path
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/customBatPath.txt")) {
-        //     document.getElementById("customBatPath").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/customBatPath.txt", 'utf8');
-        // }
-
-        // //read email address
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/Email/emailAddress.txt")) {
-        //     document.getElementById("emailAddress").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/Email/emailAddress.txt", 'utf8');
-        // }
-
-
-        // //read SMTP server
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/Email/SMTPServer.txt")) {
-        //     document.getElementById("SMTPServer").value = fs.readFileSync(homePath + "/HBBatchBeast/Config/Email/SMTPServer.txt", 'utf8');
-        // }
-
-        // // read apiKEY
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/apiKEY.txt")) {
-        //     document.getElementById("apiKEY").innerHTML = fs.readFileSync(homePath + "/HBBatchBeast/Config/apiKEY.txt", 'utf8');
-        // } else {
-        //     generateNewAPIKey();
-        // }
-
-        // // read remoteview on off
-        // if (fs.existsSync(homePath + "/HBBatchBeast/Config/remoteViewOnOFF.txt")) {
-
-        //     var f = fs.readFileSync(homePath + "/HBBatchBeast/Config/remoteViewOnOFF.txt", 'utf8');
-
-
-        //     if (f == "1") {
-        //         document.getElementById("remoteViewOnOFF").checked = true;
-
-        //     } else {
-        //         document.getElementById("remoteViewOnOFF").checked = false;
-
-        //     }
-
-        //    }
-
-
-        /* read multiple lines of text file
-        var array = fs.readFileSync('file.txt').toString().split("\n");
-        for(i in array) {
-        }
-        */
-
-
-        //document.getElementById("timer").value= "6";
         if (process.platform == 'win32') {
 
             var stringProcessingSlash = "\\";
@@ -1331,7 +909,6 @@
         }
 
         var fullPath = __dirname;
-        //fullPath = fullPath.slice(0,fullPath.lastIndexOf('\\'));
         //fullPath = fullPath.slice(0,fullPath.lastIndexOf('\\'));
         fullPath = fullPath.slice(0, fullPath.lastIndexOf(stringProcessingSlash));
         fullPath = fullPath.slice(0, fullPath.lastIndexOf(stringProcessingSlash));
@@ -1758,291 +1335,6 @@
 
 
 
-        // /* var dir = homePath+'/HBBatchBeast/Config';
-
-        // if (!fs.existsSync(dir)){
-        //     fs.mkdirSync(dir);
-        //     alert('Directory created!')
-        // }
-        // */
-
-        // // save scan interval
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/scanInterval.txt', document.getElementById("timer").value, 'utf8');
-
-        // // save daily run time
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTime.txt', document.getElementById("dailyRunTime").value, 'utf8');
-
-        // //periodic scanning
-        // if (document.getElementById("scanOnOff").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/periodicScanningOnOff.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/periodicScanningOnOff.txt', 0, 'utf8');
-
-        // }
-
-        // //daily scanning
-        // if (document.getElementById("dailyRunTimeOnOff").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTimeOnOff.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/dailyRunTimeOnOff.txt', 0, 'utf8');
-
-        // }
-
-        // //save source path
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/recentSource.txt', document.getElementById("sourcePath").value, 'utf8');
-
-        // //save destination path
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/recentDestination.txt', document.getElementById("destinationPath").value, 'utf8');
-
-        // //save tempdestination path
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/tempDestinationPath.txt', document.getElementById("tempDestinationPath").value, 'utf8');
-
-        // //save corrupt folder path
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/corruptDestinationPath.txt', document.getElementById("corruptDestinationPath").value, 'utf8');
-
-        // //save enable/disble temporary destination
-        // if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/tempDestinationOnOff.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/tempDestinationOnOff.txt', 0, 'utf8');
-
-        // }
-
-        // // save handbrake mode
-        // if (document.getElementById("handBrakeMode").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/handBrakeMode.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/handBrakeMode.txt', 0, 'utf8');
-
-        // }
-
-        // // save ffmpeg mode
-        // if (document.getElementById("FFmpegMode").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/FFmpegMode.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/FFmpegMode.txt', 0, 'utf8');
-
-        // }
-
-        // //save preset     
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/preset.txt', document.getElementById("preset").value, 'utf8');
-
-
-        // //save custom preset enable/disable
-        // if (document.getElementById("selectStandardPreset").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/customPresetOnOff.txt', 0, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/customPresetOnOff.txt', 1, 'utf8');
-
-        // }
-
-
-        // //save if to move corrupt files into folder
-        // if (document.getElementById("moveCorruptFileOnOff").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/moveCorruptFileOnOff.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/moveCorruptFileOnOff.txt', 0, 'utf8');
-
-        // }
-
-
-        // //save custom preset string
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/customPreset.txt', document.getElementById("customPresets").value, 'utf8');
-
-
-        // // save container selection
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/container.txt', document.getElementById("container").value, 'utf8');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // //save included file types
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/includedFileTypes.txt', document.getElementById("includedFileTypes").value, 'utf8');
-
-
-
-        // //save min file size on or off
-        // if (document.getElementById("minimumFileSizeOnOff").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/minimumFileSizeOnOff.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/minimumFileSizeOnOff.txt', 0, 'utf8');
-        // }
-
-
-        // //save max file size on or off
-        // if (document.getElementById("maximumFileSizeOnOff").checked == true) {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/maximumFileSizeOnOff.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/maximumFileSizeOnOff.txt', 0, 'utf8');
-        // }
-
-
-        // //save min file size
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/minimumFileSize.txt', document.getElementById("minimumFileSize").value, 'utf8');
-
-
-        // //save max file size
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/maximumFileSize.txt', document.getElementById("maximumFileSize").value, 'utf8');
-
-
-        // //save title word filter
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/titleWordFilter.txt', document.getElementById("titleWordFilter").value, 'utf8');
-
-        // //save include property filter
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/includePropertyFileFilter.txt', document.getElementById("includePropertyFileFilter").value, 'utf8');
-
-        // //save exclude property filter
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludePropertyFileFilter.txt', document.getElementById("excludePropertyFileFilter").value, 'utf8');
-
-
-        // //save include any file properties
-        // if (document.getElementById("includeAnyFilesWithProperties").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/includeAnyFilesWithProperties.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/includeAnyFilesWithProperties.txt', 0, 'utf8');
-        // }
-
-        // //save include all file properties
-        // if (document.getElementById("includeAllFilesWithProperties").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/includeAllFilesWithProperties.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/includeAllFilesWithProperties.txt', 0, 'utf8');
-        // }
-
-        // //save exclude any file properties
-        // if (document.getElementById("excludeAnyFilesWithProperties").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludeAnyFilesWithProperties.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludeAnyFilesWithProperties.txt', 0, 'utf8');
-        // }
-
-
-        // //save exclude all file properties
-        // if (document.getElementById("excludeAllFilesWithProperties").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludeAllFilesWithProperties.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/excludeAllFilesWithProperties.txt', 0, 'utf8');
-        // }
-
-
-
-
-        // //save copy filtered files or not
-        // if (document.getElementById("copyFilteredFiles").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/copyFilteredFiles.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/copyFilteredFiles.txt', 0, 'utf8');
-        // }
-
-
-        // //save copy srt files
-        // if (document.getElementById("copySRTFiles").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/copySRTFiles.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/copySRTFiles.txt', 0, 'utf8');
-        // }
-
-
-        // //save auto create folders or not
-        // if (document.getElementById("autoCreateFolders").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoCreateFolders.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoCreateFolders.txt', 0, 'utf8');
-        // }
-
-
-        // //save run priority
-        // if (document.getElementById("runPriority").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/runPriority.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/runPriority.txt', 0, 'utf8');
-        // }
-
-
-        // //save replace original files or not
-        // if (document.getElementById("replaceOriginalFile").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFile.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFile.txt', 0, 'utf8');
-        // }
-
-
-        // //save replace original files always or not
-        // if (document.getElementById("replaceOriginalFileAlways").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFileAlways.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/replaceOriginalFileAlways.txt', 0, 'utf8');
-        // }
-
-        // // save number of instances to use 
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/instanceNumber.txt', document.getElementById("instanceNumber").value, 'utf8');
-
-
-        // // save max queue view size limit
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/queueSizeViewLimit.txt', document.getElementById("queueSizeViewLimit").value, 'utf8');
-
-        // //save auto start
-        // if (document.getElementById("autoStart").checked == true) {
-
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoStart.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/autoStart.txt', 0, 'utf8');
-        // }
-
-
-        // // save custom bat path
-        // fs.writeFileSync(homePath + "/HBBatchBeast/Config/customBatPath.txt", document.getElementById("customBatPath").value, 'utf8');
-
-
-
-        // //email address
-        // fs.writeFileSync(homePath + "/HBBatchBeast/Config/Email/emailAddress.txt", document.getElementById("emailAddress").value, 'utf8');
-
-        // //SMTP server
-        // fs.writeFileSync(homePath + "/HBBatchBeast/Config/Email/SMTPServer.txt", document.getElementById("SMTPServer").value, 'utf8');
-
-
-        // // save api key
-        // fs.writeFileSync(homePath + '/HBBatchBeast/Config/apiKEY.txt', document.getElementById("apiKEY").innerHTML, 'utf8');
-
-
-        // // save remote view
-        // if (document.getElementById("remoteViewOnOFF").checked == true) {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/remoteViewOnOFF.txt', 1, 'utf8');
-        // } else {
-        //     fs.writeFileSync(homePath + '/HBBatchBeast/Config/remoteViewOnOFF.txt', 0, 'utf8');
-
-        // }
     }
 
 
@@ -2974,10 +2266,6 @@
                 presetArray,
                 document.getElementById("titleWordFilter").value,
                 document.getElementById("replaceOriginalFile").checked,
-                document.getElementById("minimumFileSizeOnOff").checked,
-                document.getElementById("minimumFileSize").value,
-                document.getElementById("maximumFileSizeOnOff").checked,
-                document.getElementById("maximumFileSize").value,
                 fileNameSuffixArray
 
 
@@ -5119,7 +4407,11 @@
             sourceQueueArray[globalQueueNumberManager],
             presetArray2[globalQueueNumberManager],
             destinationQueue[globalQueueNumberManager],
-            destinationFinalQueue[globalQueueNumberManager]
+            destinationFinalQueue[globalQueueNumberManager],
+            document.getElementById("minimumFileSizeOnOff").checked,
+            document.getElementById("minimumFileSize").value,
+            document.getElementById("maximumFileSizeOnOff").checked,
+            document.getElementById("maximumFileSize").value,
 
 
 
@@ -5409,11 +4701,10 @@
 
     function verifyBenchFiles() {
 
-        if (confirm('Running the benchmark will overwrite your current conversion settings. Would you like to continue?')) {
 
-            createviewBenchStatus();
 
-        }
+        createviewBenchStatus();
+
     }
 
 
@@ -6412,6 +5703,7 @@
         right: 25px;
         font-size: 1em;
         margin-left: 50px;
+        color: #66ccff;
     }
 
 
@@ -6649,8 +5941,8 @@
 
         <center>
 
-            <p><span name="lang_text">Source folder - see help tab for monitoring multiple folders</span> <span
-                    onclick="toolTip('tooltip_source_folders')" class="toolTipClass">�</span></p>
+            <p><span onclick="toolTip('tooltip_source_folders')" class="toolTipClass">�</span><span
+                    name="lang_text">Source folder - see help tab for monitoring multiple folders</span> </p>
 
 
 
@@ -6733,9 +6025,9 @@
 
 
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">Temporary conversion folder</span><span
-                                    onclick="toolTip('tooltip_temporary_conversion_folders')"
-                                    class="toolTipClass">�</span></p>
+                            <p><span onclick="toolTip('tooltip_temporary_conversion_folders')"
+                                    class="toolTipClass">�</span><span name="lang_text">Temporary conversion
+                                    folder</span></p>
                         </div>
 
                         <div id="tooltip_temporary_conversion_folders" style="display: none;">
@@ -6773,8 +6065,8 @@
                     <div class="grid-container">
 
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">Destination folder</span><span
-                                    onclick="toolTip('tooltip_destination_folders')" class="toolTipClass">�</span></p>
+                            <p><span onclick="toolTip('tooltip_destination_folders')" class="toolTipClass">�</span><span
+                                    name="lang_text">Destination folder</span></p>
                         </div>
                         <div class="grid-itemright"></div>
 
@@ -6825,8 +6117,8 @@
                 <div style="display: none;" id="tempConversionFolderDiv">
                     <div class="grid-container">
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">Destination folder</span><span
-                                    onclick="toolTip('tooltip_destination_folders')" class="toolTipClass">�</span></p>
+                            <p><span onclick="toolTip('tooltip_destination_folders')" class="toolTipClass">�</span><span
+                                    name="lang_text">Destination folder</span></p>
                         </div>
                         <div class="grid-itemright"></div>
 
@@ -6858,8 +6150,8 @@
 
 
                             <div class="grid-itemleft">
-                                <p><span name="lang_text">Standard preset:</span><span
-                                        onclick="toolTip('tooltip_standard_preset')" class="toolTipClass">�</span></p>
+                                <p><span onclick="toolTip('tooltip_standard_preset')" class="toolTipClass">�</span><span
+                                        name="lang_text">Standard preset:</span></p>
                             </div>
 
                             <div class="grid-itemright"> <input type="checkbox" id="selectStandardPreset" class="cb1"
@@ -6888,8 +6180,8 @@
                     <div class="grid-container">
 
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">Custom preset:</span><span
-                                    onclick="toolTip('tooltip_custom_preset')" class="toolTipClass">�</span></p>
+                            <p><span onclick="toolTip('tooltip_custom_preset')" class="toolTipClass">�</span><span
+                                    name="lang_text">Custom preset:</span></p>
                         </div>
 
                         <div class="grid-itemright"> <input type="checkbox" id="selectCustomPreset" class="cb1"
@@ -6939,7 +6231,7 @@
                     <br>https://imgur.com/a/2tl8dIw
                     <br><br> <span name="lang_text">If using graphics card encoding (such as NVENC), then you may need
                         to reduce the number of
-                        HandBrake instances (try 2 or fewer) due to memory limitations.</span>
+                        HandBrake instances (try 2 or fewer) due to VRAM limitations.</span>
 
                 </div>
 
@@ -7070,8 +6362,8 @@
 
 
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">Container:</span><span onclick="toolTip('tooltip_container')"
-                                    class="toolTipClass">�</span></p>
+                            <p><span onclick="toolTip('tooltip_container')" class="toolTipClass">�</span><span
+                                    name="lang_text">Container:</span></p>
                         </div>
                         <div class="grid-itemright">
 
@@ -7101,8 +6393,8 @@
                     <div class="grid-container">
 
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">File name suffix:</span><span
-                                    onclick="toolTip('tooltip_filename_suffix')" class="toolTipClass">�</span></p>
+                            <p><span onclick="toolTip('tooltip_filename_suffix')" class="toolTipClass">�</span><span
+                                    name="lang_text">File name suffix:</span></p>
                         </div>
                         <div class="grid-itemright">
 
@@ -7118,7 +6410,7 @@
                 </div>
 
                 <div id="tooltip_filename_suffix" style="display: none;">
-                    <br>
+
                     <br><br><span name="lang_text">This is optional. You can specify a suffix to add to the end of your
                         file name like
                         '_1080p' or '_testconversion' etc.</span>
@@ -7143,8 +6435,8 @@
                     <div class="grid-container">
 
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">Enable periodic scanning:</span><span
-                                    onclick="toolTip('tooltip_periodic_scanning')" class="toolTipClass">�</span></p>
+                            <p><span onclick="toolTip('tooltip_periodic_scanning')" class="toolTipClass">�</span><span
+                                    name="lang_text">Enable periodic scanning:</span></p>
                         </div>
 
                         <div class="grid-itemright"><input type="checkbox" id="scanOnOff" onchange="cbChange4(this)"
@@ -7173,8 +6465,8 @@
                 <div class="rowitem">
                     <div class="grid-container">
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">Enable daily scanning:</span><span
-                                    onclick="toolTip('tooltip_daily_scanning')" class="toolTipClass">�</span></p>
+                            <p><span onclick="toolTip('tooltip_daily_scanning')" class="toolTipClass">�</span><span
+                                    name="lang_text">Enable daily scanning:</span></p>
                         </div>
 
                         <div class="grid-itemright"><input type="checkbox" id="dailyRunTimeOnOff"
@@ -7263,8 +6555,9 @@
                         <div class="grid-container">
 
                             <div style="text-align: left">
-                                <p><span name="lang_text">Include these file types:</span><span
-                                        onclick="toolTip('tooltip_included_file_types')" class="toolTipClass">�</span>
+                                <p><span onclick="toolTip('tooltip_included_file_types')"
+                                        class="toolTipClass">�</span><span name="lang_text">Include these file
+                                        types:</span>
                                 </p>
                             </div>
 
@@ -7290,10 +6583,9 @@
                         <div class="grid-container">
 
                             <div style="text-align: left">
-                                <p><span name="lang_text">Exclude files smaller than (MB):</span><input type="checkbox"
-                                        id="minimumFileSizeOnOff"><span
-                                        onclick="toolTip('tooltip_exclude_files_smaller_than')"
-                                        class="toolTipClass">�</span></p>
+                                <p><span onclick="toolTip('tooltip_exclude_files_smaller_than')"
+                                        class="toolTipClass">�</span><span name="lang_text">Exclude files smaller than
+                                        (MB):</span><input type="checkbox" id="minimumFileSizeOnOff"></p>
 
                             </div>
                             <div style="text-align: right">
@@ -7317,10 +6609,9 @@
                         <div class="grid-container">
 
                             <div style="text-align: left">
-                                <p><span name="lang_text">Exclude files larger than (MB):</span><input type="checkbox"
-                                        id="maximumFileSizeOnOff"><span
-                                        onclick="toolTip('tooltip_exclude_files_larger_than')"
-                                        class="toolTipClass">�</span></p>
+                                <p><span onclick="toolTip('tooltip_exclude_files_larger_than')"
+                                        class="toolTipClass">�</span><span name="lang_text">Exclude files larger than
+                                        (MB):</span><input type="checkbox" id="maximumFileSizeOnOff"></p>
 
                             </div>
                             <div style="text-align: right">
@@ -7344,9 +6635,10 @@
                         <div class="grid-container">
 
                             <div style="text-align: left">
-                                <p><span name="lang_text">Exclude file names which include any of these words:</span>
-                                    <span onclick="toolTip('tooltip_exclude_files_with_words')"
-                                        class="toolTipClass">�</span></p>
+                                <p><span onclick="toolTip('tooltip_exclude_files_with_words')"
+                                        class="toolTipClass">�</span><span name="lang_text">Exclude file names which
+                                        include any of these words:</span>
+                                </p>
                             </div>
 
                             <div style="text-align: right">
@@ -7377,14 +6669,14 @@
                     <div class="rowitem">
                         <div class="grid-container">
                             <div style="text-align: left">
-                                <p><span name="lang_text">Include files with any </span><input type="checkbox"
-                                        id="includeAnyFilesWithProperties" onchange="cbChange6(this)" class="cb6"><span
-                                        name="lang_text"> or all </span><input type="checkbox"
-                                        id="includeAllFilesWithProperties" onchange="cbChange6(this)" class="cb6"><span
-                                        name="lang_text"> of these</span><span id="includeAllFilesWithPropertiesNumber"
-                                        style="display:inline"></span><span name="lang_text">properties:</span><span
-                                        onclick="toolTip('tooltip_include_files_with_properties')"
-                                        class="toolTipClass">�</span></p>
+                                <p><span onclick="toolTip('tooltip_include_files_with_properties')"
+                                        class="toolTipClass">�</span><span name="lang_text">Include files with any
+                                    </span><input type="checkbox" id="includeAnyFilesWithProperties"
+                                        onchange="cbChange6(this)" class="cb6"><span name="lang_text"> or all
+                                    </span><input type="checkbox" id="includeAllFilesWithProperties"
+                                        onchange="cbChange6(this)" class="cb6"><span name="lang_text"> of
+                                        these</span><span id="includeAllFilesWithPropertiesNumber"
+                                        style="display:inline"></span><span name="lang_text">properties:</span></p>
 
 
                             </div>
@@ -7398,9 +6690,7 @@
 
 
                     <div id="tooltip_include_files_with_properties" style="display: none;">
-                        <br>
-
-                        <br><br><span name="lang_text">Here you can input video and audio properties that files must
+                        <br><span name="lang_text">Here you can input video and audio properties that files must
                             have in order to be
                             converted (info extracted using FFPROBE). The properties must be separated by a comma. Use
                             the media info viewer
@@ -7424,16 +6714,16 @@
                         <div class="grid-container">
 
                             <div style="text-align: left">
-                                <p><span name="lang_text">Exclude files with any </span><input type="checkbox"
-                                        id="excludeAnyFilesWithProperties" onchange="cbChange6(this)" class="cb6"><span
-                                        name="lang_text"> or all </span><input type="checkbox"
-                                        id="excludeAllFilesWithProperties" onchange="cbChange6(this)" class="cb6"><span
-                                        name="lang_text"> of these </span><span id="excludeAllFilesWithPropertiesNumber"
-                                        style="display:inline"></span>
+                                <p><span onclick="toolTip('tooltip_exclude_files_with_properties')"
+                                        class="toolTipClass">�</span><span name="lang_text">Exclude files with any
+                                    </span><input type="checkbox" id="excludeAnyFilesWithProperties"
+                                        onchange="cbChange6(this)" class="cb6"><span name="lang_text"> or all
+                                    </span><input type="checkbox" id="excludeAllFilesWithProperties"
+                                        onchange="cbChange6(this)" class="cb6"><span name="lang_text"> of these
+                                    </span><span id="excludeAllFilesWithPropertiesNumber" style="display:inline"></span>
                                     <spanname="lang_text">
                                         </spanname>properties:</span>
-                                        <span onclick="toolTip('tooltip_exclude_files_with_properties')"
-                                            class="toolTipClass">�</span>
+
                                 </p>
 
 
@@ -7448,9 +6738,7 @@
                         </div>
                     </div>
                     <div id="tooltip_exclude_files_with_properties" style="display: none;">
-                        <br>
-
-                        <br><br><span name="lang_text">The opposite of 'Include files with any or all of these
+                        <br><span name="lang_text">The opposite of 'Include files with any or all of these
                             properties'</span>
 
 
@@ -7458,14 +6746,11 @@
 
 
 
-                    <input type="button" onclick="createViewMediaInfo()" value="Media info viewer tool"
-                        class="infoButton"><span onclick="toolTip('tooltip_media_info_viewer_tool')"
-                        class="toolTipClass">�</span>
+                    <span onclick="toolTip('tooltip_media_info_viewer_tool')" class="toolTipClass">�</span> <input
+                        type="button" onclick="createViewMediaInfo()" value="Media info viewer tool" class="infoButton">
 
                     <div id="tooltip_media_info_viewer_tool" style="display: none;">
-                        <br>
-
-                        <br><br><span name="lang_text">This is a small tool to analyse file properties with in order to
+                        <br><span name="lang_text">This is a small tool to analyse file properties with in order to
                             help you determine which
                             properties you'd like to include/exclude in the above options. It uses FFprobe to return
                             information. Drag and drop
@@ -7496,8 +6781,9 @@
                         <div class="grid-container">
 
                             <div class="grid-itemleft">
-                                <p><span name="lang_text">Copy excluded files to destination:</span><span
-                                        onclick="toolTip('tooltip_copy_filtered_files')" class="toolTipClass">�</span>
+                                <p><span onclick="toolTip('tooltip_copy_filtered_files')"
+                                        class="toolTipClass">�</span><span name="lang_text">Copy excluded files to
+                                        destination:</span>
                                 </p>
                             </div>
 
@@ -7505,23 +6791,26 @@
                         </div>
                     </div>
                     <div id="tooltip_copy_filtered_files" style="display: none;">
-                        <br>
-                        <br> <br><span name="lang_text">If you select this option, then files which have been excluded
+                        <br><span name="lang_text">If you select this option, then files which have been excluded
                             from conversion will
                             be
                             copied directly to the destination folder. This applies to the following filters:</span>
 
-                            <br><br><span name="lang_text">Exclude file names which include any of these words</span>
+                        <br><br><span name="lang_text">Exclude file names which include any of these words</span>
                         <br><span name="lang_text">Include files with any or all of these properties</span>
                         <br><span name="lang_text">Exclude files with any or all of these properties</span>
-                        <br><br><span name="lang_text">Note this also applies to files excluded because they don't meet the
+                        <br><span name="lang_text">Exclude files smaller than (MB)</span>
+                        <br><span name="lang_text">Exclude files larger than (MB)</span>
+                        <br><br><span name="lang_text">Note this also applies to files excluded because they don't meet
+                            the
                             "Include" property
                             conditions of the above so don't accidentally copy you're entire library when you're only
                             trying to convert a
                             few
                             files.</span>
-                            <br><br><span name="lang_text">The copy feature does not apply to the following filters (i.e. files excluded due to the filter)</span>
-                            <br><br><span name="lang_text">Include these file types</span>
+                        <br><br><span name="lang_text">The copy feature does not apply to the following filters (i.e.
+                            files excluded due to the filter)</span>
+                        <br><br><span name="lang_text">Include these file types</span>
 
                     </div>
 
@@ -7531,8 +6820,10 @@
                             <div class="grid-itemleft">
 
                                 <div id="deleteItemDiv">
-                                    <p id="deleteSourceFilesdiv"><span name="lang_text">Delete source files after
-                                            conversion:</span><span onclick="toolTip('tooltip_delete_source_files')" class="toolTipClass">�</span></p>
+                                    <p id="deleteSourceFilesdiv"><span onclick="toolTip('tooltip_delete_source_files')"
+                                            class="toolTipClass">�</span><span name="lang_text">Delete source files
+                                            after
+                                            conversion:</span></p>
 
                                 </div>
                             </div>
@@ -7552,45 +6843,55 @@
                     </div>
 
                     <div id="tooltip_delete_source_files" style="display: none;">
-                    
-                        <br> <br><span name="lang_text">If this is selected, then if a conversion attempt is successful, the source file
-                            will be deleted. This process is done at the very end, after conversion of all files. This means that you can convert the
-                            same source files using multiple presets, all in one go. The source files will then be deleted afterwards.</span>
-                    
-                    
+
+                        <br><span name="lang_text">If this is selected, then if a conversion attempt is successful, the
+                            source file
+                            will be deleted. This process is done at the very end, after conversion of all files. This
+                            means that you can convert the
+                            same source files using multiple presets, all in one go. The source files will then be
+                            deleted afterwards.</span>
+
+
                     </div>
 
 
                     <div class="rowitem">
                         <div class="grid-container">
-                    
+
                             <div class="grid-itemleft">
-                                <p><span name="lang_text">Replace original file if converted file is smaller?(Compress
-                                        attempt)</span><span onclick="toolTip('tooltip_compress_attempt')" class="toolTipClass">�</span></p>
-                    
+                                <p><span onclick="toolTip('tooltip_compress_attempt')"
+                                        class="toolTipClass">�</span><span name="lang_text">Replace original file if
+                                        converted file is smaller?(Compress
+                                        attempt)</span></p>
+
                             </div>
-                    
-                            <div class="grid-itemright"><input type="checkbox" id="replaceOriginalFile" onchange="cbChange5(this)"
-                                    class="cb5"></div>
+
+                            <div class="grid-itemright"><input type="checkbox" id="replaceOriginalFile"
+                                    onchange="cbChange5(this)" class="cb5"></div>
                         </div>
                     </div>
-                    
+
                     <div id="tooltip_compress_attempt" style="display: none;">
-                        <br> <br><span name="lang_text">Select this checkbox if you'd like HBBatchBeast to automatically replace the
+                        <br><span name="lang_text">Select this checkbox if you'd like HBBatchBeast to automatically
+                            replace the
                             original
-                            source file if the new file is smaller. If the new file is not smaller, then it will be left in the destination
+                            source file if the new file is smaller. If the new file is not smaller, then it will be left
+                            in the destination
                             folder.</span>
-                        <br> <br><span name="lang_text">Make sure your destination folder is not the same as/or within, your source folder
+                        <br> <br><span name="lang_text">Make sure your destination folder is not the same as/or within,
+                            your source folder
                             or it won't work properly.</span>
-                        <br> <br><span name="lang_text">Once HBBB has attempted to compress a specific file, it will add that file path to a
-                            cache so that it won't be attempted again in future. You can view/edit/clear the cache using the yellow
+                        <br> <br><span name="lang_text">Once HBBB has attempted to compress a specific file, it will add
+                            that file path to a
+                            cache so that it won't be attempted again in future. You can view/edit/clear the cache using
+                            the yellow
                             buttons.</span>
-                    
-                    
+
+
                     </div>
 
 
-<input type="button" onclick="viewLogs('originalFileReplacedList')"
+                    <input type="button" onclick="viewLogs('originalFileReplacedList')"
                         value="View compress attempt cache" class="infoButton">
 
 
@@ -7601,7 +6902,10 @@
                     <div class="rowitem">
                         <div class="grid-container">
                             <div class="grid-itemleft">
-                                <p><span name="lang_text">Replace original file always?</span><span onclick="toolTip('tooltip_replace_source_always')" class="toolTipClass">�</span></p>
+                                <p><span onclick="toolTip('tooltip_replace_source_always')"
+                                        class="toolTipClass">�</span><span name="lang_text">Replace original file
+                                        always?</span>
+                                </p>
                             </div>
 
                             <div class="grid-itemright"><input type="checkbox" id="replaceOriginalFileAlways"
@@ -7611,13 +6915,15 @@
                     </div>
 
                     <div id="tooltip_replace_source_always" style="display: none;">
-                    
-                        <br> <br><span name="lang_text">The original file will be replaced regardless of whether the new file is larger or
+
+                        <br><span name="lang_text">The original file will be replaced regardless of whether the new file
+                            is larger or
                             smaller.</span>
-                        <br> <br><span name="lang_text">Again, make sure your destination folder is not the same as/or within, your source
+                        <br> <br><span name="lang_text">Again, make sure your destination folder is not the same as/or
+                            within, your source
                             folder or it won't work properly.</span>
-                    
-                    
+
+
                     </div>
 
 
@@ -7625,7 +6931,8 @@
                         <div class="grid-container">
 
                             <div class="grid-itemleft">
-                                <p><span name="lang_text">Copy subtitle (srt) files to destination?</span><span onclick="toolTip('tooltip_copy_srt_files')" class="toolTipClass">�</span></p>
+                                <p><span onclick="toolTip('tooltip_copy_srt_files')" class="toolTipClass">�</span><span
+                                        name="lang_text">Copy subtitle (srt) files to destination?</span></p>
                             </div>
 
 
@@ -7637,17 +6944,19 @@
 
                     <div id="tooltip_copy_srt_files" style="display: none;">
 
-                            <br> <br><span name="lang_text">Subtitle '.srt' files will be copied to the destination folder automatically.</span>
-                       
-                       
-                       </div>
+                        <br><span name="lang_text">Subtitle '.srt' files will be copied to the destination folder
+                            automatically.</span>
+
+
+                    </div>
 
 
 
                     <div class="rowitem">
                         <div class="grid-container">
                             <div class="grid-itemleft">
-                                <p><span name="lang_text">Automatically create temporary/destination folders if they don't
+                                <p><span name="lang_text">Automatically create temporary/destination folders if they
+                                        don't
                                         exist?</span></p>
 
                             </div>
@@ -7666,8 +6975,9 @@
                             <div class="grid-container">
 
                                 <div style="text-align: left">
-                                    <p><span name="lang_text">Custom bat path to run after each conversion (leave blank
-                                            if not using):</span><span onclick="toolTip('tooltip_custom_bat')" class="toolTipClass">�</span></p>
+                                    <p><span onclick="toolTip('tooltip_custom_bat')" class="toolTipClass">�</span><span
+                                            name="lang_text">Custom bat path to run after each conversion (leave blank
+                                            if not using):</span></p>
 
                                 </div>
 
@@ -7680,17 +6990,21 @@
 
                     </div>
 
-                    
-<div id="tooltip_custom_bat" style="display: none;">
 
-        <br> <br><span name="lang_text">Input the path to a custom batch file which you'd like to execute after each conversion. For example:</span>
-        <br> <br>C:\Users\HaveAGitGat\Desktop\Input\CopyToBackupDrive.bat
-        <br> <br><span name="lang_text">Batch files with timeout statements won't work. More info here:</span>
-        <br> <br>https://comm.support.ca.com/kb/the-timeout-command-in-batch-script-job-results-in-error-input-redirection-is-not-supported-exiting-the-process-immediately/kb000029524
-        <br> <br><span name="lang_text">Leave box completely empty if you do not wish to use this option (make sure there are no hidden characters in the box)</span>
-   
-   
-   </div>
+                    <div id="tooltip_custom_bat" style="display: none;">
+
+                        <br><span name="lang_text">Input the path to a custom batch file which you'd like to execute
+                            after each conversion. For example:</span>
+                        <br> <br>C:\Users\HaveAGitGat\Desktop\Input\CopyToBackupDrive.bat
+                        <br> <br><span name="lang_text">Batch files with timeout statements won't work. More info
+                            here:</span>
+                        <br>
+                        <br>https://comm.support.ca.com/kb/the-timeout-command-in-batch-script-job-results-in-error-input-redirection-is-not-supported-exiting-the-process-immediately/kb000029524
+                        <br> <br><span name="lang_text">Leave box completely empty if you do not wish to use this option
+                            (make sure there are no hidden characters in the box)</span>
+
+
+                    </div>
 
 
                     <div id="runPriorityDiv" style="display: block;">
@@ -7699,7 +7013,10 @@
                             <div class="grid-container">
 
                                 <div style="text-align: left">
-                                    <p><span name="lang_text">Run processes at low priority?</span><span onclick="toolTip('tooltip_run_low_priority')" class="toolTipClass">�</span></p>
+                                    <p><span onclick="toolTip('tooltip_run_low_priority')"
+                                            class="toolTipClass">�</span><span name="lang_text">Run processes at low
+                                            priority?</span>
+                                    </p>
                                 </div>
 
                                 <div style="text-align: right">
@@ -7713,10 +7030,11 @@
 
                 <div id="tooltip_run_low_priority" style="display: none;">
 
-                        <br> <br><span name="lang_text">All conversion processes will be run at low priority, reducing processor usage.</span>
-                   
-                   
-                   </div>
+                    <br><span name="lang_text">All conversion processes will be run at low priority, reducing processor
+                        usage.</span>
+
+
+                </div>
 
 
 
@@ -7779,15 +7097,15 @@
                 </div>
 
 
-               
+
 
                 <p></p>
                 <p></p>
                 <div class="rowitem">
                     <div class="grid-container">
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">Move corrupt files into the following folder:</span><span
-                                    onclick="toolTip('tooltip_move_corrupt_files')" class="toolTipClass">�</span></p>
+                            <p><span onclick="toolTip('tooltip_move_corrupt_files')" class="toolTipClass">�</span><span
+                                    name="lang_text">Move corrupt files into the following folder:</span></p>
                         </div>
 
                         <div class="grid-itemright"> <input type="checkbox" id="moveCorruptFileOnOff">
@@ -7850,21 +7168,25 @@
                     <div class="grid-container">
 
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">Number of simultaneous HandBrake/FFmpeg instances to use?(Recommended 4
-                                    or fewer):</span><span onclick="toolTip('tooltip_no_workers')" class="toolTipClass">�</span></p>
+                            <p><span onclick="toolTip('tooltip_no_workers')" class="toolTipClass">�</span><span
+                                    name="lang_text">Number of simultaneous HandBrake/FFmpeg instances to
+                                    use?(Recommended 4
+                                    or fewer):</span></p>
                         </div>
                         <div class="grid-itemright"><input type="text" class="infoBox" id="instanceNumber">
                         </div>
                     </div>
                 </div>
-<div id="tooltip_no_workers" style="display: none;">
+                <div id="tooltip_no_workers" style="display: none;">
 
-    <br> <br><span name="lang_text">This setting applies to both the "Video health check" and "Scan and convert"
-        processes. Specify how many HandBrake threads to use. There is no maximum although it's recommended not to use
-        more than 4. A higher amount may freeze your computer if it's not very powerful.</span>
+                    <br><span name="lang_text">This setting applies to both the "Video health check" and "Scan and
+                        convert"
+                        processes. Specify how many HandBrake threads to use. There is no maximum although it's
+                        recommended not to use
+                        more than 4. A higher amount may freeze your computer if it's not very powerful.</span>
 
 
-</div>
+                </div>
 
                 <div class="rowitem">
                     <div class="grid-container">
@@ -7891,25 +7213,41 @@
                 <br>
                 <br>
 
-            <div class="remoteTab">
-    <p><span name="lang_text">Fill in email details to receive email notifications if an error is encountered during a health
-        check or conversion/folder watching. Won't work with accounts that require 2FA. You need to enable access to
-        less secure apps on Gmail accounts.</span></p>
-    </div>
+                <div class="remoteTab">
+                    <p><span name="lang_text">Fill in email details to receive email notifications if an error is
+                            encountered during a health
+                            check or conversion/folder watching. Won't work with accounts that require 2FA. You need to
+                            enable access to
+                            less secure apps on Gmail accounts.</span></p>
+                </div>
 
-    <br>
+                <br>
                 <br>
                 <br>
 
                 <div class="rowitem">
                     <div class="grid-container">
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">Email address:</span></p>
+                            <p><span onclick="toolTip('tooltip_email_settings')" class="toolTipClass">�</span><span
+                                    name="lang_text">Email address:</span></p>
                         </div>
 
                         <div class="grid-itemright"><input type="text" class="infoBox2" id="emailAddress"> </div>
                     </div>
                 </div>
+
+                <div id="tooltip_email_settings" style="display: none;">
+
+                    <br> <span name="lang_text">For example:</span>
+                    <br>
+                    <br><br>Email e.g.: example@exampleemail.com
+                    <br><br>Password: Is not saved for security purposes.
+                    <br><br>SMTP server e.g.: smtp.gmail.com
+
+
+                </div>
+
+
 
 
                 <div class="rowitem">
@@ -7991,7 +7329,7 @@
 
             <center>
 
-                <p><span name="lang_text">This feature allows monitoring of batch conversion status using any
+                <p><span name="lang_text">This feature allows monitoring of conversion/health check status using any
                         web-browser. Useful when running servers etc.</span></p>
 
 
@@ -8165,12 +7503,12 @@
             <div id="fullQueueDiv" style="display: none;">
 
                 <div ALIGN="RIGHT">
-                   
+
                     <input type='button' id="deselectAllButton" class="infoButton" value='Deselect all'
                         onclick='deselectAllItems()' />
                     <input type='button' id="invertAllButton" class="infoButton" value='Invert all'
                         onclick='invertAllItems()' />
-                        <input type='button' id="selectAllButton" class="infoButton" value='Select all'
+                    <input type='button' id="selectAllButton" class="infoButton" value='Select all'
                         onclick='selectAllItems()' />
                 </div>
 
