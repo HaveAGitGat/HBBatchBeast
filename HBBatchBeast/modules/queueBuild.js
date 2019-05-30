@@ -34,10 +34,9 @@ var outputFolderPathold = "";
 var sourceQueueArrayCounter = 0;
 var writeNumber = 0;
 
-var minimumFileSizeOnOff
-var minimumFileSize
-var maximumFileSizeOnOff
-var maximumFileSize
+
+
+var fileNameSuffixArray
 
 var fsextra = require('fs-extra')
 var fs = require('fs');
@@ -116,7 +115,7 @@ process.on('message', (queueInfoBomb) => {
             "File scanner received info",
         ];
         process.send(message);
-    
+
 
 
 
@@ -152,11 +151,11 @@ process.on('message', (queueInfoBomb) => {
 
         replaceOriginalFile = queueInfoBomb[10]
 
-        minimumFileSizeOnOff = queueInfoBomb[11]
-        minimumFileSize = queueInfoBomb[12]
 
-        maximumFileSizeOnOff = queueInfoBomb[13]
-        maximumFileSize = queueInfoBomb[14]
+
+
+
+        fileNameSuffixArray = queueInfoBomb[11]
 
 
 
@@ -312,27 +311,6 @@ process.on('message', (queueInfoBomb) => {
 
                             if (mode != "healthCheck") {
 
-                                if (minimumFileSizeOnOff == true || maximumFileSizeOnOff == true) {
-
-                                    var singleFileSize = fs.statSync(thisFile)
-                                    var singleFileSize = singleFileSize.size
-                                    var fileSizeInGbytes = singleFileSize / 1000000.0;
-
-                                    if (minimumFileSizeOnOff == true) {
-                                        if (fileSizeInGbytes < minimumFileSize) {
-                                            supportedFileSwitch = 0;
-                                        }
-                                    }
-
-                                    if (maximumFileSizeOnOff == true) {
-                                        if (fileSizeInGbytes > maximumFileSize) {
-                                            supportedFileSwitch = 0;
-                                        }
-                                    }
-
-
-
-                                }
 
 
 
@@ -365,9 +343,9 @@ process.on('message', (queueInfoBomb) => {
 
 
 
-                            
 
-                                
+
+
 
 
 
@@ -386,7 +364,7 @@ process.on('message', (queueInfoBomb) => {
 
                                     var message = [
                                         "consoleMessage",
-                                        "Valid files found:"+(totalFileFoundCounter + 1),
+                                        "Valid files found:" + (totalFileFoundCounter + 1),
                                     ];
                                     process.send(message);
 
@@ -432,7 +410,7 @@ process.on('message', (queueInfoBomb) => {
 
                                 } else {
 
-                                    subfilePath = filePathEndFileType + containerType;   // "test" +".mp4"
+                                    subfilePath = filePathEndFileType + fileNameSuffixArray[y] + containerType;   // "test" +".mp4"
 
 
                                 }
@@ -475,7 +453,7 @@ process.on('message', (queueInfoBomb) => {
                                         //     "File does not exist: "+outputPathArrayFinal[inputPathArrayCounter] +"",
                                         // ];
                                         // process.send(message);
-                                       
+
 
                                         fileNotExistsCounter++
                                     }
@@ -490,7 +468,7 @@ process.on('message', (queueInfoBomb) => {
 
                                     } else {
 
-                                       
+
                                         // var message = [
                                         //     "consoleMessage",
                                         //     "File does not exist: "+outputPathArray[inputPathArrayCounter]+"",
@@ -623,7 +601,7 @@ process.on('message', (queueInfoBomb) => {
 
                     } else {
 
-                       
+
                         presetArray3.push(presetArray2[i])
                         sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
 
@@ -636,7 +614,7 @@ process.on('message', (queueInfoBomb) => {
 
                             var message = [
                                 "consoleMessage",
-                                "Building queue:"+(sourceQueueArrayCounter + 1),
+                                "Building queue:" + (sourceQueueArrayCounter + 1),
                             ];
                             process.send(message);
 
@@ -732,7 +710,7 @@ process.on('message', (queueInfoBomb) => {
                     } else {
 
 
-                       
+
 
                         presetArray3.push(presetArray2[i])
 
@@ -750,7 +728,7 @@ process.on('message', (queueInfoBomb) => {
                             process.send(message);
                             var message = [
                                 "consoleMessage",
-                                "Building queue:"+(sourceQueueArrayCounter + 1),
+                                "Building queue:" + (sourceQueueArrayCounter + 1),
                             ];
                             process.send(message);
 
@@ -821,7 +799,7 @@ process.on('message', (queueInfoBomb) => {
 
 
 
-       
+
 
 
 
