@@ -1,3 +1,22 @@
+
+function updateConsole(text) {
+    var message = [
+        "consoleMessage",
+        text,
+    ];
+    process.send(message);
+
+
+}
+
+
+process.on('uncaughtException', function (err) {
+    //console.error(err.stack);
+    updateConsole(err.stack)
+    process.exit();
+});
+
+
 //global variables
 var shellWorker
 var shell = require('shelljs');
@@ -15,6 +34,8 @@ if (process.platform == 'darwin') {
     var homePath = home
 
 }
+
+console.log(randomvariable)
 
 process.on('message', (infoArray) => {
 
@@ -78,3 +99,8 @@ process.on('message', (infoArray) => {
         process.exit();
     }
 });
+
+
+
+
+
