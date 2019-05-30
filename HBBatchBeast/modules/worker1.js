@@ -1,3 +1,37 @@
+//Log errors
+
+
+
+
+function updateConsole(workerNumber, text) {
+
+    var message = [
+        workerNumber,
+        "consoleMessage",
+        text,
+    ];
+    process.send(message);
+}
+
+process.on('uncaughtException', function (err) {
+    console.error(err.stack);
+
+    updateConsole(workerNumber, ":" + err.stack)
+
+
+    var message = [
+        workerNumber,
+        "appendRequest",
+        homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt',
+        "Worker thread error: " + err.stack + "\r\n",
+    ];
+    process.send(message);
+
+
+    process.exit();
+});
+
+
 //SET ENV
 if (__dirname.includes('.asar')) { // If dev
     process.env.NODE_ENV = "production";
@@ -30,24 +64,7 @@ function sleep(milliseconds) {
 
 
 
-//Log errors
 
-
-
-
-function updateConsole(workerNumber, text) {
-
-    var message = [
-        workerNumber,
-        "consoleMessage",
-        text,
-    ];
-    process.send(message);
-
-
-
-
-}
 
 
 
@@ -156,24 +173,14 @@ var currentSourceLine
 var preset
 
 
-
-process.on('uncaughtException', function (err) {
-    console.error(err.stack);
-
-    updateConsole(workerNumber, ":" + err.stack)
-
-
-    var message = [
-        workerNumber,
-        "appendRequest",
-        homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt',
-        "Worker thread error: " + err.stack + "\r\n",
-    ];
-    process.send(message);
+var minimumFileSizeOnOff
+var minimumFileSize
+var maximumFileSizeOnOff
+var maximumFileSize
 
 
-    process.exit();
-});
+
+
 
 
 
@@ -285,6 +292,11 @@ process.on('message', (m) => {
         preset = m[23];
         currentDestinationLine = m[24];
         currentDestinationFinalLine = m[25];
+
+        minimumFileSizeOnOff = m[26]
+        minimumFileSize = m[27]
+        maximumFileSizeOnOff = m[28]
+        maximumFileSize = m[29]
 
 
 
@@ -807,6 +819,31 @@ process.on('message', (m) => {
                             updateConsole(workerNumber, "FFprobe Fail:" + currentSourceLine)
                         }
                         processFileY = true
+
+                        if (minimumFileSizeOnOff == true || maximumFileSizeOnOff == true) {
+
+                            var singleFileSize = fs.statSync(currentSourceLine)
+                            var singleFileSize = singleFileSize.size
+                            var fileSizeInGbytes = singleFileSize / 1000000.0;
+
+                            if (minimumFileSizeOnOff == true) {
+                                if (fileSizeInGbytes < minimumFileSize) {
+                                    processFileY = false
+                                    filterReason += "File below minimum MB size "
+                                }
+                            }
+
+                            if (maximumFileSizeOnOff == true) {
+                                if (fileSizeInGbytes > maximumFileSize) {
+                                    processFileY = false
+                                    filterReason += "File above maximum MB size "
+                                }
+                            }
+
+
+
+                        }
+
                     }
                     //jsonInfo.streams[0]["codec_name"] == "h264"
                     if (processFileY == true) {
@@ -1108,6 +1145,11 @@ process.on('message', (m) => {
 
 
                         shellThreadModule.on('message', function (message) {
+
+
+                            if (message[0] == "consoleMessage") {
+                                updateConsole("Worker " + message[0] + ":" + message[1] + "");
+                            }
 
 
 
