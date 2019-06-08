@@ -116,6 +116,16 @@ if(process.platform=='win32'){
         mainWindow.hide()
     })
 
+    mainWindow.on('maximize', function (event) {
+        event.preventDefault()
+        window.maximize();
+    })
+
+    mainWindow.on('unmaximize', function (event) {
+        event.preventDefault()
+        window.unmaximize();
+    })
+
 mainWindow.on('show', function () {
 appIcon.setHighlightMode('always')
 
@@ -241,7 +251,7 @@ if (process.platform == 'darwin') {
 
 //Add developer tools item if not in production
 
-if (process.env.NODE_ENV != 'production'|| process.env.NODE_ENV == 'production') {
+if (process.env.NODE_ENV != 'production') {
     mainMenuTemplate.push({
         label: 'Developer Tools',
         submenu: [
