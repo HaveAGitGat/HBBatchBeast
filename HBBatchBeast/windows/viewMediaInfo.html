@@ -36,10 +36,15 @@ window.onload = function () {
 
 document.getElementById("window-controls").style.right = 0
 
+document.getElementById("min-button").style.gridColumn = 1;
+            document.getElementById("max-button").style.gridColumn = 2;
+            document.getElementById("close-button").style.gridColumn = 3;
+
 }
 if ( process.platform == 'darwin') {
 
 document.getElementById("window-controls").style.left = 0
+
 document.getElementById("min-button").style.gridColumn = 2;
 document.getElementById("max-button").style.gridColumn = 3;
 document.getElementById("close-button").style.gridColumn = 1;
@@ -294,7 +299,7 @@ body {
 
 
 
-#window-controls #min-button {
+/* #window-controls #min-button {
   grid-column: 1;
 }
 #window-controls #max-button, #window-controls #restore-button {
@@ -302,7 +307,7 @@ body {
 }
 #window-controls #close-button {
   grid-column: 3;
-}
+} */
 
 #window-title {
   grid-column: 1;
