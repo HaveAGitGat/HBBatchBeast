@@ -935,7 +935,8 @@ process.on('message', (m) => {
 
                                 var numbers = "0123456789"
                                 var n = str.indexOf("%")
-                                if (str.length >= 7 && str.indexOf("%") >= 7 && numbers.includes(str.charAt(n - 6))) {
+
+                                if (str.length >= 6 && str.indexOf("%") >= 6 && numbers.includes(str.charAt(n - 5))) {
 
                                     var output = str.substring(n - 6, n + 1)
 
@@ -1013,7 +1014,7 @@ process.on('message', (m) => {
 
                                 var numbers = "0123456789"
                                 var n = str.indexOf("%")
-                                if (str.length >= 7 && str.indexOf("%") >= 7 && numbers.includes(str.charAt(n - 6))) {
+                                if (str.length >= 6 && str.indexOf("%") >= 6 && numbers.includes(str.charAt(n - 5))) {
 
                                     var output = str.substring(n - 6, n + 1)
 
