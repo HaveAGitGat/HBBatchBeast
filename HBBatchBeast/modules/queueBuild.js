@@ -1,29 +1,23 @@
-// process.on('error', function (error) {
-//     process.send({ error: error.message || error });
-// });
+function updateConsole(text) {
+    var message = [
+        "consoleMessage",
+        text,
+    ];
+    process.send(message);
 
+
+}
 
 process.on('uncaughtException', function (err) {
-    // console.error(err.stack);
     console.log(err.stack);
 
-    // var tempPath=homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt'
-    // var tempMessage="Worker thread error: "+err.stack+"\r\n"
-    // process.send(workerNumber+",writeRequest,"+tempPath+","+tempMessage)
-
-
-    //  var message = [
-    // "writeRequest",
-    // homePath + '/HBBatchBeast/Logs/SystemErrorLog.txt',
-    // "Queue thread error: "+err.stack+"\r\n",
-    // ];
-    // process.send(message);
-
+    updateConsole(err.stack)
 
     process.exit();
 });
 
 
+//console.log(randomvariable)
 
 //Global variables
 
@@ -88,6 +82,7 @@ var presetArray = [];
 var destinationQueueArray = [];
 var destinationFinalQueueArray = [];
 
+var removeApostrophes_chkbx
 
 
 
@@ -95,8 +90,14 @@ var destinationFinalQueueArray = [];
 
 
 
+var message = [
+    "readyforInfo",
+];
+
+process.send(message);
 
 
+updateConsole("File scanner: online.")
 
 
 
@@ -110,18 +111,18 @@ process.on('message', (queueInfoBomb) => {
     if (queueInfoBomb[0] == "queueInfoBomb") {
 
 
-        var message = [
-            "consoleMessage",
-            "File scanner received info",
-        ];
-        process.send(message);
+
+        updateConsole("File scanner: received info")
 
 
 
 
 
         inputPathStemArray = queueInfoBomb[1]
+
+
         outPutPathStemArray = queueInfoBomb[2]
+
         outPutPathStemFinalArray = queueInfoBomb[3]
 
 
@@ -157,6 +158,10 @@ process.on('message', (queueInfoBomb) => {
 
         fileNameSuffixArray = queueInfoBomb[11]
 
+        removeApostrophes_chkbx = queueInfoBomb[12]
+
+
+
 
 
 
@@ -166,7 +171,8 @@ process.on('message', (queueInfoBomb) => {
 
         if (process.platform == 'win32' || process.platform == 'linux') {
 
-            var homePath = "."
+            //var homePath = "."
+            var homePath = home
 
 
         }
@@ -185,7 +191,7 @@ process.on('message', (queueInfoBomb) => {
 
 
             var healthyFileArray = "";
-            healthyFileArray = fs.readFileSync(homePath + "/HBBatchBeast/Logs/healthyFileList.txt", 'utf8');
+            healthyFileArray = fs.readFileSync(homePath + "/Documents/HBBatchBeast/Logs/healthyFileList.txt", 'utf8');
             healthyFileArray = healthyFileArray.toString().split("\n");
 
         }
@@ -195,7 +201,7 @@ process.on('message', (queueInfoBomb) => {
 
 
             var replacedFileArray = "";
-            replacedFileArray = fs.readFileSync(homePath + "/HBBatchBeast/Logs/originalFileReplacedList.txt", 'utf8');
+            replacedFileArray = fs.readFileSync(homePath + "/Documents/HBBatchBeast/Logs/originalFileReplacedList.txt", 'utf8');
             replacedFileArray = replacedFileArray.toString().split("\n");
 
         }
@@ -331,7 +337,21 @@ process.on('message', (queueInfoBomb) => {
 
 
                                 //Here add the full file path to the inputPathArray
-                                inputPathArray[inputPathArrayCounter] = thisFile + "";
+
+                                
+                                if (removeApostrophes_chkbx) {
+
+                                    var fileNameApostrophesRemoved =  thisFile.replace(/'/g, ' ');   
+                                    fs.renameSync(thisFile, fileNameApostrophesRemoved)  
+                                    inputPathArray[inputPathArrayCounter] = fileNameApostrophesRemoved + ""; 
+
+                                }else{
+
+                                    inputPathArray[inputPathArrayCounter] = thisFile + ""; 
+                                }
+        
+
+                                
 
 
                                 // var message = [
@@ -352,25 +372,17 @@ process.on('message', (queueInfoBomb) => {
 
 
 
-                                if ((totalFileFoundCounter + 1) % 100 == 0) {
+                               // if ((totalFileFoundCounter + 1) % 100 == 0) {
 
                                     // scanWindow.webContents.send('item:count', (totalFileFoundCounter + 1));
+                              //  }
 
-                                    var message = [
-                                        "totalFiles",
-                                        (totalFileFoundCounter + 1),
-                                    ];
-                                    process.send(message);
-
-                                    var message = [
-                                        "consoleMessage",
-                                        "Valid files found:" + (totalFileFoundCounter + 1),
-                                    ];
-                                    process.send(message);
-
-
-
-                                }
+                                updateConsole("File scanner: Valid files found:" + (totalFileFoundCounter + 1))
+                                var message = [
+                                    "totalFiles",
+                                    (totalFileFoundCounter + 1),
+                                ];
+                                process.send(message);
 
 
                                 // ipcRenderer.send('item:count', (totalFileFoundCounter + 1));
@@ -583,11 +595,8 @@ process.on('message', (queueInfoBomb) => {
 
 
 
-        var message = [
-            "consoleMessage",
-            "Building queue",
-        ];
-        process.send(message);
+
+        updateConsole("File scanner: Building queue")
 
 
 
@@ -603,6 +612,7 @@ process.on('message', (queueInfoBomb) => {
 
 
                         presetArray3.push(presetArray2[i])
+                        
                         sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
 
                         if ((sourceQueueArrayCounter + 1) % 100 == 0) {
@@ -612,11 +622,9 @@ process.on('message', (queueInfoBomb) => {
                             ];
                             process.send(message);
 
-                            var message = [
-                                "consoleMessage",
-                                "Building queue:" + (sourceQueueArrayCounter + 1),
-                            ];
-                            process.send(message);
+                           
+
+                            updateConsole("File scanner: Building queue:" + (sourceQueueArrayCounter + 1))
 
                         }
 
@@ -725,12 +733,12 @@ process.on('message', (queueInfoBomb) => {
                                 "buildQueue",
                                 (sourceQueueArrayCounter + 1),
                             ];
+
                             process.send(message);
-                            var message = [
-                                "consoleMessage",
-                                "Building queue:" + (sourceQueueArrayCounter + 1),
-                            ];
-                            process.send(message);
+
+                           
+
+                            updateConsole("File scanner: Building queue:" + (sourceQueueArrayCounter + 1))
 
                         }
 
@@ -820,14 +828,14 @@ process.on('message', (queueInfoBomb) => {
 
         var message = [
             "writeRequest",
-            homePath + '/HBBatchBeast/Config/unconvertedFilesFound.txt',
+            homePath + '/Documents/HBBatchBeast/Config/unconvertedFilesFound.txt',
             (fileNotExistsCounter),
         ];
         process.send(message);
 
 
 
-
+        updateConsole("File scanner: Finished")
 
 
         var message = [
