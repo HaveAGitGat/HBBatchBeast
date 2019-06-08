@@ -21,7 +21,6 @@ A free GUI application for HandBrake and FFmpeg/FFprobe on Windows, macOS and Li
 
 This is a standalone program on Windows but requires Handbrake to be installed on Linux and Mac. 
 
-Please read the DeveloperREADME for help with modifying or if you'd like to contribute.
 
 
 -------------------------------------------------------------
