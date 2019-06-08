@@ -118,12 +118,12 @@ if(process.platform=='win32'){
 
     mainWindow.on('maximize', function (event) {
         event.preventDefault()
-        window.maximize();
+        mainWindow.maximize();
     })
 
     mainWindow.on('unmaximize', function (event) {
         event.preventDefault()
-        window.unmaximize();
+        mainWindow.unmaximize();
     })
 
 mainWindow.on('show', function () {
