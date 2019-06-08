@@ -379,8 +379,9 @@
         if ( process.platform == 'darwin') {
 
             document.getElementById("window-controls").style.left = 0
-            document.getElementById("min-button").style.gridColumn = 3;
-            document.getElementById("max-button").style.gridColumn = 2;
+
+            document.getElementById("min-button").style.gridColumn = 2;
+            document.getElementById("max-button").style.gridColumn = 3;
             document.getElementById("close-button").style.gridColumn = 1;
 
             document.getElementById("window-title").style.top = 0;
@@ -660,7 +661,7 @@
 
                 var Status = data
 
-                if ("2.1.2" != Status.version) {
+                if ("2.1.3" != Status.version) {
 
                     updateConsole("" + "New version available" + "")
 
@@ -2204,7 +2205,7 @@ function getFFmpegCLIPath(){
                         var d = new Date(),
                             h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
                             m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
-                        timenow = h + ':' + m
+                        var timenow = h + ':' + m
 
 
                         //   /  console.log(dailyRunTime+"   "+timenow)
@@ -6153,7 +6154,7 @@ function getFFmpegCLIPath(){
 
 
             <div id="window-title">
-                <span>HBBatchBeast 2.1.2</span>
+                <span>HBBatchBeast 2.1.3</span>
             </div>
 
             <div id="window-controls">
