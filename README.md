@@ -4,7 +4,7 @@
 
 
 
-![Screenshot](https://i.imgur.com/p3MwnpI.png)
+![Screenshot](https://i.imgur.com/pSNJFSj.png)
 
 Demo video - https://youtu.be/mHMXfInoqfE
 
