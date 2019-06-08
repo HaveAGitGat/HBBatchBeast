@@ -32,6 +32,25 @@ const {ipcRenderer}=electron
 
 window.onload = function () {
 
+  if (process.platform == 'win32' || process.platform == 'linux') {
+
+document.getElementById("window-controls").style.right = 0
+
+}
+if ( process.platform == 'darwin') {
+
+document.getElementById("window-controls").style.left = 0
+document.getElementById("min-button").style.gridColumn = 3;
+document.getElementById("max-button").style.gridColumn = 2;
+document.getElementById("close-button").style.gridColumn = 1;
+
+document.getElementById("window-title").style.top = 0;
+document.getElementById("window-title").style.right = 0;
+document.getElementById("window-title").style.position = "absolute";
+}
+
+
+
   document.getElementById("informationWindow").innerHTML = ""
 
 
@@ -240,7 +259,7 @@ body {
   grid-template-columns: repeat(3, 46px);
   position: absolute;
   top: 0;
-  right: 0;
+  /* right: 0; */
   height: 100%;
   font-family: "Segoe MDL2 Assets";
   font-size: 10px;
