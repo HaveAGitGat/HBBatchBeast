@@ -12,7 +12,7 @@ function updateConsole(text) {
 
 process.on('uncaughtException', function (err) {
     //console.error(err.stack);
-    updateConsole(err.stack)
+    updateConsole("Shell thread module: "+err.stack)
     process.exit();
 });
 
@@ -23,19 +23,9 @@ var shell = require('shelljs');
 var fs = require('fs');
 var home = require("os").homedir();
 
-if (process.platform == 'win32' || process.platform == 'linux') {
 
-    var homePath = "."
 
-}
-
-if (process.platform == 'darwin') {
-
-    var homePath = home
-
-}
-
-console.log(randomvariable)
+//console.log(randomvariable)
 
 process.on('message', (infoArray) => {
 
