@@ -1,3 +1,24 @@
+function updateConsole(text) {
+  var message = [
+      "consoleMessage",
+      text,
+  ];
+  process.send(message);
+
+
+}
+
+process.on('uncaughtException', function (err) {
+  console.log(err.stack);
+
+  updateConsole(err.stack)
+
+  process.exit();
+});
+
+//console.log(randomvariable)
+
+
 
 //global variable
 
