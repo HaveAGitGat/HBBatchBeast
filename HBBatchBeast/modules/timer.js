@@ -8,45 +8,45 @@
 setInterval(runTimer, 1000);
 
 //global variables
-var runTimerOn= 0;
+var runTimerOn = 0;
 
-var timer =1;
+var timer = 1;
 
 
-function runTimer(){
+function runTimer() {
 
     //timer--;
     console.log(timer)
 
 
-if(runTimerOn== 1){
+    if (runTimerOn == 1) {
 
- timer--;  
- 
- if(timer== 0){
+        timer--;
 
-    var messageOut = [
-        "scanandconvert",
-                ];  
-process.send(messageOut);
-process.exit()
+        if (timer == 0) {
 
- }
-}
+            var messageOut = [
+                "scanandconvert",
+            ];
+            process.send(messageOut);
+            process.exit()
+
+        }
+    }
 }
 
 
 
 process.on('message', (infoArray) => {
 
-if(infoArray[0]=="runTimer"){
+    if (infoArray[0] == "runTimer") {
 
 
-    if(infoArray[1]=="dailyRunTime"){
+        if (infoArray[1] == "dailyRunTime") {
 
-        runTimerOn= 1;
+            runTimerOn = 1;
 
+        }
     }
-}
 
 });
