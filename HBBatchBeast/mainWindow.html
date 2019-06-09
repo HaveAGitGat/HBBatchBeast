@@ -77,7 +77,7 @@
 
 
     if (process.platform == 'win32' || process.platform == 'linux') {
-       // var homePathOld = "."
+        // var homePathOld = "."
         var homePath = home
     }
 
@@ -380,7 +380,7 @@
             document.getElementById("close-button").style.gridColumn = 3;
 
         }
-        if ( process.platform == 'darwin') {
+        if (process.platform == 'darwin') {
 
             document.getElementById("window-controls").style.left = 0
 
@@ -394,7 +394,7 @@
         }
 
 
- 
+
         //create folders/logs if not exist
         if (!fs.existsSync(homePath + "/Documents/HBBatchBeast")) {
             fs.mkdirSync(homePath + "/Documents/HBBatchBeast");
@@ -430,8 +430,8 @@
             fs.mkdirSync(homePath + "/Documents/HBBatchBeast/Logs");
         }
 
-        if (!fs.existsSync( homePath + '/Documents/HBBatchBeast/Logs/MasterLog.txt')) {
-            fs.appendFileSync( homePath + '/Documents/HBBatchBeast/Logs/MasterLog.txt', "", 'utf8');
+        if (!fs.existsSync(homePath + '/Documents/HBBatchBeast/Logs/MasterLog.txt')) {
+            fs.appendFileSync(homePath + '/Documents/HBBatchBeast/Logs/MasterLog.txt', "", 'utf8');
         }
 
 
@@ -458,9 +458,9 @@
         }
 
 
-       
 
-        
+
+
 
 
         //set console
@@ -520,16 +520,16 @@
         }
 
 
-        function folderChangeAlert(){
+        function folderChangeAlert() {
             if (process.platform == 'win32') {
-                alert("Hello \n\nAs of v2.1.3, the way configuration settings are stored has been changed in order to allow multiple configurations so you'll need to re-do your configurations. \n\nAlso, in order to improve consistency across platforms and to make upgrading easier in future, the HBBatchBeast logs and config settings folder has changed to inside your 'Documents' folder.\n\n To retain your healthy file logs etc please move your old 'HBBatchBeast\\HBBatchBeast\\Logs' and 'HBBatchBeast\\HBBatchBeast\\Config' folders to:\n\n"+home+"\\Documents\\HBBatchBeast\\ \n\nSorry for the inconvenience.");
+                alert("Hello \n\nAs of v2.1.3, the way configuration settings are stored has been changed in order to allow multiple configurations so you'll need to re-do your configurations. \n\nAlso, in order to improve consistency across platforms and to make upgrading easier in future, the HBBatchBeast logs and config settings folder has changed to inside your 'Documents' folder.\n\n To retain your healthy file logs etc please move your old 'HBBatchBeast\\HBBatchBeast\\Logs' and 'HBBatchBeast\\HBBatchBeast\\Config' folders to:\n\n" + home + "\\Documents\\HBBatchBeast\\ \n\nSorry for the inconvenience.");
 
-                }
+            }
 
-                if (process.platform == 'linux' || process.platform == 'darwin') {
-                alert("Hello \n\nAs of v2.1.3, the way configuration settings are stored has been changed in order to allow multiple configurations so you'll need to re-do your configurations. \n\nAlso, in order to improve consistency across platforms and to make upgrading easier in future, the HBBatchBeast logs and config settings folder has changed to inside your 'Documents' folder.\n\n To retain your healthy file logs etc please move your old 'home\\HBBatchBeast\\Logs' and 'home\\HBBatchBeast\\Config' folders to:\n\n"+home+"\\Documents\\HBBatchBeast\\ \n\nSorry for the inconvenience.");
+            if (process.platform == 'linux' || process.platform == 'darwin') {
+                alert("Hello \n\nAs of v2.1.3, the way configuration settings are stored has been changed in order to allow multiple configurations so you'll need to re-do your configurations. \n\nAlso, in order to improve consistency across platforms and to make upgrading easier in future, the HBBatchBeast logs and config settings folder has changed to inside your 'Documents' folder.\n\n To retain your healthy file logs etc please move your old 'home\\HBBatchBeast\\Logs' and 'home\\HBBatchBeast\\Config' folders to:\n\n" + home + "\\Documents\\HBBatchBeast\\ \n\nSorry for the inconvenience.");
 
-                }
+            }
         }
 
 
@@ -574,7 +574,7 @@
 
         //load lang strings from json
 
-       
+
         if (process.env.NODE_ENV != 'production') {
             var new_language = JSON.parse(fs.readFileSync('./translations/' + selLang.value + '.json', 'utf8'))
         } else {
@@ -606,12 +606,12 @@
             }
         }
 
-   
 
 
 
-    
-        
+
+
+
         //Initialise undefined parts of config object
         for (var i = 0; i < 10; i++) {
             //Video health check tab
@@ -793,9 +793,9 @@
         jsonConfig.configs[selected_config_no].tab_health.thorough_health_check_toggle == 1 ? document.getElementById("runThoroughHealthCheck").checked = true : document.getElementById("runThoroughHealthCheck").checked = false;
         jsonConfig.configs[selected_config_no].tab_health.thorough_health_check_repair_toggle == 1 ? document.getElementById("repairAttempt").checked = true : document.getElementById("repairAttempt").checked = false;
         jsonConfig.configs[selected_config_no].tab_health.crf_repair_value == undefined ? document.getElementById("CRFRepairValue").value = 23 : document.getElementById("CRFRepairValue").value = jsonConfig.configs[selected_config_no].tab_health.crf_repair_value;
-        
-        
-       //Batch tab
+
+
+        //Batch tab
 
         jsonConfig.configs[selected_config_no].tab_batch.path.source_path == undefined ? document.getElementById("sourcePath").value = "" : document.getElementById("sourcePath").value = jsonConfig.configs[selected_config_no].tab_batch.path.source_path;
 
@@ -807,7 +807,7 @@
         }
 
 
-        
+
 
         jsonConfig.configs[selected_config_no].tab_batch.path.destination_path == undefined ? document.getElementById("destinationPath").value = "" : document.getElementById("destinationPath").value = jsonConfig.configs[selected_config_no].tab_batch.path.destination_path;
         jsonConfig.configs[selected_config_no].tab_batch.path.temp_destination_path == undefined ? document.getElementById("tempDestinationPath").value = "" : document.getElementById("tempDestinationPath").value = jsonConfig.configs[selected_config_no].tab_batch.path.temp_destination_path;
@@ -841,7 +841,7 @@
         jsonConfig.configs[selected_config_no].tab_batch.preset == undefined ? document.getElementById("preset").selectedIndex = "" : document.getElementById("preset").selectedIndex = jsonConfig.configs[selected_config_no].tab_batch.preset;
         jsonConfig.configs[selected_config_no].tab_batch.custom_preset_string == undefined ? document.getElementById("customPresets").value = "" : document.getElementById("customPresets").value = jsonConfig.configs[selected_config_no].tab_batch.custom_preset_string;
         jsonConfig.configs[selected_config_no].tab_batch.container == undefined ? document.getElementById("container").value = "" : document.getElementById("container").value = jsonConfig.configs[selected_config_no].tab_batch.container;
-        
+
 
         if (jsonConfig.configs[selected_config_no].tab_batch.periodic_scanning_toggle == 1) {
             document.getElementById("scanOnOff").checked = true;
@@ -867,13 +867,13 @@
 
         jsonConfig.configs[selected_config_no].tab_batch.advanced.periodic_scan_interval == undefined ? document.getElementById("timer").value = "300" : document.getElementById("timer").value = jsonConfig.configs[selected_config_no].tab_batch.advanced.periodic_scan_interval;
         jsonConfig.configs[selected_config_no].tab_batch.advanced.daily_run_time == undefined ? document.getElementById("dailyRunTime").value = "" : document.getElementById("dailyRunTime").value = jsonConfig.configs[selected_config_no].tab_batch.advanced.daily_run_time;
-        
+
         jsonConfig.configs[selected_config_no].tab_batch.advanced.file_name_suffix == undefined ? document.getElementById("fileNameSuffix").value = "" : document.getElementById("fileNameSuffix").value = jsonConfig.configs[selected_config_no].tab_batch.advanced.file_name_suffix;
         jsonConfig.configs[selected_config_no].tab_batch.advanced.file_name_suffix_toggle == 1 ? document.getElementById("fileNameSuffixToggle").checked = true : document.getElementById("fileNameSuffixToggle").checked = false;
-        
-        
-        
-        
+
+
+
+
         jsonConfig.configs[selected_config_no].tab_batch.advanced.included_file_types == undefined ? document.getElementById("includedFileTypes").value == "" : document.getElementById("includedFileTypes").value = jsonConfig.configs[selected_config_no].tab_batch.advanced.included_file_types;
 
         if (jsonConfig.configs[selected_config_no].tab_batch.advanced.included_file_types == undefined) {
@@ -1204,51 +1204,51 @@
 
 
 
-function getHandBrakeCLIPath(){
-
-    
-var fullPath = __dirname;
-fullPath = fullPath.slice(0, fullPath.lastIndexOf(global.stringProcessingSlash));
-fullPath = fullPath.slice(0, fullPath.lastIndexOf(global.stringProcessingSlash));
-var fullPath2 = fullPath + "\\HandBrakeCLI.exe"
+    function getHandBrakeCLIPath() {
 
 
-
-//handbrake CLI path
-if (process.platform == 'win32' && process.env.NODE_ENV == 'production') {
-    //production
-    var handBrakeCLIPath = "\"" + fullPath2 + "\"";
-
-} else if (process.platform == 'win32' && process.env.NODE_ENV != 'production') {
-    //development
-    var handBrakeCLIPath = "\"" + __dirname + "/HandBrakeCLI.exe\"";
-}
+        var fullPath = __dirname;
+        fullPath = fullPath.slice(0, fullPath.lastIndexOf(global.stringProcessingSlash));
+        fullPath = fullPath.slice(0, fullPath.lastIndexOf(global.stringProcessingSlash));
+        var fullPath2 = fullPath + "\\HandBrakeCLI.exe"
 
 
-if (process.platform == 'linux' || process.platform == 'darwin') {
-    //development && //production
-    var handBrakeCLIPath = "HandBrakeCLI -i \""
-}
 
-return handBrakeCLIPath
+        //handbrake CLI path
+        if (process.platform == 'win32' && process.env.NODE_ENV == 'production') {
+            //production
+            var handBrakeCLIPath = "\"" + fullPath2 + "\"";
 
-}
+        } else if (process.platform == 'win32' && process.env.NODE_ENV != 'production') {
+            //development
+            var handBrakeCLIPath = "\"" + __dirname + "/HandBrakeCLI.exe\"";
+        }
 
-function getFFmpegCLIPath(){
 
-    if (process.env.NODE_ENV == 'production') {
-    if (process.platform == 'win32') {
-        var ffmpegPath = (path.join(__dirname, '\\node_modules\\@ffmpeg-installer\\win32-x64\\ffmpeg.exe')).replace('app.asar', 'app.asar.unpacked')
-    } else {
-        var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
+        if (process.platform == 'linux' || process.platform == 'darwin') {
+            //development && //production
+            var handBrakeCLIPath = "HandBrakeCLI -i \""
+        }
+
+        return handBrakeCLIPath
+
     }
-} else {
-    var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
-}
 
-    return ffmpegPath
+    function getFFmpegCLIPath() {
 
-}
+        if (process.env.NODE_ENV == 'production') {
+            if (process.platform == 'win32') {
+                var ffmpegPath = (path.join(__dirname, '\\node_modules\\@ffmpeg-installer\\win32-x64\\ffmpeg.exe')).replace('app.asar', 'app.asar.unpacked')
+            } else {
+                var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('app.asar', 'app.asar.unpacked');
+            }
+        } else {
+            var ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+        }
+
+        return ffmpegPath
+
+    }
 
 
 
@@ -1283,10 +1283,10 @@ function getFFmpegCLIPath(){
             jsonConfig.configs[selected_config_no].tab_health.path.corrupt_destination_path = document.getElementById("corruptDestinationPath").value
             document.getElementById("moveCorruptFileOnOff").checked ? jsonConfig.configs[selected_config_no].tab_health.move_corrupt_files_toggle = 1 : jsonConfig.configs[selected_config_no].tab_health.move_corrupt_files_toggle = 0;
             document.getElementById("runThoroughHealthCheck").checked ? jsonConfig.configs[selected_config_no].tab_health.thorough_health_check_toggle = 1 : jsonConfig.configs[selected_config_no].tab_health.thorough_health_check_toggle = 0;
-            document.getElementById("repairAttempt").checked ? jsonConfig.configs[selected_config_no].tab_health.thorough_health_check_repair_toggle  = 1 : jsonConfig.configs[selected_config_no].tab_health.thorough_health_check_repair_toggle  = 0;
+            document.getElementById("repairAttempt").checked ? jsonConfig.configs[selected_config_no].tab_health.thorough_health_check_repair_toggle = 1 : jsonConfig.configs[selected_config_no].tab_health.thorough_health_check_repair_toggle = 0;
             jsonConfig.configs[selected_config_no].tab_health.crf_repair_value = document.getElementById("CRFRepairValue").value
 
-          
+
 
             //Batch tab
 
@@ -1300,15 +1300,15 @@ function getFFmpegCLIPath(){
             jsonConfig.configs[selected_config_no].tab_batch.preset = document.getElementById("preset").value
             jsonConfig.configs[selected_config_no].tab_batch.custom_preset_string = document.getElementById("customPresets").value
             jsonConfig.configs[selected_config_no].tab_batch.container = document.getElementById("container").value
-            
+
             document.getElementById("scanOnOff").checked ? jsonConfig.configs[selected_config_no].tab_batch.periodic_scanning_toggle = 1 : jsonConfig.configs[selected_config_no].tab_batch.periodic_scanning_toggle = 0;
             document.getElementById("dailyRunTimeOnOff").checked ? jsonConfig.configs[selected_config_no].tab_batch.daily_scanning_toggle = 1 : jsonConfig.configs[selected_config_no].tab_batch.daily_scanning_toggle = 0;
             jsonConfig.configs[selected_config_no].tab_batch.advanced.periodic_scan_interval = document.getElementById("timer").value
             jsonConfig.configs[selected_config_no].tab_batch.advanced.daily_run_time = document.getElementById("dailyRunTime").value
-            
+
             jsonConfig.configs[selected_config_no].tab_batch.advanced.file_name_suffix = document.getElementById("fileNameSuffix").value
             document.getElementById("fileNameSuffixToggle").checked ? jsonConfig.configs[selected_config_no].tab_batch.advanced.file_name_suffix_toggle = 1 : jsonConfig.configs[selected_config_no].tab_batch.advanced.file_name_suffix_toggle = 0;
-            
+
             jsonConfig.configs[selected_config_no].tab_batch.advanced.included_file_types = document.getElementById("includedFileTypes").value
             document.getElementById("minimumFileSizeOnOff").checked ? jsonConfig.configs[selected_config_no].tab_batch.advanced.min_file_size_filter_toggle = 1 : jsonConfig.configs[selected_config_no].tab_batch.advanced.min_file_size_filter_toggle = 0;
             document.getElementById("maximumFileSizeOnOff").checked ? jsonConfig.configs[selected_config_no].tab_batch.advanced.max_file_size_filter_toggle = 1 : jsonConfig.configs[selected_config_no].tab_batch.advanced.max_file_size_filter_toggle = 0;
@@ -1368,7 +1368,7 @@ function getFFmpegCLIPath(){
 
         fs.writeFileSync(homePath + '/Documents/HBBatchBeast/Config/Configuration.json', jsonContentString, 'utf8');
 
-        
+
 
 
 
@@ -1474,7 +1474,7 @@ function getFFmpegCLIPath(){
             document.getElementById("instanceNumber").value = "4"
 
             document.getElementById("autoStart").checked = false;
-            
+
 
         }
 
@@ -1549,7 +1549,7 @@ function getFFmpegCLIPath(){
 
         cancelCount = 0;
         otherCount = 0;
-   
+
 
         var g;
 
@@ -1858,12 +1858,12 @@ function getFFmpegCLIPath(){
 
 
 
-                     
+
                         //  if (outPutPathStemFinalArray[y].includes(inputPathStemArray[y])) {
 
-                     
 
-                            if(pathIsInside(outPutPathStemArray[y], inputPathStemArray[y])){
+
+                        if (pathIsInside(outPutPathStemArray[y], inputPathStemArray[y])) {
 
 
                             //
@@ -1874,9 +1874,9 @@ function getFFmpegCLIPath(){
 
                         }
 
-                      
 
-                        if(pathIsInside(outPutPathStemFinalArray[y], inputPathStemArray[y])){
+
+                        if (pathIsInside(outPutPathStemFinalArray[y], inputPathStemArray[y])) {
 
 
                             //
@@ -1894,14 +1894,14 @@ function getFFmpegCLIPath(){
                     } else {
 
 
-                       
+
 
 
                         //if (outPutPathStemArray[y].includes(inputPathStemArray[y])) {
 
-                        
 
-                            if(pathIsInside(outPutPathStemArray[y], inputPathStemArray[y])){
+
+                        if (pathIsInside(outPutPathStemArray[y], inputPathStemArray[y])) {
                             //
 
                             alert(document.getElementById("alert_validation_tempOff_destinside_source_1").textContent + " " + (y + 1) + " " + outPutPathStemArray[y] + " " + document.getElementById("alert_validation_tempOff_destinside_source_2").textContent + " " + (y + 1) + " " + inputPathStemArray[y] + " " + document.getElementById("alert_validation_tempOff_destinside_source_3").textContent);
@@ -2351,8 +2351,8 @@ function getFFmpegCLIPath(){
 
                 for (var y = 0; y < inputPathStemArray.length; y++) {
                     presetArray[y] = "-Z \"" + document.getElementById("preset").options[document.getElementById("preset").selectedIndex].text + "\"";
-                   
-                   
+
+
                     fileNameSuffixArray[y] = ((document.getElementById("fileNameSuffix").value).toString().split("\n"))[0]
                 }
 
@@ -2370,7 +2370,7 @@ function getFFmpegCLIPath(){
 
             }
 
-            if(document.getElementById("fileNameSuffixToggle").checked  == false){
+            if (document.getElementById("fileNameSuffixToggle").checked == false) {
 
                 for (var y = 0; y < inputPathStemArray.length; y++) {
                     fileNameSuffixArray[y] = "";
@@ -2386,10 +2386,10 @@ function getFFmpegCLIPath(){
 
                 for (var y = 0; y < inputPathStemArray.length; y++) {
 
-                    if(document.getElementById("runThoroughHealthCheck").checked){
+                    if (document.getElementById("runThoroughHealthCheck").checked) {
                         presetArray[y] = "-v error, -f null";
 
-                    }else{
+                    } else {
                         presetArray[y] = "--scan";
                     }
                 }
@@ -2453,7 +2453,7 @@ function getFFmpegCLIPath(){
 
 
 
-          //  console.log(queueInfoBomb)
+            //  console.log(queueInfoBomb)
 
 
             // launch Queue builder module
@@ -2480,7 +2480,7 @@ function getFFmpegCLIPath(){
             //         //Here is where the output goes
             //             });
 
-          
+
 
 
 
@@ -2631,12 +2631,12 @@ function getFFmpegCLIPath(){
         updateConsole("" + "Configuring pre-launch" + "")
 
 
-        if ( mode == "healthCheck") {
+        if (mode == "healthCheck") {
 
-        document.getElementById("myChartDiv").innerHTML = "<div id='myChart'></div>" ;
+            document.getElementById("myChartDiv").innerHTML = "<div id='myChart'></div>";
 
-        }else{
-            document.getElementById("myChartDiv").innerHTML =    "<div class=\"grid-container\" ><div class=\"grid-itemleft\"><div id='myChart'></div></div><div class=\"grid-itemright\"><div id='myBarChart'></div> </div></div>"
+        } else {
+            document.getElementById("myChartDiv").innerHTML = "<div class=\"grid-container\" ><div class=\"grid-itemleft\"><div id='myChart'></div></div><div class=\"grid-itemright\"><div id='myBarChart'></div> </div></div>"
 
 
 
@@ -2917,7 +2917,7 @@ function getFFmpegCLIPath(){
             ]
 
             //workers.push(childProcess.fork(path.join(__dirname, workerPath ),[], { silent: true }));
-            workers.push(childProcess.fork(path.join(__dirname, workerPath),child_argv,));
+            workers.push(childProcess.fork(path.join(__dirname, workerPath), child_argv));
 
 
             updateConsole("" + "Worker " + i + " launched" + "")
@@ -2931,16 +2931,16 @@ function getFFmpegCLIPath(){
 
 
 
-                    // var messageOut = [
-                    //     "workerNumber",
-                    //     i,
-                    // ];
+            // var messageOut = [
+            //     "workerNumber",
+            //     i,
+            // ];
 
-                    // workers[i - 1].send(messageOut);
+            // workers[i - 1].send(messageOut);
 
 
 
-           
+
 
             // var worker = workers[1];
             //  worker.send("w:"+2);
@@ -3094,7 +3094,7 @@ function getFFmpegCLIPath(){
                     var currentRow = parseInt(message[2]) + 1
                     if (queueView == "enabled") {
                         //done    
-                        queueTable.rows[currentRow].cells[5].innerHTML ="Attempting repair:" +message[3];
+                        queueTable.rows[currentRow].cells[5].innerHTML = "Attempting repair:" + message[3];
                     }
                     // workerStatusDiv
                 }
@@ -3166,7 +3166,7 @@ function getFFmpegCLIPath(){
                             + "<td>" + Status + "</td>"
                             + "<td>" + getTimeNow() + "</td>"
                             + "</tr>";
-                    }else if (Status2 == "<p><font color=\"#ff2d2d\">Error:Unable to repair file</font></p>") {
+                    } else if (Status2 == "<p><font color=\"#ff2d2d\">Error:Unable to repair file</font></p>") {
                         tempOutputQueueHTML += "<tr>"
                             + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
                             + "<td>" + sessionNumber + "</td>"
@@ -3175,8 +3175,8 @@ function getFFmpegCLIPath(){
                             + "<td>" + Status + "</td>"
                             + "<td>" + getTimeNow() + "</td>"
                             + "</tr>";
-                        }else if (Status2 == "<p><font color=\"#66ccff\">File repaired. Please inspect files.</font></p>") {
-                            tempOutputQueueHTML += "<tr>"
+                    } else if (Status2 == "<p><font color=\"#66ccff\">File repaired. Please inspect files.</font></p>") {
+                        tempOutputQueueHTML += "<tr>"
                             + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
                             + "<td>" + sessionNumber + "</td>"
                             + "<td>" + preset + "</td>"
@@ -3184,9 +3184,9 @@ function getFFmpegCLIPath(){
                             + "<td>" + Status + "</td>"
                             + "<td>" + getTimeNow() + "</td>"
                             + "</tr>";
-                       }
+                    }
 
-                   
+
                     sessionNumber++;
 
                 }
@@ -3257,7 +3257,7 @@ function getFFmpegCLIPath(){
                     if (message[1].includes("File repaired")) {
 
                         successfulCount++;
-                         informationUpdate(message[0], message[3], message[4], message[2], "#59ff74",message[1], "<p><font color=\"#66ccff\">File repaired. Please inspect files.</font></p>")
+                        informationUpdate(message[0], message[3], message[4], message[2], "#59ff74", message[1], "<p><font color=\"#66ccff\">File repaired. Please inspect files.</font></p>")
 
                     }
                 } catch (err) { }
@@ -3268,8 +3268,8 @@ function getFFmpegCLIPath(){
                         errorCount++;
                         informationUpdate(message[0], message[3], message[4], message[2], "#ff2d2d", "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('" + sessionNumber + "')\" value=\"Error: Unable to repair file(Click for info)\">", "<p><font color=\"#ff2d2d\">Error:Unable to repair file</font></p>")
 
-                       
-                      //  informationUpdate(message[0], message[3], message[4], message[2], "#ff2d2d", "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('" + sessionNumber + "')\" value=\"Unable to repair (Click for info)\">", "<p><font color=\"#ff2d2d\">Error</font></p>")
+
+                        //  informationUpdate(message[0], message[3], message[4], message[2], "#ff2d2d", "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('" + sessionNumber + "')\" value=\"Unable to repair (Click for info)\">", "<p><font color=\"#ff2d2d\">Error</font></p>")
 
                     }
                 } catch (err) { }
@@ -3498,100 +3498,100 @@ function getFFmpegCLIPath(){
             zingchart.render({
                 id: 'myChart',
                 data: myConfig,
-             //   height: 500,
+                //   height: 500,
                 width: '100%'
             });
 
 
             ///
 
-            if ( mode != "healthCheck") {
+            if (mode != "healthCheck") {
 
-            var graphSourceSize =  parseFloat(sourceFileSize.toPrecision(4))
-            var graphOutputFileSize = parseFloat(outputFileSize.toPrecision(4))
+                var graphSourceSize = parseFloat(sourceFileSize.toPrecision(4))
+                var graphOutputFileSize = parseFloat(outputFileSize.toPrecision(4))
 
-            console.log(graphSourceSize)
-            console.log(graphOutputFileSize)
+                console.log(graphSourceSize)
+                console.log(graphOutputFileSize)
 
-            var myBarConfig = {
-                type: "bar",
-                plot: {
-                    borderColor: "#2B313B",
-                    borderWidth: 0,
-                    // slice: 90,
-                    valueBox: {
-                       
-                        // text: '%t\n%npv%',
-                        text: '%t\n%pvGB',
-                        fontFamily: "Open Sans"
+                var myBarConfig = {
+                    type: "bar",
+                    plot: {
+                        borderColor: "#2B313B",
+                        borderWidth: 0,
+                        // slice: 90,
+                        valueBox: {
+
+                            // text: '%t\n%npv%',
+                            text: '%t\n%pvGB',
+                            fontFamily: "Open Sans"
+                        },
+                        tooltip: {
+                            fontSize: '1em',
+                            fontFamily: "Open Sans",
+                            padding: "",
+                            text: "%t"
+                        },
                     },
-                    tooltip: {
-                        fontSize: '1em',
-                        fontFamily: "Open Sans",
-                        padding: "",
-                        text: "%t"
+                    backgroundColor: "#1A2933",
+                    "scale-y": {
+                        lineColor: 'none',
+                        tick: {
+                            visible: false
+                        },
+                        guide: {
+                            visible: false
+                        },
+                        item: {
+                            visible: false
+                        }
                     },
-            },
-            backgroundColor: "#1A2933",
-            "scale-y": {
-                lineColor: 'none',
-                tick: {
-                    visible: false
-                },
-                guide: {
-                    visible: false
-                },
-                item: {
-                    visible: false
-                }
-            },
-            "scale-x": {
-                visible: false
-            },
-            series: [
+                    "scale-x": {
+                        visible: false
+                    },
+                    series: [
 
-                                {
-                    "values": [
-                    graphSourceSize,
-                    ],
-                    "alpha": 0.95,
-                    "borderRadiusTopLeft": 7,
-                    "borderRadiusTopRight": 7,
-                    "background-color": "#067ea5",
-                    "text": "Old size",
-                },
-                {
-                    "values": [
-                    graphOutputFileSize,
-                    ],
-                    "borderRadiusTopLeft": 7,
-                    "borderRadiusTopRight": 7,
-                    "alpha": 0.95,
-                    "background-color": "#0aa2aa",
-                    "text": "New size"
-                },
-                // {
-                //     "values": [
-                //     10,
-                //     5,
-            
-                //     ],
-                //     "alpha": 0.95,
-                //     "borderRadiusTopLeft": 7,
-                //     "background-color": "#8993c7",
-                //     "text": "Old size",
-                // }
-                ]
-            };
+                        {
+                            "values": [
+                                graphSourceSize,
+                            ],
+                            "alpha": 0.95,
+                            "borderRadiusTopLeft": 7,
+                            "borderRadiusTopRight": 7,
+                            "background-color": "#067ea5",
+                            "text": "Old size",
+                        },
+                        {
+                            "values": [
+                                graphOutputFileSize,
+                            ],
+                            "borderRadiusTopLeft": 7,
+                            "borderRadiusTopRight": 7,
+                            "alpha": 0.95,
+                            "background-color": "#0aa2aa",
+                            "text": "New size"
+                        },
+                        // {
+                        //     "values": [
+                        //     10,
+                        //     5,
 
-            zingchart.render({
-                id: 'myBarChart',
-                data: myBarConfig,
-                // height: 500,
-                width: '100%'
-            });
+                        //     ],
+                        //     "alpha": 0.95,
+                        //     "borderRadiusTopLeft": 7,
+                        //     "background-color": "#8993c7",
+                        //     "text": "Old size",
+                        // }
+                    ]
+                };
 
-        }
+                zingchart.render({
+                    id: 'myBarChart',
+                    data: myBarConfig,
+                    // height: 500,
+                    width: '100%'
+                });
+
+            }
 
 
 
@@ -4328,15 +4328,15 @@ function getFFmpegCLIPath(){
             if (process.env.NODE_ENV == 'production') {
 
                 //production
-               // var logPath = fullPath + "\\HBBatchBeast\\Logs\\" + logType + ".txt";
-               var logPath =  homePath + "/Documents/HBBatchBeast/Logs/" + logType + ".txt";
+                // var logPath = fullPath + "\\HBBatchBeast\\Logs\\" + logType + ".txt";
+                var logPath = homePath + "/Documents/HBBatchBeast/Logs/" + logType + ".txt";
 
 
             } else {
 
                 //development
                 //var logPath = __dirname + "\\HBBatchBeast\\Logs\\" + logType + ".txt";
-                var logPath =  homePath + "/Documents/HBBatchBeast/Logs/" + logType + ".txt";
+                var logPath = homePath + "/Documents/HBBatchBeast/Logs/" + logType + ".txt";
 
             }
 
@@ -4433,8 +4433,8 @@ function getFFmpegCLIPath(){
             } else {
 
                 //development
-               // var logPath = __dirname + "\\HBBatchBeast\\Logs\\";
-               var logPath = homePath + "/Documents/HBBatchBeast/Logs/";
+                // var logPath = __dirname + "\\HBBatchBeast\\Logs\\";
+                var logPath = homePath + "/Documents/HBBatchBeast/Logs/";
 
             }
 
@@ -6165,7 +6165,7 @@ function getFFmpegCLIPath(){
                 <div class="button" id="min-button">
                     <span>&#xE921;</span>
                 </div>
-                <div class="button" id="max-button" >
+                <div class="button" id="max-button">
                     <span>&#xE922;</span>
                 </div>
                 <div class="button" id="restore-button">
@@ -6399,7 +6399,7 @@ function getFFmpegCLIPath(){
             </div>
 
             <div id="consoleBar" class="consoleBarClass">
-                    <a href="javascript:void(0)" class="openbtn" onclick="viewLogs('MasterLog')">txt</a>
+                <a href="javascript:void(0)" class="openbtn" onclick="viewLogs('MasterLog')">txt</a>
                 <a href="javascript:void(0)" class="closebtn" onclick="toggleConsole()">↕</a>
                 <p>
                     <p>
@@ -6534,8 +6534,8 @@ function getFFmpegCLIPath(){
                     line). If you want to specify multiple source folders, make sure each source folder path is
                     on its own line such as:</span>
 
-                    <br>C:\Users\HaveAGitGat\Desktop\Input1
-                    <br>C:\Users\HaveAGitGat\Desktop\Input2
+                <br>C:\Users\HaveAGitGat\Desktop\Input1
+                <br>C:\Users\HaveAGitGat\Desktop\Input2
 
 
             </div>
@@ -6782,10 +6782,12 @@ function getFFmpegCLIPath(){
                     <br> <br>
                     -Z "Very Fast 480p30"
                     <br><br>
-                    <br><br><span name="lang_text">If using FFmpeg, you need to separate the input and output parameters with a comma. Such as:</span>
-                    
+                    <br><br><span name="lang_text">If using FFmpeg, you need to separate the input and output parameters
+                        with a comma. Such as:</span>
+
                     <br><br>-r 1,-r 24
-                    <br><br><span name="lang_text">You can also link to a custom preset that's been exported from the official
+                    <br><br><span name="lang_text">You can also link to a custom preset that's been exported from the
+                        official
                         HandBrake GUI
                         application for example:</span>
                     <br><br>
@@ -6937,11 +6939,14 @@ function getFFmpegCLIPath(){
                 </div>
 
                 <div id="custompresetNotificationImportedJSON" style="display: none;">
-                        <p>
-                            <font color="#66ccff"><span name="lang_text">Imported preset detected.If you're having trouble with imported custom presets, it may be due to a known bug with the HandBrakeCLI (will be fixed in next HandBrakeCLI release). A temporary solution is to remove '"PictureRotate": "0:0"' from the .json file. More info here:</span></font>
-                        </p>
-                        <br>https://github.com/HandBrake/HandBrake/issues/2047
-                    </div>
+                    <p>
+                        <font color="#66ccff"><span name="lang_text">Imported preset detected.If you're having trouble
+                                with imported custom presets, it may be due to a known bug with the HandBrakeCLI (will
+                                be fixed in next HandBrakeCLI release). A temporary solution is to remove
+                                '"PictureRotate": "0:0"' from the .json file. More info here:</span></font>
+                    </p>
+                    <br>https://github.com/HandBrake/HandBrake/issues/2047
+                </div>
 
                 <div class="rowitem">
                     <div class="grid-container">
@@ -7103,43 +7108,49 @@ function getFFmpegCLIPath(){
                     </div>
 
                     <div class="rowitem">
-                            <div class="grid-container">
-        
-                                <div class="grid-itemleft">
-                                    <p><span onclick="toolTip('tooltip_filename_suffix')" class="toolTipClass">�</span><span
-                                            name="lang_text">Output filename suffix:</span><input type="checkbox" id="fileNameSuffixToggle" ></p>
-                                </div>
+                        <div class="grid-container">
+
+                            <div class="grid-itemleft">
+                                <p><span onclick="toolTip('tooltip_filename_suffix')" class="toolTipClass">�</span><span
+                                        name="lang_text">Output filename suffix:</span><input type="checkbox"
+                                        id="fileNameSuffixToggle"></p>
+                            </div>
+                            <div class="grid-itemright">
+
+
                                 <div class="grid-itemright">
-        
-        
-                                    <div class="grid-itemright">
-                                        <textarea type="text" class="customPresetBox" id="fileNameSuffix"></textarea>
-        
-        
-        
-                                    </div>
+                                    <textarea type="text" class="customPresetBox" id="fileNameSuffix"></textarea>
+
+
+
                                 </div>
                             </div>
                         </div>
-        
-                        <div id="tooltip_filename_suffix" style="display: none;">
-        
-                            <br><br><span name="lang_text">This is optional. You can specify a suffix to add to the end of your
-                                filename like
-                                '_1080p' or '_testconversion' etc.</span>
-                            <br><br><span name="lang_text">If 'standard preset' is selected then all output files will have the
-                                same suffix.</span>
-                            <br><br><span name="lang_text">If 'custom preset' is selected then you can specify one suffix per
-                                source folder/custom
-                                preset. Make sure each suffix is on its own line. For example, if you have 2 source folders and
-                                are using 'custom preset', you could put this in the filename suffix box:</span>
-                            <br><br> _720p
-                            <br>_1080p
-                            <br><br><span name="lang_text">Files in the first source folder will have '_720p' added to output
-                                filename. Files in the second source folder will have '_1080p' added to output filename
-                                etc.</span>
-        
-                        </div>
+                    </div>
+
+                    <div id="tooltip_filename_suffix" style="display: none;">
+
+                        <br><br><span name="lang_text">This is optional. You can specify a suffix to add to the end of
+                            your
+                            filename like
+                            '_1080p' or '_testconversion' etc.</span>
+                        <br><br><span name="lang_text">If 'standard preset' is selected then all output files will have
+                            the
+                            same suffix.</span>
+                        <br><br><span name="lang_text">If 'custom preset' is selected then you can specify one suffix
+                            per
+                            source folder/custom
+                            preset. Make sure each suffix is on its own line. For example, if you have 2 source folders
+                            and
+                            are using 'custom preset', you could put this in the filename suffix box:</span>
+                        <br><br> _720p
+                        <br>_1080p
+                        <br><br><span name="lang_text">Files in the first source folder will have '_720p' added to
+                            output
+                            filename. Files in the second source folder will have '_1080p' added to output filename
+                            etc.</span>
+
+                    </div>
 
 
 
@@ -7780,70 +7791,79 @@ function getFFmpegCLIPath(){
 
 
                 <div class="rowitem">
-                        <div class="grid-container">
-                            <div class="grid-itemleft">
-                                <p><span onclick="toolTip('tooltip_thorough_health_check')" class="toolTipClass">�</span><span
-                                        name="lang_text">Run thorough file health check:</span></p>
-                            </div>
-    
-                            <div class="grid-itemright"> <input type="checkbox" id="runThoroughHealthCheck">
-                            </div>
+                    <div class="grid-container">
+                        <div class="grid-itemleft">
+                            <p><span onclick="toolTip('tooltip_thorough_health_check')"
+                                    class="toolTipClass">�</span><span name="lang_text">Run thorough file health
+                                    check:</span></p>
+                        </div>
+
+                        <div class="grid-itemright"> <input type="checkbox" id="runThoroughHealthCheck">
                         </div>
                     </div>
+                </div>
 
-                    <div id="tooltip_thorough_health_check" style="display: none;">
-                            <br>
-                            <span name="lang_text"> If checked, then a much slower, more thorough video health check will be run using FFmpeg instead of HandBrake.</span>
-                            <span name="lang_text"> Based on Desani's 'ScanMedia.ps1' found at:</span>
-                            <br>
-                            https://gist.github.com/Desani/129be27da7d735d7c75192ec1aa96c65
+                <div id="tooltip_thorough_health_check" style="display: none;">
+                    <br>
+                    <span name="lang_text"> If checked, then a much slower, more thorough video health check will be run
+                        using FFmpeg instead of HandBrake.</span>
+                    <span name="lang_text"> Based on Desani's 'ScanMedia.ps1' found at:</span>
+                    <br>
+                    https://gist.github.com/Desani/129be27da7d735d7c75192ec1aa96c65
+                </div>
+
+                <div class="rowitem">
+                    <div class="grid-container">
+                        <div class="grid-itemleft">
+                            <p><span onclick="toolTip('tooltip_thorough_health_check_repair_attempt')"
+                                    class="toolTipClass">�</span><span name="lang_text">Attempt to repair files after
+                                    thorough check:</span></p>
                         </div>
 
-                        <div class="rowitem">
-                                <div class="grid-container">
-                                    <div class="grid-itemleft">
-                                        <p><span onclick="toolTip('tooltip_thorough_health_check_repair_attempt')" class="toolTipClass">�</span><span
-                                                name="lang_text">Attempt to repair files after thorough check:</span></p>
-                                    </div>
-            
-                                    <div class="grid-itemright"> <input type="checkbox" id="repairAttempt">
-                                    </div>
-                                </div>
-                            </div>
-        
-                            <div id="tooltip_thorough_health_check_repair_attempt" style="display: none;">
-                                    <br>
-                                    <br><span name="lang_text"> If checked, HBBatchBeast will attempt to repair files using FFmpeg. A new file with the suffix '_repaired' will be created in the same folder as the source file.</span>
-                                   
-                                    <br>
-        
-                                </div>
+                        <div class="grid-itemright"> <input type="checkbox" id="repairAttempt">
+                        </div>
+                    </div>
+                </div>
 
-                                <div class="rowitem">
-                                        <div class="grid-container">
-                    
-                                            <div class="grid-itemleft">
-                                                <p><span onclick="toolTip('tooltip_repair_crf_value')" class="toolTipClass">�</span><span
-                                                        name="lang_text">'CRF' value to use when attempting to repair files:</span></p>
-                                            </div>
-                                            <div class="grid-itemright"><input type="text" class="infoBox" id="CRFRepairValue">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="tooltip_repair_crf_value" style="display: none;">
-                    
-                                        <br><span name="lang_text">The default 'CRF' value is 23. Please see the following for more information:</span>
-                                        <br><br>https://trac.ffmpeg.org/wiki/Encode/H.264
+                <div id="tooltip_thorough_health_check_repair_attempt" style="display: none;">
+                    <br>
+                    <br><span name="lang_text"> If checked, HBBatchBeast will attempt to repair files using FFmpeg. A
+                        new file with the suffix '_repaired' will be created in the same folder as the source
+                        file.</span>
 
-                                        <br> <br><span name="lang_text">The range of the CRF scale is 0–51, where 0 is lossless, 23 is the default, and 51 is worst quality possible. A lower value generally leads to higher quality, and a subjectively sane range is 17–28. Consider 17 or 18 to be visually lossless or nearly so; it should look the same or nearly the same as the input but it isn't technically lossless.</span>
-                                       
-                    
-                    
-                                    </div>
-    
+                    <br>
+
+                </div>
+
+                <div class="rowitem">
+                    <div class="grid-container">
+
+                        <div class="grid-itemleft">
+                            <p><span onclick="toolTip('tooltip_repair_crf_value')" class="toolTipClass">�</span><span
+                                    name="lang_text">'CRF' value to use when attempting to repair files:</span></p>
+                        </div>
+                        <div class="grid-itemright"><input type="text" class="infoBox" id="CRFRepairValue">
+                        </div>
+                    </div>
+                </div>
+                <div id="tooltip_repair_crf_value" style="display: none;">
+
+                    <br><span name="lang_text">The default 'CRF' value is 23. Please see the following for more
+                        information:</span>
+                    <br><br>https://trac.ffmpeg.org/wiki/Encode/H.264
+
+                    <br> <br><span name="lang_text">The range of the CRF scale is 0–51, where 0 is lossless, 23 is the
+                        default, and 51 is worst quality possible. A lower value generally leads to higher quality, and
+                        a subjectively sane range is 17–28. Consider 17 or 18 to be visually lossless or nearly so; it
+                        should look the same or nearly the same as the input but it isn't technically lossless.</span>
 
 
-                                <input type='button' class="button1" value='Save config' onclick='saveConfig()' />
+
+                </div>
+
+
+
+                <input type='button' class="button1" value='Save config' onclick='saveConfig()' />
                 <input type='button' class="button2one1" value='Health check' onclick='convertFiles("healthCheck")' />
 
 
@@ -8153,10 +8173,10 @@ function getFFmpegCLIPath(){
             </div>
 
 
-<div id='myChartDiv' style="display: none;">
+            <div id='myChartDiv' style="display: none;">
 
 
-</div>
+            </div>
 
 
 

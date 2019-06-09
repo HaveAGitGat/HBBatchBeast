@@ -43,7 +43,7 @@ var home = require("os").homedir();
 if (process.platform == 'win32' || process.platform == 'linux') {
 
     var homePath = home
-   // var homePath = "."
+    // var homePath = "."
 }
 
 if (process.platform == 'darwin') {
@@ -288,10 +288,10 @@ process.on('message', (m) => {
         maximumFileSizeOnOff = m[28]
         maximumFileSize = m[29]
         runThoroughHealthCheck = m[30]
-        repairFile =  m[31]
+        repairFile = m[31]
         repairCRFValue = m[32]
         handBrakeCLIPath = m[33]
-        ffmpegPath= m[34]
+        ffmpegPath = m[34]
 
 
 
@@ -306,7 +306,7 @@ process.on('message', (m) => {
 
         currentDestinationLine_unmodified = currentDestinationLine.split('.')
         currentDestinationLine_unmodified[currentDestinationLine_unmodified.length - 1] = sourceFileContainer
-        currentDestinationLine_unmodified =  currentDestinationLine_unmodified.join('.')
+        currentDestinationLine_unmodified = currentDestinationLine_unmodified.join('.')
 
 
         try {
@@ -376,7 +376,7 @@ process.on('message', (m) => {
 
         errorLogFull = ""
         errorLogFull += "Command: \n\n"
-        errorLogFull +=  workerCommand + "\n\n"
+        errorLogFull += workerCommand + "\n\n"
 
         var childProcess = require("child_process");
 
@@ -1007,7 +1007,7 @@ process.on('message', (m) => {
                             ];
                             process.send(message);
 
-                            errorLogFull +=  data;
+                            errorLogFull += data;
                             // send percentage update to GUI
 
                             if (handBrakeMode == true) {
@@ -1120,12 +1120,12 @@ process.on('message', (m) => {
 
                                     updateConsole(workerNumber, "HBBatchBeast ALERT: NO OUTPUT FILE PRODUCED" + currentDestinationLine)
 
-                                    
 
 
-                                    errorLogFull +=  "\n HBBatchBeast ALERT: NO OUTPUT FILE PRODUCED";
-                                    if(currentSourceLine.includes("'") &&  process.platform == 'linux'){
-                                        errorLogFull +=  "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + currentSourceLine
+
+                                    errorLogFull += "\n HBBatchBeast ALERT: NO OUTPUT FILE PRODUCED";
+                                    if (currentSourceLine.includes("'") && process.platform == 'linux') {
+                                        errorLogFull += "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + currentSourceLine
                                         updateConsole(workerNumber, "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + currentSourceLine)
                                     }
 
@@ -1146,7 +1146,7 @@ process.on('message', (m) => {
                                     workerEncounteredError(message[1])
 
                                 } else {
-                                   // workerEncounteredError(message[1])
+                                    // workerEncounteredError(message[1])
                                     workerNotEncounteredError();
 
 
@@ -1284,20 +1284,20 @@ function workerEncounteredError(messageOne) {
 
             //if repair file == true
 
-            
 
-            if (FFmpegMode == true && repairFile == true ) {
 
-              //  updateConsole(workerNumber, "Source file length2:" + source_file_length)
+            if (FFmpegMode == true && repairFile == true) {
 
-                if(source_file_length !== undefined){
+                //  updateConsole(workerNumber, "Source file length2:" + source_file_length)
+
+                if (source_file_length !== undefined) {
                     attemptToRepair();
 
 
-                }else{
+                } else {
 
-                    if(currentSourceLine.includes("'") &&  process.platform == 'linux'){
-                        errorLogFull +=  "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + currentSourceLine
+                    if (currentSourceLine.includes("'") && process.platform == 'linux') {
+                        errorLogFull += "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + currentSourceLine
                         updateConsole(workerNumber, "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + currentSourceLine)
                     }
 
@@ -1348,7 +1348,7 @@ function workerEncounteredError(messageOne) {
                 updateConsole(workerNumber, "Sub worker error when processing:" + currentSourceLine)
 
                 if (moveCorruptFileOnOff == true) {
-                moveCorruptedFile();
+                    moveCorruptedFile();
                 }
 
                 var message = [
@@ -1429,117 +1429,117 @@ function workerNotEncounteredError() {
 
         checkifQueuePause();
 
-    }else{
+    } else {
 
 
 
-        var sourcefileSizeInGbytes= (((fs.statSync(currentSourceLine)).size)/ 1000000000.0);
-        var destfileSizeInGbytes = (((fs.statSync(currentDestinationLine)).size)/ 1000000000.0);
-        
+        var sourcefileSizeInGbytes = (((fs.statSync(currentSourceLine)).size) / 1000000000.0);
+        var destfileSizeInGbytes = (((fs.statSync(currentDestinationLine)).size) / 1000000000.0);
+
         var message = [
             workerNumber,
             "fileSizes",
             globalQueueNumber,
             sourcefileSizeInGbytes,
             destfileSizeInGbytes
-            
+
         ];
         process.send(message);
 
 
 
 
- 
 
 
-    // }
-    if (batOnOff != "") {
 
-        var pathBat = batOnOff;
-        pathBat = "\"" + pathBat + "\""
+        // }
+        if (batOnOff != "") {
 
-
-        try {
-            updateConsole(workerNumber, "Launching bat file:" + pathBat)
-            require('child_process').execSync(pathBat, function (err, stdout, stderr) {
-                if (err) {
-                    // Ooops.
-
-                    return console.log(err);
-                }
-
-                // Done.
+            var pathBat = batOnOff;
+            pathBat = "\"" + pathBat + "\""
 
 
-            });
+            try {
+                updateConsole(workerNumber, "Launching bat file:" + pathBat)
+                require('child_process').execSync(pathBat, function (err, stdout, stderr) {
+                    if (err) {
+                        // Ooops.
 
-            updateConsole(workerNumber, "Bat file launched succcesfully:" + pathBat)
-        } catch (err) {
+                        return console.log(err);
+                    }
 
-            updateConsole(workerNumber, "Launching bat file failed:" + pathBat)
+                    // Done.
+
+
+                });
+
+                updateConsole(workerNumber, "Bat file launched succcesfully:" + pathBat)
+            } catch (err) {
+
+                updateConsole(workerNumber, "Launching bat file failed:" + pathBat)
+
+            }
 
         }
 
-    }
 
 
 
+        if (tempFolderSelected == true) {
+            try {
+                // dont use fs.renameSync(
+                updateConsole(workerNumber, "Moving file:" + currentDestinationLine + " to " + currentDestinationFinalLine)
 
-    if (tempFolderSelected == true) {
-        try {
-            // dont use fs.renameSync(
-            updateConsole(workerNumber, "Moving file:" + currentDestinationLine + " to " + currentDestinationFinalLine)
+                fsextra.moveSync(currentDestinationLine, currentDestinationFinalLine, {
+                    overwrite: true
+                })
 
-            fsextra.moveSync(currentDestinationLine, currentDestinationFinalLine, {
-                overwrite: true
-            })
+                updateConsole(workerNumber, "File moved successfully:" + currentDestinationLine + " to " + currentDestinationFinalLine)
 
-            updateConsole(workerNumber, "File moved successfully:" + currentDestinationLine + " to " + currentDestinationFinalLine)
+            } catch (err) {
+                updateConsole(workerNumber, "Moving file failed:" + currentDestinationLine + " to " + currentDestinationFinalLine)
+            }
 
-        } catch (err) {
-            updateConsole(workerNumber, "Moving file failed:" + currentDestinationLine + " to " + currentDestinationFinalLine)
+
+            var message = [
+                workerNumber,
+                "appendRequest",
+                homePath + "/Documents/HBBatchBeast/Logs/fileConversionLog.txt",
+                getDateNow() + "-" + getTimeNow() + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n",
+            ];
+            process.send(message);
+
+        } else {
+
+
+            var message = [
+                workerNumber,
+                "appendRequest",
+                homePath + "/Documents/HBBatchBeast/Logs/fileConversionLog.txt",
+                getDateNow() + "-" + getTimeNow() + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset + "\r\n",
+            ];
+            process.send(message);
+
+
         }
 
 
-        var message = [
-            workerNumber,
-            "appendRequest",
-            homePath + "/Documents/HBBatchBeast/Logs/fileConversionLog.txt",
-            getDateNow() + "-" + getTimeNow() + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n",
-        ];
-        process.send(message);
-
-    } else {
+        // check to see if should delete source files
+        if (deleteSourceFilesOnOff == true) {
 
 
-        var message = [
-            workerNumber,
-            "appendRequest",
-            homePath + "/Documents/HBBatchBeast/Logs/fileConversionLog.txt",
-            getDateNow() + "-" + getTimeNow() + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset + "\r\n",
-        ];
-        process.send(message);
+            var message = [
+                workerNumber,
+                "deleteThisFile",
+                globalQueueNumber,
+
+            ];
+            process.send(message);
 
 
-    }
+            updateConsole(workerNumber, "File queued for deletion:" + currentSourceLine)
 
-
-    // check to see if should delete source files
-    if (deleteSourceFilesOnOff == true) {
-
-
-        var message = [
-            workerNumber,
-            "deleteThisFile",
-            globalQueueNumber,
-
-        ];
-        process.send(message);
-
-
-        updateConsole(workerNumber, "File queued for deletion:" + currentSourceLine)
-
-    }
+        }
 
 
 
@@ -1675,11 +1675,11 @@ function workerNotEncounteredError() {
 
         }
 
-    
 
-    checkifQueuePause();
 
-}
+        checkifQueuePause();
+
+    }
 }
 
 
@@ -1744,7 +1744,7 @@ function attemptToRepair() {
 
 
 
-    var preset = "-y,-c:v libx264 -crf "+repairCRFValue+" -c:a aac -q:a 100 -strict -2 -movflags faststart -level 41"
+    var preset = "-y,-c:v libx264 -crf " + repairCRFValue + " -c:a aac -q:a 100 -strict -2 -movflags faststart -level 41"
     var presetSplit = preset.split(',')
     var workerCommand = "";
 
@@ -1841,7 +1841,7 @@ function attemptToRepair() {
         ];
         process.send(message);
 
-        errorLogFull +=  data;
+        errorLogFull += data;
         // send percentage update to GUI
 
         if (FFmpegMode == true) {
@@ -1924,136 +1924,136 @@ function attemptToRepair() {
 
                 updateConsole(workerNumber, "Repair cancelled:" + currentSourceLine)
 
-                try{
+                try {
                     fs.unlinkSync(repair_file_path)
-                }catch(err){}
-        
-               
+                } catch (err) { }
+
+
                 updateConsole(workerNumber, "File deleted:" + repair_file_path)
-    
-                checkifQueuePause();
-
-            //// exit code begin
-        }else {
-
-            if (message[1] != 0) {
-
-                if(currentSourceLine.includes("'") &&  process.platform == 'linux'){
-                    errorLogFull +=  "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + currentSourceLine
-                    updateConsole(workerNumber, "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + currentSourceLine)
-                }
-
-                updateConsole(workerNumber, "Unable to repair file!:" + currentSourceLine + " to " + repair_file_path)
-                var message = [
-                    workerNumber,
-                    "Unable to repair file",
-                    globalQueueNumber,
-                    preset,
-                    errorLogFull
-                ];
-                process.send(message);
-
-                moveCorruptedFile();
 
                 checkifQueuePause();
-                // workerEncounteredError(message[1])
 
+                //// exit code begin
             } else {
 
-                //check if output file is same length as input file
+                if (message[1] != 0) {
 
+                    if (currentSourceLine.includes("'") && process.platform == 'linux') {
+                        errorLogFull += "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + currentSourceLine
+                        updateConsole(workerNumber, "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + currentSourceLine)
+                    }
 
-                updateConsole(workerNumber, "Checking repaired file length!:" + repair_file_path)
+                    updateConsole(workerNumber, "Unable to repair file!:" + currentSourceLine + " to " + repair_file_path)
+                    var message = [
+                        workerNumber,
+                        "Unable to repair file",
+                        globalQueueNumber,
+                        preset,
+                        errorLogFull
+                    ];
+                    process.send(message);
 
-                // updateConsole(workerNumber, "File repaired successfully!:" + currentSourceLine)
+                    moveCorruptedFile();
 
-
-
-                if (__dirname.includes('.asar')) {
-                    process.env.NODE_ENV = "production";
-                }
-
-                var ffprobe = require('ffprobe'),
-                    ffprobeStatic = require('ffprobe-static');
-                var path = require("path");
-                var ffprobeStaticPath = ''
-
-                if (process.env.NODE_ENV == 'production') {
-
-                    ffprobeStaticPath = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
+                    checkifQueuePause();
+                    // workerEncounteredError(message[1])
 
                 } else {
-                    ffprobeStaticPath = require('ffprobe-static').path
-                }
 
-                var thisval
-
-                ffprobe(repair_file_path, { path: ffprobeStaticPath }, function (err, info) {
-                    if (err) return done(err);
-                    //console.log(info);
-
-                    console.log(info);
-
-                    thisval = info;
+                    //check if output file is same length as input file
 
 
-                    console.log(thisval.streams[0]["duration"]);
+                    updateConsole(workerNumber, "Checking repaired file length!:" + repair_file_path)
+
+                    // updateConsole(workerNumber, "File repaired successfully!:" + currentSourceLine)
 
 
-                    var repaired_file_length = thisval.streams[0]["duration"]
 
-                    updateConsole(workerNumber, "File source length:" + parseInt(source_file_length))
-                    updateConsole(workerNumber, "File repaired length:" + parseInt(repaired_file_length))
+                    if (__dirname.includes('.asar')) {
+                        process.env.NODE_ENV = "production";
+                    }
 
-                    if (parseInt(source_file_length) === parseInt(repaired_file_length)) {
+                    var ffprobe = require('ffprobe'),
+                        ffprobeStatic = require('ffprobe-static');
+                    var path = require("path");
+                    var ffprobeStaticPath = ''
 
-                        updateConsole(workerNumber, "File repaired successfully!:" + currentSourceLine + " to " + repair_file_path)
+                    if (process.env.NODE_ENV == 'production') {
 
-                        var message = [
-                            workerNumber,
-                            "File repaired. Please inspect files.",
-                            globalQueueNumber,
-                            preset,
-                            errorLogFull
-                        ];
-                        process.send(message);
-
-                        if (moveCorruptFileOnOff == true) {
-                            moveCorruptedFile();
-                        }
-                        checkifQueuePause();
+                        ffprobeStaticPath = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
 
                     } else {
-
-                        updateConsole(workerNumber, "Unable to repair file!:" + currentSourceLine + " to " + repair_file_path)
-                        try{
-                        fs.unlinkSync(repair_file_path)
-                    }catch(err){}
-
-
-                        var message = [
-                            workerNumber,
-                            "Unable to repair file",
-                            globalQueueNumber,
-                            preset,
-                            errorLogFull
-                        ];
-                        process.send(message);
-
-                        if (moveCorruptFileOnOff == true) {
-                            moveCorruptedFile();
-                        }
-    
-    
-    
-                        checkifQueuePause();
-    
-
+                        ffprobeStaticPath = require('ffprobe-static').path
                     }
-                });
+
+                    var thisval
+
+                    ffprobe(repair_file_path, { path: ffprobeStaticPath }, function (err, info) {
+                        if (err) return done(err);
+                        //console.log(info);
+
+                        console.log(info);
+
+                        thisval = info;
+
+
+                        console.log(thisval.streams[0]["duration"]);
+
+
+                        var repaired_file_length = thisval.streams[0]["duration"]
+
+                        updateConsole(workerNumber, "File source length:" + parseInt(source_file_length))
+                        updateConsole(workerNumber, "File repaired length:" + parseInt(repaired_file_length))
+
+                        if (parseInt(source_file_length) === parseInt(repaired_file_length)) {
+
+                            updateConsole(workerNumber, "File repaired successfully!:" + currentSourceLine + " to " + repair_file_path)
+
+                            var message = [
+                                workerNumber,
+                                "File repaired. Please inspect files.",
+                                globalQueueNumber,
+                                preset,
+                                errorLogFull
+                            ];
+                            process.send(message);
+
+                            if (moveCorruptFileOnOff == true) {
+                                moveCorruptedFile();
+                            }
+                            checkifQueuePause();
+
+                        } else {
+
+                            updateConsole(workerNumber, "Unable to repair file!:" + currentSourceLine + " to " + repair_file_path)
+                            try {
+                                fs.unlinkSync(repair_file_path)
+                            } catch (err) { }
+
+
+                            var message = [
+                                workerNumber,
+                                "Unable to repair file",
+                                globalQueueNumber,
+                                preset,
+                                errorLogFull
+                            ];
+                            process.send(message);
+
+                            if (moveCorruptFileOnOff == true) {
+                                moveCorruptedFile();
+                            }
+
+
+
+                            checkifQueuePause();
+
+
+                        }
+                    });
+                }
+                /// exit finish
             }
-            /// exit finish
-        }
         }
     });
 }

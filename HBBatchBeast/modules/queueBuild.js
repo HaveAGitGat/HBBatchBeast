@@ -338,20 +338,20 @@ process.on('message', (queueInfoBomb) => {
 
                                 //Here add the full file path to the inputPathArray
 
-                                
+
                                 if (removeApostrophes_chkbx) {
 
-                                    var fileNameApostrophesRemoved =  thisFile.replace(/'/g, ' ');   
-                                    fs.renameSync(thisFile, fileNameApostrophesRemoved)  
-                                    inputPathArray[inputPathArrayCounter] = fileNameApostrophesRemoved + ""; 
+                                    var fileNameApostrophesRemoved = thisFile.replace(/'/g, ' ');
+                                    fs.renameSync(thisFile, fileNameApostrophesRemoved)
+                                    inputPathArray[inputPathArrayCounter] = fileNameApostrophesRemoved + "";
 
-                                }else{
+                                } else {
 
-                                    inputPathArray[inputPathArrayCounter] = thisFile + ""; 
+                                    inputPathArray[inputPathArrayCounter] = thisFile + "";
                                 }
-        
 
-                                
+
+
 
 
                                 // var message = [
@@ -372,10 +372,10 @@ process.on('message', (queueInfoBomb) => {
 
 
 
-                               // if ((totalFileFoundCounter + 1) % 100 == 0) {
+                                // if ((totalFileFoundCounter + 1) % 100 == 0) {
 
-                                    // scanWindow.webContents.send('item:count', (totalFileFoundCounter + 1));
-                              //  }
+                                // scanWindow.webContents.send('item:count', (totalFileFoundCounter + 1));
+                                //  }
 
                                 updateConsole("File scanner: Valid files found:" + (totalFileFoundCounter + 1))
                                 var message = [
@@ -612,7 +612,7 @@ process.on('message', (queueInfoBomb) => {
 
 
                         presetArray3.push(presetArray2[i])
-                        
+
                         sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
 
                         if ((sourceQueueArrayCounter + 1) % 100 == 0) {
@@ -622,7 +622,7 @@ process.on('message', (queueInfoBomb) => {
                             ];
                             process.send(message);
 
-                           
+
 
                             updateConsole("File scanner: Building queue:" + (sourceQueueArrayCounter + 1))
 
@@ -736,7 +736,7 @@ process.on('message', (queueInfoBomb) => {
 
                             process.send(message);
 
-                           
+
 
                             updateConsole("File scanner: Building queue:" + (sourceQueueArrayCounter + 1))
 

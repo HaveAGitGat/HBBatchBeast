@@ -12,7 +12,7 @@ function updateConsole(text) {
 
 process.on('uncaughtException', function (err) {
     //console.error(err.stack);
-    updateConsole("Shell thread module: "+err.stack)
+    updateConsole("Shell thread module: " + err.stack)
     process.exit();
 });
 
@@ -35,7 +35,7 @@ process.on('message', (infoArray) => {
 
         var workerCommand = infoArray[1];
 
-        shellWorker = shell.exec(workerCommand, function(code, stdout, stderr, stdin) {
+        shellWorker = shell.exec(workerCommand, function (code, stdout, stderr, stdin) {
             //console.log('Exit code:', code);
 
             var message = [
@@ -83,7 +83,7 @@ process.on('message', (infoArray) => {
                 shell.exit(1);
             }
 
-        } catch (err) {}
+        } catch (err) { }
 
         //process.send("Exit,"+"Cancelled");
         process.exit();

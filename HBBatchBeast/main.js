@@ -18,7 +18,7 @@ const url = require('url');
 
 const path = require('path');
 
-const { app, BrowserWindow, Menu, ipcMain ,Tray} = electron;
+const { app, BrowserWindow, Menu, ipcMain, Tray } = electron;
 
 
 //declare main window limited to in scope to this block
@@ -29,7 +29,7 @@ let mainWindow;
 
 if (__dirname.includes('.asar')) { // If dev
     process.env.NODE_ENV = "production";
-  }
+}
 
 
 
@@ -48,7 +48,7 @@ app.on('ready', function () {
     mainWindow = new BrowserWindow({
         width: 1400,
         height: 1000,
-       frame: false,
+        // frame: false,
         title: 'HBBatchBeast'
 
 
@@ -76,134 +76,134 @@ app.on('ready', function () {
     Menu.setApplicationMenu(mainMenu);
 
 
-if(process.platform=='win32'){
+    if (process.platform == 'win32') {
 
- appIcon = new Tray(iconpath)
+        appIcon = new Tray(iconpath)
 
-    var contextMenu = Menu.buildFromTemplate([
-        {
-            label: 'Show', click: function () {
-                mainWindow.show()
+        var contextMenu = Menu.buildFromTemplate([
+            {
+                label: 'Show', click: function () {
+                    mainWindow.show()
+                }
+            },
+            {
+
+                label: 'Clear notification', click: function () {
+
+                    appIcon.setImage(iconpath);
+
+                }
+            },
+            {
+                label: 'Quit', click: function () {
+                    app.isQuiting = true
+                    app.quit()
+                }
             }
-        },
-             {
 
-             label: 'Clear notification', click: function () {
-                
-                 appIcon.setImage(iconpath);
-               
-            }
-        },
-        {
-            label: 'Quit', click: function () {
-                app.isQuiting = true
-                app.quit()
-            }
-        }
-   
-    ])
+        ])
 
-    appIcon.setContextMenu(contextMenu)
+        appIcon.setContextMenu(contextMenu)
 
-    mainWindow.on('close', function (event) {
+        mainWindow.on('close', function (event) {
             //  mainWindow = null
-                 app.isQuiting = true
-                 app.quit()
-    })
+            app.isQuiting = true
+            app.quit()
+        })
 
-    mainWindow.on('minimize', function (event) {
-        event.preventDefault()
-        mainWindow.hide()
-    })
+        mainWindow.on('minimize', function (event) {
+            event.preventDefault()
+            mainWindow.hide()
+        })
 
-    mainWindow.on('maximize', function (event) {
-        event.preventDefault()
-        mainWindow.maximize();
-    })
+        mainWindow.on('maximize', function (event) {
+            event.preventDefault()
+            mainWindow.maximize();
+        })
 
-    mainWindow.on('unmaximize', function (event) {
-        event.preventDefault()
-        mainWindow.unmaximize();
-    })
+        mainWindow.on('unmaximize', function (event) {
+            event.preventDefault()
+            mainWindow.unmaximize();
+        })
 
-mainWindow.on('show', function () {
-appIcon.setHighlightMode('always')
+        mainWindow.on('show', function () {
+            appIcon.setHighlightMode('always')
 
 
-//appIcon.setImage(iconpath);
-    })
+            //appIcon.setImage(iconpath);
+        })
 
-//appIcon.setToolTip('Error!');
-}
+        //appIcon.setToolTip('Error!');
+    }
 
 });
 
- 
 
-if(process.platform=='win32'){
- var platform = "win"
- var iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.ico')
-var type = "ico"
-//var iconpath = "./assets/icons/win/icon.ico"
+
+if (process.platform == 'win32') {
+    var platform = "win"
+    var iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.ico')
+    var type = "ico"
+    //var iconpath = "./assets/icons/win/icon.ico"
 }
 
-    if(process.platform == 'linux' ){
- var platform = "png"
- var type ="png"
- var iconpath = "./assets/icons/png/icon.png"
+if (process.platform == 'linux') {
+    var platform = "png"
+    var type = "png"
+    var iconpath = "./assets/icons/png/icon.png"
 
-    }
-    
-    if( process.platform == 'darwin'){
- var platform = "mac"
- var type = "icns"
-var iconpath = "./assets/icons/mac/icon.icns"
+}
 
-    }
+if (process.platform == 'darwin') {
+    var platform = "mac"
+    var type = "icns"
+    var iconpath = "./assets/icons/mac/icon.icns"
+
+}
 
 //Catch icon updates
-ipcMain.on('item:add',function(e,item){
+ipcMain.on('item:add', function (e, item) {
 
     //  console.log(item);
 
-var icon = path.join(__dirname, '.\\assets\\icons\\'+platform+'\\'+item+'.ico')
+    var icon = path.join(__dirname, '.\\assets\\icons\\' + platform + '\\' + item + '.ico')
 
-//var icon ="./assets/icons/"+platform+"/"+item+"."+type;
-appIcon.setImage(icon);
-
-  
-  });
-
-
-
-ipcMain.on('item:ready',function(e,item){
-
-
-     mainWindow.webContents.send('item:ready', "Test" );
+    //var icon ="./assets/icons/"+platform+"/"+item+"."+type;
+    appIcon.setImage(icon);
 
 
 });
 
 
 
-ipcMain.on('mediaview:ready',function(e,item){
-    mainWindow.webContents.send('mediaview:ready', "Test" );
+ipcMain.on('item:ready', function (e, item) {
+
+
+    mainWindow.webContents.send('item:ready', "Test");
+
+
+});
+
+
+
+ipcMain.on('mediaview:ready', function (e, item) {
+    mainWindow.webContents.send('mediaview:ready', "Test");
 });
 
 
 
 
-ipcMain.on('benchstatus:ready',function(e,item){
-    mainWindow.webContents.send('benchstatus:ready',"Test");
+ipcMain.on('benchstatus:ready', function (e, item) {
+    mainWindow.webContents.send('benchstatus:ready', "Test");
 });
 
 
-  
 
 
-  
-  
-  
+
+
+
+
 
 
 
@@ -279,8 +279,8 @@ ipcMain.on('item:add', function (e, item) {
 
     //  console.log(item);
 
-    
-  
+
+
 
 
 

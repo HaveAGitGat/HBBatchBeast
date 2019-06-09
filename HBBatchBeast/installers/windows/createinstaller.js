@@ -8,7 +8,7 @@ getInstallerConfig()
     process.exit(1)
   })
 
-function getInstallerConfig () {
+function getInstallerConfig() {
   console.log('creating windows installer')
   const rootPath = path.join('./')
   const outPath = path.join(rootPath, 'release-builds')
