@@ -3749,7 +3749,7 @@
 
 
 
-                if (document.getElementById("handBrakeMode").checked && queueStatusPaused != 1) {
+                if (document.getElementById("handBrakeMode").checked && queueStatusPaused != 1 && mode != "healthCheck") {
 
 
 
@@ -5298,11 +5298,11 @@
 
 
         if (process.platform == 'win32') {
-            if (document.getElementById("handBrakeMode").checked) {
+            if (document.getElementById("handBrakeMode").checked || mode == "healthCheck") {
 
                 var workerCommand = 'wmic process where name=\"HandBrakeCLI.exe\" CALL setpriority \"Below normal\"'
 
-            } else if (document.getElementById("FFmpegMode").checked) {
+            } else if (document.getElementById("FFmpegMode").checked || (mode == "healthCheck" && document.getElementById("runThoroughHealthCheck").checked) ) {
                 var workerCommand = 'wmic process where name=\"ffmpeg.exe\" CALL setpriority \"Below normal\"'
 
             }
@@ -5312,11 +5312,11 @@
 
 
         if (process.platform == 'linux') {
-            if (document.getElementById("handBrakeMode").checked) {
+            if (document.getElementById("handBrakeMode").checked  || mode == "healthCheck") {
 
                 var workerCommand = 'for p in $(pgrep ^HandBrakeCLI$); do renice -n 20 -p $p; done'
 
-            } else if (document.getElementById("FFmpegMode").checked) {
+            } else if (document.getElementById("FFmpegMode").checked || (mode == "healthCheck" && document.getElementById("runThoroughHealthCheck").checked)) {
                 var workerCommand = 'for p in $(pgrep ^ffmpeg$); do renice -n 20 -p $p; done'
 
             }
@@ -5327,11 +5327,11 @@
 
 
         if (process.platform == 'darwin') {
-            if (document.getElementById("handBrakeMode").checked) {
+            if (document.getElementById("handBrakeMode").checked || mode == "healthCheck") {
 
                 var workerCommand = 'for p in $(pgrep ^HandBrakeCLI$); do renice -n 20 -p $p; done'
 
-            } else if (document.getElementById("FFmpegMode").checked) {
+            } else if (document.getElementById("FFmpegMode").checked || (mode == "healthCheck" && document.getElementById("runThoroughHealthCheck").checked)) {
                 var workerCommand = 'for p in $(pgrep ^ffmpeg$); do renice -n 20 -p $p; done'
 
             }
