@@ -4736,12 +4736,15 @@
 
     function pauseQueue() {
 
+        
+
 
         if (confirm(document.getElementById("alert_confirm_queue_pause_1").textContent)) {
 
             updateConsole("" + "Queue pause initiated." + "")
 
             queueStatusPaused = 1;
+            updateInfo = 0
 
 
             fs.writeFileSync(homePath + '/Documents/HBBatchBeast/Config/queueStartStop.txt', "0", 'utf8');
@@ -4826,6 +4829,7 @@
 
 
         queueStatusPaused = 0;
+        updateInfo = 1;
 
         document.getElementById("pauseButtonDiv").style.display = 'block';
         document.getElementById("continueButtonDiv").style.display = 'none';
