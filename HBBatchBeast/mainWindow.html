@@ -3048,8 +3048,10 @@
                     }
 
                     //Need to update workerprogressarray if this is changed.
-                    document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\" style=\"white-space:nowrap;\"><p>Worker " + message[0] + " processing file:<div id=\"cancelButtonDiv" + message[0] + "\"><input type='button' id=\"cancelButton" + message[0] + "\" class=\"infoButton\" value='Cancel item' onclick='cancelItemProcess(\"" + message[0] + "\")'/></div></p><div id=\"worker" + message[0] + "Percentage\"><p><font color=\"#66ccff\">Starting</font></p></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
+                    document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\" style=\"white-space:nowrap;\"><p>Worker " + message[0] + " processing file:<div id=\"cancelButtonDiv" + message[0] + "\"><input type='button' id=\"cancelButton" + message[0] + "\" class=\"infoButton\" value='Cancel item' onclick='cancelItemProcess(\"" + message[0] + "\")'/></div></p><div id=\"worker" + message[0] + "Percentage\"><p><font color=\"#66ccff\">Running</font></p></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
 
+
+                   
 
                     //style="display: none;"
                     //document.getElementById("pauseButtonDiv").style.display = 'none';
