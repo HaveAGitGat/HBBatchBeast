@@ -1953,7 +1953,9 @@ function attemptToRepair() {
                     ];
                     process.send(message);
 
-                    moveCorruptedFile();
+                     if (moveCorruptFileOnOff == true) {
+                                moveCorruptedFile();
+                            }
 
                     checkifQueuePause();
                     // workerEncounteredError(message[1])
