@@ -108,7 +108,7 @@ Settings help in Wiki:https://github.com/HaveAGitGat/HBBatchBeast/wiki
 -------------------------------------------------------------
 
 
-The program scans the source folder for all files. It then compares the source folder files with the destination folder files to see if any of the source files exist in the destination folder already. If not, the program queues the files for conversion.
+The program scans the source folders for all files. It then compares the source folder files with the destination folder files to see if any of the source files exist in the destination folder already. If not, the program queues the files for conversion.
  
 4 worker modules (default number) then work through the conversion queue. If periodic scanning is enabled then the program will run at the chosen interval.
 
