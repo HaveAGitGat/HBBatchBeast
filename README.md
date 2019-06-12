@@ -19,7 +19,7 @@ A free GUI application for HandBrake and FFmpeg/FFprobe on Windows, macOS and Li
 
 -Health check feature which can scan for corrupt video files using HandBrake (quick scan) or FFmpeg (thorough scan), although this is not always accurate. Attempt repair file feature included too. 
 
-This is a standalone program on Windows but requires Handbrake to be installed on Linux and Mac. 
+This is a standalone program on Windows but requires HandBrakeCLI to be installed on Linux and Mac. 
 
 
 
