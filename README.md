@@ -72,7 +72,7 @@ Settings help in Wiki:https://github.com/HaveAGitGat/HBBatchBeast/wiki
 
 INSTALLATION - Linux:
 
-Step 1: Make sure you have HandbrakeCLI installed - do the following:
+Step 1: Make sure you have HandBrakeCLI installed - do the following:
 
 
 a.Copy the following line into a terminal:
