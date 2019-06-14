@@ -39,7 +39,7 @@ Settings help in Wiki:https://github.com/HaveAGitGat/HBBatchBeast/wiki
 
 INSTALLATION - macOS:
 
-Step 1: Make sure you have HandbrakeCLI installed. The easiest way is using Hombrew. Do the following.
+Step 1: Make sure you have HandBrakeCLI installed. The easiest way is using Hombrew. Do the following.
 
 a.Copy the following line into a terminal:
 
