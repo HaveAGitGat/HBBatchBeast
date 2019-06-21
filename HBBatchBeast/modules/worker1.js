@@ -1595,6 +1595,14 @@ function workerNotEncounteredError() {
                     process.send(message);
                     updateConsole(workerNumber, "Original file replaced:" + currentSourceLine + " to " + newCurrentSourceLine)
 
+                    var message = [
+                        workerNumber,
+                        "appendRequest",
+                        homePath + "/Documents/HBBatchBeast/Logs/originalFileReplacedList.txt",
+                        path.normalize(newCurrentSourceLine) + "\n",
+                    ];
+                    process.send(message);
+
                 } catch (err) {
 
                     errorLogFull += "\n HBBatchBeast ALERT: Error replacing original file";
@@ -1659,13 +1667,12 @@ function workerNotEncounteredError() {
             }
 
 
-            var message = [
-                workerNumber,
-                "appendRequest",
-                homePath + "/Documents/HBBatchBeast/Logs/originalFileReplacedList.txt",
-                currentSourceLine + "\n",
-            ];
-            process.send(message);
+            //
+
+
+
+
+
 
 
         } else {
