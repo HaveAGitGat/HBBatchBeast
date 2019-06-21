@@ -372,17 +372,20 @@ process.on('message', (queueInfoBomb) => {
 
 
 
-                                // if ((totalFileFoundCounter + 1) % 100 == 0) {
+                                 if ((totalFileFoundCounter + 1) % 100 == 0) {
 
                                 // scanWindow.webContents.send('item:count', (totalFileFoundCounter + 1));
                                 //  }
 
                                 updateConsole("File scanner: Valid files found:" + (totalFileFoundCounter + 1))
+
                                 var message = [
                                     "totalFiles",
                                     (totalFileFoundCounter + 1),
                                 ];
                                 process.send(message);
+
+                                }
 
 
                                 // ipcRenderer.send('item:count', (totalFileFoundCounter + 1));
