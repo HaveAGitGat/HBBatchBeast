@@ -831,12 +831,12 @@ process.on('message', (queueInfoBomb) => {
 
 
 
-        var message = [
-            "writeRequest",
-            homePath + '/Documents/HBBatchBeast/Config/unconvertedFilesFound.txt',
-            (fileNotExistsCounter),
-        ];
-        process.send(message);
+        // var message = [
+        //     "writeRequest",
+        //     homePath + '/Documents/HBBatchBeast/Config/unconvertedFilesFound.txt',
+        //     (fileNotExistsCounter),
+        // ];
+        // process.send(message);
 
 
 
@@ -851,6 +851,7 @@ process.on('message', (queueInfoBomb) => {
             skipOrCopyArray,
             destinationQueueArray,
             destinationFinalQueueArray,
+            fileNotExistsCounter,
         ];
         process.send(message);
 
