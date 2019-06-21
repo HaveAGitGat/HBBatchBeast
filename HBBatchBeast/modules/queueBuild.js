@@ -44,6 +44,7 @@ var sourceQueueArray = [];
 var skipOrCopyArray = [];
 
 var replaceOriginalFile;
+var replaceOriginalFileAlways;
 
 
 var errorArray = [];
@@ -159,6 +160,7 @@ process.on('message', (queueInfoBomb) => {
         fileNameSuffixArray = queueInfoBomb[11]
 
         removeApostrophes_chkbx = queueInfoBomb[12]
+        replaceOriginalFileAlways= queueInfoBomb[13]
 
 
 
@@ -301,7 +303,7 @@ process.on('message', (queueInfoBomb) => {
 
                             if (mode != "healthCheck") {
 
-                                if (replaceOriginalFile == true) {
+                                if (replaceOriginalFile == true || replaceOriginalFileAlways == true ) {
                                     for (var j = 0; j < replacedFileArray.length; j++) {
 
                                         if (thisFile == replacedFileArray[j]) {
