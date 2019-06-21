@@ -482,6 +482,11 @@
 
 
 
+
+
+
+
+
         if (fs.existsSync(homePath + '/Documents/HBBatchBeast/Config/Configuration.json')) {
 
             try {
@@ -3001,7 +3006,15 @@
 
 
                 if (message[1] == "consoleMessage") {
-                    updateConsole("Worker " + message[0] + ":" + message[2] + "");
+
+                    if(document.getElementById("saveWorkerLogs").checked == true){
+
+                        updateConsole("Worker " + message[0] + ":" + message[2] + "");
+
+                    }else{
+                        updateConsole("Worker " + message[0] + ":" + message[2] + "", true);
+                       
+                    }
                 }
 
 
@@ -8005,12 +8018,20 @@
                 <div class="rowitem">
                     <div class="grid-container">
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">Save worker console output logs?:</span>
+                            <p><span onclick="toolTip('tooltip_save_verbose_logs')" class="toolTipClass">�</span><span name="lang_text">Save verbose logs?:</span>
                             </p>
                         </div>
 
                         <div class="grid-itemright"><input type="checkbox" id="saveWorkerLogs"></div>
                     </div>
+                </div>
+
+                <div id="tooltip_save_verbose_logs" style="display: none;">
+
+                    <br> <span name="lang_text">Check this checkbox to save detailed sub-process logs. This includes worker console ouput. This will cause very large logs.</span>
+            
+
+
                 </div>
 
                 <br>
