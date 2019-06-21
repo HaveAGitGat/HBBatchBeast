@@ -918,6 +918,8 @@
         jsonConfig.configs[selected_config_no].tab_system.worker_instance_number == undefined ? document.getElementById("instanceNumber").value = "4" : document.getElementById("instanceNumber").value = jsonConfig.configs[selected_config_no].tab_system.worker_instance_number;
         jsonConfig.configs[selected_config_no].tab_system.max_queue_view_size == undefined ? document.getElementById("queueSizeViewLimit").value = "1000" : document.getElementById("queueSizeViewLimit").value = jsonConfig.configs[selected_config_no].tab_system.max_queue_view_size;
         jsonConfig.configs[selected_config_no].tab_system.run_on_program_startup_toggle == 1 ? document.getElementById("autoStart").checked = true : document.getElementById("autoStart").checked = false;
+        jsonConfig.configs[selected_config_no].tab_system.save_worker_logs_toggle == 1 ? document.getElementById("saveWorkerLogs").checked = true : document.getElementById("saveWorkerLogs").checked = false;
+
         jsonConfig.configs[selected_config_no].tab_system.email_address == undefined ? document.getElementById("emailAddress").value = "" : document.getElementById("emailAddress").value = jsonConfig.configs[selected_config_no].tab_system.email_address;
         jsonConfig.configs[selected_config_no].tab_system.smtp_server == undefined ? document.getElementById("SMTPServer").value = "" : document.getElementById("SMTPServer").value = jsonConfig.configs[selected_config_no].tab_system.smtp_server;
 
@@ -1351,6 +1353,9 @@
             jsonConfig.configs[selected_config_no].tab_system.worker_instance_number = document.getElementById("instanceNumber").value
             jsonConfig.configs[selected_config_no].tab_system.max_queue_view_size = document.getElementById("queueSizeViewLimit").value
             document.getElementById("autoStart").checked ? jsonConfig.configs[selected_config_no].tab_system.run_on_program_startup_toggle = 1 : jsonConfig.configs[selected_config_no].tab_system.run_on_program_startup_toggle = 0;
+            document.getElementById("saveWorkerLogs").checked ? jsonConfig.configs[selected_config_no].tab_system.save_worker_logs_toggle = 1 : jsonConfig.configs[selected_config_no].tab_system.save_worker_logs_toggle = 0;
+            
+            
             jsonConfig.configs[selected_config_no].tab_system.email_address = document.getElementById("emailAddress").value
             jsonConfig.configs[selected_config_no].tab_system.smtp_server = document.getElementById("SMTPServer").value
 
@@ -4808,7 +4813,8 @@
             document.getElementById("repairAttempt").checked,
             document.getElementById("CRFRepairValue").value,
             getHandBrakeCLIPath(),
-            getFFmpegCLIPath()
+            getFFmpegCLIPath(),
+            document.getElementById("saveWorkerLogs").checked,
 
 
 
@@ -7983,7 +7989,17 @@
                     </div>
                 </div>
 
-                
+
+                <div class="rowitem">
+                    <div class="grid-container">
+                        <div class="grid-itemleft">
+                            <p><span name="lang_text">Save worker console output logs?:</span>
+                            </p>
+                        </div>
+
+                        <div class="grid-itemright"><input type="checkbox" id="saveWorkerLogs"></div>
+                    </div>
+                </div>
 
                 <br>
                 <br>
