@@ -2871,7 +2871,7 @@
 
         if (totalFileFoundCounter >= document.getElementById("queueSizeViewLimit").value) {
             document.getElementById("fullQueueDiv").style.display = 'none';
-            document.getElementById("viewStatus").innerHTML += "<p style=\"color:red\">Queue size view limit exceeded(" + document.getElementById("queueSizeViewLimit").value + ")! Queue view disabled.<\p>";
+            document.getElementById("viewStatus").innerHTML += "<p style=\"color:red\">Queue size view limit exceeded(" + document.getElementById("queueSizeViewLimit").value + ")! Queue view disabled.You can increase this on the 'System' tab.<\p>";
 
             queueView = "disabled";
 
@@ -3080,7 +3080,7 @@
                 if (message[1] == "percentage") {
                     // document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker" + i + "Status\"> </div>";       
                     document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">" + message[3] + "</font></p>";
-                    updateConsole("Worker " + message[0] + ":" + message[3] + ":" + sourceQueueArray[message[2]] + "");
+                    //updateConsole("Worker " + message[0] + ":" + message[3] + ":" + sourceQueueArray[message[2]] + "");
                     var currentRow = parseInt(message[2]) + 1
                     if (queueView == "enabled") {
                         //done    
@@ -7208,7 +7208,7 @@
                             <div style="text-align: left">
                                 <p><span onclick="toolTip('tooltip_included_file_types')"
                                         class="toolTipClass">�</span><span name="lang_text">Include these file
-                                        types:</span>
+                                        containers:</span>
                                 </p>
                             </div>
 
@@ -7222,7 +7222,7 @@
                     <div id="tooltip_included_file_types" style="display: none;">
                         <br>
 
-                        <span name="lang_text">Enter the file types to scan for. Each type needs to be separated by a
+                        <span name="lang_text">Enter the file containers to scan for. Each type needs to be separated by a
                             comma. The default entry is:</span>
                         <br>
                         <br>
@@ -7975,13 +7975,15 @@
                 <div class="rowitem">
                     <div class="grid-container">
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">Automatically start "Scan and convert" when program opened?</span>
+                            <p><span name="lang_text">Automatically start "Scan and convert" when program opened?:</span>
                             </p>
                         </div>
 
                         <div class="grid-itemright"><input type="checkbox" id="autoStart"></div>
                     </div>
                 </div>
+
+                
 
                 <br>
                 <br>
