@@ -2448,6 +2448,7 @@
                 document.getElementById("replaceOriginalFile").checked,
                 fileNameSuffixArray,
                 document.getElementById("removeApostrophes").checked,
+                document.getElementById("replaceOriginalFileAlways").checked,
 
 
 
@@ -4815,6 +4816,7 @@
             getHandBrakeCLIPath(),
             getFFmpegCLIPath(),
             document.getElementById("saveWorkerLogs").checked,
+           
 
 
 
@@ -7548,12 +7550,7 @@
                     </div>
 
 
-                    <input type="button" onclick="viewLogs('originalFileReplacedList')"
-                        value="View compress attempt cache" class="infoButton">
 
-
-                    <input type="button" onclick="clearOriginalFileCompressAttemptCache()"
-                        value="Clear compress attempt cache" class="infoButton">
 
 
                     <div class="rowitem">
@@ -7580,8 +7577,22 @@
                             within, your source
                             folder or it won't work properly.</span>
 
+                            <br> <br><span name="lang_text">Once HBBatchBeast has transcoded a specific file, it
+                                will add
+                                that file path to a
+                                cache so that it won't be attempted again in future. You can view/edit/clear the cache using
+                                the yellow
+                                buttons.</span>
+
 
                     </div>
+
+                    <input type="button" onclick="viewLogs('originalFileReplacedList')"
+                    value="View replaced file cache" class="infoButton">
+
+
+                <input type="button" onclick="clearOriginalFileCompressAttemptCache()"
+                    value="Clear replaced file cache" class="infoButton">
 
 
                     <div class="rowitem">
@@ -8121,7 +8132,7 @@
             <center>
 
                 <p><span name="lang_text">This feature allows monitoring of conversion/health check status using any
-                        web-browser. Useful when running servers etc.</span></p>
+                        web-browser. Useful when running servers etc. No filenames are sent.</span></p>
 
 
 
@@ -8269,9 +8280,9 @@
 
 
 
-            <div class="grid-container">
+           
                 <div id="workerStatusDiv"> </div>
-            </div>
+            
 
 
             <div id="healthCheckDiv"></div>
