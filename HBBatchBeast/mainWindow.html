@@ -2307,7 +2307,7 @@
 
 
 
-            fs.writeFileSync(homePath + '/Documents/HBBatchBeast/Config/unconvertedFilesFound.txt', 0, 'utf8');
+           
 
 
 
@@ -2562,6 +2562,7 @@
                     skipOrCopyArray = message[4];
                     destinationQueue = message[5];
                     destinationFinalQueue = message[6];
+                    unConvertedFiles = message[7];
 
 
 
@@ -2674,7 +2675,7 @@
 
 
 
-        unConvertedFiles = fs.readFileSync(homePath + "/Documents/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
+        
         if (mode != "healthCheck") {
 
             document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + unConvertedFiles + "<\p>";
@@ -4053,7 +4054,7 @@
 
 
 
-                var convertedFiles1 = fs.readFileSync(homePath + "/Documents/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
+                
 
 
 
@@ -4076,7 +4077,7 @@
 
 
 
-                var unConvertedFiles = fs.readFileSync(homePath + "/Documents/HBBatchBeast/Config/unconvertedFilesFound.txt", 'utf8');
+               
                 if (mode == "healthCheck") {
                     preset = "Health check"
                 } else {
@@ -4096,7 +4097,7 @@
 
 
                 }
-                fs.appendFileSync(homePath + "/Documents/HBBatchBeast/Logs/Scans.txt", "Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + convertedFiles1 + "-------Preset:" + preset + ". \r\n", 'utf8');
+                fs.appendFileSync(homePath + "/Documents/HBBatchBeast/Logs/Scans.txt", "Scan completed on " + today2 + "-" + timenow + ".-------Total files found:" + totalFileFoundCounter + "---------Unconverted files:" + unConvertedFiles + "------.Files processed:" + convertedFiles + " out of " + unConvertedFiles + "-------Preset:" + preset + ". \r\n", 'utf8');
                 document.getElementById("sessionConversions").style.display = 'block';
                 document.getElementById("endTimeDiv").innerHTML = "<p>End time: " + getTimeNow() + "<\p>";
 
