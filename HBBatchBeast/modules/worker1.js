@@ -155,6 +155,8 @@ var repairCRFValue
 var handBrakeCLIPath
 var ffmpegPath
 
+var saveWorkerLogs
+
 
 
 // var message = [
@@ -292,6 +294,7 @@ process.on('message', (m) => {
         repairCRFValue = m[32]
         handBrakeCLIPath = m[33]
         ffmpegPath = m[34]
+        saveWorkerLogs = m[35]
 
 
 
@@ -920,14 +923,16 @@ process.on('message', (m) => {
 
                             var str = "" + data;
 
-                            var message = [
-                                workerNumber,
-                                "appendRequest",
-                                homePath + "/Documents/HBBatchBeast/Logs/Worker" + workerNumber + "ConsoleOutput.txt",
-                                str,
-                                //currentSourceLine+" ConversionError\n",
-                            ];
-                            process.send(message);
+                            if (saveWorkerLogs) {
+                                var message = [
+                                    workerNumber,
+                                    "appendRequest",
+                                    homePath + "/Documents/HBBatchBeast/Logs/Worker" + workerNumber + "ConsoleOutput.txt",
+                                    str,
+                                    //currentSourceLine+" ConversionError\n",
+                                ];
+                                process.send(message);
+                            }
 
                             // send percentage update to GUI
 
@@ -998,14 +1003,16 @@ process.on('message', (m) => {
                             // console.log('stderrorWorker: ' + data);
                             var str = "" + data;
 
-                            var message = [
-                                workerNumber,
-                                "appendRequest",
-                                homePath + "/Documents/HBBatchBeast/Logs/Worker" + workerNumber + "ConsoleOutputError.txt",
-                                str,
-                                //currentSourceLine+" ConversionError\n",
-                            ];
-                            process.send(message);
+                            if (saveWorkerLogs) {
+                                var message = [
+                                    workerNumber,
+                                    "appendRequest",
+                                    homePath + "/Documents/HBBatchBeast/Logs/Worker" + workerNumber + "ConsoleOutputError.txt",
+                                    str,
+                                    //currentSourceLine+" ConversionError\n",
+                                ];
+                                process.send(message);
+                            }
 
                             errorLogFull += data;
                             // send percentage update to GUI
@@ -1778,14 +1785,18 @@ function attemptToRepair() {
         //  console.log('stdoutWorker: ' + data);
         //log console output to text file
         var str = "" + data;
-        var message = [
-            workerNumber,
-            "appendRequest",
-            homePath + "/Documents/HBBatchBeast/Logs/Worker" + workerNumber + "ConsoleOutput.txt",
-            str,
-            //currentSourceLine+" ConversionError\n",
-        ];
-        process.send(message);
+
+        if (saveWorkerLogs) {
+
+            var message = [
+                workerNumber,
+                "appendRequest",
+                homePath + "/Documents/HBBatchBeast/Logs/Worker" + workerNumber + "ConsoleOutput.txt",
+                str,
+                //currentSourceLine+" ConversionError\n",
+            ];
+            process.send(message);
+        }
 
         // send percentage update to GUI
 
@@ -1832,14 +1843,17 @@ function attemptToRepair() {
         // console.log('stderrorWorker: ' + data);
         var str = "" + data;
 
-        var message = [
-            workerNumber,
-            "appendRequest",
-            homePath + "/Documents/HBBatchBeast/Logs/Worker" + workerNumber + "ConsoleOutputError.txt",
-            str,
-            //currentSourceLine+" ConversionError\n",
-        ];
-        process.send(message);
+
+        if (saveWorkerLogs) {
+            var message = [
+                workerNumber,
+                "appendRequest",
+                homePath + "/Documents/HBBatchBeast/Logs/Worker" + workerNumber + "ConsoleOutputError.txt",
+                str,
+                //currentSourceLine+" ConversionError\n",
+            ];
+            process.send(message);
+        }
 
         errorLogFull += data;
         // send percentage update to GUI
@@ -1953,9 +1967,9 @@ function attemptToRepair() {
                     ];
                     process.send(message);
 
-                     if (moveCorruptFileOnOff == true) {
-                                moveCorruptedFile();
-                            }
+                    if (moveCorruptFileOnOff == true) {
+                        moveCorruptedFile();
+                    }
 
                     checkifQueuePause();
                     // workerEncounteredError(message[1])
