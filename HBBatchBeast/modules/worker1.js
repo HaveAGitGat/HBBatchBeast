@@ -674,6 +674,8 @@ process.on('message', (m) => {
                             var processFileY = true
                         }
 
+                        minmaxThreshold();
+
                     } else if (excludeAnyFilesWithProperties == true || excludeAllFilesWithProperties == true) {
 
                         try {
@@ -735,6 +737,8 @@ process.on('message', (m) => {
                             var processFileY = true
                         }
 
+                        minmaxThreshold();
+
                     } else {
 
                         try {
@@ -769,6 +773,17 @@ process.on('message', (m) => {
                         }
                         processFileY = true
 
+                        minmaxThreshold();
+
+
+
+                    }
+
+
+                    //
+
+                    function minmaxThreshold(){
+
                         if (minimumFileSizeOnOff == true || maximumFileSizeOnOff == true) {
 
                             var singleFileSize = fs.statSync(currentSourceLine)
@@ -792,8 +807,8 @@ process.on('message', (m) => {
 
 
                         }
-
                     }
+
                     //jsonInfo.streams[0]["codec_name"] == "h264"
                     if (processFileY == true) {
                         processFile();
