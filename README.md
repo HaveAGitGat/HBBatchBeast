@@ -1,4 +1,4 @@
-# HBBatchBeast for HandBrake and FFmpeg/FFprobe (Windows, macOS and Linux)
+# HBBatchBeast for HandBrake and FFmpeg/FFprobe (Windows, macOS, Linux & Docker)
 
 [![Reddit](https://img.shields.io/badge/Reddit-HBBatchBeast-FF5700.svg?style=flat-square)](https://www.reddit.com/r/HBBatchBeast/)     [![paypal](https://img.shields.io/badge/-donate-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=97L64UK77NTZL&source=url)    [![Discord](https://img.shields.io/badge/Discord-Chat-green.svg)](https://discord.gg/MSsgDqJ)    [![Docker](https://img.shields.io/badge/docker%20build-passing-green.svg)](https://hub.docker.com/r/haveagitgat/hbbatchbeast)    
 
