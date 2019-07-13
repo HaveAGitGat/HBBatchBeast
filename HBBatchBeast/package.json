@@ -16,7 +16,7 @@
     "author": "HaveAGitGat",
     "license": "MIT",
     "dependencies": {
-        "@ffmpeg-installer/ffmpeg": "^1.0.17",
+        "@ffmpeg-installer/ffmpeg": "^1.0.19",
         "async": "^2.6.2",
         "bcrypt": "^3.0.6",
         "download": "^7.1.0",
@@ -43,7 +43,7 @@
         "zingchart": "^2.8.6"
     },
     "devDependencies": {
-        "electron": "^3.1.8",
+        "electron": "^3.1.12",
         "electron-installer-dmg": "^2.0.0",
         "electron-packager": "^13.1.1",
         "electron-winstaller": "^2.7.0"
