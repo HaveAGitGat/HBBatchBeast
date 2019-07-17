@@ -1346,12 +1346,20 @@ function workerEncounteredError(messageOne) {
                 }
 
 
+                if (saveWorkerLogs) {
+                    var errorLogWrite =  getDateNow() + "-" + getTimeNow() + "---Health---check--ERROR----------" + currentSourceLine + "\r\n" + errorLogFull + "\r\n"
+
+                }else{
+                    var errorLogWrite = currentSourceLine + "\r\n"
+
+                }
+               
 
                 var message = [
                     workerNumber,
                     "appendRequest",
                     homePath + "/Documents/HBBatchBeast/Logs/ErrorLog.txt",
-                    getDateNow() + "-" + getTimeNow() + "---Health---check--ERROR----------" + currentSourceLine + "\r\n" + errorLogFull + "\r\n",
+                    errorLogWrite,
                 ];
                 process.send(message);
 
@@ -1373,11 +1381,19 @@ function workerEncounteredError(messageOne) {
                     moveCorruptedFile();
                 }
 
+                if (saveWorkerLogs) {
+                    var errorLogWrite =  getDateNow() + "-" + getTimeNow() + "---Health---check--ERROR----------" + currentSourceLine + "\r\n" + errorLogFull + "\r\n"
+
+                }else{
+                    var errorLogWrite =   currentSourceLine + "\r\n"
+
+                }
+
                 var message = [
                     workerNumber,
                     "appendRequest",
                     homePath + "/Documents/HBBatchBeast/Logs/ErrorLog.txt",
-                    getDateNow() + "-" + getTimeNow() + "---Health---check--ERROR----------" + currentSourceLine + "\r\n" + errorLogFull + "\r\n",
+                    errorLogWrite,
                 ];
                 process.send(message);
                 checkifQueuePause();
