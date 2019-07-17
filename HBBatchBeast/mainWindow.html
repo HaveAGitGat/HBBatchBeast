@@ -369,6 +369,39 @@
     window.onload = function () {
 
 
+        // save lang strings to json
+ if (process.env.NODE_ENV != 'production') {
+
+ 
+var language_text = {}
+
+
+var lang_name_tags = document.getElementsByName("lang_text");
+for (var i = 0; i < lang_name_tags.length; i++) {
+
+    var langText = lang_name_tags[i].textContent
+
+    langText = langText.replace(/(\r\n|\n|\r)/gm, " ");
+    langText = langText.replace(/\s+/g, " ");
+
+    language_text[langText] = langText
+
+
+}
+
+var lang_button_tags = document.getElementsByTagName("input");
+for (var i = 0; i < lang_button_tags.length; i++) {
+    if (lang_button_tags[i].type == "button") {
+        language_text[lang_button_tags[i].value] = lang_button_tags[i].value
+    }
+}
+
+var jsonContent = JSON.stringify(language_text);
+
+fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
+
+}
+
 
 
 
@@ -2665,7 +2698,9 @@
 
 
         document.getElementById("queueButton").style.display = 'block';
+      
         document.getElementById("outputButton").style.display = 'block';
+     
 
 
         if (mode == "scanandconvert" || mode == "healthCheck") {
@@ -5449,6 +5484,30 @@
 
         }
 
+    }
+
+
+
+    function toggleShowRows(obj,colour) {
+        
+        if (obj.checked == false) {
+            for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
+
+                if (sessionConversionsTable.rows[i].style.backgroundColor == colour) {
+
+                    sessionConversionsTable.rows[i].style.display = 'none';
+
+                }
+            }
+        } else if (obj.checked == true) {
+
+            for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
+                if (sessionConversionsTable.rows[i].style.backgroundColor == colour) {
+
+                    sessionConversionsTable.rows[i].style.display = 'block';
+                }
+            }
+        }
     }
 
 </script>
@@ -8355,13 +8414,33 @@
 
             <div id="files"></div>
             <div id="files2"></div>
-            <div ALIGN="LEFT">
+            <div ALIGN="LEFT" >
                 <input type='button' id="outputButton" class="button4" value='Toggle output view'
                     onclick='toggleView("sessionConversions")' style="display: none;" />
+
+
+               
+
             </div>
 
+         
+           
+               
+
+
             <div id="sessionConversions" style="display: none;">
-                <p><span name="lang_text">Output this session</span></p>
+
+
+
+                <p><span name="lang_text">Output this session:</span>
+
+                    
+                <span name="lang_text">Success</span><input type="checkbox" class="rounded" id="showSuccess" onchange='toggleShowRows(this,"rgb(89, 255, 116)")' checked>
+                <span name="lang_text">Error</span><input type="checkbox" class="rounded" id="showError"  onchange='toggleShowRows(this,"rgb(255, 45, 45)")' checked>
+                <span name="lang_text"> Cancelled</span><input type="checkbox" class="rounded" id="showCancelled" onchange='toggleShowRows(this,"rgb(255, 218, 109)")'checked>
+                <span name="lang_text"> Other</span><input type="checkbox" class="rounded" id="showOther" onchange='toggleShowRows(this,"rgb(255, 162, 76)")' checked></p>
+
+                
 
 
 
