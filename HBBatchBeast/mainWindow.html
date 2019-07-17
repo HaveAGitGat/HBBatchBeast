@@ -3210,7 +3210,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-                    if (mode != "healthCheck") {
+                     if (mode != "healthCheck" || mode == "healthCheck") {
 
                         tempOutputQueueHTML += "<tr>"
                             + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
@@ -4086,6 +4086,11 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
                 }
+
+                toggleShowRows(document.getElementById("showSuccess"), "rgb(89, 255, 116)")
+                toggleShowRows(document.getElementById("showError"), "rgb(255, 45, 45)")
+                toggleShowRows(document.getElementById("showCancelled"), "rgb(255, 218, 109)")
+                toggleShowRows(document.getElementById("showOther"), "rgb(255, 162, 76)")
 
 
                 var today = new Date();
@@ -5489,7 +5494,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
     function toggleShowRows(obj,colour) {
-        
+
         if (obj.checked == false) {
             for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
 
