@@ -1083,10 +1083,8 @@ process.on('message', (m) => {
 
 
                                         }
-
                                     }
                                 }
-
                             }
 
 
@@ -1347,7 +1345,7 @@ function workerEncounteredError(messageOne) {
 
 
                 if (saveWorkerLogs) {
-                    var errorLogWrite =  getDateNow() + "-" + getTimeNow() + "---Health---check--ERROR----------" + currentSourceLine + "\r\n" + errorLogFull + "\r\n"
+                    var errorLogWrite = "[" + getDateNow() + "#" + getTimeNow() + "]" + currentSourceLine + "\r\n" + errorLogFull + "\r\n"
 
                 }else{
                     var errorLogWrite = currentSourceLine + "\r\n"
@@ -1382,7 +1380,7 @@ function workerEncounteredError(messageOne) {
                 }
 
                 if (saveWorkerLogs) {
-                    var errorLogWrite =  getDateNow() + "-" + getTimeNow() + "---Health---check--ERROR----------" + currentSourceLine + "\r\n" + errorLogFull + "\r\n"
+                    var errorLogWrite = "[" + getDateNow() + "#" + getTimeNow() + "]" + currentSourceLine + "\r\n" + errorLogFull + "\r\n"
 
                 }else{
                     var errorLogWrite =   currentSourceLine + "\r\n"
@@ -1420,7 +1418,7 @@ function workerEncounteredError(messageOne) {
                     workerNumber,
                     "appendRequest",
                     homePath + "/Documents/HBBatchBeast/Logs/fileConversionLog.txt",
-                    getDateNow() + "-" + getTimeNow() + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n" + errorLogFull + "\r\n",
+                    "[" + getDateNow() + "#" + getTimeNow() + "]"+ "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n" + errorLogFull + "\r\n",
                 ];
                 process.send(message);
             } else {
@@ -1428,7 +1426,7 @@ function workerEncounteredError(messageOne) {
                     workerNumber,
                     "appendRequest",
                     homePath + "/Documents/HBBatchBeast/Logs/fileConversionLog.txt",
-                    getDateNow() + "-" + getTimeNow() + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset + "\r\n" + errorLogFull + "\r\n",
+                    "[" + getDateNow() + "#" + getTimeNow() + "]" + "--------ERROR----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset + "\r\n" + errorLogFull + "\r\n",
                 ];
                 process.send(message);
             }
@@ -1543,7 +1541,7 @@ function workerNotEncounteredError() {
                 workerNumber,
                 "appendRequest",
                 homePath + "/Documents/HBBatchBeast/Logs/fileConversionLog.txt",
-                getDateNow() + "-" + getTimeNow() + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n",
+                "[" + getDateNow() + "#" + getTimeNow() + "]" + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationFinalLine + "----------using preset----------:" + preset + "\r\n",
             ];
             process.send(message);
 
@@ -1554,7 +1552,7 @@ function workerNotEncounteredError() {
                 workerNumber,
                 "appendRequest",
                 homePath + "/Documents/HBBatchBeast/Logs/fileConversionLog.txt",
-                getDateNow() + "-" + getTimeNow() + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset + "\r\n",
+                "[" + getDateNow() + "#" + getTimeNow() + "]" + "--------Processed----------" + currentSourceLine + "------------to----------" + currentDestinationLine + "----------using preset----------:" + preset + "\r\n",
             ];
             process.send(message);
 
@@ -1741,6 +1739,7 @@ function checkifQueuePause() {
 }
 
 function getDateNow() {
+
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
@@ -1751,6 +1750,7 @@ function getDateNow() {
     // if (mm < 10) {
     //     mm = '0' + mm
     // }
+
     var months = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"];
 
@@ -1761,6 +1761,7 @@ function getDateNow() {
 }
 
 function getTimeNow() {
+
     var d = new Date(),
         h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
         m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
