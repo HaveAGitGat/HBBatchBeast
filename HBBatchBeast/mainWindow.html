@@ -3212,43 +3212,69 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
                      if (mode != "healthCheck" || mode == "healthCheck") {
 
-                        tempOutputQueueHTML += "<tr>"
-                            + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
-                            + "<td>" + sessionNumber + "</td>"
-                            + "<td>" + preset + "</td>"
-                            + "<td>" + FFprobeArray[globalQueueNumber] + "</td>"
-                            + "<td>" + Status + "</td>"
-                            + "<td>" + getTimeNow() + "</td>"
-                            + "</tr>";
+                        // tempOutputQueueHTML += "<tr>"
+                        //     + "<td >" + sourceQueueArray[globalQueueNumber] + "</td>"
+                        //     + "<td  >" + sessionNumber + "</td>"
+                        //     + "<td  >" + preset + "</td>"
+                        //     + "<td  >" + FFprobeArray[globalQueueNumber] + "</td>"
+                        //     + "<td  >" + Status + "</td>"
+                        //     + "<td  >" + getTimeNow() + "</td>"
+                        //     + "</tr>";
 
-                    } else if (Status2 == "<p><font color=\"#ff2d2d\">Error</font></p>") {
-                        tempOutputQueueHTML += "<tr>"
-                            + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
-                            + "<td>" + sessionNumber + "</td>"
-                            + "<td>" + preset + "</td>"
-                            + "<td>" + FFprobeArray[globalQueueNumber] + "</td>"
-                            + "<td>" + Status + "</td>"
-                            + "<td>" + getTimeNow() + "</td>"
-                            + "</tr>";
-                    } else if (Status2 == "<p><font color=\"#ff2d2d\">Error:Unable to repair file</font></p>") {
-                        tempOutputQueueHTML += "<tr>"
-                            + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
-                            + "<td>" + sessionNumber + "</td>"
-                            + "<td>" + preset + "</td>"
-                            + "<td>" + FFprobeArray[globalQueueNumber] + "</td>"
-                            + "<td>" + Status + "</td>"
-                            + "<td>" + getTimeNow() + "</td>"
-                            + "</tr>";
-                    } else if (Status2 == "<p><font color=\"#66ccff\">File repaired. Please inspect files.</font></p>") {
-                        tempOutputQueueHTML += "<tr>"
-                            + "<td>" + sourceQueueArray[globalQueueNumber] + "</td>"
-                            + "<td>" + sessionNumber + "</td>"
-                            + "<td>" + preset + "</td>"
-                            + "<td>" + FFprobeArray[globalQueueNumber] + "</td>"
-                            + "<td>" + Status + "</td>"
-                            + "<td>" + getTimeNow() + "</td>"
-                            + "</tr>";
+                            var temprow = document.getElementById("sessionConversionsTable").insertRow();
+                            var tempcell0 = temprow.insertCell(0);
+                            var tempcell1 = temprow.insertCell(1);
+                            var tempcell2 = temprow.insertCell(2);
+                            var tempcell3 = temprow.insertCell(3);
+                            var tempcell4 = temprow.insertCell(4);
+                            var tempcell5 = temprow.insertCell(5);
+
+
+
+                             tempcell0.innerHTML = sourceQueueArray[globalQueueNumber]
+                             
+                             tempcell1.innerHTML = sessionNumber 
+                             tempcell2.innerHTML = preset
+                             tempcell3.innerHTML = FFprobeArray[globalQueueNumber] 
+                             tempcell4.innerHTML = Status
+                             tempcell5.innerHTML = getTimeNow()
+
+                             if ((temprow.cells[4].innerHTML).toString().includes("Completed")) {
+                        temprow.style.backgroundColor = "#59ff74";
+                    } else if ((temprow.cells[4].innerHTML).toString().includes("Error")) {
+                        temprow.style.backgroundColor = "#ff2d2d";
+                    } else if ((temprow.cells[4].innerHTML).toString().includes("Cancelled")) {
+                        temprow.style.backgroundColor = "#ffda6d";
+                    } else if ((temprow.cells[4].innerHTML).toString().includes("Skipped")) {
+                        temprow.style.backgroundColor = "#ffa24c";
+                    } else if ((temprow.cells[4].innerHTML).toString().includes("Copied to destination")) {
+                        temprow.style.backgroundColor = "#59ff74";
+                    } else if ((temprow.cells[4].innerHTML).toString().includes("Copy to destination failed")) {
+                        temprow.style.backgroundColor = "#ff2d2d";
+                    } else if ((temprow.cells[4].innerHTML).toString().includes("Original replaced")) {
+                        temprow.style.backgroundColor = "#59ff74";
+                    } else if ((temprow.cells[4].innerHTML).toString().includes("Original not replaced")) {
+                        temprow.style.backgroundColor = "#ffa24c";
+                    } else if ((temprow.cells[4].innerHTML).toString().includes("File repaired. Please inspect files.")) {
+                        temprow.style.backgroundColor = "#59ff74";
                     }
+
+                    
+
+
+                toggleShowRowsQ(document.getElementById("showSuccess1"), "rgb(89, 255, 116)")
+                toggleShowRowsQ(document.getElementById("showError1"), "rgb(255, 45, 45)")
+                toggleShowRowsQ(document.getElementById("showCancelled1"), "rgb(255, 218, 109)")
+                toggleShowRowsQ(document.getElementById("showOther1"), "rgb(255, 162, 76)")
+
+                toggleShowRowsO(document.getElementById("showSuccess"), "rgb(89, 255, 116)")
+                toggleShowRowsO(document.getElementById("showError"), "rgb(255, 45, 45)")
+                toggleShowRowsO(document.getElementById("showCancelled"), "rgb(255, 218, 109)")
+                toggleShowRowsO(document.getElementById("showOther"), "rgb(255, 162, 76)")
+
+
+                        }
+
 
 
                     sessionNumber++;
@@ -3927,7 +3953,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-                for (i = 0; i < deleteArray.length; i++) {
+                for (var i = 0; i < deleteArray.length; i++) {
 
                     if (fs.existsSync(deleteArray[i])) {
 
@@ -3964,7 +3990,9 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
                 updateConsole("" + "Updating output table" + "")
-                document.getElementById('sessionConversionsTable').innerHTML += tempOutputQueueHTML;
+
+
+               // document.getElementById('sessionConversionsTable').innerHTML += tempOutputQueueHTML
 
                 //notify
 
@@ -4031,66 +4059,16 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-                for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
-
-
-
-                    if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Completed")) {
-                        sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
-
-
-
-                    } else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Error")) {
-
-                        sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
-
-
-                    } else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Cancelled")) {
-
-                        sessionConversionsTable.rows[i].style.backgroundColor = "#ffda6d";
-
-
-                    } else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Skipped")) {
-
-                        sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
-
-
-                    } else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Copied to destination")) {
-
-                        sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
-
-
-                    } else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Copy to destination failed")) {
-
-                        sessionConversionsTable.rows[i].style.backgroundColor = "#ff2d2d";
-
-
-                    } else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Original replaced")) {
-
-                        sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
-
-
-                    } else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("Original not replaced")) {
-
-                        sessionConversionsTable.rows[i].style.backgroundColor = "#ffa24c";
-
-
-                    } else if ((sessionConversionsTable.rows[i].cells[4].innerHTML).toString().includes("File repaired. Please inspect files.")) {
-
-                        sessionConversionsTable.rows[i].style.backgroundColor = "#59ff74";
-
-
-                    }
+         
 
 
 
 
-                }
 
-                toggleShowRows(document.getElementById("showSuccess"), "rgb(89, 255, 116)")
-                toggleShowRows(document.getElementById("showError"), "rgb(255, 45, 45)")
-                toggleShowRows(document.getElementById("showCancelled"), "rgb(255, 218, 109)")
-                toggleShowRows(document.getElementById("showOther"), "rgb(255, 162, 76)")
+
+
+                
+
 
 
                 var today = new Date();
@@ -5491,9 +5469,44 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
     }
 
+    function toggleShowRowsQ(obj,colour) {
+
+//  var tb = document.getElementById("sessionConversionsTable");
+ // tb.getElementsByTagName("th")[0].style.display = "none";
+//  tb.getElementsByTagName("th")[0].style.display = "block";
+
+  if (obj.checked == false) {
+      for (var i = 0; i < queueTable.rows.length; i++) {
+
+          if (queueTable.rows[i].style.backgroundColor == colour) {
+
+              queueTable.rows[i].style.display = 'none';
+
+          }
+      }
+  } else if (obj.checked == true) {
+
+      for (var i = 0; i < queueTable.rows.length; i++) {
+          if (queueTable.rows[i].style.backgroundColor == colour) {
+
+           queueTable.rows[i].style.display = 'table-row';
+
+           
+            queueTable.rows[i].cells[0].style.width = "10%"
+
+       
+          }
+      }
+  }
+}
 
 
-    function toggleShowRows(obj,colour) {
+
+    function toggleShowRowsO(obj,colour) {
+
+      //  var tb = document.getElementById("sessionConversionsTable");
+       // tb.getElementsByTagName("th")[0].style.display = "none";
+      //  tb.getElementsByTagName("th")[0].style.display = "block";
 
         if (obj.checked == false) {
             for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
@@ -5509,7 +5522,12 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
             for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
                 if (sessionConversionsTable.rows[i].style.backgroundColor == colour) {
 
-                    sessionConversionsTable.rows[i].style.display = 'block';
+                 sessionConversionsTable.rows[i].style.display = 'table-row';
+
+                 
+                  sessionConversionsTable.rows[i].cells[0].style.width = "10%"
+
+             
                 }
             }
         }
@@ -5766,6 +5784,12 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
         color: black;
     }
 
+    table.historicTable tr {
+   /* display: table;
+  width: auto;
+   table-layout: fixed;  */
+}
+
 
     table.historicTable tr:nth-child(even) {
         background-color: #828282;
@@ -5786,6 +5810,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
     }
 
+
+ 
 
 
 
@@ -8412,6 +8438,12 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
                 <p><span name="lang_text">Queue</span></p>
+
+                <span name="lang_text">Success</span><input type="checkbox" class="rounded" id="showSuccess1" onchange='toggleShowRowsQ(this,"rgb(89, 255, 116)")' checked>
+                <span name="lang_text">Error</span><input type="checkbox" class="rounded" id="showError1"  onchange='toggleShowRowsQ(this,"rgb(255, 45, 45)")' checked>
+                <span name="lang_text"> Cancelled</span><input type="checkbox" class="rounded" id="showCancelled1" onchange='toggleShowRowsQ(this,"rgb(255, 218, 109)")'checked>
+                <span name="lang_text"> Other</span><input type="checkbox" class="rounded" id="showOther1" onchange='toggleShowRowsQ(this,"rgb(255, 162, 76)")' checked></p>
+
                 <div id="fullQueue">
 
                 </div>
@@ -8439,19 +8471,19 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-                <p><span name="lang_text">Output this session:</span>
+                <p><span name="lang_text">Output this session:</span></p>
 
                     
-                <span name="lang_text">Success</span><input type="checkbox" class="rounded" id="showSuccess" onchange='toggleShowRows(this,"rgb(89, 255, 116)")' checked>
-                <span name="lang_text">Error</span><input type="checkbox" class="rounded" id="showError"  onchange='toggleShowRows(this,"rgb(255, 45, 45)")' checked>
-                <span name="lang_text"> Cancelled</span><input type="checkbox" class="rounded" id="showCancelled" onchange='toggleShowRows(this,"rgb(255, 218, 109)")'checked>
-                <span name="lang_text"> Other</span><input type="checkbox" class="rounded" id="showOther" onchange='toggleShowRows(this,"rgb(255, 162, 76)")' checked></p>
+                <p> <span name="lang_text">Success</span><input type="checkbox" class="rounded" id="showSuccess" onchange='toggleShowRowsO(this,"rgb(89, 255, 116)")' checked>
+                <span name="lang_text">Error</span><input type="checkbox" class="rounded" id="showError"  onchange='toggleShowRowsO(this,"rgb(255, 45, 45)")' checked>
+                <span name="lang_text"> Cancelled</span><input type="checkbox" class="rounded" id="showCancelled" onchange='toggleShowRowsO(this,"rgb(255, 218, 109)")'checked>
+                <span name="lang_text"> Other</span><input type="checkbox" class="rounded" id="showOther" onchange='toggleShowRowsO(this,"rgb(255, 162, 76)")' checked></p>
 
                 
 
 
 
-                <table id="sessionConversionsTable" class="historicTable">
+                <table id="sessionConversionsTable" class="historicTable" >
                     <col width="70%">
                     <col width="auto">
                     <col width="auto">
@@ -8459,15 +8491,15 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                     <col width="auto">
                     <col width="auto">
 
-                    <th class="headcol">Source file</th>
-                    <th class="headcol">No.</th>
+                    <th class="headcol2" >Source file</th>
+                    <th class="headcol2" >No.</th>
 
-                    <th class="headcol">Preset</th>
+                    <th class="headcol2" >Preset</th>
 
-                    <th class="headcol">FFprobe</th>
+                    <th class="headcol2" >FFprobe</th>
 
-                    <th class="headcol">Status</th>
-                    <th class="headcol">Finish time</th>
+                    <th class="headcol2" >Status</th>
+                    <th class="headcol2" >Finish time</th>
 
 
                 </table>
