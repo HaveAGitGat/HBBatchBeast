@@ -3262,10 +3262,11 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                     
 
 
-                toggleShowRowsQ(document.getElementById("showSuccess1"), "rgb(89, 255, 116)")
-                toggleShowRowsQ(document.getElementById("showError1"), "rgb(255, 45, 45)")
-                toggleShowRowsQ(document.getElementById("showCancelled1"), "rgb(255, 218, 109)")
-                toggleShowRowsQ(document.getElementById("showOther1"), "rgb(255, 162, 76)")
+                toggleShowRowsQ(document.getElementById("showSuccess1"), "rgb(89, 255, 116)","rgb(89, 255, 116)")
+                toggleShowRowsQ(document.getElementById("showError1"), "rgb(255, 45, 45)","rgb(255, 45, 45)")
+                toggleShowRowsQ(document.getElementById("showCancelled1"), "rgb(255, 218, 109)","rgb(255, 218, 109)")
+                toggleShowRowsQ(document.getElementById("showRemaining1"), "rgb(242, 242, 242)","")
+                toggleShowRowsQ(document.getElementById("showOther1"), "rgb(255, 162, 76)","rgb(255, 162, 76)")
 
                 toggleShowRowsO(document.getElementById("showSuccess"), "rgb(89, 255, 116)")
                 toggleShowRowsO(document.getElementById("showError"), "rgb(255, 45, 45)")
@@ -5469,16 +5470,20 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
     }
 
-    function toggleShowRowsQ(obj,colour) {
+    function toggleShowRowsQ(obj,colour,colour1) {
 
 //  var tb = document.getElementById("sessionConversionsTable");
  // tb.getElementsByTagName("th")[0].style.display = "none";
 //  tb.getElementsByTagName("th")[0].style.display = "block";
 
-  if (obj.checked == false) {
-      for (var i = 0; i < queueTable.rows.length; i++) {
+try{
 
-          if (queueTable.rows[i].style.backgroundColor == colour) {
+  if (obj.checked == false) {
+      for (var i = 1; i < queueTable.rows.length; i++) {
+
+        console.log("here"+queueTable.rows[i].style.backgroundColor)
+
+          if (queueTable.rows[i].style.backgroundColor == colour || queueTable.rows[i].style.backgroundColor == colour1) {
 
               queueTable.rows[i].style.display = 'none';
 
@@ -5486,8 +5491,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
       }
   } else if (obj.checked == true) {
 
-      for (var i = 0; i < queueTable.rows.length; i++) {
-          if (queueTable.rows[i].style.backgroundColor == colour) {
+      for (var i = 1; i < queueTable.rows.length; i++) {
+          if (queueTable.rows[i].style.backgroundColor == colour || queueTable.rows[i].style.backgroundColor == colour1) {
 
            queueTable.rows[i].style.display = 'table-row';
 
@@ -5498,6 +5503,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
           }
       }
   }
+
+}catch(err){}
 }
 
 
@@ -5507,6 +5514,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
       //  var tb = document.getElementById("sessionConversionsTable");
        // tb.getElementsByTagName("th")[0].style.display = "none";
       //  tb.getElementsByTagName("th")[0].style.display = "block";
+
+      try{
 
         if (obj.checked == false) {
             for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
@@ -5531,6 +5540,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                 }
             }
         }
+    }catch(err){}
     }
 
 </script>
@@ -8439,10 +8449,14 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
                 <p><span name="lang_text">Queue</span></p>
 
-                <span name="lang_text">Success</span><input type="checkbox" class="rounded" id="showSuccess1" onchange='toggleShowRowsQ(this,"rgb(89, 255, 116)")' checked>
-                <span name="lang_text">Error</span><input type="checkbox" class="rounded" id="showError1"  onchange='toggleShowRowsQ(this,"rgb(255, 45, 45)")' checked>
-                <span name="lang_text"> Cancelled</span><input type="checkbox" class="rounded" id="showCancelled1" onchange='toggleShowRowsQ(this,"rgb(255, 218, 109)")'checked>
-                <span name="lang_text"> Other</span><input type="checkbox" class="rounded" id="showOther1" onchange='toggleShowRowsQ(this,"rgb(255, 162, 76)")' checked></p>
+                <span name="lang_text">Success</span><input type="checkbox" class="rounded" id="showSuccess1" onchange='toggleShowRowsQ(this,"rgb(89, 255, 116)","rgb(89, 255, 116)")' checked>
+                <span name="lang_text">Error</span><input type="checkbox" class="rounded" id="showError1"  onchange='toggleShowRowsQ(this,"rgb(255, 45, 45)","rgb(255, 45, 45)")' checked>
+                <span name="lang_text"> Cancelled</span><input type="checkbox" class="rounded" id="showCancelled1" onchange='toggleShowRowsQ(this,"rgb(255, 218, 109)","rgb(255, 218, 109)")'checked>
+
+                <span name="lang_text"> Remaining</span><input type="checkbox" class="rounded" id="showRemaining1" onchange='toggleShowRowsQ(this,"rgb(242 , 242, 242)","")' checked>
+
+                <span name="lang_text"> Other</span><input type="checkbox" class="rounded" id="showOther1" onchange='toggleShowRowsQ(this,"rgb(255, 162, 76)","rgb(255, 162, 76)")' checked></p>
+                
 
                 <div id="fullQueue">
 
