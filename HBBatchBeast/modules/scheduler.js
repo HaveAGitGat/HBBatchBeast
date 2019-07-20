@@ -10,7 +10,7 @@ setInterval(runTimer, 1000);
 //global variables
 var runTimerOn = 0;
 
-var timer = 1;
+var timer = 4;
 
 
 function runTimer() {
