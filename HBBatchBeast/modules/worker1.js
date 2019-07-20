@@ -157,6 +157,8 @@ var ffmpegPath
 
 var saveWorkerLogs
 
+var exitRequestSent = false
+
 
 
 // var message = [
@@ -177,6 +179,14 @@ updateConsole(workerNumber, "Worker online. Requesting item")
 
 
 process.on('message', (m) => {
+
+
+    if (m[0] == "continueWork") {
+
+        checkifQueuePause()
+
+
+    }
 
 
 
@@ -1201,7 +1211,7 @@ process.on('message', (m) => {
 
 
 
-
+if(exitRequestSent == false){}
 
 
         var message = [
@@ -1213,7 +1223,7 @@ process.on('message', (m) => {
 
         updateConsole(workerNumber, "Exit request")
 
-
+        exitRequestSent = true
 
 
     }
