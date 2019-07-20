@@ -301,6 +301,9 @@
 
     var consoleItemCount = 0
 
+    var workersRunning = false
+    var inProgress = false
+
 
 
 
@@ -912,6 +915,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
         jsonConfig.configs[selected_config_no].tab_batch.advanced.periodic_scan_interval == undefined ? document.getElementById("timer").value = "300" : document.getElementById("timer").value = jsonConfig.configs[selected_config_no].tab_batch.advanced.periodic_scan_interval;
         jsonConfig.configs[selected_config_no].tab_batch.advanced.daily_run_time == undefined ? document.getElementById("dailyRunTime").value = "" : document.getElementById("dailyRunTime").value = jsonConfig.configs[selected_config_no].tab_batch.advanced.daily_run_time;
+        jsonConfig.configs[selected_config_no].tab_batch.advanced.daily_run_time_end == undefined ? document.getElementById("dailyRunTimeEnd").value = "" : document.getElementById("dailyRunTimeEnd").value = jsonConfig.configs[selected_config_no].tab_batch.advanced.daily_run_time_end;
 
         jsonConfig.configs[selected_config_no].tab_batch.advanced.file_name_suffix == undefined ? document.getElementById("fileNameSuffix").value = "" : document.getElementById("fileNameSuffix").value = jsonConfig.configs[selected_config_no].tab_batch.advanced.file_name_suffix;
         jsonConfig.configs[selected_config_no].tab_batch.advanced.file_name_suffix_toggle == 1 ? document.getElementById("fileNameSuffixToggle").checked = true : document.getElementById("fileNameSuffixToggle").checked = false;
@@ -1352,6 +1356,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
             document.getElementById("dailyRunTimeOnOff").checked ? jsonConfig.configs[selected_config_no].tab_batch.daily_scanning_toggle = 1 : jsonConfig.configs[selected_config_no].tab_batch.daily_scanning_toggle = 0;
             jsonConfig.configs[selected_config_no].tab_batch.advanced.periodic_scan_interval = document.getElementById("timer").value
             jsonConfig.configs[selected_config_no].tab_batch.advanced.daily_run_time = document.getElementById("dailyRunTime").value
+            jsonConfig.configs[selected_config_no].tab_batch.advanced.daily_run_time_end = document.getElementById("dailyRunTimeEnd").value
 
             jsonConfig.configs[selected_config_no].tab_batch.advanced.file_name_suffix = document.getElementById("fileNameSuffix").value
             document.getElementById("fileNameSuffixToggle").checked ? jsonConfig.configs[selected_config_no].tab_batch.advanced.file_name_suffix_toggle = 1 : jsonConfig.configs[selected_config_no].tab_batch.advanced.file_name_suffix_toggle = 0;
@@ -2213,6 +2218,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
             if (mode != "healthCheck") {
 
                 var dailyRunTime = document.getElementById("dailyRunTime").value
+                var dailyRunTimeEnd = document.getElementById("dailyRunTimeEnd").value
                 if (document.getElementById("dailyRunTimeOnOff").checked == true) {
 
 
@@ -2229,7 +2235,14 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-                    } else {
+                    } else if(isNaN(parseInt(dailyRunTimeEnd.charAt(0))) || isNaN(parseInt(dailyRunTimeEnd.charAt(1))) || isNaN(parseInt(dailyRunTimeEnd.charAt(3))) || isNaN(parseInt(dailyRunTimeEnd.charAt(4)))){
+
+                        alert(document.getElementById("alert_validation_daily_run_time_end").textContent);
+                        
+                        break validationSection;
+                    
+                    
+                 } else{
 
 
 
@@ -2253,82 +2266,76 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-                        // var time = fancyTimeFormat(time)    
+                        var scheduleStartTime = parseInt(((parseInt(dailyRunTime.charAt(0)+""+dailyRunTime.charAt(1))) * 60)) + parseInt(((dailyRunTime.charAt(3)+""+dailyRunTime.charAt(4))));
+                        var scheduleEndTime = parseInt(((parseInt(dailyRunTimeEnd.charAt(0)+""+dailyRunTimeEnd.charAt(1))) * 60)) + parseInt(((dailyRunTimeEnd.charAt(3)+""+dailyRunTimeEnd.charAt(4))));
+                        var date = new Date();
+                        var timenow = (date.getHours() * 60) + date.getMinutes();
+                        //var timenow = 1;
 
 
-                        var d = new Date(),
-                            h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
-                            m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
-                        var timenow = h + ':' + m
+                        //boost schedule end time if scheduled time crosses midnight.
+                        if(scheduleEndTime < scheduleStartTime ){
 
 
-                        //   /  console.log(dailyRunTime+"   "+timenow)
+                            //check if timenow is between midnight and schedule end time
+                            if(timenow > 0 && timenow < scheduleEndTime){
+                            timenow += (24*60)
+                            }
 
-                        // console.log(dailyRunTime.charAt(0))
-                        // console.log(dailyRunTime.charAt(1))
-                        // console.log(dailyRunTime.charAt(2))
-                        // console.log(dailyRunTime.charAt(3))
-                        // console.log(dailyRunTime.charAt(4))
+                            scheduleEndTime += (24*60)
 
-                        // console.log("")
-
-                        // console.log(timenow.charAt(0))
-                        // console.log(timenow.charAt(1))
-                        // console.log(timenow.charAt(2))
-                        // console.log(timenow.charAt(3))
-                        // console.log(timenow.charAt(4))
+                        }
 
 
 
-                        if (dailyRunTime.charAt(0) == timenow.charAt(0) && dailyRunTime.charAt(1) == timenow.charAt(1) && dailyRunTime.charAt(2) == timenow.charAt(2) && dailyRunTime.charAt(3) == timenow.charAt(3) && dailyRunTime.charAt(4) == timenow.charAt(4)) {
-
+                        if (scheduleStartTime <= timenow && timenow <= scheduleEndTime){
                             // break validationSection;
 
                         } else {
 
-                            // creat timer module
-                            var timerInfoBomb = [
-                                "runTimer",
-                                "dailyRunTime",
-                                2,
-                            ];
-
-                            // var path = require("path");
-                            // import hello from "bar";
-
-                            //  import relative from path;
-
-                            var childProcess = require("child_process");
-                            var timerModulePath = "/modules/timer.js"
-
-                            // if(timerModule != ""){
-                            timerModule = childProcess.fork(path.join(__dirname, timerModulePath));
-                            // }
-                            timerModule.send(timerInfoBomb);
-                            timerModule.on("exit", function (code, signal, ) {
-                                console.log('Child exited:', code, signal);
-
-                            });
-
-                            timerModule.on('message', function (message) {
+                            // // creat timer module
+                            // var timerInfoBomb = [
+                            //     "runTimer",
+                            //     "dailyRunTime",
+                            //     2,
+                            // ];
 
 
 
-                                if (message[0] == "scanandconvert") {
+                            // var childProcess = require("child_process");
+                            // var timerModulePath = "/modules/scheduler.js"
+
+                            // // if(timerModule != ""){
+                            // timerModule = childProcess.fork(path.join(__dirname, timerModulePath));
+                            // // }
+                            // timerModule.send(timerInfoBomb);
+                            // timerModule.on("exit", function (code, signal, ) {
+                            //     console.log('Child exited:', code, signal);
+
+                            // });
+
+                            // timerModule.on('message', function (message) {
 
 
-                                    convertFiles('scanandconvert');
-                                }
 
-                            });
+                            //     if (message[0] == "scanandconvert") {
 
+
+                            //         convertFiles('scanandconvert');
+                            //     }
+
+                            // });
+
+
+                            setTimeout(convertFiles, 1000,'scanandconvert');    
+                            
+             
 
 
 
 
                             break validationSection;
                         }
-
                     }
                 }
             }
@@ -2904,6 +2911,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
     function launchWorkerModules(mode2) {
 
+        
+
         document.getElementById("convertSelectedButton").style.display = 'none';
 
 
@@ -3460,6 +3469,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
         //  elmnt.scrollIntoView()
 
 
+        workersRunning = true
+        inProgress = true
 
 
     }
@@ -3742,24 +3753,65 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
     function runScan() {
 
 
-        //console.log("Here")
 
-        // var includePropertyFileFilterVar = document.getElementById("includePropertyFileFilter").value
-        //     var excludePropertyFileFilterVar = document.getElementById("excludePropertyFileFilter").value
+        if (mode != "healthCheck") {
+        if (document.getElementById("dailyRunTimeOnOff").checked == true  && inProgress == true) {
 
-        //     includePropertyFileFilterVar = includePropertyFileFilterVar.trim()
-        //     excludePropertyFileFilterVar=excludePropertyFileFilterVar.trim()
+           
 
-        //     if(includePropertyFileFilterVar.charAt(includePropertyFileFilterVar.length - 1) != ","){
-        //         includePropertyFileFilterVar += ","
-        //     }
 
-        //     if(excludePropertyFileFilterVar.charAt(excludePropertyFileFilterVar.length - 1) != ","){
-        //         excludePropertyFileFilterVar += ","
-        //     }
+                var dailyRunTime = document.getElementById("dailyRunTime").value
+                var dailyRunTimeEnd = document.getElementById("dailyRunTimeEnd").value
+                var scheduleStartTime = parseInt(((parseInt(dailyRunTime.charAt(0)+""+dailyRunTime.charAt(1))) * 60)) + parseInt(((dailyRunTime.charAt(3)+""+dailyRunTime.charAt(4))));
+                        var scheduleEndTime = parseInt(((parseInt(dailyRunTimeEnd.charAt(0)+""+dailyRunTimeEnd.charAt(1))) * 60)) + parseInt(((dailyRunTimeEnd.charAt(3)+""+dailyRunTimeEnd.charAt(4))));
+                        var date = new Date();
+                        var timenow = (date.getHours() * 60) + date.getMinutes();
+                        //var timenow = 1;
 
-        //     document.getElementById("includePropertyFileFilter").value =includePropertyFileFilterVar
-        //     document.getElementById("excludePropertyFileFilter").value =excludePropertyFileFilterVar
+
+                        //boost schedule end time if scheduled time crosses midnight.
+                        if(scheduleEndTime < scheduleStartTime ){
+
+
+                            //check if timenow is between midnight and schedule end time
+                            if(timenow > 0 && timenow < scheduleEndTime){
+                            timenow += (24*60)
+                            }
+
+                            scheduleEndTime += (24*60)
+
+                        }
+
+
+
+                        if (scheduleStartTime <= timenow && timenow <= scheduleEndTime){
+
+                            // if paused, start
+
+
+                            if(queueStatusPaused == 1 && workerStatusArray.length != document.getElementById("instanceNumber").value && document.getElementById("continueButtonGreyDiv").style.display == 'none'){
+
+                                continueQueue()
+
+                            }
+
+
+                        }else{
+                              //if running, pause
+
+
+                            if(workersRunning == true && queueStatusPaused == 0 && workerStatusArray.length != document.getElementById("instanceNumber").value){
+                                pauseQueueInitiate()
+                            }
+
+                          
+
+                        }
+        }
+    }
+
+        //
+
 
         var includePropertyFileFilterVar = ((document.getElementById("includePropertyFileFilter").value)).split(",");
 
@@ -3797,19 +3849,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        console.log("updateInfo"+updateInfo)
 
         if (updateInfo == 1) {
 
@@ -3849,9 +3889,9 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
                         for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
 
-
+                            try{
                             workerProgressArray[j - 1] = document.getElementById("worker" + (j) + "Status").innerHTML
-
+                        }catch(err){}
 
                         }
                     }
@@ -3925,11 +3965,10 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
             if (sourceQueueArray.length >= 1) {
 
 
-
+                console.log("workerStatusArray.length"+workerStatusArray.length)
+                console.log("instanceNumber"+document.getElementById("instanceNumber").value)
 
                 if (workerStatusArray.length == document.getElementById("instanceNumber").value) {
-
-
 
                     updateConsole("" + "All workers complete " + "")
 
@@ -3951,7 +3990,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
             function AllComplete() {
 
-
+                workersRunning = false
+                inProgress = false
 
 
                 for (var i = 0; i < deleteArray.length; i++) {
@@ -4056,19 +4096,6 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-
-
-
-
-         
-
-
-
-
-
-
-
-                
 
 
 
@@ -4259,6 +4286,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
         if (countDownOn == 1 && AllCompleted == "1") {
 
+
+
             if (mode == "scanandconvert") {
                 if (timerSeconds % 2 == 0) {
                     if (process.platform == 'win32') {
@@ -4284,7 +4313,15 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
                 if (document.getElementById("dailyRunTimeOnOff").checked == true) {
 
-                    convertFiles('scanandconvert');
+                    //convertFiles('scanandconvert');
+
+                    updateConsole("" + "here2" + "")
+
+                   
+
+                     AllCompleted = 0
+                     setTimeout(convertFiles, 5000,'scanandconvert');  
+
 
 
 
@@ -4304,6 +4341,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
                     if (timerSeconds == 0) {
 
+       
+
                         convertFiles('scanandconvert');
 
                         timerSeconds = document.getElementById("timer").value
@@ -4312,12 +4351,10 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                     }
                 }
             }
+
+//
+
         }
-
-
-
-
-
     }
 
 
@@ -4729,6 +4766,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
         var continueQueueProcess = 1;
 
+
+        //check if all workers have finished their current items before re-enabling 'Continue' button
         for (var j = 0; j < document.getElementById("instanceNumber").value; j++) {
 
             if (workerStatusFinishedArray[j] != "Finished") {
@@ -4740,6 +4779,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
         if (continueQueueProcess == 1) {
 
+            workersRunning = false
             document.getElementById("continueButtonDiv").style.display = 'block';
             document.getElementById("continueButtonGreyDiv").style.display = 'none';
 
@@ -4789,11 +4829,20 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
         if (confirm(document.getElementById("alert_confirm_queue_pause_1").textContent)) {
 
+            pauseQueueInitiate() 
+
+
+            alert(document.getElementById("alert_confirm_queue_pause_2").textContent)
+
+        }
+    }
+
+        function pauseQueueInitiate() {
+
             updateConsole("" + "Queue pause initiated." + "")
 
             queueStatusPaused = 1;
             updateInfo = 0
-
 
             fs.writeFileSync(homePath + '/Documents/HBBatchBeast/Config/queueStartStop.txt', "0", 'utf8');
 
@@ -4801,17 +4850,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
             document.getElementById("pauseButtonDiv").style.display = 'none';
             document.getElementById("continueButtonDiv").style.display = 'none';
             document.getElementById("continueButtonGreyDiv").style.display = 'block';
-
-
-            alert(document.getElementById("alert_confirm_queue_pause_2").textContent)
-
         }
-
-
-
-
-
-    }
 
 
 
@@ -4875,6 +4914,10 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
     function continueQueue() {
 
+
+        
+        workersRunning = true
+
         updateConsole("" + "Continue queue initiated." + "")
 
 
@@ -4890,30 +4933,39 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
         for (var i = 0; i < workers.length; i++) {
 
-
-
-            //  workers[i].send(currentNumber);
-
-
-
-            if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
-                var messageOut = queueWorkerMessage();
-
-                globalQueueNumberManager++;
-
-            } else {
-
-                var messageOut = [
-                    "completed",
+            var messageOut = [
+                    "continueWork",
                 ];
-
-            }
             workers[i].send(messageOut);
+
+
+
+            // //  workers[i].send(currentNumber);
+
+
+
+            // if (globalQueueNumberManager <= sourceQueueArray.length - 1) {
+            //     var messageOut = queueWorkerMessage();
+
+            //     globalQueueNumberManager++;
+
+            // } else {
+
+            //     //Update worker IPC when changing this
+
+            //    // workerStatusArray.push("Complete")
+
+            //     var messageOut = [
+            //         "completed",
+            //     ];
+
+            // }
+            // workers[i].send(messageOut);
 
 
         }
 
-
+       
 
 
 
@@ -6504,8 +6556,11 @@ try{
             'New' on the remote monitoring tab to generate a new key.</span>
 
 
-        <span name="lang_text" id="alert_validation_daily_run_time" style="display: none;">Please enter a daily scan
+        <span name="lang_text" id="alert_validation_daily_run_time" style="display: none;">Please enter a daily scan START
             time in 24 hour format: hh:mm (for example 13:02)</span>
+
+            <span name="lang_text" id="alert_validation_daily_run_time_end" style="display: none;">Please enter a daily scan END
+                time in 24 hour format: hh:mm (for example 13:02)</span>
 
         <span name="lang_text" id="alert_chkbx_delete_source_files" style="display: none;">SOURCE FILES WILL BE DELETED
             AFTER CONVERSION! Please test before proper use!</span>
@@ -7272,8 +7327,9 @@ try{
                                     <p><span name="lang_text">Daily run time (hh:mm):</span></p>
                                 </div>
 
-                                <div class="grid-itemright"><input type="text" class="infoBox" id="dailyRunTime"></div>
-
+                                <div class="grid-itemright"><input type="text" class="infoBox" id="dailyRunTime"> - <input type="text" class="infoBox" id="dailyRunTimeEnd">
+                                </div>
+                                
 
 
                             </div>
