@@ -16,8 +16,8 @@ addons:
 # A list of operating systems which are used for tests
 os:
   - linux
- # - osx
- # - windows
+  - osx
+  - windows
 
 env:
   global:
