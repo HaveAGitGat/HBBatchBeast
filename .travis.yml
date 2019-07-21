@@ -52,6 +52,8 @@ script:
 
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm run create-installer-win;  fi
 
+  
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm install electron-installer-debian --save;  fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run package-linux;  fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run create-debian-installer;  fi
 
