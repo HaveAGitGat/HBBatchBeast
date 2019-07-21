@@ -35,12 +35,18 @@ before_cache:
 
   # These commands are executed before the scripts are executed
 install:
+  - cd HBBatchBeast
   # On OS X we first need to install Yarn via Homebrew
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install yarn; fi
   # Install all dependencies listed in your package.json file
   - yarn
 
+
+
+
 script:
+  
+  
   - echo "Unit Tests"
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xvfb-run yarn test; else yarn test; fi
 
