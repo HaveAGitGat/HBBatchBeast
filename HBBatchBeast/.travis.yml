@@ -46,6 +46,7 @@ install:
 
 script:
   
+  
   - echo "Unit Tests"
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xvfb-run yarn test; else yarn test; fi
 
