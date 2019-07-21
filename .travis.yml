@@ -50,11 +50,11 @@ script:
   
   - echo "Unit Tests"
 
-  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm run create-installer-win; else ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm run create-installer-win;  fi
 
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run package-linux; else ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run create-debian-installer; else ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run package-linux;  fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run create-debian-installer;  fi
 
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run package-mac; else ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run create-installer-mac; else ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run package-mac;  fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run create-installer-mac;  fi
 
