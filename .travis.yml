@@ -16,8 +16,8 @@ addons:
 # A list of operating systems which are used for tests
 os:
   - linux
-  - osx
-  - windows
+ # - osx
+ # - windows
 
 env:
   global:
@@ -54,7 +54,7 @@ script:
 
   
   
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then apt-get install fakeroot;  fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install fakeroot;  fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm install electron-installer-debian --save;  fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run package-linux;  fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run create-debian-installer;  fi
