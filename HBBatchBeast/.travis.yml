@@ -40,11 +40,11 @@ install:
   # Install all dependencies listed in your package.json file
   - yarn
 
-  
-before_script: cd HBBatchBeast
+
 
 
 script:
+  - cd HBBatchBeast
   - echo "Unit Tests"
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xvfb-run yarn test; else yarn test; fi
 
