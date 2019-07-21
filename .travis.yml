@@ -17,6 +17,7 @@ addons:
 os:
   - linux
   - osx
+  - windows
 
 env:
   global:
@@ -48,16 +49,12 @@ script:
   
   
   - echo "Unit Tests"
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xvfb-run yarn test; else yarn test; fi
 
-  - echo "E2E Tests"
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then xvfb-run yarn test:electron; else yarn test:electron; fi
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm run create-installer-win; else ; fi
 
-  - echo "Deploy linux version to GitHub"
-  - if [[ "$TRAVIS_BRANCH" == "master" ]] && [[ "$TRAVIS_OS_NAME" == "linux" ]]; then yarn release:linux; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run package-linux; else ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run create-debian-installer; else ; fi
 
-  - echo "Deploy windows version to GitHub"
-  - if [[ "$TRAVIS_BRANCH" == "master" ]] && [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn release:win; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run package-mac; else ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run create-installer-mac; else ; fi
 
-  - echo "Deploy mac version to GitHub"
-  - if [[ "$TRAVIS_BRANCH" == "master" ]] && [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn release:mac; fi
