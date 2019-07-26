@@ -368,12 +368,30 @@ process.on('message', (m) => {
 
         }
 
+        //
+
+        var currentSourceLineLinux = currentSourceLine.replace(/'/g, '\'\"\'\"\'');
+        var currentDestinationLineLinux = currentDestinationLine.replace(/'/g, '\'\"\'\"\'');
+        var presetLinux = presetLinux.replace(/'/g, '\'\"\'\"\'');
+
+        var preset0Linux = presetSplit[0].replace(/'/g, '\'\"\'\"\'');
+        var preset1Linux = presetSplit[1].replace(/'/g, '\'\"\'\"\'');
+        var ffmpegPathLinux = ffmpegPath.replace(/'/g, '\'\"\'\"\'');
+        
+
         if (process.platform == 'linux' && handBrakeMode == true) {
-            workerCommand = "HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
+
+            workerCommand = "HandBrakeCLI -i '" + currentSourceLineLinux + "' -o '" + currentDestinationLineLinux + "' " + presetLinux;
+
         } else if (process.platform == 'linux' && FFmpegMode == true) {
-            workerCommand = ffmpegPath + " " + presetSplit[0] + " -i '" + currentSourceLine + "' " + presetSplit[1] + " '" + currentDestinationLine + "' "
+
+
+            workerCommand = ffmpegPathLinux + " " + preset0Linux + " -i '" + currentSourceLineLinux + "' " + preset1Linux + " '" + currentDestinationLineLinux + "' "
 
         }
+
+
+        //
 
         if (process.platform == 'darwin' && handBrakeMode == true) {
             workerCommand = "/usr/local/bin/HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
@@ -1814,9 +1832,19 @@ function attemptToRepair() {
     }
 
     if (process.platform == 'linux' && FFmpegMode == true) {
-        workerCommand = ffmpegPath + " " + presetSplit[0] + " -i '" + currentSourceLine + "' " + presetSplit[1] + " '" + repair_file_path + "' "
+
+        var ffmpegPathLinux = ffmpegPath.replace(/'/g, '\'\"\'\"\'');
+
+        var currentSourceLineLinux = currentSourceLine.replace(/'/g, '\'\"\'\"\'');
+        var repair_file_pathLinux = repair_file_path.replace(/'/g, '\'\"\'\"\'');
+   
+        var preset0Linux = presetSplit[0].replace(/'/g, '\'\"\'\"\'');
+        var preset1Linux = presetSplit[1].replace(/'/g, '\'\"\'\"\'');
+
+        workerCommand = ffmpegPathLinux + " " + preset0Linux + " -i '" + currentSourceLineLinux + "' " + preset1Linux + " '" + repair_file_pathLinux + "' "
 
     }
+
 
     if (process.platform == 'darwin' && FFmpegMode == true) {
         workerCommand = ffmpegPath + " " + presetSplit[0] + " -i '" + currentSourceLine + "' " + presetSplit[1] + " '" + repair_file_path + "' "
