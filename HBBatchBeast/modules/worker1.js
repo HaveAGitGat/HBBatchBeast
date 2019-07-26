@@ -372,10 +372,9 @@ process.on('message', (m) => {
 
         var currentSourceLineLinux = currentSourceLine.replace(/'/g, '\'\"\'\"\'');
         var currentDestinationLineLinux = currentDestinationLine.replace(/'/g, '\'\"\'\"\'');
-        var presetLinux = presetLinux.replace(/'/g, '\'\"\'\"\'');
+        var presetLinux = preset.replace(/'/g, '\'\"\'\"\'');
 
-        var preset0Linux = presetSplit[0].replace(/'/g, '\'\"\'\"\'');
-        var preset1Linux = presetSplit[1].replace(/'/g, '\'\"\'\"\'');
+       
         var ffmpegPathLinux = ffmpegPath.replace(/'/g, '\'\"\'\"\'');
         
 
@@ -384,6 +383,9 @@ process.on('message', (m) => {
             workerCommand = "HandBrakeCLI -i '" + currentSourceLineLinux + "' -o '" + currentDestinationLineLinux + "' " + presetLinux;
 
         } else if (process.platform == 'linux' && FFmpegMode == true) {
+
+            var preset0Linux = presetSplit[0].replace(/'/g, '\'\"\'\"\'');
+            var preset1Linux = presetSplit[1].replace(/'/g, '\'\"\'\"\'');
 
 
             workerCommand = ffmpegPathLinux + " " + preset0Linux + " -i '" + currentSourceLineLinux + "' " + preset1Linux + " '" + currentDestinationLineLinux + "' "
