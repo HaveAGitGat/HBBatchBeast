@@ -384,10 +384,12 @@ process.on('message', (m) => {
 
         } else if (process.platform == 'linux' && FFmpegMode == true) {
 
+        try{
             var preset0Linux = presetSplit[0].replace(/'/g, '\'\"\'\"\'');
+        }catch(err){}
+        try{
             var preset1Linux = presetSplit[1].replace(/'/g, '\'\"\'\"\'');
-
-
+        }catch(err){}
             workerCommand = ffmpegPathLinux + " " + preset0Linux + " -i '" + currentSourceLineLinux + "' " + preset1Linux + " '" + currentDestinationLineLinux + "' "
 
         }
