@@ -955,6 +955,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
         jsonConfig.configs[selected_config_no].tab_batch.advanced.custom_bat_path == undefined ? document.getElementById("customBatPath").value = "" : document.getElementById("customBatPath").value = jsonConfig.configs[selected_config_no].tab_batch.advanced.custom_bat_path;
         jsonConfig.configs[selected_config_no].tab_batch.advanced.low_process_priority_toggle == 1 ? document.getElementById("runPriority").checked = true : document.getElementById("runPriority").checked = false;
         jsonConfig.configs[selected_config_no].tab_batch.advanced.remove_filename_apostrophes == 1 ? document.getElementById("removeApostrophes").checked = true : document.getElementById("removeApostrophes").checked = false;
+        jsonConfig.configs[selected_config_no].tab_batch.advanced.reverse_file_queue == 1 ? document.getElementById("reverseFileQueue").checked = true : document.getElementById("reverseFileQueue").checked = false;
 
 
         // Remote viewing tab
@@ -1390,6 +1391,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
             jsonConfig.configs[selected_config_no].tab_batch.advanced.custom_bat_path = document.getElementById("customBatPath").value
             document.getElementById("runPriority").checked ? jsonConfig.configs[selected_config_no].tab_batch.advanced.low_process_priority_toggle = 1 : jsonConfig.configs[selected_config_no].tab_batch.advanced.low_process_priority_toggle = 0;
             document.getElementById("removeApostrophes").checked ? jsonConfig.configs[selected_config_no].tab_batch.advanced.remove_filename_apostrophes = 1 : jsonConfig.configs[selected_config_no].tab_batch.advanced.remove_filename_apostrophes = 0;
+            document.getElementById("reverseFileQueue").checked ? jsonConfig.configs[selected_config_no].tab_batch.advanced.reverse_file_queue = 1 : jsonConfig.configs[selected_config_no].tab_batch.advanced.reverse_file_queue = 0;
 
 
 
@@ -2501,9 +2503,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                 fileNameSuffixArray,
                 document.getElementById("removeApostrophes").checked,
                 document.getElementById("replaceOriginalFileAlways").checked,
-
-
-
+                document.getElementById("reverseFileQueue").checked
 
 
             ];
@@ -7851,7 +7851,7 @@ try{
 
                     </div>
 
-                    <div id="runPriorityDiv" style="display: block;">
+    
 
                         <div class="rowitem">
                             <div class="grid-container">
@@ -7868,7 +7868,7 @@ try{
                                 </div>
                             </div>
                         </div>
-                    </div>
+                  
 
                     <div id="tooltip_remove_apostrophes" style="display: none;">
 
@@ -7878,6 +7878,31 @@ try{
 
 
                     </div>
+
+
+
+                    <div class="rowitem">
+                        <div class="grid-container">
+
+                            <div style="text-align: left">
+                                <p><span onclick="toolTip('tooltip_reverse_file_queue')"
+                                        class="toolTipClass">�</span><span name="lang_text">Reverse file queue:</span>
+                                </p>
+                            </div>
+
+                            <div style="text-align: right">
+                                <input type="checkbox" id="reverseFileQueue">
+                            </div>
+                        </div>
+                    </div>
+              
+
+                <div id="tooltip_reverse_file_queue" style="display: none;">
+
+                    <br><span name="lang_text">Check this option to reverse the file queue when scanning for files.Items will be processed in reverse order.</span>
+
+
+                </div>
 
 
 

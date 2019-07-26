@@ -84,6 +84,7 @@ var destinationQueueArray = [];
 var destinationFinalQueueArray = [];
 
 var removeApostrophes_chkbx
+var reverseFileQueue_chxbx
 
 
 
@@ -161,6 +162,7 @@ process.on('message', (queueInfoBomb) => {
 
         removeApostrophes_chkbx = queueInfoBomb[12]
         replaceOriginalFileAlways= queueInfoBomb[13]
+        reverseFileQueue_chxbx = queueInfoBomb[14]
 
 
 
@@ -841,6 +843,18 @@ process.on('message', (queueInfoBomb) => {
 
 
         updateConsole("File scanner: Finished")
+
+
+        // reverse file queue
+        if(reverseFileQueue_chxbx === true){
+
+            sourceQueueArray.reverse(); 
+            presetArray3.reverse();
+            skipOrCopyArray.reverse();
+            destinationQueueArray.reverse();
+            destinationFinalQueueArray.reverse();
+        }
+
 
 
         var message = [
