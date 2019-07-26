@@ -23,6 +23,7 @@ env:
   global:
     - ELECTRON_CACHE=$HOME/.cache/electron
     - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+    - YARN_GPG=no
 
 cache:
   yarn: true
@@ -50,7 +51,7 @@ script:
   
   - echo "Unit Tests"
 
-  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm run create-installer-win;  fi
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm run package-win;  fi
 
   
   
