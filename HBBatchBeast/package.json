@@ -36,7 +36,6 @@
         "path-is-inside": "^1.0.2",
         "request": "^2.88.0",
         "shelljs": "^0.8.3",
-        "shelljs-exec-proxy": "^0.1.1",
         "shx": "^0.3.2",
         "translate-json-object": "^2.3.3",
         "tree-kill": "^1.2.1",
