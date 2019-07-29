@@ -606,6 +606,17 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
         }
 
 
+        if(jsonConfig.version_message != "2.1.5"){
+
+            jsonConfig.version_message = "2.1.5"
+
+            alert("Changes:")
+
+           
+
+        }
+
+
 
 
 
@@ -2329,7 +2340,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                             // });
 
 
-                            setTimeout(convertFiles, 1000,'scanandconvert');    
+                            setTimeout(convertFiles, 2000,'scanandconvert');    
                             
              
 
@@ -3139,8 +3150,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                         sourceFileSize += parseFloat(message[3])
                         outputFileSize += parseFloat(message[4])
 
-                        console.log(sourceFileSize)
-                        console.log(outputFileSize)
+                    //    console.log(sourceFileSize)
+                     //   console.log(outputFileSize)
 
                     }
 
@@ -3202,7 +3213,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                         //[4] FFPROBE
 
                         queueTable.rows[currentRow].cells[5].innerHTML = Status;
-                        queueTable.rows[currentRow].cells[7].innerHTML = getTimeNow();
+                        queueTable.rows[currentRow].cells[7].innerHTML = getDateNow() + " " + getTimeNow();
 
                         queueTable.rows[currentRow].style.backgroundColor = backgroundColor;
                     }
@@ -3246,7 +3257,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                              tempcell2.innerHTML = preset
                              tempcell3.innerHTML = FFprobeArray[globalQueueNumber] 
                              tempcell4.innerHTML = Status
-                             tempcell5.innerHTML = getTimeNow()
+                             tempcell5.innerHTML = getDateNow() + " " + getTimeNow()
 
                              if ((temprow.cells[4].innerHTML).toString().includes("Completed")) {
                         temprow.style.backgroundColor = "#59ff74";
@@ -3612,8 +3623,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                 var graphSourceSize = parseFloat(sourceFileSize.toPrecision(4))
                 var graphOutputFileSize = parseFloat(outputFileSize.toPrecision(4))
 
-                console.log(graphSourceSize)
-                console.log(graphOutputFileSize)
+              //  console.log(graphSourceSize)
+              //  console.log(graphOutputFileSize)
 
                 var myBarConfig = {
                     type: "bar",
@@ -3790,6 +3801,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
                             if(queueStatusPaused == 1 && workerStatusArray.length != document.getElementById("instanceNumber").value && document.getElementById("continueButtonGreyDiv").style.display == 'none'){
+                               
 
                                 continueQueue()
 
@@ -3801,7 +3813,13 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
                             if(workersRunning == true && queueStatusPaused == 0 && workerStatusArray.length != document.getElementById("instanceNumber").value){
-                                pauseQueueInitiate()
+
+                                
+                                pauseQueueInitiate(2)
+
+
+
+
                             }
 
                           
@@ -3849,7 +3867,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-        console.log("updateInfo"+updateInfo)
+       // console.log("updateInfo"+updateInfo)
 
         if (updateInfo == 1) {
 
@@ -3965,8 +3983,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
             if (sourceQueueArray.length >= 1) {
 
 
-                console.log("workerStatusArray.length"+workerStatusArray.length)
-                console.log("instanceNumber"+document.getElementById("instanceNumber").value)
+               // console.log("workerStatusArray.length"+workerStatusArray.length)
+               // console.log("instanceNumber"+document.getElementById("instanceNumber").value)
 
                 if (workerStatusArray.length == document.getElementById("instanceNumber").value) {
 
@@ -4315,7 +4333,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
                     //convertFiles('scanandconvert');
 
-                    updateConsole("" + "here2" + "")
+                   
 
                    
 
@@ -4829,7 +4847,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
         if (confirm(document.getElementById("alert_confirm_queue_pause_1").textContent)) {
 
-            pauseQueueInitiate() 
+            pauseQueueInitiate(1) 
 
 
             alert(document.getElementById("alert_confirm_queue_pause_2").textContent)
@@ -4837,7 +4855,18 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
         }
     }
 
-        function pauseQueueInitiate() {
+        function pauseQueueInitiate(statusMessage) {
+
+            if(statusMessage == 1){
+
+
+                document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Paused by user</font></p>";
+                exportStatus = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Paused by user</font></p>";
+            }else if(statusMessage == 2){
+                document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Paused by daily scan scheduler</font></p>";
+                exportStatus = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Paused by daily scan scheduler</font></p>";
+
+            }
 
             updateConsole("" + "Queue pause initiated." + "")
 
@@ -4919,6 +4948,9 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
         workersRunning = true
 
         updateConsole("" + "Continue queue initiated." + "")
+
+        document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Running</font></p>";
+        exportStatus = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Running</font></p>";
 
 
         queueStatusPaused = 0;
@@ -5533,7 +5565,7 @@ try{
   if (obj.checked == false) {
       for (var i = 1; i < queueTable.rows.length; i++) {
 
-        console.log("here"+queueTable.rows[i].style.backgroundColor)
+      //  console.log("here"+queueTable.rows[i].style.backgroundColor)
 
           if (queueTable.rows[i].style.backgroundColor == colour || queueTable.rows[i].style.backgroundColor == colour1) {
 
@@ -7262,13 +7294,11 @@ try{
                 <div id="tooltip_daily_scanning" style="display: none;">
                     <br>
 
-                    <span name="lang_text">Instead of periodic scanning, you can choose for a scan to be run once a day.
+                    <span name="lang_text">Instead of periodic scanning, you can choose for a scan to be run once a day during a specified time window.
                         The scan time
                         is entered in the advanced settings section in hh:mm format such as '18:30'. Once "Scan and
                         convert" is selected, the program
-                        will wait until the specified time until running a scan and conversion process. Again, this will
-                        loop infinitely
-                        until stopped.</span>
+                        will wait until the specified time until running a scan and conversion process. The program will continue scanning and transcoding until the end of the time window is reached. If a transcode queue is running, the queue will be paused. The program will then wait until the start time before starting a new scan/convert or continuing the previous queue.</span>
 
 
                 </div>
@@ -7324,7 +7354,7 @@ try{
                         <div class="rowitem">
                             <div class="grid-container">
                                 <div class="grid-itemleft">
-                                    <p><span name="lang_text">Daily run time (hh:mm):</span></p>
+                                    <p><span name="lang_text">Daily run time (hh:mm to hh:mm):</span></p>
                                 </div>
 
                                 <div class="grid-itemright"><input type="text" class="infoBox" id="dailyRunTime"> - <input type="text" class="infoBox" id="dailyRunTimeEnd">
