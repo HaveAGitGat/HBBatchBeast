@@ -5,10 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
 </head>
-<!-- <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
-<script>		    zingchart.MODULESDIR = "https://cdn.zingchart.com/modules/";
-    ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "ee6b7db5b51705a13dc2339db3edaf6d"];</script> -->
 
 <script>
 
@@ -373,42 +372,42 @@
 
 
         // save lang strings to json
- if (process.env.NODE_ENV != 'production') {
-
- 
-var language_text = {}
+        if (process.env.NODE_ENV != 'production') {
 
 
-var lang_name_tags = document.getElementsByName("lang_text");
-for (var i = 0; i < lang_name_tags.length; i++) {
-
-    var langText = lang_name_tags[i].textContent
-
-    langText = langText.replace(/(\r\n|\n|\r)/gm, " ");
-    langText = langText.replace(/\s+/g, " ");
-
-    language_text[langText] = langText
+            var language_text = {}
 
 
-}
+            var lang_name_tags = document.getElementsByName("lang_text");
+            for (var i = 0; i < lang_name_tags.length; i++) {
 
-var lang_button_tags = document.getElementsByTagName("input");
-for (var i = 0; i < lang_button_tags.length; i++) {
-    if (lang_button_tags[i].type == "button") {
-        language_text[lang_button_tags[i].value] = lang_button_tags[i].value
-    }
-}
+                var langText = lang_name_tags[i].textContent
 
-var jsonContent = JSON.stringify(language_text);
+                langText = langText.replace(/(\r\n|\n|\r)/gm, " ");
+                langText = langText.replace(/\s+/g, " ");
 
-fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
-
-}
+                language_text[langText] = langText
 
 
+            }
+
+            var lang_button_tags = document.getElementsByTagName("input");
+            for (var i = 0; i < lang_button_tags.length; i++) {
+                if (lang_button_tags[i].type == "button") {
+                    language_text[lang_button_tags[i].value] = lang_button_tags[i].value
+                }
+            }
+
+            var jsonContent = JSON.stringify(language_text);
+
+            fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
+
+        }
 
 
-        
+
+
+
 
 
         //format title and buttons depending on OS
@@ -511,7 +510,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
         updateConsole("" + "HBBatchBeast loaded" + "")
-        
+
 
 
 
@@ -606,13 +605,33 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
         }
 
 
-        if(jsonConfig.version_message != "2.1.5"){
+        if (jsonConfig.version_message != "2.1.5") {
 
             jsonConfig.version_message = "2.1.5"
 
-            alert("Changes:")
+            var versionChanges = `
+v2.1.5
 
-           
+Bug related:
+
+-Fixed Linux filename apostrophe issue (No longer necessary to remove apostrophes from filenames)
+
+
+Features/additions:
+
+-Added daily scan schedule time window - hh:mm - hh:mm. Queue will automatically be continued inside the time window and automatically paused outside of the time window.
+
+-Filter queue and session output items.
+-Health check output now shows all items, can filter.
+-Verbose health check error logs removed unless 'Save verbose logs?' Checked.
+-Moved file container filter to System tab.
+-Option to reverse queue order.
+-Added date to 'Finish time'
+`
+
+            alert(versionChanges)
+
+
 
         }
 
@@ -724,7 +743,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
                 var Status = data
 
-                if ("2.1.4" != Status.version) {
+                if ("2.1.5" != Status.version) {
 
                     updateConsole("" + "New version available" + "")
 
@@ -1417,8 +1436,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
             jsonConfig.configs[selected_config_no].tab_system.max_queue_view_size = document.getElementById("queueSizeViewLimit").value
             document.getElementById("autoStart").checked ? jsonConfig.configs[selected_config_no].tab_system.run_on_program_startup_toggle = 1 : jsonConfig.configs[selected_config_no].tab_system.run_on_program_startup_toggle = 0;
             document.getElementById("saveWorkerLogs").checked ? jsonConfig.configs[selected_config_no].tab_system.save_worker_logs_toggle = 1 : jsonConfig.configs[selected_config_no].tab_system.save_worker_logs_toggle = 0;
-            
-            
+
+
             jsonConfig.configs[selected_config_no].tab_system.email_address = document.getElementById("emailAddress").value
             jsonConfig.configs[selected_config_no].tab_system.smtp_server = document.getElementById("SMTPServer").value
 
@@ -1537,6 +1556,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
             document.getElementById("runPriority").checked = false;
 
             document.getElementById("removeApostrophes").checked = false;
+            document.getElementById("reverseFileQueue").checked = false;
 
 
             document.getElementById("instanceNumber").value = "4"
@@ -2248,14 +2268,14 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-                    } else if(isNaN(parseInt(dailyRunTimeEnd.charAt(0))) || isNaN(parseInt(dailyRunTimeEnd.charAt(1))) || isNaN(parseInt(dailyRunTimeEnd.charAt(3))) || isNaN(parseInt(dailyRunTimeEnd.charAt(4)))){
+                    } else if (isNaN(parseInt(dailyRunTimeEnd.charAt(0))) || isNaN(parseInt(dailyRunTimeEnd.charAt(1))) || isNaN(parseInt(dailyRunTimeEnd.charAt(3))) || isNaN(parseInt(dailyRunTimeEnd.charAt(4)))) {
 
                         alert(document.getElementById("alert_validation_daily_run_time_end").textContent);
-                        
+
                         break validationSection;
-                    
-                    
-                 } else{
+
+
+                    } else {
 
 
 
@@ -2279,29 +2299,29 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-                        var scheduleStartTime = parseInt(((parseInt(dailyRunTime.charAt(0)+""+dailyRunTime.charAt(1))) * 60)) + parseInt(((dailyRunTime.charAt(3)+""+dailyRunTime.charAt(4))));
-                        var scheduleEndTime = parseInt(((parseInt(dailyRunTimeEnd.charAt(0)+""+dailyRunTimeEnd.charAt(1))) * 60)) + parseInt(((dailyRunTimeEnd.charAt(3)+""+dailyRunTimeEnd.charAt(4))));
+                        var scheduleStartTime = parseInt(((parseInt(dailyRunTime.charAt(0) + "" + dailyRunTime.charAt(1))) * 60)) + parseInt(((dailyRunTime.charAt(3) + "" + dailyRunTime.charAt(4))));
+                        var scheduleEndTime = parseInt(((parseInt(dailyRunTimeEnd.charAt(0) + "" + dailyRunTimeEnd.charAt(1))) * 60)) + parseInt(((dailyRunTimeEnd.charAt(3) + "" + dailyRunTimeEnd.charAt(4))));
                         var date = new Date();
                         var timenow = (date.getHours() * 60) + date.getMinutes();
                         //var timenow = 1;
 
 
                         //boost schedule end time if scheduled time crosses midnight.
-                        if(scheduleEndTime < scheduleStartTime ){
+                        if (scheduleEndTime < scheduleStartTime) {
 
 
                             //check if timenow is between midnight and schedule end time
-                            if(timenow > 0 && timenow < scheduleEndTime){
-                            timenow += (24*60)
+                            if (timenow > 0 && timenow < scheduleEndTime) {
+                                timenow += (24 * 60)
                             }
 
-                            scheduleEndTime += (24*60)
+                            scheduleEndTime += (24 * 60)
 
                         }
 
 
 
-                        if (scheduleStartTime <= timenow && timenow <= scheduleEndTime){
+                        if (scheduleStartTime <= timenow && timenow <= scheduleEndTime) {
                             // break validationSection;
 
                         } else {
@@ -2340,9 +2360,9 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                             // });
 
 
-                            setTimeout(convertFiles, 2000,'scanandconvert');    
-                            
-             
+                            setTimeout(convertFiles, 2000, 'scanandconvert');
+
+
 
 
 
@@ -2372,7 +2392,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-           
+
 
 
 
@@ -2716,9 +2736,9 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
         document.getElementById("queueButton").style.display = 'block';
-      
+
         document.getElementById("outputButton").style.display = 'block';
-     
+
 
 
         if (mode == "scanandconvert" || mode == "healthCheck") {
@@ -2740,7 +2760,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-        
+
         if (mode != "healthCheck") {
 
             document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + unConvertedFiles + "<\p>";
@@ -2922,7 +2942,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
     function launchWorkerModules(mode2) {
 
-        
+
 
         document.getElementById("convertSelectedButton").style.display = 'none';
 
@@ -3069,13 +3089,13 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
                 if (message[1] == "consoleMessage") {
 
-                    if(document.getElementById("saveWorkerLogs").checked == true){
+                    if (document.getElementById("saveWorkerLogs").checked == true) {
 
                         updateConsole("Worker " + message[0] + ":" + message[2] + "");
 
-                    }else{
+                    } else {
                         updateConsole("Worker " + message[0] + ":" + message[2] + "", true);
-                       
+
                     }
                 }
 
@@ -3133,7 +3153,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                     document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\" style=\"white-space:nowrap;\"><p>Worker " + message[0] + " processing file:<div id=\"cancelButtonDiv" + message[0] + "\"><input type='button' id=\"cancelButton" + message[0] + "\" class=\"infoButton\" value='Cancel item' onclick='cancelItemProcess(\"" + message[0] + "\")'/></div></p><div id=\"worker" + message[0] + "Percentage\"><p><font color=\"#66ccff\">Running</font></p></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
 
 
-                   
+
 
                     //style="display: none;"
                     //document.getElementById("pauseButtonDiv").style.display = 'none';
@@ -3150,8 +3170,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                         sourceFileSize += parseFloat(message[3])
                         outputFileSize += parseFloat(message[4])
 
-                    //    console.log(sourceFileSize)
-                     //   console.log(outputFileSize)
+                        //    console.log(sourceFileSize)
+                        //   console.log(outputFileSize)
 
                     }
 
@@ -3230,7 +3250,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-                     if (mode != "healthCheck" || mode == "healthCheck") {
+                    if (mode != "healthCheck" || mode == "healthCheck") {
 
                         // tempOutputQueueHTML += "<tr>"
                         //     + "<td >" + sourceQueueArray[globalQueueNumber] + "</td>"
@@ -3241,60 +3261,60 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                         //     + "<td  >" + getTimeNow() + "</td>"
                         //     + "</tr>";
 
-                            var temprow = document.getElementById("sessionConversionsTable").insertRow();
-                            var tempcell0 = temprow.insertCell(0);
-                            var tempcell1 = temprow.insertCell(1);
-                            var tempcell2 = temprow.insertCell(2);
-                            var tempcell3 = temprow.insertCell(3);
-                            var tempcell4 = temprow.insertCell(4);
-                            var tempcell5 = temprow.insertCell(5);
+                        var temprow = document.getElementById("sessionConversionsTable").insertRow();
+                        var tempcell0 = temprow.insertCell(0);
+                        var tempcell1 = temprow.insertCell(1);
+                        var tempcell2 = temprow.insertCell(2);
+                        var tempcell3 = temprow.insertCell(3);
+                        var tempcell4 = temprow.insertCell(4);
+                        var tempcell5 = temprow.insertCell(5);
 
 
 
-                             tempcell0.innerHTML = sourceQueueArray[globalQueueNumber]
-                             
-                             tempcell1.innerHTML = sessionNumber 
-                             tempcell2.innerHTML = preset
-                             tempcell3.innerHTML = FFprobeArray[globalQueueNumber] 
-                             tempcell4.innerHTML = Status
-                             tempcell5.innerHTML = getDateNow() + " " + getTimeNow()
+                        tempcell0.innerHTML = sourceQueueArray[globalQueueNumber]
 
-                             if ((temprow.cells[4].innerHTML).toString().includes("Completed")) {
-                        temprow.style.backgroundColor = "#59ff74";
-                    } else if ((temprow.cells[4].innerHTML).toString().includes("Error")) {
-                        temprow.style.backgroundColor = "#ff2d2d";
-                    } else if ((temprow.cells[4].innerHTML).toString().includes("Cancelled")) {
-                        temprow.style.backgroundColor = "#ffda6d";
-                    } else if ((temprow.cells[4].innerHTML).toString().includes("Skipped")) {
-                        temprow.style.backgroundColor = "#ffa24c";
-                    } else if ((temprow.cells[4].innerHTML).toString().includes("Copied to destination")) {
-                        temprow.style.backgroundColor = "#59ff74";
-                    } else if ((temprow.cells[4].innerHTML).toString().includes("Copy to destination failed")) {
-                        temprow.style.backgroundColor = "#ff2d2d";
-                    } else if ((temprow.cells[4].innerHTML).toString().includes("Original replaced")) {
-                        temprow.style.backgroundColor = "#59ff74";
-                    } else if ((temprow.cells[4].innerHTML).toString().includes("Original not replaced")) {
-                        temprow.style.backgroundColor = "#ffa24c";
-                    } else if ((temprow.cells[4].innerHTML).toString().includes("File repaired. Please inspect files.")) {
-                        temprow.style.backgroundColor = "#59ff74";
-                    }
+                        tempcell1.innerHTML = sessionNumber
+                        tempcell2.innerHTML = preset
+                        tempcell3.innerHTML = FFprobeArray[globalQueueNumber]
+                        tempcell4.innerHTML = Status
+                        tempcell5.innerHTML = getDateNow() + " " + getTimeNow()
 
-                    
-
-
-                toggleShowRowsQ(document.getElementById("showSuccess1"), "rgb(89, 255, 116)","rgb(89, 255, 116)")
-                toggleShowRowsQ(document.getElementById("showError1"), "rgb(255, 45, 45)","rgb(255, 45, 45)")
-                toggleShowRowsQ(document.getElementById("showCancelled1"), "rgb(255, 218, 109)","rgb(255, 218, 109)")
-                toggleShowRowsQ(document.getElementById("showRemaining1"), "rgb(242, 242, 242)","")
-                toggleShowRowsQ(document.getElementById("showOther1"), "rgb(255, 162, 76)","rgb(255, 162, 76)")
-
-                toggleShowRowsO(document.getElementById("showSuccess"), "rgb(89, 255, 116)")
-                toggleShowRowsO(document.getElementById("showError"), "rgb(255, 45, 45)")
-                toggleShowRowsO(document.getElementById("showCancelled"), "rgb(255, 218, 109)")
-                toggleShowRowsO(document.getElementById("showOther"), "rgb(255, 162, 76)")
-
-
+                        if ((temprow.cells[4].innerHTML).toString().includes("Completed")) {
+                            temprow.style.backgroundColor = "#59ff74";
+                        } else if ((temprow.cells[4].innerHTML).toString().includes("Error")) {
+                            temprow.style.backgroundColor = "#ff2d2d";
+                        } else if ((temprow.cells[4].innerHTML).toString().includes("Cancelled")) {
+                            temprow.style.backgroundColor = "#ffda6d";
+                        } else if ((temprow.cells[4].innerHTML).toString().includes("Skipped")) {
+                            temprow.style.backgroundColor = "#ffa24c";
+                        } else if ((temprow.cells[4].innerHTML).toString().includes("Copied to destination")) {
+                            temprow.style.backgroundColor = "#59ff74";
+                        } else if ((temprow.cells[4].innerHTML).toString().includes("Copy to destination failed")) {
+                            temprow.style.backgroundColor = "#ff2d2d";
+                        } else if ((temprow.cells[4].innerHTML).toString().includes("Original replaced")) {
+                            temprow.style.backgroundColor = "#59ff74";
+                        } else if ((temprow.cells[4].innerHTML).toString().includes("Original not replaced")) {
+                            temprow.style.backgroundColor = "#ffa24c";
+                        } else if ((temprow.cells[4].innerHTML).toString().includes("File repaired. Please inspect files.")) {
+                            temprow.style.backgroundColor = "#59ff74";
                         }
+
+
+
+
+                        toggleShowRowsQ(document.getElementById("showSuccess1"), "rgb(89, 255, 116)", "rgb(89, 255, 116)")
+                        toggleShowRowsQ(document.getElementById("showError1"), "rgb(255, 45, 45)", "rgb(255, 45, 45)")
+                        toggleShowRowsQ(document.getElementById("showCancelled1"), "rgb(255, 218, 109)", "rgb(255, 218, 109)")
+                        toggleShowRowsQ(document.getElementById("showRemaining1"), "rgb(242, 242, 242)", "")
+                        toggleShowRowsQ(document.getElementById("showOther1"), "rgb(255, 162, 76)", "rgb(255, 162, 76)")
+
+                        toggleShowRowsO(document.getElementById("showSuccess"), "rgb(89, 255, 116)")
+                        toggleShowRowsO(document.getElementById("showError"), "rgb(255, 45, 45)")
+                        toggleShowRowsO(document.getElementById("showCancelled"), "rgb(255, 218, 109)")
+                        toggleShowRowsO(document.getElementById("showOther"), "rgb(255, 162, 76)")
+
+
+                    }
 
 
 
@@ -3623,8 +3643,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                 var graphSourceSize = parseFloat(sourceFileSize.toPrecision(4))
                 var graphOutputFileSize = parseFloat(outputFileSize.toPrecision(4))
 
-              //  console.log(graphSourceSize)
-              //  console.log(graphOutputFileSize)
+                //  console.log(graphSourceSize)
+                //  console.log(graphOutputFileSize)
 
                 var myBarConfig = {
                     type: "bar",
@@ -3766,67 +3786,67 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
         if (mode != "healthCheck") {
-        if (document.getElementById("dailyRunTimeOnOff").checked == true  && inProgress == true) {
+            if (document.getElementById("dailyRunTimeOnOff").checked == true && inProgress == true) {
 
-           
+
 
 
                 var dailyRunTime = document.getElementById("dailyRunTime").value
                 var dailyRunTimeEnd = document.getElementById("dailyRunTimeEnd").value
-                var scheduleStartTime = parseInt(((parseInt(dailyRunTime.charAt(0)+""+dailyRunTime.charAt(1))) * 60)) + parseInt(((dailyRunTime.charAt(3)+""+dailyRunTime.charAt(4))));
-                        var scheduleEndTime = parseInt(((parseInt(dailyRunTimeEnd.charAt(0)+""+dailyRunTimeEnd.charAt(1))) * 60)) + parseInt(((dailyRunTimeEnd.charAt(3)+""+dailyRunTimeEnd.charAt(4))));
-                        var date = new Date();
-                        var timenow = (date.getHours() * 60) + date.getMinutes();
-                        //var timenow = 1;
+                var scheduleStartTime = parseInt(((parseInt(dailyRunTime.charAt(0) + "" + dailyRunTime.charAt(1))) * 60)) + parseInt(((dailyRunTime.charAt(3) + "" + dailyRunTime.charAt(4))));
+                var scheduleEndTime = parseInt(((parseInt(dailyRunTimeEnd.charAt(0) + "" + dailyRunTimeEnd.charAt(1))) * 60)) + parseInt(((dailyRunTimeEnd.charAt(3) + "" + dailyRunTimeEnd.charAt(4))));
+                var date = new Date();
+                var timenow = (date.getHours() * 60) + date.getMinutes();
+                //var timenow = 1;
 
 
-                        //boost schedule end time if scheduled time crosses midnight.
-                        if(scheduleEndTime < scheduleStartTime ){
+                //boost schedule end time if scheduled time crosses midnight.
+                if (scheduleEndTime < scheduleStartTime) {
 
 
-                            //check if timenow is between midnight and schedule end time
-                            if(timenow > 0 && timenow < scheduleEndTime){
-                            timenow += (24*60)
-                            }
+                    //check if timenow is between midnight and schedule end time
+                    if (timenow > 0 && timenow < scheduleEndTime) {
+                        timenow += (24 * 60)
+                    }
 
-                            scheduleEndTime += (24*60)
+                    scheduleEndTime += (24 * 60)
 
-                        }
-
-
-
-                        if (scheduleStartTime <= timenow && timenow <= scheduleEndTime){
-
-                            // if paused, start
-
-
-                            if(queueStatusPaused == 1 && workerStatusArray.length != document.getElementById("instanceNumber").value && document.getElementById("continueButtonGreyDiv").style.display == 'none'){
-                               
-
-                                continueQueue()
-
-                            }
-
-
-                        }else{
-                              //if running, pause
-
-
-                            if(workersRunning == true && queueStatusPaused == 0 && workerStatusArray.length != document.getElementById("instanceNumber").value){
-
-                                
-                                pauseQueueInitiate(2)
+                }
 
 
 
+                if (scheduleStartTime <= timenow && timenow <= scheduleEndTime) {
 
-                            }
+                    // if paused, start
 
-                          
 
-                        }
+                    if (queueStatusPaused == 1 && workerStatusArray.length != document.getElementById("instanceNumber").value && document.getElementById("continueButtonGreyDiv").style.display == 'none') {
+
+
+                        continueQueue()
+
+                    }
+
+
+                } else {
+                    //if running, pause
+
+
+                    if (workersRunning == true && queueStatusPaused == 0 && workerStatusArray.length != document.getElementById("instanceNumber").value) {
+
+
+                        pauseQueueInitiate(2)
+
+
+
+
+                    }
+
+
+
+                }
+            }
         }
-    }
 
         //
 
@@ -3867,7 +3887,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-       // console.log("updateInfo"+updateInfo)
+        // console.log("updateInfo"+updateInfo)
 
         if (updateInfo == 1) {
 
@@ -3907,9 +3927,9 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
                         for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
 
-                            try{
-                            workerProgressArray[j - 1] = document.getElementById("worker" + (j) + "Status").innerHTML
-                        }catch(err){}
+                            try {
+                                workerProgressArray[j - 1] = document.getElementById("worker" + (j) + "Status").innerHTML
+                            } catch (err) { }
 
                         }
                     }
@@ -3983,8 +4003,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
             if (sourceQueueArray.length >= 1) {
 
 
-               // console.log("workerStatusArray.length"+workerStatusArray.length)
-               // console.log("instanceNumber"+document.getElementById("instanceNumber").value)
+                // console.log("workerStatusArray.length"+workerStatusArray.length)
+                // console.log("instanceNumber"+document.getElementById("instanceNumber").value)
 
                 if (workerStatusArray.length == document.getElementById("instanceNumber").value) {
 
@@ -4051,7 +4071,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                 updateConsole("" + "Updating output table" + "")
 
 
-               // document.getElementById('sessionConversionsTable').innerHTML += tempOutputQueueHTML
+                // document.getElementById('sessionConversionsTable').innerHTML += tempOutputQueueHTML
 
                 //notify
 
@@ -4138,7 +4158,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-                
+
 
 
 
@@ -4161,7 +4181,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
 
 
-               
+
                 if (mode == "healthCheck") {
                     preset = "Health check"
                 } else {
@@ -4333,12 +4353,12 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
                     //convertFiles('scanandconvert');
 
-                   
 
-                   
 
-                     AllCompleted = 0
-                     setTimeout(convertFiles, 5000,'scanandconvert');  
+
+
+                    AllCompleted = 0
+                    setTimeout(convertFiles, 5000, 'scanandconvert');
 
 
 
@@ -4359,7 +4379,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
                     if (timerSeconds == 0) {
 
-       
+
 
                         convertFiles('scanandconvert');
 
@@ -4370,7 +4390,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
                 }
             }
 
-//
+            //
 
         }
     }
@@ -4842,12 +4862,12 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
     function pauseQueue() {
 
-        
+
 
 
         if (confirm(document.getElementById("alert_confirm_queue_pause_1").textContent)) {
 
-            pauseQueueInitiate(1) 
+            pauseQueueInitiate(1)
 
 
             alert(document.getElementById("alert_confirm_queue_pause_2").textContent)
@@ -4855,31 +4875,31 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
         }
     }
 
-        function pauseQueueInitiate(statusMessage) {
+    function pauseQueueInitiate(statusMessage) {
 
-            if(statusMessage == 1){
-
-
-                document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Paused by user</font></p>";
-                exportStatus = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Paused by user</font></p>";
-            }else if(statusMessage == 2){
-                document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Paused by daily scan scheduler</font></p>";
-                exportStatus = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Paused by daily scan scheduler</font></p>";
-
-            }
-
-            updateConsole("" + "Queue pause initiated." + "")
-
-            queueStatusPaused = 1;
-            updateInfo = 0
-
-            fs.writeFileSync(homePath + '/Documents/HBBatchBeast/Config/queueStartStop.txt', "0", 'utf8');
+        if (statusMessage == 1) {
 
 
-            document.getElementById("pauseButtonDiv").style.display = 'none';
-            document.getElementById("continueButtonDiv").style.display = 'none';
-            document.getElementById("continueButtonGreyDiv").style.display = 'block';
+            document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Paused by user</font></p>";
+            exportStatus = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Paused by user</font></p>";
+        } else if (statusMessage == 2) {
+            document.getElementById("timerDiv").innerHTML = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Paused by daily scan scheduler</font></p>";
+            exportStatus = "<p style=\"font-size: 2em;\"><font color=\"#66ccff\">Paused by daily scan scheduler</font></p>";
+
         }
+
+        updateConsole("" + "Queue pause initiated." + "")
+
+        queueStatusPaused = 1;
+        updateInfo = 0
+
+        fs.writeFileSync(homePath + '/Documents/HBBatchBeast/Config/queueStartStop.txt', "0", 'utf8');
+
+
+        document.getElementById("pauseButtonDiv").style.display = 'none';
+        document.getElementById("continueButtonDiv").style.display = 'none';
+        document.getElementById("continueButtonGreyDiv").style.display = 'block';
+    }
 
 
 
@@ -4924,7 +4944,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
             getHandBrakeCLIPath(),
             getFFmpegCLIPath(),
             document.getElementById("saveWorkerLogs").checked,
-           
+
 
 
 
@@ -4944,7 +4964,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
     function continueQueue() {
 
 
-        
+
         workersRunning = true
 
         updateConsole("" + "Continue queue initiated." + "")
@@ -4966,8 +4986,8 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
         for (var i = 0; i < workers.length; i++) {
 
             var messageOut = [
-                    "continueWork",
-                ];
+                "continueWork",
+            ];
             workers[i].send(messageOut);
 
 
@@ -4997,7 +5017,7 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
         }
 
-       
+
 
 
 
@@ -5554,77 +5574,77 @@ fs.writeFileSync('./translations/en.json', jsonContent, 'utf8');
 
     }
 
-    function toggleShowRowsQ(obj,colour,colour1) {
+    function toggleShowRowsQ(obj, colour, colour1) {
 
-//  var tb = document.getElementById("sessionConversionsTable");
- // tb.getElementsByTagName("th")[0].style.display = "none";
-//  tb.getElementsByTagName("th")[0].style.display = "block";
+        //  var tb = document.getElementById("sessionConversionsTable");
+        // tb.getElementsByTagName("th")[0].style.display = "none";
+        //  tb.getElementsByTagName("th")[0].style.display = "block";
 
-try{
+        try {
 
-  if (obj.checked == false) {
-      for (var i = 1; i < queueTable.rows.length; i++) {
+            if (obj.checked == false) {
+                for (var i = 1; i < queueTable.rows.length; i++) {
 
-      //  console.log("here"+queueTable.rows[i].style.backgroundColor)
+                    //  console.log("here"+queueTable.rows[i].style.backgroundColor)
 
-          if (queueTable.rows[i].style.backgroundColor == colour || queueTable.rows[i].style.backgroundColor == colour1) {
+                    if (queueTable.rows[i].style.backgroundColor == colour || queueTable.rows[i].style.backgroundColor == colour1) {
 
-              queueTable.rows[i].style.display = 'none';
+                        queueTable.rows[i].style.display = 'none';
 
-          }
-      }
-  } else if (obj.checked == true) {
+                    }
+                }
+            } else if (obj.checked == true) {
 
-      for (var i = 1; i < queueTable.rows.length; i++) {
-          if (queueTable.rows[i].style.backgroundColor == colour || queueTable.rows[i].style.backgroundColor == colour1) {
+                for (var i = 1; i < queueTable.rows.length; i++) {
+                    if (queueTable.rows[i].style.backgroundColor == colour || queueTable.rows[i].style.backgroundColor == colour1) {
 
-           queueTable.rows[i].style.display = 'table-row';
-
-           
-            queueTable.rows[i].cells[0].style.width = "10%"
-
-       
-          }
-      }
-  }
-
-}catch(err){}
-}
+                        queueTable.rows[i].style.display = 'table-row';
 
 
+                        queueTable.rows[i].cells[0].style.width = "10%"
 
-    function toggleShowRowsO(obj,colour) {
 
-      //  var tb = document.getElementById("sessionConversionsTable");
-       // tb.getElementsByTagName("th")[0].style.display = "none";
-      //  tb.getElementsByTagName("th")[0].style.display = "block";
-
-      try{
-
-        if (obj.checked == false) {
-            for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
-
-                if (sessionConversionsTable.rows[i].style.backgroundColor == colour) {
-
-                    sessionConversionsTable.rows[i].style.display = 'none';
-
+                    }
                 }
             }
-        } else if (obj.checked == true) {
 
-            for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
-                if (sessionConversionsTable.rows[i].style.backgroundColor == colour) {
+        } catch (err) { }
+    }
 
-                 sessionConversionsTable.rows[i].style.display = 'table-row';
 
-                 
-                  sessionConversionsTable.rows[i].cells[0].style.width = "10%"
 
-             
+    function toggleShowRowsO(obj, colour) {
+
+        //  var tb = document.getElementById("sessionConversionsTable");
+        // tb.getElementsByTagName("th")[0].style.display = "none";
+        //  tb.getElementsByTagName("th")[0].style.display = "block";
+
+        try {
+
+            if (obj.checked == false) {
+                for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
+
+                    if (sessionConversionsTable.rows[i].style.backgroundColor == colour) {
+
+                        sessionConversionsTable.rows[i].style.display = 'none';
+
+                    }
+                }
+            } else if (obj.checked == true) {
+
+                for (var i = 0; i < sessionConversionsTable.rows.length; i++) {
+                    if (sessionConversionsTable.rows[i].style.backgroundColor == colour) {
+
+                        sessionConversionsTable.rows[i].style.display = 'table-row';
+
+
+                        sessionConversionsTable.rows[i].cells[0].style.width = "10%"
+
+
+                    }
                 }
             }
-        }
-    }catch(err){}
+        } catch (err) { }
     }
 
 </script>
@@ -5879,10 +5899,10 @@ try{
     }
 
     table.historicTable tr {
-   /* display: table;
+        /* display: table;
   width: auto;
    table-layout: fixed;  */
-}
+    }
 
 
     table.historicTable tr:nth-child(even) {
@@ -5905,7 +5925,7 @@ try{
     }
 
 
- 
+
 
 
 
@@ -6381,6 +6401,35 @@ try{
         color: #66ccff;
     }
 
+    .github-button {
+    position: relative;
+    overflow: visible;
+    display: inline-block;
+    padding: 0.5em 1em;
+    border: 1px solid #d4d4d4;
+    margin: 0;
+    text-decoration: none;
+    text-align: center;
+    text-shadow: 1px 1px 0 #fff;
+    font:11px/normal sans-serif;
+    color: #333;
+    white-space: nowrap;
+    cursor: pointer;
+    outline: none;
+    background-color: #e9cc49;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f4f4f4), to(#ececec));
+    background-image: -moz-linear-gradient(#f4f4f4, #ececec);
+    background-image: -ms-linear-gradient(#f4f4f4, #ececec);
+    background-image: -o-linear-gradient(#f4f4f4, #ececec);
+    background-image: linear-gradient(#f4f4f4, #ececec);
+    -moz-background-clip: padding; /* for Firefox 3.6 */
+    background-clip: padding-box;
+    border-radius: 0.2em;
+    /* IE hacks */
+    zoom: 1;
+    *display: inline;
+}
+
 
 
     #main {
@@ -6419,7 +6468,7 @@ try{
 
 
             <div id="window-title">
-                <span>HBBatchBeast 2.1.4</span>
+                <span>HBBatchBeast 2.1.5</span>
             </div>
 
             <div id="window-controls">
@@ -6588,11 +6637,13 @@ try{
             'New' on the remote monitoring tab to generate a new key.</span>
 
 
-        <span name="lang_text" id="alert_validation_daily_run_time" style="display: none;">Please enter a daily scan START
+        <span name="lang_text" id="alert_validation_daily_run_time" style="display: none;">Please enter a daily scan
+            START
             time in 24 hour format: hh:mm (for example 13:02)</span>
 
-            <span name="lang_text" id="alert_validation_daily_run_time_end" style="display: none;">Please enter a daily scan END
-                time in 24 hour format: hh:mm (for example 13:02)</span>
+        <span name="lang_text" id="alert_validation_daily_run_time_end" style="display: none;">Please enter a daily scan
+            END
+            time in 24 hour format: hh:mm (for example 13:02)</span>
 
         <span name="lang_text" id="alert_chkbx_delete_source_files" style="display: none;">SOURCE FILES WILL BE DELETED
             AFTER CONVERSION! Please test before proper use!</span>
@@ -6690,6 +6741,13 @@ try{
 
 
             <div ALIGN="RIGHT">
+
+    <input type="button" class="github-button"
+    onclick="openURL('https://github.com/HaveAGitGat/HBBatchBeast')"
+    value="★ Star" data-icon="octicon-star" >
+
+
+    
                 <div class="lang_select_div" style="position: static; right:95px;">
                     <select name="language_select" class="selectboxlang" id="language_select">
                         <option value="nil">-</option>
@@ -7294,11 +7352,15 @@ try{
                 <div id="tooltip_daily_scanning" style="display: none;">
                     <br>
 
-                    <span name="lang_text">Instead of periodic scanning, you can choose for a scan to be run once a day during a specified time window.
+                    <span name="lang_text">Instead of periodic scanning, you can choose for a scan to be run once a day
+                        during a specified time window.
                         The scan time
                         is entered in the advanced settings section in hh:mm format such as '18:30'. Once "Scan and
                         convert" is selected, the program
-                        will wait until the specified time until running a scan and conversion process. The program will continue scanning and transcoding until the end of the time window is reached. If a transcode queue is running, the queue will be paused. The program will then wait until the start time before starting a new scan/convert or continuing the previous queue.</span>
+                        will wait until the specified time until running a scan and conversion process. The program will
+                        continue scanning and transcoding until the end of the time window is reached. If a transcode
+                        queue is running, the queue will be paused. The program will then wait until the start time
+                        before starting a new scan/convert or continuing the previous queue.</span>
 
 
                 </div>
@@ -7357,9 +7419,10 @@ try{
                                     <p><span name="lang_text">Daily run time (hh:mm to hh:mm):</span></p>
                                 </div>
 
-                                <div class="grid-itemright"><input type="text" class="infoBox" id="dailyRunTime"> - <input type="text" class="infoBox" id="dailyRunTimeEnd">
+                                <div class="grid-itemright"><input type="text" class="infoBox" id="dailyRunTime"> -
+                                    <input type="text" class="infoBox" id="dailyRunTimeEnd">
                                 </div>
-                                
+
 
 
                             </div>
@@ -7755,22 +7818,22 @@ try{
                             within, your source
                             folder or it won't work properly.</span>
 
-                            <br> <br><span name="lang_text">Once HBBatchBeast has transcoded a specific file, it
-                                will add
-                                that file path to a
-                                cache so that it won't be attempted again in future. You can view/edit/clear the cache using
-                                the yellow
-                                buttons.</span>
+                        <br> <br><span name="lang_text">Once HBBatchBeast has transcoded a specific file, it
+                            will add
+                            that file path to a
+                            cache so that it won't be attempted again in future. You can view/edit/clear the cache using
+                            the yellow
+                            buttons.</span>
 
 
                     </div>
 
-                    <input type="button" onclick="viewLogs('originalFileReplacedList')"
-                    value="View replaced file cache" class="infoButton">
+                    <input type="button" onclick="viewLogs('originalFileReplacedList')" value="View replaced file cache"
+                        class="infoButton">
 
 
-                <input type="button" onclick="clearOriginalFileCompressAttemptCache()"
-                    value="Clear replaced file cache" class="infoButton">
+                    <input type="button" onclick="clearOriginalFileCompressAttemptCache()"
+                        value="Clear replaced file cache" class="infoButton">
 
 
                     <div class="rowitem">
@@ -7881,24 +7944,24 @@ try{
 
                     </div>
 
-    
 
-                        <div class="rowitem">
-                            <div class="grid-container">
 
-                                <div style="text-align: left">
-                                    <p><span onclick="toolTip('tooltip_remove_apostrophes')"
-                                            class="toolTipClass">�</span><span name="lang_text">Remove apostrophes from
-                                            filenames:</span>
-                                    </p>
-                                </div>
+                    <div class="rowitem">
+                        <div class="grid-container">
 
-                                <div style="text-align: right">
-                                    <input type="checkbox" id="removeApostrophes">
-                                </div>
+                            <div style="text-align: left">
+                                <p><span onclick="toolTip('tooltip_remove_apostrophes')"
+                                        class="toolTipClass">�</span><span name="lang_text">Remove apostrophes from
+                                        filenames:</span>
+                                </p>
+                            </div>
+
+                            <div style="text-align: right">
+                                <input type="checkbox" id="removeApostrophes">
                             </div>
                         </div>
-                  
+                    </div>
+
 
                     <div id="tooltip_remove_apostrophes" style="display: none;">
 
@@ -7925,14 +7988,15 @@ try{
                             </div>
                         </div>
                     </div>
-              
-
-                <div id="tooltip_reverse_file_queue" style="display: none;">
-
-                    <br><span name="lang_text">Check this option to reverse the file queue when scanning for files.Items will be processed in reverse order.</span>
 
 
-                </div>
+                    <div id="tooltip_reverse_file_queue" style="display: none;">
+
+                        <br><span name="lang_text">Check this option to reverse the file queue when scanning for
+                            files.Items will be processed in reverse order.</span>
+
+
+                    </div>
 
 
 
@@ -8186,8 +8250,8 @@ try{
                     <div class="grid-container">
 
                         <div style="text-align: left">
-                            <p><span onclick="toolTip('tooltip_included_file_types')"
-                                    class="toolTipClass">�</span><span name="lang_text">Include these file
+                            <p><span onclick="toolTip('tooltip_included_file_types')" class="toolTipClass">�</span><span
+                                    name="lang_text">Include these file
                                     containers:</span>
                             </p>
                         </div>
@@ -8223,7 +8287,8 @@ try{
                 <div class="rowitem">
                     <div class="grid-container">
                         <div class="grid-itemleft">
-                            <p><span name="lang_text">Automatically start "Scan and convert" when program opened?:</span>
+                            <p><span name="lang_text">Automatically start "Scan and convert" when program
+                                    opened?:</span>
                             </p>
                         </div>
 
@@ -8235,7 +8300,8 @@ try{
                 <div class="rowitem">
                     <div class="grid-container">
                         <div class="grid-itemleft">
-                            <p><span onclick="toolTip('tooltip_save_verbose_logs')" class="toolTipClass">�</span><span name="lang_text">Save verbose logs?:</span>
+                            <p><span onclick="toolTip('tooltip_save_verbose_logs')" class="toolTipClass">�</span><span
+                                    name="lang_text">Save verbose logs?:</span>
                             </p>
                         </div>
 
@@ -8245,8 +8311,9 @@ try{
 
                 <div id="tooltip_save_verbose_logs" style="display: none;">
 
-                    <br> <span name="lang_text">Check this checkbox to save detailed sub-process logs. This includes worker console ouput. This will cause very large logs.</span>
-            
+                    <br> <span name="lang_text">Check this checkbox to save detailed sub-process logs. This includes
+                        worker console output. This will cause very large logs.</span>
+
 
 
                 </div>
@@ -8519,9 +8586,9 @@ try{
 
 
 
-           
-                <div id="workerStatusDiv"> </div>
-            
+
+            <div id="workerStatusDiv"> </div>
+
 
 
             <div id="healthCheckDiv"></div>
@@ -8560,14 +8627,19 @@ try{
 
                 <p><span name="lang_text">Queue</span></p>
 
-                <span name="lang_text">Success</span><input type="checkbox" class="rounded" id="showSuccess1" onchange='toggleShowRowsQ(this,"rgb(89, 255, 116)","rgb(89, 255, 116)")' checked>
-                <span name="lang_text">Error</span><input type="checkbox" class="rounded" id="showError1"  onchange='toggleShowRowsQ(this,"rgb(255, 45, 45)","rgb(255, 45, 45)")' checked>
-                <span name="lang_text"> Cancelled</span><input type="checkbox" class="rounded" id="showCancelled1" onchange='toggleShowRowsQ(this,"rgb(255, 218, 109)","rgb(255, 218, 109)")'checked>
+                <span name="lang_text">Success</span><input type="checkbox" class="rounded" id="showSuccess1"
+                    onchange='toggleShowRowsQ(this,"rgb(89, 255, 116)","rgb(89, 255, 116)")' checked>
+                <span name="lang_text">Error</span><input type="checkbox" class="rounded" id="showError1"
+                    onchange='toggleShowRowsQ(this,"rgb(255, 45, 45)","rgb(255, 45, 45)")' checked>
+                <span name="lang_text"> Cancelled</span><input type="checkbox" class="rounded" id="showCancelled1"
+                    onchange='toggleShowRowsQ(this,"rgb(255, 218, 109)","rgb(255, 218, 109)")' checked>
 
-                <span name="lang_text"> Remaining</span><input type="checkbox" class="rounded" id="showRemaining1" onchange='toggleShowRowsQ(this,"rgb(242 , 242, 242)","")' checked>
+                <span name="lang_text"> Remaining</span><input type="checkbox" class="rounded" id="showRemaining1"
+                    onchange='toggleShowRowsQ(this,"rgb(242 , 242, 242)","")' checked>
 
-                <span name="lang_text"> Other</span><input type="checkbox" class="rounded" id="showOther1" onchange='toggleShowRowsQ(this,"rgb(255, 162, 76)","rgb(255, 162, 76)")' checked></p>
-                
+                <span name="lang_text"> Other</span><input type="checkbox" class="rounded" id="showOther1"
+                    onchange='toggleShowRowsQ(this,"rgb(255, 162, 76)","rgb(255, 162, 76)")' checked></p>
+
 
                 <div id="fullQueue">
 
@@ -8578,18 +8650,18 @@ try{
 
             <div id="files"></div>
             <div id="files2"></div>
-            <div ALIGN="LEFT" >
+            <div ALIGN="LEFT">
                 <input type='button' id="outputButton" class="button4" value='Toggle output view'
                     onclick='toggleView("sessionConversions")' style="display: none;" />
 
 
-               
+
 
             </div>
 
-         
-           
-               
+
+
+
 
 
             <div id="sessionConversions" style="display: none;">
@@ -8598,17 +8670,21 @@ try{
 
                 <p><span name="lang_text">Output this session:</span></p>
 
-                    
-                <p> <span name="lang_text">Success</span><input type="checkbox" class="rounded" id="showSuccess" onchange='toggleShowRowsO(this,"rgb(89, 255, 116)")' checked>
-                <span name="lang_text">Error</span><input type="checkbox" class="rounded" id="showError"  onchange='toggleShowRowsO(this,"rgb(255, 45, 45)")' checked>
-                <span name="lang_text"> Cancelled</span><input type="checkbox" class="rounded" id="showCancelled" onchange='toggleShowRowsO(this,"rgb(255, 218, 109)")'checked>
-                <span name="lang_text"> Other</span><input type="checkbox" class="rounded" id="showOther" onchange='toggleShowRowsO(this,"rgb(255, 162, 76)")' checked></p>
 
-                
+                <p> <span name="lang_text">Success</span><input type="checkbox" class="rounded" id="showSuccess"
+                        onchange='toggleShowRowsO(this,"rgb(89, 255, 116)")' checked>
+                    <span name="lang_text">Error</span><input type="checkbox" class="rounded" id="showError"
+                        onchange='toggleShowRowsO(this,"rgb(255, 45, 45)")' checked>
+                    <span name="lang_text"> Cancelled</span><input type="checkbox" class="rounded" id="showCancelled"
+                        onchange='toggleShowRowsO(this,"rgb(255, 218, 109)")' checked>
+                    <span name="lang_text"> Other</span><input type="checkbox" class="rounded" id="showOther"
+                        onchange='toggleShowRowsO(this,"rgb(255, 162, 76)")' checked></p>
 
 
 
-                <table id="sessionConversionsTable" class="historicTable" >
+
+
+                <table id="sessionConversionsTable" class="historicTable">
                     <col width="70%">
                     <col width="auto">
                     <col width="auto">
@@ -8616,15 +8692,15 @@ try{
                     <col width="auto">
                     <col width="auto">
 
-                    <th class="headcol2" >Source file</th>
-                    <th class="headcol2" >No.</th>
+                    <th class="headcol2">Source file</th>
+                    <th class="headcol2">No.</th>
 
-                    <th class="headcol2" >Preset</th>
+                    <th class="headcol2">Preset</th>
 
-                    <th class="headcol2" >FFprobe</th>
+                    <th class="headcol2">FFprobe</th>
 
-                    <th class="headcol2" >Status</th>
-                    <th class="headcol2" >Finish time</th>
+                    <th class="headcol2">Status</th>
+                    <th class="headcol2">Finish time</th>
 
 
                 </table>
