@@ -370,27 +370,27 @@ process.on('message', (m) => {
 
         //
 
-        var currentSourceLineLinux = currentSourceLine.replace(/'/g, '\'\"\'\"\'');
-        var currentDestinationLineLinux = currentDestinationLine.replace(/'/g, '\'\"\'\"\'');
-        var presetLinux = preset.replace(/'/g, '\'\"\'\"\'');
+        var currentSourceLineUnix = currentSourceLine.replace(/'/g, '\'\"\'\"\'');
+        var currentDestinationLineUnix = currentDestinationLine.replace(/'/g, '\'\"\'\"\'');
+        var presetUnix = preset.replace(/'/g, '\'\"\'\"\'');
 
        
-        var ffmpegPathLinux = ffmpegPath.replace(/'/g, '\'\"\'\"\'');
+        var ffmpegPathUnix = ffmpegPath.replace(/'/g, '\'\"\'\"\'');
+        try{
+            var preset0Unix = presetSplit[0].replace(/'/g, '\'\"\'\"\'');
+        }catch(err){}
+        try{
+            var preset1Unix = presetSplit[1].replace(/'/g, '\'\"\'\"\'');
+        }catch(err){}
         
 
         if (process.platform == 'linux' && handBrakeMode == true) {
 
-            workerCommand = "HandBrakeCLI -i '" + currentSourceLineLinux + "' -o '" + currentDestinationLineLinux + "' " + presetLinux;
+            workerCommand = "HandBrakeCLI -i '" + currentSourceLineUnix + "' -o '" + currentDestinationLineUnix + "' " + presetUnix;
 
         } else if (process.platform == 'linux' && FFmpegMode == true) {
 
-        try{
-            var preset0Linux = presetSplit[0].replace(/'/g, '\'\"\'\"\'');
-        }catch(err){}
-        try{
-            var preset1Linux = presetSplit[1].replace(/'/g, '\'\"\'\"\'');
-        }catch(err){}
-            workerCommand = ffmpegPathLinux + " " + preset0Linux + " -i '" + currentSourceLineLinux + "' " + preset1Linux + " '" + currentDestinationLineLinux + "' "
+            workerCommand = ffmpegPathUnix + " " + preset0Unix + " -i '" + currentSourceLineUnix + "' " + preset1Unix + " '" + currentDestinationLineUnix + "' "
 
         }
 
@@ -398,9 +398,9 @@ process.on('message', (m) => {
         //
 
         if (process.platform == 'darwin' && handBrakeMode == true) {
-            workerCommand = "/usr/local/bin/HandBrakeCLI -i '" + currentSourceLine + "' -o '" + currentDestinationLine + "' " + preset;
+            workerCommand = "/usr/local/bin/HandBrakeCLI -i '"  + currentSourceLineUnix + "' -o '" + currentDestinationLineUnix + "' " + presetUnix;
         } else if (process.platform == 'darwin' && FFmpegMode == true) {
-            workerCommand = ffmpegPath + " " + presetSplit[0] + " -i '" + currentSourceLine + "' " + presetSplit[1] + " '" + currentDestinationLine + "' "
+            workerCommand = ffmpegPathUnix + " " + preset0Unix + " -i '" + currentSourceLineUnix + "' " + preset1Unix + " '" + currentDestinationLineUnix + "' "
         }
 
 
@@ -1837,21 +1837,30 @@ function attemptToRepair() {
 
     if (process.platform == 'linux' && FFmpegMode == true) {
 
-        var ffmpegPathLinux = ffmpegPath.replace(/'/g, '\'\"\'\"\'');
+        var ffmpegPathUnix = ffmpegPath.replace(/'/g, '\'\"\'\"\'');
 
-        var currentSourceLineLinux = currentSourceLine.replace(/'/g, '\'\"\'\"\'');
-        var repair_file_pathLinux = repair_file_path.replace(/'/g, '\'\"\'\"\'');
+        var currentSourceLineUnix = currentSourceLine.replace(/'/g, '\'\"\'\"\'');
+        var repair_file_pathUnix = repair_file_path.replace(/'/g, '\'\"\'\"\'');
    
-        var preset0Linux = presetSplit[0].replace(/'/g, '\'\"\'\"\'');
-        var preset1Linux = presetSplit[1].replace(/'/g, '\'\"\'\"\'');
+        var preset0Unix = presetSplit[0].replace(/'/g, '\'\"\'\"\'');
+        var preset1Unix = presetSplit[1].replace(/'/g, '\'\"\'\"\'');
 
-        workerCommand = ffmpegPathLinux + " " + preset0Linux + " -i '" + currentSourceLineLinux + "' " + preset1Linux + " '" + repair_file_pathLinux + "' "
+        workerCommand = ffmpegPathUnix + " " + preset0Unix + " -i '" + currentSourceLineUnix + "' " + preset1Unix + " '" + repair_file_pathUnix + "' "
 
     }
 
 
     if (process.platform == 'darwin' && FFmpegMode == true) {
-        workerCommand = ffmpegPath + " " + presetSplit[0] + " -i '" + currentSourceLine + "' " + presetSplit[1] + " '" + repair_file_path + "' "
+       
+        var ffmpegPathUnix = ffmpegPath.replace(/'/g, '\'\"\'\"\'');
+
+        var currentSourceLineUnix = currentSourceLine.replace(/'/g, '\'\"\'\"\'');
+        var repair_file_pathUnix = repair_file_path.replace(/'/g, '\'\"\'\"\'');
+   
+        var preset0Unix = presetSplit[0].replace(/'/g, '\'\"\'\"\'');
+        var preset1Unix = presetSplit[1].replace(/'/g, '\'\"\'\"\'');
+
+        workerCommand = ffmpegPathUnix + " " + preset0Unix + " -i '" + currentSourceLineUnix + "' " + preset1Unix + " '" + repair_file_pathUnix + "' "
     }
 
     var infoArray = [
