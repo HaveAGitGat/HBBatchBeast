@@ -812,12 +812,15 @@ process.on('message', (m) => {
                     }
 
 
-                    //
+                    
 
                     function minmaxThreshold(){
 
                         if (minimumFileSizeOnOff == true || maximumFileSizeOnOff == true) {
 
+                            //
+
+                            try{
                             var singleFileSize = fs.statSync(currentSourceLine)
                             var singleFileSize = singleFileSize.size
                             var fileSizeInMbytes = singleFileSize / 1000000.0;
@@ -835,6 +838,10 @@ process.on('message', (m) => {
                                     filterReason += "File above maximum MB size "
                                 }
                             }
+
+                        }catch(err){
+
+                        }
 
 
 
@@ -1289,11 +1296,20 @@ function moveCorruptedFile() {
 
     updateConsole(workerNumber, "Moving corrupt file:" + currentSourceLine + " to " + corruptDestinationPath)
 
-    fsextra.moveSync(currentSourceLine, corruptDestinationPath, {
-        overwrite: true
-    })
+    try {
 
-    updateConsole(workerNumber, "Moving corrupt file successful:" + currentSourceLine + " to " + corruptDestinationPath)
+        fsextra.moveSync(currentSourceLine, corruptDestinationPath, {
+            overwrite: true
+        })
+        updateConsole(workerNumber, "Moving corrupt file successful:" + currentSourceLine + " to " + corruptDestinationPath)
+
+    } catch (err) {
+        updateConsole(workerNumber, "Moving corrupt file unsuccessful:" + currentSourceLine + " to " + corruptDestinationPath)
+    }
+
+
+
+    
 
 
 
