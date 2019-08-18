@@ -124,6 +124,8 @@ Generally, the only line you need to change in the above is line 7:
 
 Change '/media/mount/Video' to the location of your media on your host machine. You'll be able to navigate to those files by going to '/home/developer/Documents/HBBatchBeast/Media' while using the Docker container. Map more volumes if necessary.
 
+To close HBBatchBeast, close the application window and then use Ctrl+C to end the process in the terminal.
+
 -----------------------------------------------------------------------------
 
 
