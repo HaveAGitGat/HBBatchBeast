@@ -36,7 +36,6 @@ https://github.com/HaveAGitGat/HBBatchBeast/releases
 
 Step 2:Run HBBatchBeast.exe
 
-
 -----------------------------------------------------------------------------
 
 
