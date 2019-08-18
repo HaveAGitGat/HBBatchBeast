@@ -24,7 +24,9 @@ This is a standalone program on Windows but requires HandBrakeCLI to be installe
 
 
 Settings help is available by pressing the blue ? diamond icons spread throughout the program:
+
 ![Screenshot](https://i.imgur.com/qwxlJkX.png)
+
 -------------------------------------------------------------
 INSTALLATION - Windows:
 
@@ -118,7 +120,7 @@ Step 2: Configure and run the HBBatchBeast Docker container using the following 
    
 Generally, the only line you need to change in the above is line 7:
 
-**-v /media/mount/Video:/home/developer/Documents/HBBatchBeast/Media \ **
+-v /media/mount/Video:/home/developer/Documents/HBBatchBeast/Media \ 
 
 Change '/media/mount/Video' to the location of your media on your host machine. You'll be able to navigate to those files by going to '/home/developer/Documents/HBBatchBeast/Media' while using the Docker container. Map more volumes if necessary.
 
