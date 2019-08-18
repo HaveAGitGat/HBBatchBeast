@@ -106,7 +106,36 @@ Step 4:Run hbbatchbeast
 
 Settings help in Wiki:https://github.com/HaveAGitGat/HBBatchBeast/wiki
 
--------------------------------------------------------------
+-----------------------------------------------------------------------------
+
+INSTALLATION - Docker (Linux host required):
+
+Step 1: Open up a terminal and pull the HBBatchBeast Docker image using the following command (may take some time):
+
+**docker pull haveagitgat/hbbatchbeast**
+
+Step 2: Configure and run the HBBatchBeast Docker container using the following command:
+
+**docker run -ti --rm \
+       -e DISPLAY=unix$DISPLAY \
+       --privileged \
+       --volume $XAUTH:/root/.Xauthority \
+       --volume /tmp/.X11-unix:/tmp/.X11-unix \
+       -v /home/$USER/Documents:/home/developer/Documents \
+       -v /media/mount/Video:/home/developer/Documents/HBBatchBeast/Media \
+        haveagitgat/hbbatchbeast**
+   
+Generally, the only line you need to change in the above is line 7:
+
+**-v /media/mount/Video:/home/developer/Documents/HBBatchBeast/Media \**
+
+Change '/media/mount/Video' to the location of your media on your host machine. You'll be able to navigate to those files by going to '/home/developer/Documents/HBBatchBeast/Media' while using the Docker container. Map more volumes if necessary.
+
+Settings help is availble by pressing the blue ? diamond icons spread throughout the program:
+![Screenshot](https://i.imgur.com/qwxlJkX.png)
+
+
+-----------------------------------------------------------------------------
 
 
 The program scans the source folders for all files. It then compares the source folder files with the destination folder files to see if any of the source files exist in the destination folder already. If not, the program queues the files for conversion.
