@@ -98,6 +98,10 @@ Step 3:Install the package
 
 Step 4:Run hbbatchbeast 
 
+If you're having trouble installing HandBrake on newer versions of Ubuntu, please see the following for detailed steps (thanks to TorqueWrench!):
+
+https://engineerworkshop.com/2019/10/13/how-to-install-handbrake-on-ubuntu/
+
 -----------------------------------------------------------------------------
 
 INSTALLATION - Docker (Linux host required):
