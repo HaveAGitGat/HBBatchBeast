@@ -2824,15 +2824,6 @@ Features/additions:
 
             tableHTML += "<table class=\"outputTable\" id=\"queueTable\">"
 
-                + "<col width=\"70%\">"
-                + "<col width=\"auto\">"
-
-                + "<col width=\"auto\">"
-                + "<col width=\"auto\">"
-                + "<col width=\"auto\">"
-                + "<col width=\"auto\">"
-                + "<col width=\"auto\">"
-                + "<col width=\"auto\">"
                 + "<tr>"
 
                 + "<th class=\"headcol\">Source file</th>"
@@ -2844,6 +2835,9 @@ Features/additions:
                 + "<th class=\"headcol\">Status</th>"
                 + "<th class=\"headcol\">Process?</th>"
                 + "<th class=\"headcol\">Finish time</th>"
+
+                + "<th class=\"headcol\">Old size (GB)</th>"
+                + "<th class=\"headcol\">New size (GB)</th>"
 
                 + "</tr>"
 
@@ -2900,6 +2894,8 @@ Features/additions:
                     + "<td > - </td>"
                     + "<td > - </td>"
                     + "<td ><input id=\"tableQueueNumber" + tableQueueNumber + "\" type=\"checkbox\" checked=\"true\"></td>"
+                    + "<td > - </td>"
+                    + "<td > - </td>"
                     + "<td > - </td>"
 
                     + "</tr>"
@@ -2995,7 +2991,6 @@ Features/additions:
 
         var cp = [];
         var childProcess = require("child_process");
-        const cluster = require('cluster');
         //var path = require("path");
 
 
@@ -3165,10 +3160,19 @@ Features/additions:
                 }
 
                 if (mode != "healthCheck") {
+
                     if (message[1] == "fileSizes") {
 
                         sourceFileSize += parseFloat(message[3])
                         outputFileSize += parseFloat(message[4])
+
+                        var currentRow = parseInt(message[2]) + 1
+
+
+                        try{
+                        queueTable.rows[currentRow].cells[8].innerHTML = parseFloat(message[3]).toPrecision(3)
+                        queueTable.rows[currentRow].cells[9].innerHTML = parseFloat(message[4]).toPrecision(3)
+                    }catch(err){}
 
                         //    console.log(sourceFileSize)
                         //   console.log(outputFileSize)
@@ -3269,6 +3273,9 @@ Features/additions:
                         var tempcell4 = temprow.insertCell(4);
                         var tempcell5 = temprow.insertCell(5);
 
+                        var tempcell6 = temprow.insertCell(6);
+                        var tempcell7 = temprow.insertCell(7);
+
 
 
                         tempcell0.innerHTML = sourceQueueArray[globalQueueNumber]
@@ -3278,6 +3285,9 @@ Features/additions:
                         tempcell3.innerHTML = FFprobeArray[globalQueueNumber]
                         tempcell4.innerHTML = Status
                         tempcell5.innerHTML = getDateNow() + " " + getTimeNow()
+
+                        tempcell6.innerHTML = queueTable.rows[currentRow].cells[8].innerHTML
+                        tempcell7.innerHTML = queueTable.rows[currentRow].cells[9].innerHTML
 
                         if ((temprow.cells[4].innerHTML).toString().includes("Completed")) {
                             temprow.style.backgroundColor = "#59ff74";
@@ -5882,6 +5892,8 @@ Features/additions:
     table.outputTable {
         border-radius: 5px;
         width: 100%;
+        table-layout: auto;
+        white-space: normal;
 
     }
 
@@ -5921,6 +5933,8 @@ Features/additions:
     table.historicTable {
         border-radius: 5px;
         width: 100%;
+        table-layout: auto;
+        white-space: normal;
 
     }
 
@@ -8685,12 +8699,9 @@ Features/additions:
 
 
                 <table id="sessionConversionsTable" class="historicTable">
-                    <col width="70%">
-                    <col width="auto">
-                    <col width="auto">
-                    <col width="auto">
-                    <col width="auto">
-                    <col width="auto">
+
+
+ 
 
                     <th class="headcol2">Source file</th>
                     <th class="headcol2">No.</th>
@@ -8701,6 +8712,12 @@ Features/additions:
 
                     <th class="headcol2">Status</th>
                     <th class="headcol2">Finish time</th>
+                    <th class="headcol2">Old size (GB)</th>
+                    <th class="headcol2">New size (GB)</th>
+
+                    
+
+                    
 
 
                 </table>
