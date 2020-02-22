@@ -98,6 +98,10 @@ Step 3:Install the package
 
 Step 4:Run hbbatchbeast 
 
+If you're having trouble installing HandBrake on newer versions of Ubuntu, please see the following for detailed steps (thanks to TorqueWrench!):
+
+https://engineerworkshop.com/2019/10/13/how-to-install-handbrake-on-ubuntu/
+
 -----------------------------------------------------------------------------
 
 INSTALLATION - Docker (Linux host required):
@@ -108,14 +112,14 @@ Step 1: Open up a terminal and pull the HBBatchBeast Docker image using the foll
 
 Step 2: Configure and run the HBBatchBeast Docker container using the following command:
 
-**docker run -ti --rm \
+    docker run -ti --rm \
        -e DISPLAY=unix$DISPLAY \
        --privileged \
        --volume $XAUTH:/root/.Xauthority \
        --volume /tmp/.X11-unix:/tmp/.X11-unix \
        -v /home/$USER/Documents:/home/developer/Documents \
        -v /media/mount/Video:/home/developer/Documents/HBBatchBeast/Media \
-        haveagitgat/hbbatchbeast**
+        haveagitgat/hbbatchbeast
    
 Generally, the only line you need to change in the above is line 7:
 
