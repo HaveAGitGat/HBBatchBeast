@@ -30,9 +30,9 @@ Settings help is available by pressing the blue ? diamond icons spread throughou
 -------------------------------------------------------------
 INSTALLATION - Windows:
 
-Step 1:Download hbbatchbeast-Windows.7z from the release page and extract  it:
+Step 1:Download hbbatchbeast:
 
-https://github.com/HaveAGitGat/HBBatchBeast/releases
+<a class="gumroad-button" href="https://gum.co/xfMXJ">Download HBBatchBeast</a>
 
 Step 2:Run HBBatchBeast.exe
 
@@ -57,7 +57,7 @@ Press enter and wait for it to complete.
 
 Step 2:Download hbbatchbeast-macOS.dmg from the release page:
 
-https://github.com/HaveAGitGat/HBBatchBeast/releases
+<a class="gumroad-button" href="https://gum.co/xfMXJ">Download HBBatchBeast</a>
 
 Step 3:Install the package
 
@@ -92,7 +92,7 @@ Press enter and wait for it to complete.
 
 Step 2:Download hbbatchbeast-Linux.deb from the release page:
 
-https://github.com/HaveAGitGat/HBBatchBeast/releases
+<a class="gumroad-button" href="https://gum.co/xfMXJ">Download HBBatchBeast</a>
 
 Step 3:Install the package
 
