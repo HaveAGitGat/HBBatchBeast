@@ -4,7 +4,7 @@
 
 
 <h2>
-<a class="gumroad-button" href="https://gum.co/xfMXJ">Setup/Installation</a>
+<a class="gumroad-button" href="https://github.com/HaveAGitGat/HBBatchBeast/wiki/2-Installation">Setup/Installation</a>
 </h2>  
 
 
