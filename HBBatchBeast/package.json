@@ -18,7 +18,7 @@
     "dependencies": {
         "@ffmpeg-installer/ffmpeg": "^1.0.19",
         "async": "^2.6.2",
-        "bcrypt": "^3.0.6",
+        "bcrypt": "^5.0.0",
         "download": "^7.1.0",
         "emailjs": "^2.2.0",
         "ffmpeg": "0.0.4",
