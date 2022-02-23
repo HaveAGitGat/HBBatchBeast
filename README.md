@@ -13,7 +13,7 @@
 Demo video - https://youtu.be/mHMXfInoqfE
 
 
-Website: http://hbbatchbeast.io/
+Discord: https://discord.gg/X4khmE96hS
 
 A free GUI application for HandBrake and FFmpeg/FFprobe on Windows, macOS and Linux (+ Linux Docker image) with an emphasis on multi HandBrake/FFmpeg instance batch conversion (including recursive folder scans and folder watching). The destination folder structure is kept the same as the source folder structure. Media in subfolders is also converted. Multiple folders can be monitored and different conversion presets can be specified for each folder. Also included:
 
