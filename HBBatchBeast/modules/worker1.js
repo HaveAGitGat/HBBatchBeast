@@ -358,7 +358,7 @@ process.on('message', (m) => {
         }
 
         var presetSplit
-        presetSplit = preset.split(',')
+        presetSplit = preset.split('|')
         var workerCommand = "";
 
         if (process.platform == 'win32' && handBrakeMode == true) {
