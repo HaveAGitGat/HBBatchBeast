@@ -17,7 +17,7 @@
     "license": "MIT",
     "dependencies": {
         "@ffmpeg-installer/ffmpeg": "^1.0.19",
-        "async": "^2.6.2",
+        "async": "^3.2.2",
         "bcrypt": "^3.0.6",
         "download": "^7.1.0",
         "emailjs": "^2.2.0",
