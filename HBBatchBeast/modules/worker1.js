@@ -51,15 +51,6 @@ if (process.platform == 'darwin') {
     var homePath = home
 }
 
-function sleep(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-        if ((new Date().getTime() - start) > milliseconds) {
-            break;
-        }
-    }
-}
-
 
 
 
@@ -604,7 +595,6 @@ process.on('message', (m) => {
                     var filterReason = "";
 
 
-                    var JSONBomb = "";
                     if (mode == "healthCheck") {
 
                         try {
@@ -2095,9 +2085,7 @@ function attemptToRepair() {
                         process.env.NODE_ENV = "production";
                     }
 
-                    var ffprobe = require('ffprobe'),
-                        ffprobeStatic = require('ffprobe-static');
-                    var path = require("path");
+                    var ffprobe = require('ffprobe');
                     var ffprobeStaticPath = ''
 
                     if (process.env.NODE_ENV == 'production') {

@@ -26,13 +26,11 @@ var totalFileFoundCounter = 0;
 var fileNotExistsCounter = 0;
 var outputFolderPathold = "";
 var sourceQueueArrayCounter = 0;
-var writeNumber = 0;
 
 
 
 var fileNameSuffixArray
 
-var fsextra = require('fs-extra')
 var fs = require('fs');
 
 
@@ -47,8 +45,6 @@ var replaceOriginalFile;
 var replaceOriginalFileAlways;
 
 
-var errorArray = [];
-var sourceQueueFileSizeArray = []
 var outputPathArrayFinal = [];
 
 
@@ -58,13 +54,6 @@ var outputFolderPathFinalold = "";
 
 
 
-var totalFileSize = 0;
-
-var errorCount = 0;
-var successfulCount = 0;
-
-var g;
-
 var outPutPathStem
 var outPutPathStemFinal
 
@@ -72,9 +61,7 @@ var inputPathStem
 var inputPathStemSplit
 var topFolder
 var topFolderCharLength
-var programPath = ""
 
-var queueView = "enabled"
 var presetArray2 = [];
 var presetArray3 = [];
 var presetArray = [];
@@ -589,11 +576,6 @@ process.on('message', (queueInfoBomb) => {
         //var currentWindowPath = window.location.pathname;
         //var currentFolderPath = currentWindowPath.substring(0, currentWindowPath.lastIndexOf('/'));
 
-        var currentWindowPath = __filename;
-        var currentFolderPath = __dirname;
-
-
-
         // var handBrakeCLIPath = fso.GetAbsolutePathName(homePath+'/HandBrakeCLI.exe');
 
         //var handBrakeCLIPath = fso.GetAbsolutePathName(homePath+'/HandBrakeCLI.exe');
@@ -696,7 +678,6 @@ process.on('message', (queueInfoBomb) => {
                         sourceQueueArrayCounter++
                         destinationQueueArray.push(outputPathArray[i])
                         destinationFinalQueueArray.push(outputPathArrayFinal[i])
-                        writeNumber++;
 
 
 
@@ -797,7 +778,6 @@ process.on('message', (queueInfoBomb) => {
                         sourceQueueArrayCounter++
                         destinationQueueArray.push(outputPathArray[i])
                         destinationFinalQueueArray.push(outputPathArrayFinal[i])
-                        writeNumber++;
 
                     }
 

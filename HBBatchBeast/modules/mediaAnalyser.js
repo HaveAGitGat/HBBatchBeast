@@ -40,9 +40,7 @@ process.on('message', (infoArray) => {
       process.env.NODE_ENV = "production";
     }
 
-    var ffprobe = require('ffprobe'),
-      ffprobeStatic = require('ffprobe-static');
-    var path = require("path");
+    var ffprobe = require('ffprobe');
     var ffprobeStaticPath = ''
 
     if (process.env.NODE_ENV == 'production') {

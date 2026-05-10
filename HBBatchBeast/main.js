@@ -143,20 +143,17 @@ app.on('ready', function () {
 if (process.platform == 'win32') {
     var platform = "win"
     var iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.ico')
-    var type = "ico"
     //var iconpath = "./assets/icons/win/icon.ico"
 }
 
 if (process.platform == 'linux') {
     var platform = "png"
-    var type = "png"
     var iconpath = "./assets/icons/png/icon.png"
 
 }
 
 if (process.platform == 'darwin') {
     var platform = "mac"
-    var type = "icns"
     var iconpath = "./assets/icons/mac/icon.icns"
 
 }

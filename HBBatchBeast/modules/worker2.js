@@ -20,8 +20,6 @@ process.on('uncaughtException', function (err) {
 //global variables
 var shellWorker
 var shell = require('shelljs');
-var fs = require('fs');
-var home = require("os").homedir();
 
 
 
