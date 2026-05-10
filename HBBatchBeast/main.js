@@ -7,9 +7,6 @@
 //     return;
 //  }
 
-
-
-
 //require electron module
 const electron = require('electron')
 
@@ -20,24 +17,18 @@ const path = require('path');
 
 const { app, BrowserWindow, Menu, ipcMain, Tray } = electron;
 
-
 //declare main window limited to in scope to this block
 let mainWindow;
 
 //SET ENV
 
-
 if (__dirname.includes('.asar')) { // If dev
     process.env.NODE_ENV = "production";
 }
 
-
-
-
 //listen for app to be ready
 
-
-var appIcon
+let appIcon
 
 app.on('ready', function () {
 
@@ -50,7 +41,6 @@ app.on('ready', function () {
         height: 1000,
         frame: false,
         title: 'HBBatchBeast'
-
 
     });
 
@@ -69,18 +59,16 @@ app.on('ready', function () {
 
     // });
 
-
     //Build menu from template
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
     //Insert menu
     Menu.setApplicationMenu(mainMenu);
 
-
     if (process.platform == 'win32') {
 
         appIcon = new Tray(iconpath)
 
-        var contextMenu = Menu.buildFromTemplate([
+        const contextMenu = Menu.buildFromTemplate([
             {
                 label: 'Show', click: function () {
                     mainWindow.show()
@@ -129,7 +117,6 @@ app.on('ready', function () {
         mainWindow.on('show', function () {
             appIcon.setHighlightMode('always')
 
-
             //appIcon.setImage(iconpath);
         })
 
@@ -138,23 +125,24 @@ app.on('ready', function () {
 
 });
 
-
+let platform;
+let iconpath;
 
 if (process.platform == 'win32') {
-    var platform = "win"
-    var iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.ico')
+    platform = "win"
+    iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.ico')
     //var iconpath = "./assets/icons/win/icon.ico"
 }
 
 if (process.platform == 'linux') {
-    var platform = "png"
-    var iconpath = "./assets/icons/png/icon.png"
+    platform = "png"
+    iconpath = "./assets/icons/png/icon.png"
 
 }
 
 if (process.platform == 'darwin') {
-    var platform = "mac"
-    var iconpath = "./assets/icons/mac/icon.icns"
+    platform = "mac"
+    iconpath = "./assets/icons/mac/icon.icns"
 
 }
 
@@ -163,62 +151,35 @@ ipcMain.on('item:add', function (e, item) {
 
     //  console.log(item);
 
-    var icon = path.join(__dirname, '.\\assets\\icons\\' + platform + '\\' + item + '.ico')
+    const icon = path.join(__dirname, '.\\assets\\icons\\' + platform + '\\' + item + '.ico')
 
     //var icon ="./assets/icons/"+platform+"/"+item+"."+type;
     appIcon.setImage(icon);
 
-
 });
-
-
 
 ipcMain.on('item:ready', function (e, item) {
 
-
     mainWindow.webContents.send('item:ready', "Test");
 
-
 });
-
-
 
 ipcMain.on('mediaview:ready', function (e, item) {
     mainWindow.webContents.send('mediaview:ready', "Test");
 });
 
-
-
-
 ipcMain.on('benchstatus:ready', function (e, item) {
     mainWindow.webContents.send('benchstatus:ready', "Test");
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //Create menu template
 
 const mainMenuTemplate = [
 
-
-
     {
         label: 'File',
 
         submenu: [
-
 
             {
                 label: 'Quit',
@@ -234,8 +195,6 @@ const mainMenuTemplate = [
 
     }
 ];
-
-
 
 //If mac, add empty object to menu
 
@@ -266,9 +225,7 @@ if (process.env.NODE_ENV != 'production') {
 
     });
 
-
 }
-
 
 //Catch item:add
 
@@ -276,15 +233,4 @@ ipcMain.on('item:add', function (e, item) {
 
     //  console.log(item);
 
-
-
-
-
-
-
-
-
-
 });
-
-

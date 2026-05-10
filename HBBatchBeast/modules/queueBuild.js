@@ -1,10 +1,9 @@
 function updateConsole(text) {
-    var message = [
+    const message = [
         "consoleMessage",
         text,
     ];
     process.send(message);
-
 
 }
 
@@ -16,104 +15,71 @@ process.on('uncaughtException', function (err) {
     process.exit();
 });
 
-
 //console.log(randomvariable)
 
 //Global variables
 
-var inputPathArrayCounter = 0;
-var totalFileFoundCounter = 0;
-var fileNotExistsCounter = 0;
-var outputFolderPathold = "";
-var sourceQueueArrayCounter = 0;
+let inputPathArrayCounter = 0;
+let totalFileFoundCounter = 0;
+let fileNotExistsCounter = 0;
+let outputFolderPathold = "";
+let sourceQueueArrayCounter = 0;
 
+let fileNameSuffixArray
 
+const fs = require('fs');
+const path = require('path');
 
-var fileNameSuffixArray
+const inputPathArray = [];
+const outputPathArray = [];
+const sourceQueueArray = [];
 
-var fs = require('fs');
+const skipOrCopyArray = [];
 
+let replaceOriginalFile;
+let replaceOriginalFileAlways;
 
+const outputPathArrayFinal = [];
 
-var inputPathArray = [];
-var outputPathArray = [];
-var sourceQueueArray = [];
+let outputFolderPathFinalold = "";
 
-var skipOrCopyArray = [];
+let outPutPathStem
+let outPutPathStemFinal
 
-var replaceOriginalFile;
-var replaceOriginalFileAlways;
+let inputPathStem
+let inputPathStemSplit
+let topFolder
+let topFolderCharLength
 
+const presetArray2 = [];
+const presetArray3 = [];
+let presetArray = [];
 
-var outputPathArrayFinal = [];
+const destinationQueueArray = [];
+const destinationFinalQueueArray = [];
 
+let removeApostrophes_chkbx
+let reverseFileQueue_chxbx
 
-
-
-var outputFolderPathFinalold = "";
-
-
-
-var outPutPathStem
-var outPutPathStemFinal
-
-var inputPathStem
-var inputPathStemSplit
-var topFolder
-var topFolderCharLength
-
-var presetArray2 = [];
-var presetArray3 = [];
-var presetArray = [];
-
-
-var destinationQueueArray = [];
-var destinationFinalQueueArray = [];
-
-var removeApostrophes_chkbx
-var reverseFileQueue_chxbx
-
-
-
-
-
-
-
-var message = [
+const message = [
     "readyforInfo",
 ];
 
 process.send(message);
 
-
 updateConsole("File scanner: online.")
-
-
 
 process.on('message', (queueInfoBomb) => {
 
-
-
-
-
-
     if (queueInfoBomb[0] == "queueInfoBomb") {
-
-
 
         updateConsole("File scanner: received info")
 
-
-
-
-
         inputPathStemArray = queueInfoBomb[1]
-
 
         outPutPathStemArray = queueInfoBomb[2]
 
         outPutPathStemFinalArray = queueInfoBomb[3]
-
 
         //
 
@@ -121,17 +87,11 @@ process.on('message', (queueInfoBomb) => {
 
         tempConversionFolderCheckedOnOff = queueInfoBomb[4]
 
-
-
-
         //document.getElementById("includedFileTypes").value=queueInfoBomb[4]
         supportedFileTypeArrayImport = queueInfoBomb[5]
 
-
         //document.getElementById("container").options[document.getElementById("container").selectedIndex].text=queueInfoBomb[5]
         containerType = queueInfoBomb[6]
-
-
 
         mode = queueInfoBomb[7]
 
@@ -141,74 +101,33 @@ process.on('message', (queueInfoBomb) => {
 
         replaceOriginalFile = queueInfoBomb[10]
 
-
-
-
-
         fileNameSuffixArray = queueInfoBomb[11]
 
         removeApostrophes_chkbx = queueInfoBomb[12]
         replaceOriginalFileAlways= queueInfoBomb[13]
         reverseFileQueue_chxbx = queueInfoBomb[14]
 
+        const homePath = require("os").homedir();
 
-
-
-
-
-
-        var home = require("os").homedir();
-
-
-        if (process.platform == 'win32' || process.platform == 'linux') {
-
-            //var homePath = "."
-            var homePath = home
-
-
-        }
-
-        if (process.platform == 'darwin') {
-
-            var homePath = home
-
-        }
-
-
-
-
+        let healthyFileArray;
+        let replacedFileArray;
 
         if (mode == "healthCheck") {
 
-
-            var healthyFileArray = "";
             healthyFileArray = fs.readFileSync(homePath + "/Documents/HBBatchBeast/Logs/healthyFileList.txt", 'utf8');
             healthyFileArray = healthyFileArray.toString().split("\n");
 
         }
 
-
         if (mode != "healthCheck") {
 
-
-            var replacedFileArray = "";
             replacedFileArray = fs.readFileSync(homePath + "/Documents/HBBatchBeast/Logs/originalFileReplacedList.txt", 'utf8');
             replacedFileArray = replacedFileArray.toString().split("\n");
 
         }
 
-
-
-
-
-
-
-
-
         // folder loop begin 
-        for (var y = 0; y < inputPathStemArray.length; y++) {
-
-
+        for (let y = 0; y < inputPathStemArray.length; y++) {
 
             inputPathStem = inputPathStemArray[y]   // input folder path with comma:  /path/to/folder,
             outPutPathStem = outPutPathStemArray[y]
@@ -219,15 +138,9 @@ process.on('message', (queueInfoBomb) => {
 
             inputPathStemSplit = inputPathStem.split(','); // comma removed step 1:  /path/to/folder
 
-
-
             topFolder = inputPathStemSplit[inputPathStemSplit.length - 1] // comma removed step 2:  /path/to/folder
 
             topFolderCharLength = topFolder.length   //
-
-
-
-            var path = require('path');
 
             try {
                 traverseDir(inputPathStem);
@@ -235,9 +148,8 @@ process.on('message', (queueInfoBomb) => {
 
             function traverseDir(inputPathStem) {
 
-
                 fs.readdirSync(inputPathStem).forEach(file => {
-                    let fullPath = path.join(inputPathStem, file);
+                    const fullPath = path.join(inputPathStem, file);
 
                     try {
                         if (fs.lstatSync(fullPath).isDirectory()) {
@@ -247,24 +159,18 @@ process.on('message', (queueInfoBomb) => {
                             } catch (err) { }
                         } else {
 
-
-
-                            var thisFile = fullPath + "" // path/to/folder/test.mp4
+                            const thisFile = fullPath + "" // path/to/folder/test.mp4
 
                             fileTypeSplit = thisFile.split('.');    // 
                             fileType = fileTypeSplit[fileTypeSplit.length - 1]   // mp4
 
-
                             //Here we define supported file types
-                            var supportedFileTypeArray = supportedFileTypeArrayImport
-
-                            supportedFileTypeArray = supportedFileTypeArray.split(',');
+                            const supportedFileTypeArray = supportedFileTypeArrayImport.split(',');
 
                             //Here we check to see if the current file being analysed contains a valid file type
-                            var supportedFileSwitch = 0;
+                            let supportedFileSwitch = 0;
 
-
-                            for (var j = 0; j < supportedFileTypeArray.length; j++) {
+                            for (let j = 0; j < supportedFileTypeArray.length; j++) {
 
                                 if (fileType.toLowerCase() == supportedFileTypeArray[j].toLowerCase()) {
                                     supportedFileSwitch = 1;
@@ -272,15 +178,10 @@ process.on('message', (queueInfoBomb) => {
 
                             }
 
-
-
-
-
                             // compare against healthy file list
 
-
                             if (mode == "healthCheck") {
-                                for (var j = 0; j < healthyFileArray.length; j++) {
+                                for (let j = 0; j < healthyFileArray.length; j++) {
 
                                     if (thisFile == healthyFileArray[j]) {
                                         supportedFileSwitch = 0;
@@ -293,7 +194,7 @@ process.on('message', (queueInfoBomb) => {
                             if (mode != "healthCheck") {
 
                                 if (replaceOriginalFile == true || replaceOriginalFileAlways == true ) {
-                                    for (var j = 0; j < replacedFileArray.length; j++) {
+                                    for (let j = 0; j < replacedFileArray.length; j++) {
 
                                         if (thisFile == replacedFileArray[j]) {
                                             supportedFileSwitch = 0;
@@ -302,37 +203,23 @@ process.on('message', (queueInfoBomb) => {
                                 }
                             }
 
-
-
                             // check if min/max file size is reached
 
                             if (mode != "healthCheck") {
 
-
-
-
                             }
-
-
-
 
                             //If the file type is valid, then process it
 
                             if (supportedFileSwitch == 1) {
 
-
-
                                 //document.getElementById("files2").innerHTML += "<p>"+ thisFile+"<\p>";
-
-
-
 
                                 //Here add the full file path to the inputPathArray
 
-
                                 if (removeApostrophes_chkbx) {
 
-                                    var fileNameApostrophesRemoved = thisFile.replace(/'/g, ' ');
+                                    const fileNameApostrophesRemoved = thisFile.replace(/'/g, ' ');
                                     fs.renameSync(thisFile, fileNameApostrophesRemoved)
                                     inputPathArray[inputPathArrayCounter] = fileNameApostrophesRemoved + "";
 
@@ -341,52 +228,32 @@ process.on('message', (queueInfoBomb) => {
                                     inputPathArray[inputPathArrayCounter] = thisFile + "";
                                 }
 
-
-
-
-
                                 // var message = [
                                 //     "consoleMessage",
                                 //     "Valid file found: "+thisFile+"",
                                 // ];
                                 // process.send(message);
 
+                                if ((totalFileFoundCounter + 1) % 100 == 0) {
 
+                                    // scanWindow.webContents.send('item:count', (totalFileFoundCounter + 1));
+                                    //  }
 
+                                    updateConsole("File scanner: Valid files found:" + (totalFileFoundCounter + 1))
 
+                                    const message = [
+                                        "totalFiles",
+                                        (totalFileFoundCounter + 1),
+                                    ];
+                                    process.send(message);
 
-
-
-
-
-
-
-
-
-                                 if ((totalFileFoundCounter + 1) % 100 == 0) {
-
-                                // scanWindow.webContents.send('item:count', (totalFileFoundCounter + 1));
-                                //  }
-
-                                updateConsole("File scanner: Valid files found:" + (totalFileFoundCounter + 1))
-
-                                var message = [
-                                    "totalFiles",
-                                    (totalFileFoundCounter + 1),
-                                ];
-                                process.send(message);
-
-                            }
-
+                                }
 
                                 // ipcRenderer.send('item:count', (totalFileFoundCounter + 1));
 
-
                                 totalFileFoundCounter++
 
-
-                                var str = inputPathArray[inputPathArrayCounter];   // path/to/topfolder/subfolder/test.mp4
-
+                                let str = inputPathArray[inputPathArrayCounter];   // path/to/topfolder/subfolder/test.mp4
 
                                 //str = str.substring(str.indexOf("topFolder") + topFolderCharLength + 1);
 
@@ -394,14 +261,14 @@ process.on('message', (queueInfoBomb) => {
 
                                 str = str.substring(topFolderCharLength);       // /subfolder/test.mp4
 
+                                let stringProcessingSlash;
 
                                 if (process.platform == 'win32') {
-
-                                    var stringProcessingSlash = "\\";
+                                    stringProcessingSlash = "\\";
                                 }
 
                                 if (process.platform == 'linux' || process.platform == 'darwin') {
-                                    var stringProcessingSlash = "/";
+                                    stringProcessingSlash = "/";
                                 }
 
                                 pointer = str.split(stringProcessingSlash);
@@ -418,37 +285,29 @@ process.on('message', (queueInfoBomb) => {
 
                                     subfilePath = filePathEndFileType + fileNameSuffixArray[y] + containerType;   // "test" +".mp4"
 
-
                                 }
-
-
 
                                 LongsubfilePath = str.slice(0, str.lastIndexOf(stringProcessingSlash)); //  path/to/folder
 
                                 newsubfilePath = LongsubfilePath + stringProcessingSlash + subfilePath; // path/to/folder + "/" + "test.mp4"
 
-
                                 outputPathArray[inputPathArrayCounter] = outPutPathStem + newsubfilePath;
-                                var outputFolderPath = outputPathArray[inputPathArrayCounter].substring(0, outputPathArray[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
+                                const outputFolderPath = outputPathArray[inputPathArrayCounter].substring(0, outputPathArray[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
 
                                 //
 
                                 presetArray2[inputPathArrayCounter] = presetArray[y]
 
-
-
-
+                                let outputFolderPathFinal;
 
                                 if (tempConversionFolderCheckedOnOff == true) {
 
                                     outputPathArrayFinal[inputPathArrayCounter] = outPutPathStemFinal + newsubfilePath;
-                                    var outputFolderPathFinal = outputPathArrayFinal[inputPathArrayCounter].substring(0, outputPathArrayFinal[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
+                                    outputFolderPathFinal = outputPathArrayFinal[inputPathArrayCounter].substring(0, outputPathArrayFinal[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
 
                                 }
 
-
                                 //if temp folder checked
-
 
                                 if (tempConversionFolderCheckedOnOff == true) {
                                     if (fs.existsSync(outputPathArrayFinal[inputPathArrayCounter])) {
@@ -460,27 +319,21 @@ process.on('message', (queueInfoBomb) => {
                                         // ];
                                         // process.send(message);
 
-
                                         fileNotExistsCounter++
                                     }
                                     //ELSE if temp folder unchecked
                                 } else {
 
-
-
                                     //
                                     if (fs.existsSync(outputPathArray[inputPathArrayCounter])) {
 
-
                                     } else {
-
 
                                         // var message = [
                                         //     "consoleMessage",
                                         //     "File does not exist: "+outputPathArray[inputPathArrayCounter]+"",
                                         // ];
                                         // process.send(message);
-
 
                                         fileNotExistsCounter++
 
@@ -489,28 +342,20 @@ process.on('message', (queueInfoBomb) => {
 
                                 }
 
-
-                                var shell = require('shelljs');
-
-
+                                const shell = require('shelljs');
 
                                 if (fs.existsSync(outputFolderPath)) {
-
 
                                 } else {
 
                                     if (outputFolderPath != outputFolderPathold) {
                                         // fs.mkdirSync(outputFolderPath);
 
-
                                         try {
 
                                             if (mode != "healthCheck") {
 
-
                                                 shell.mkdir('-p', outputFolderPath);
-
-
 
                                             }
 
@@ -521,11 +366,9 @@ process.on('message', (queueInfoBomb) => {
 
                                 }
 
-
                                 //AND if tempfolderchecked
 
                                 if (tempConversionFolderCheckedOnOff == true) {
-
 
                                     if (fs.existsSync(outputFolderPathFinal)) {
 
@@ -544,24 +387,15 @@ process.on('message', (queueInfoBomb) => {
 
                                             } catch (err) { }
 
-
                                             outputFolderPathFinalold = outputFolderPathFinal;
 
                                         }
                                     }
                                 }
 
-
                                 inputPathArrayCounter++;
 
-
-
-
-
                             } //end supported file switch
-
-
-
 
                         }  //end current file, go to next
 
@@ -570,9 +404,6 @@ process.on('message', (queueInfoBomb) => {
             }
         }//end source folder loop
 
-
-
-
         //var currentWindowPath = window.location.pathname;
         //var currentFolderPath = currentWindowPath.substring(0, currentWindowPath.lastIndexOf('/'));
 
@@ -580,18 +411,11 @@ process.on('message', (queueInfoBomb) => {
 
         //var handBrakeCLIPath = fso.GetAbsolutePathName(homePath+'/HandBrakeCLI.exe');
 
-
-
-
-
-
         updateConsole("File scanner: Building queue")
-
-
 
         if (tempConversionFolderCheckedOnOff == true) {
 
-            for (var i = 0; i < outputPathArray.length; i++) {
+            for (let i = 0; i < outputPathArray.length; i++) {
 
                 try {
 
@@ -599,36 +423,31 @@ process.on('message', (queueInfoBomb) => {
 
                     } else {
 
-
                         presetArray3.push(presetArray2[i])
 
                         sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
 
                         if ((sourceQueueArrayCounter + 1) % 100 == 0) {
-                            var message = [
+                            const message = [
                                 "buildQueue",
                                 (sourceQueueArrayCounter + 1),
                             ];
                             process.send(message);
 
-
-
                             updateConsole("File scanner: Building queue:" + (sourceQueueArrayCounter + 1))
 
                         }
 
-
-
-
                         if (mode != "healthCheck") {
                             // check if file should be filtered out
-                            if (process.platform == 'win32') {
+                            let stringProcessingSlash;
 
-                                var stringProcessingSlash = "\\";
+                            if (process.platform == 'win32') {
+                                stringProcessingSlash = "\\";
                             }
 
                             if (process.platform == 'linux' || process.platform == 'darwin') {
-                                var stringProcessingSlash = "/";
+                                stringProcessingSlash = "/";
                             }
 
                             if (inputPathArray[i].includes('.srt') || inputPathArray[i].includes('.SRT')) {
@@ -642,12 +461,9 @@ process.on('message', (queueInfoBomb) => {
 
                                 filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));   // test
 
+                                const titleWordFilterArray = titleWordFilterArrayImport.split(',');
 
-                                var titleWordFilterArray = titleWordFilterArrayImport
-
-                                titleWordFilterArray = titleWordFilterArray.split(',');
-
-                                for (var j = 0; j < titleWordFilterArray.length; j++) {
+                                for (let j = 0; j < titleWordFilterArray.length; j++) {
 
                                     if (titleWordFilterArray[j] != "") {
                                         if (filePathEndFileType.indexOf(titleWordFilterArray[j]) >= 0) {
@@ -661,43 +477,20 @@ process.on('message', (queueInfoBomb) => {
 
                             }
 
-
                         }
-
-
-
-
-
-
-
-
-
-
-
 
                         sourceQueueArrayCounter++
                         destinationQueueArray.push(outputPathArray[i])
                         destinationFinalQueueArray.push(outputPathArrayFinal[i])
-
-
-
-
-
-
-
-
 
                     }
 
                 } catch (err) { }
             }//
 
-
-
         } else {
 
-
-            for (var i = 0; i < outputPathArray.length; i++) {
+            for (let i = 0; i < outputPathArray.length; i++) {
 
                 try {
 
@@ -705,26 +498,18 @@ process.on('message', (queueInfoBomb) => {
 
                     } else {
 
-
-
-
                         presetArray3.push(presetArray2[i])
-
 
                         sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
 
-
-
                         if ((sourceQueueArrayCounter + 1) % 100 == 0) {
 
-                            var message = [
+                            const message = [
                                 "buildQueue",
                                 (sourceQueueArrayCounter + 1),
                             ];
 
                             process.send(message);
-
-
 
                             updateConsole("File scanner: Building queue:" + (sourceQueueArrayCounter + 1))
 
@@ -733,13 +518,14 @@ process.on('message', (queueInfoBomb) => {
                         if (mode != "healthCheck") {
 
                             // check if file should be filtered out
-                            if (process.platform == 'win32') {
+                            let stringProcessingSlash;
 
-                                var stringProcessingSlash = "\\";
+                            if (process.platform == 'win32') {
+                                stringProcessingSlash = "\\";
                             }
 
                             if (process.platform == 'linux' || process.platform == 'darwin') {
-                                var stringProcessingSlash = "/";
+                                stringProcessingSlash = "/";
                             }
 
                             if (inputPathArray[i].includes('.srt') || inputPathArray[i].includes('.SRT')) {
@@ -754,12 +540,9 @@ process.on('message', (queueInfoBomb) => {
 
                                 filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));   // test
 
+                                const titleWordFilterArray = titleWordFilterArrayImport.split(',');
 
-                                var titleWordFilterArray = titleWordFilterArrayImport
-
-                                titleWordFilterArray = titleWordFilterArray.split(',');
-
-                                for (var j = 0; j < titleWordFilterArray.length; j++) {
+                                for (let j = 0; j < titleWordFilterArray.length; j++) {
 
                                     if (titleWordFilterArray[j] != "") {
                                         if (filePathEndFileType.indexOf(titleWordFilterArray[j]) >= 0) {
@@ -773,8 +556,6 @@ process.on('message', (queueInfoBomb) => {
                             }
                         }
 
-
-
                         sourceQueueArrayCounter++
                         destinationQueueArray.push(outputPathArray[i])
                         destinationFinalQueueArray.push(outputPathArrayFinal[i])
@@ -784,34 +565,9 @@ process.on('message', (queueInfoBomb) => {
                 } catch (err) { }
             }//
 
-
-
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ////
-
-
-
-
 
         // var message = [
         //     "writeRequest",
@@ -820,24 +576,19 @@ process.on('message', (queueInfoBomb) => {
         // ];
         // process.send(message);
 
-
-
         updateConsole("File scanner: Finished")
 
-
         // reverse file queue
-        if(reverseFileQueue_chxbx === true){
+        if (reverseFileQueue_chxbx === true) {
 
-            sourceQueueArray.reverse(); 
+            sourceQueueArray.reverse();
             presetArray3.reverse();
             skipOrCopyArray.reverse();
             destinationQueueArray.reverse();
             destinationFinalQueueArray.reverse();
         }
 
-
-
-        var message = [
+        const completeMessage = [
             "complete",
             totalFileFoundCounter,
             sourceQueueArray,
@@ -847,16 +598,13 @@ process.on('message', (queueInfoBomb) => {
             destinationFinalQueueArray,
             fileNotExistsCounter,
         ];
-        process.send(message);
+        process.send(completeMessage);
 
-
-
-        var message = [
+        const exitMessage = [
             "exitRequest",
         ];
 
-        process.send(message);
-
+        process.send(exitMessage);
 
         //process.exit();
 
@@ -866,10 +614,4 @@ process.on('message', (queueInfoBomb) => {
         process.exit();
     }
 
-
 });
-
-
-
-
-

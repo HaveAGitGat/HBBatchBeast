@@ -1,14 +1,12 @@
 
 function updateConsole(text) {
-    var message = [
+    const message = [
         "consoleMessage",
         text,
     ];
     process.send(message);
 
-
 }
-
 
 process.on('uncaughtException', function (err) {
     //console.error(err.stack);
@@ -16,12 +14,9 @@ process.on('uncaughtException', function (err) {
     process.exit();
 });
 
-
 //global variables
-var shellWorker
-var shell = require('shelljs');
-
-
+let shellWorker
+const shell = require('shelljs');
 
 //console.log(randomvariable)
 
@@ -31,17 +26,16 @@ process.on('message', (infoArray) => {
 
     if (infoArray[0] == "processFile") {
 
-        var workerCommand = infoArray[1];
+        const workerCommand = infoArray[1];
 
         shellWorker = shell.exec(workerCommand, function (code, stdout, stderr, stdin) {
             //console.log('Exit code:', code);
 
-            var message = [
+            const message = [
                 "Exit",
                 code,
             ];
             process.send(message);
-
 
             //console.log('Program output:', stdout+"    PID:"+shellWorker.pid);
             //console.log('stderr:', stderr);
@@ -51,12 +45,11 @@ process.on('message', (infoArray) => {
         });
     }
 
-
     if (infoArray[0] == "exitThread") {
 
         if (infoArray[1] == "itemCancelled") {
 
-            var message = [
+            const message = [
                 "Exit",
                 "Cancelled",
             ];
@@ -66,16 +59,18 @@ process.on('message', (infoArray) => {
 
         try {
 
+            let killCommand;
+
             if (process.platform == 'win32') {
-                var killCommand = 'taskkill /PID ' + shellWorker.pid + ' /T /F'
+                killCommand = 'taskkill /PID ' + shellWorker.pid + ' /T /F'
             }
             if (process.platform == 'linux') {
                 //var killCommand = 'vps -o pid --no-headers --ppid ' + shellWorker.pid
-                var killCommand = 'pkill -P ' + shellWorker.pid
+                killCommand = 'pkill -P ' + shellWorker.pid
             }
             if (process.platform == 'darwin') {
                 //var killCommand = 'pgrep -P ' + shellWorker.pid
-                var killCommand = 'pkill -P ' + shellWorker.pid
+                killCommand = 'pkill -P ' + shellWorker.pid
             }
             if (shell.exec(killCommand).code !== 0) {
                 shell.exit(1);
@@ -87,8 +82,3 @@ process.on('message', (infoArray) => {
         process.exit();
     }
 });
-
-
-
-
-

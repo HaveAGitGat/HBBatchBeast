@@ -1,20 +1,13 @@
 
-var shell = require('shelljs');
-
-
+const shell = require('shelljs');
 
 process.on('message', (infoArray) => {
 
-
-
     if (infoArray[0] == "setPriority") {
 
-
-        var workerCommand = infoArray[1];
-
+        const workerCommand = infoArray[1];
 
         shell.exec(workerCommand, function (code, stdout, stderr, stdin) {
-
 
             process.exit()
         });

@@ -39,6 +39,9 @@ module.exports = [
       ...js.configs.recommended.rules,
       'no-empty': 'off',
       'no-debugger': 'warn',
+      'no-multiple-empty-lines': ['error', {
+        max: 1
+      }],
       'no-redeclare': 'off',
       'no-undef': 'off',
       'no-unused-vars': ['warn', {
@@ -47,7 +50,9 @@ module.exports = [
         varsIgnorePattern: '^_'
       }],
       'no-useless-assignment': 'off',
-      'no-useless-escape': 'off'
+      'no-useless-escape': 'off',
+      'no-var': 'error',
+      'prefer-const': 'error'
     }
   }
 ];

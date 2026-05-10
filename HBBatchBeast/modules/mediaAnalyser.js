@@ -1,10 +1,9 @@
 function updateConsole(text) {
-  var message = [
+  const message = [
     "consoleMessage",
     text,
   ];
   process.send(message);
-
 
 }
 
@@ -18,30 +17,22 @@ process.on('uncaughtException', function (err) {
 
 //console.log(randomvariable)
 
-
-
 //global variable
-
 
 process.on('message', (infoArray) => {
 
-
-
-
   if (infoArray[0] == "analyseThis") {
-
 
     //var workerCommand = infoArray[1];
 
-
-    var filepath = infoArray[1]
+    const filepath = infoArray[1]
 
     if (__dirname.includes('.asar')) {
       process.env.NODE_ENV = "production";
     }
 
-    var ffprobe = require('ffprobe');
-    var ffprobeStaticPath = ''
+    const ffprobe = require('ffprobe');
+    let ffprobeStaticPath;
 
     if (process.env.NODE_ENV == 'production') {
 
@@ -51,13 +42,13 @@ process.on('message', (infoArray) => {
       ffprobeStaticPath = require('ffprobe-static').path
     }
 
-    var thisval
+    let thisval
 
     ffprobe(filepath, { path: ffprobeStaticPath }, function (err, info) {
       //if (err) return done(err);
 
       if (err) {
-        var message = [
+        const message = [
           "fileInfo",
           info,
         ];
@@ -65,9 +56,7 @@ process.on('message', (infoArray) => {
 
         process.exit()
 
-
       }
-
 
       //console.log(info);
 
@@ -77,7 +66,7 @@ process.on('message', (infoArray) => {
 
       console.log(thisval.streams[0]["codec_name"]);
 
-      var message = [
+      const message = [
         "fileInfo",
         info,
       ];
@@ -87,11 +76,8 @@ process.on('message', (infoArray) => {
 
     });
 
-
     //
 
   }
-
-
 
 });
