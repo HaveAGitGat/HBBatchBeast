@@ -3,8 +3,10 @@
     "productName": "hbbatchbeast",
     "description": "A Handbrake GUI for recursive folder conversion and folder watching",
     "version": "0.1.5",
+    "packageManager": "yarn@1.22.22",
     "main": "main.js",
     "scripts": {
+        "lint": "eslint .",
         "start": "electron .",
         "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds --darwinDarkModeSupport=true  --asar.unpackDir='{node_modules/ffprobe-static,node_modules/@ffmpeg-installer}'",
         "package-win": "electron-packager . hbbatchbeast --overwrite  --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"HBBatchBeast\" --asar.unpackDir={node_modules/ffprobe-static,node_modules/@ffmpeg-installer}",
@@ -45,6 +47,11 @@
         "electron": "^3.1.12",
         "electron-installer-dmg": "^2.0.0",
         "electron-packager": "^13.1.1",
-        "electron-winstaller": "^2.7.0"
+        "electron-winstaller": "^2.7.0",
+        "eslint": "10.2.1"
+    },
+    "resolutions": {
+        "@types/estree": "1.0.8",
+        "is-core-module": "2.16.1"
     }
 }
