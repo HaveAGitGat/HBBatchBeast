@@ -44,6 +44,7 @@
         "zingchart": "^2.8.6"
     },
     "devDependencies": {
+        "@eslint/js": "10.0.1",
         "electron": "^3.1.12",
         "electron-installer-dmg": "^2.0.0",
         "electron-packager": "^13.1.1",
