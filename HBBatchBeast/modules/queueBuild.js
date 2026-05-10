@@ -4,7 +4,6 @@ function updateConsole(text) {
         text,
     ];
     process.send(message);
-
 }
 
 process.on('uncaughtException', function (err) {
@@ -70,9 +69,7 @@ process.send(message);
 updateConsole("File scanner: online.")
 
 process.on('message', (queueInfoBomb) => {
-
     if (queueInfoBomb[0] == "queueInfoBomb") {
-
         updateConsole("File scanner: received info")
 
         inputPathStemArray = queueInfoBomb[1]
@@ -113,22 +110,17 @@ process.on('message', (queueInfoBomb) => {
         let replacedFileArray;
 
         if (mode == "healthCheck") {
-
             healthyFileArray = fs.readFileSync(homePath + "/Documents/HBBatchBeast/Logs/healthyFileList.txt", 'utf8');
             healthyFileArray = healthyFileArray.toString().split("\n");
-
         }
 
         if (mode != "healthCheck") {
-
             replacedFileArray = fs.readFileSync(homePath + "/Documents/HBBatchBeast/Logs/originalFileReplacedList.txt", 'utf8');
             replacedFileArray = replacedFileArray.toString().split("\n");
-
         }
 
         // folder loop begin 
         for (let y = 0; y < inputPathStemArray.length; y++) {
-
             inputPathStem = inputPathStemArray[y]   // input folder path with comma:  /path/to/folder,
             outPutPathStem = outPutPathStemArray[y]
 
@@ -147,18 +139,15 @@ process.on('message', (queueInfoBomb) => {
             } catch (err) { }
 
             function traverseDir(inputPathStem) {
-
                 fs.readdirSync(inputPathStem).forEach(file => {
                     const fullPath = path.join(inputPathStem, file);
 
                     try {
                         if (fs.lstatSync(fullPath).isDirectory()) {
-
                             try {
                                 traverseDir(fullPath);
                             } catch (err) { }
                         } else {
-
                             const thisFile = fullPath + "" // path/to/folder/test.mp4
 
                             fileTypeSplit = thisFile.split('.');    // 
@@ -171,18 +160,15 @@ process.on('message', (queueInfoBomb) => {
                             let supportedFileSwitch = 0;
 
                             for (let j = 0; j < supportedFileTypeArray.length; j++) {
-
                                 if (fileType.toLowerCase() == supportedFileTypeArray[j].toLowerCase()) {
                                     supportedFileSwitch = 1;
                                 }
-
                             }
 
                             // compare against healthy file list
 
                             if (mode == "healthCheck") {
                                 for (let j = 0; j < healthyFileArray.length; j++) {
-
                                     if (thisFile == healthyFileArray[j]) {
                                         supportedFileSwitch = 0;
                                     }
@@ -192,10 +178,8 @@ process.on('message', (queueInfoBomb) => {
                             // compare against files already replaced list
 
                             if (mode != "healthCheck") {
-
                                 if (replaceOriginalFile == true || replaceOriginalFileAlways == true ) {
                                     for (let j = 0; j < replacedFileArray.length; j++) {
-
                                         if (thisFile == replacedFileArray[j]) {
                                             supportedFileSwitch = 0;
                                         }
@@ -212,19 +196,15 @@ process.on('message', (queueInfoBomb) => {
                             //If the file type is valid, then process it
 
                             if (supportedFileSwitch == 1) {
-
                                 //document.getElementById("files2").innerHTML += "<p>"+ thisFile+"<\p>";
 
                                 //Here add the full file path to the inputPathArray
 
                                 if (removeApostrophes_chkbx) {
-
                                     const fileNameApostrophesRemoved = thisFile.replace(/'/g, ' ');
                                     fs.renameSync(thisFile, fileNameApostrophesRemoved)
                                     inputPathArray[inputPathArrayCounter] = fileNameApostrophesRemoved + "";
-
                                 } else {
-
                                     inputPathArray[inputPathArrayCounter] = thisFile + "";
                                 }
 
@@ -235,7 +215,6 @@ process.on('message', (queueInfoBomb) => {
                                 // process.send(message);
 
                                 if ((totalFileFoundCounter + 1) % 100 == 0) {
-
                                     // scanWindow.webContents.send('item:count', (totalFileFoundCounter + 1));
                                     //  }
 
@@ -246,7 +225,6 @@ process.on('message', (queueInfoBomb) => {
                                         (totalFileFoundCounter + 1),
                                     ];
                                     process.send(message);
-
                                 }
 
                                 // ipcRenderer.send('item:count', (totalFileFoundCounter + 1));
@@ -278,13 +256,9 @@ process.on('message', (queueInfoBomb) => {
                                 filePathEndFileType = filePathEnd.slice(0, filePathEnd.lastIndexOf('.'));   // test
 
                                 if (filePathEnd.includes('.srt') || filePathEnd.includes('.SRT')) {
-
                                     subfilePath = filePathEndFileType + ".srt";   // "test" +".srt"
-
                                 } else {
-
                                     subfilePath = filePathEndFileType + fileNameSuffixArray[y] + containerType;   // "test" +".mp4"
-
                                 }
 
                                 LongsubfilePath = str.slice(0, str.lastIndexOf(stringProcessingSlash)); //  path/to/folder
@@ -301,10 +275,8 @@ process.on('message', (queueInfoBomb) => {
                                 let outputFolderPathFinal;
 
                                 if (tempConversionFolderCheckedOnOff == true) {
-
                                     outputPathArrayFinal[inputPathArrayCounter] = outPutPathStemFinal + newsubfilePath;
                                     outputFolderPathFinal = outputPathArrayFinal[inputPathArrayCounter].substring(0, outputPathArrayFinal[inputPathArrayCounter].lastIndexOf(stringProcessingSlash));
-
                                 }
 
                                 //if temp folder checked
@@ -312,7 +284,6 @@ process.on('message', (queueInfoBomb) => {
                                 if (tempConversionFolderCheckedOnOff == true) {
                                     if (fs.existsSync(outputPathArrayFinal[inputPathArrayCounter])) {
                                     } else {
-
                                         // var message = [
                                         //     "consoleMessage",
                                         //     "File does not exist: "+outputPathArrayFinal[inputPathArrayCounter] +"",
@@ -323,12 +294,10 @@ process.on('message', (queueInfoBomb) => {
                                     }
                                     //ELSE if temp folder unchecked
                                 } else {
-
                                     //
                                     if (fs.existsSync(outputPathArray[inputPathArrayCounter])) {
 
                                     } else {
-
                                         // var message = [
                                         //     "consoleMessage",
                                         //     "File does not exist: "+outputPathArray[inputPathArrayCounter]+"",
@@ -336,10 +305,8 @@ process.on('message', (queueInfoBomb) => {
                                         // process.send(message);
 
                                         fileNotExistsCounter++
-
                                     }
                                     //
-
                                 }
 
                                 const shell = require('shelljs');
@@ -347,58 +314,42 @@ process.on('message', (queueInfoBomb) => {
                                 if (fs.existsSync(outputFolderPath)) {
 
                                 } else {
-
                                     if (outputFolderPath != outputFolderPathold) {
                                         // fs.mkdirSync(outputFolderPath);
 
                                         try {
-
                                             if (mode != "healthCheck") {
-
                                                 shell.mkdir('-p', outputFolderPath);
-
                                             }
-
                                         } catch (err) { }
 
                                         outputFolderPathold = outputFolderPath;
                                     }
-
                                 }
 
                                 //AND if tempfolderchecked
 
                                 if (tempConversionFolderCheckedOnOff == true) {
-
                                     if (fs.existsSync(outputFolderPathFinal)) {
 
                                     } else {
-
                                         if (outputFolderPathFinal != outputFolderPathFinalold) {
-
                                             //fs.mkdirSync(outputFolderPathFinal);
 
                                             try {
-
                                                 if (mode != "healthCheck") {
                                                     shell.mkdir('-p', outputFolderPathFinal);
-
                                                 }
-
                                             } catch (err) { }
 
                                             outputFolderPathFinalold = outputFolderPathFinal;
-
                                         }
                                     }
                                 }
 
                                 inputPathArrayCounter++;
-
                             } //end supported file switch
-
                         }  //end current file, go to next
-
                     } catch (err) { }
                 });
             }
@@ -414,15 +365,11 @@ process.on('message', (queueInfoBomb) => {
         updateConsole("File scanner: Building queue")
 
         if (tempConversionFolderCheckedOnOff == true) {
-
             for (let i = 0; i < outputPathArray.length; i++) {
-
                 try {
-
                     if (fs.existsSync(outputPathArrayFinal[i])) {
 
                     } else {
-
                         presetArray3.push(presetArray2[i])
 
                         sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
@@ -435,7 +382,6 @@ process.on('message', (queueInfoBomb) => {
                             process.send(message);
 
                             updateConsole("File scanner: Building queue:" + (sourceQueueArrayCounter + 1))
-
                         }
 
                         if (mode != "healthCheck") {
@@ -451,9 +397,7 @@ process.on('message', (queueInfoBomb) => {
                             }
 
                             if (inputPathArray[i].includes('.srt') || inputPathArray[i].includes('.SRT')) {
-
                                 skipOrCopyArray[sourceQueueArrayCounter] = 1;
-
                             } else {
                                 pointer = inputPathArray[i].split(stringProcessingSlash);
 
@@ -464,46 +408,34 @@ process.on('message', (queueInfoBomb) => {
                                 const titleWordFilterArray = titleWordFilterArrayImport.split(',');
 
                                 for (let j = 0; j < titleWordFilterArray.length; j++) {
-
                                     if (titleWordFilterArray[j] != "") {
                                         if (filePathEndFileType.indexOf(titleWordFilterArray[j]) >= 0) {
                                             // supportedFileSwitch = 0;
 
                                             skipOrCopyArray[sourceQueueArrayCounter] = 1;
-
                                         }
                                     }
                                 }
-
                             }
-
                         }
 
                         sourceQueueArrayCounter++
                         destinationQueueArray.push(outputPathArray[i])
                         destinationFinalQueueArray.push(outputPathArrayFinal[i])
-
                     }
-
                 } catch (err) { }
             }//
-
         } else {
-
             for (let i = 0; i < outputPathArray.length; i++) {
-
                 try {
-
                     if (fs.existsSync(outputPathArray[i])) {
 
                     } else {
-
                         presetArray3.push(presetArray2[i])
 
                         sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
 
                         if ((sourceQueueArrayCounter + 1) % 100 == 0) {
-
                             const message = [
                                 "buildQueue",
                                 (sourceQueueArrayCounter + 1),
@@ -512,11 +444,9 @@ process.on('message', (queueInfoBomb) => {
                             process.send(message);
 
                             updateConsole("File scanner: Building queue:" + (sourceQueueArrayCounter + 1))
-
                         }
 
                         if (mode != "healthCheck") {
-
                             // check if file should be filtered out
                             let stringProcessingSlash;
 
@@ -529,11 +459,8 @@ process.on('message', (queueInfoBomb) => {
                             }
 
                             if (inputPathArray[i].includes('.srt') || inputPathArray[i].includes('.SRT')) {
-
                                 skipOrCopyArray[sourceQueueArrayCounter] = 1;
-
                             } else {
-
                                 pointer = inputPathArray[i].split(stringProcessingSlash);
 
                                 filePathEnd = pointer[pointer.length - 1]   //     test.mp4
@@ -543,13 +470,11 @@ process.on('message', (queueInfoBomb) => {
                                 const titleWordFilterArray = titleWordFilterArrayImport.split(',');
 
                                 for (let j = 0; j < titleWordFilterArray.length; j++) {
-
                                     if (titleWordFilterArray[j] != "") {
                                         if (filePathEndFileType.indexOf(titleWordFilterArray[j]) >= 0) {
                                             // supportedFileSwitch = 0;
 
                                             skipOrCopyArray[sourceQueueArrayCounter] = 1;
-
                                         }
                                     }
                                 }
@@ -559,12 +484,9 @@ process.on('message', (queueInfoBomb) => {
                         sourceQueueArrayCounter++
                         destinationQueueArray.push(outputPathArray[i])
                         destinationFinalQueueArray.push(outputPathArrayFinal[i])
-
                     }
-
                 } catch (err) { }
             }//
-
         }
 
         ////
@@ -580,7 +502,6 @@ process.on('message', (queueInfoBomb) => {
 
         // reverse file queue
         if (reverseFileQueue_chxbx === true) {
-
             sourceQueueArray.reverse();
             presetArray3.reverse();
             skipOrCopyArray.reverse();
@@ -607,11 +528,9 @@ process.on('message', (queueInfoBomb) => {
         process.send(exitMessage);
 
         //process.exit();
-
     }
 
     if (queueInfoBomb[0] == "exitApproved") {
         process.exit();
     }
-
 });

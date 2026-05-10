@@ -4,7 +4,6 @@ function updateConsole(text) {
     text,
   ];
   process.send(message);
-
 }
 
 process.on('uncaughtException', function (err) {
@@ -20,9 +19,7 @@ process.on('uncaughtException', function (err) {
 //global variable
 
 process.on('message', (infoArray) => {
-
   if (infoArray[0] == "analyseThis") {
-
     //var workerCommand = infoArray[1];
 
     const filepath = infoArray[1]
@@ -35,9 +32,7 @@ process.on('message', (infoArray) => {
     let ffprobeStaticPath;
 
     if (process.env.NODE_ENV == 'production') {
-
       ffprobeStaticPath = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
-
     } else {
       ffprobeStaticPath = require('ffprobe-static').path
     }
@@ -55,7 +50,6 @@ process.on('message', (infoArray) => {
         process.send(message);
 
         process.exit()
-
       }
 
       //console.log(info);
@@ -73,11 +67,8 @@ process.on('message', (infoArray) => {
       process.send(message);
 
       process.exit()
-
     });
 
     //
-
   }
-
 });

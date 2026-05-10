@@ -5,7 +5,6 @@ function updateConsole(text) {
         text,
     ];
     process.send(message);
-
 }
 
 process.on('uncaughtException', function (err) {
@@ -21,11 +20,9 @@ const shell = require('shelljs');
 //console.log(randomvariable)
 
 process.on('message', (infoArray) => {
-
     console.log("shellThread")
 
     if (infoArray[0] == "processFile") {
-
         const workerCommand = infoArray[1];
 
         shellWorker = shell.exec(workerCommand, function (code, stdout, stderr, stdin) {
@@ -46,19 +43,15 @@ process.on('message', (infoArray) => {
     }
 
     if (infoArray[0] == "exitThread") {
-
         if (infoArray[1] == "itemCancelled") {
-
             const message = [
                 "Exit",
                 "Cancelled",
             ];
             process.send(message);
-
         }
 
         try {
-
             let killCommand;
 
             if (process.platform == 'win32') {
@@ -75,7 +68,6 @@ process.on('message', (infoArray) => {
             if (shell.exec(killCommand).code !== 0) {
                 shell.exit(1);
             }
-
         } catch (err) { }
 
         //process.send("Exit,"+"Cancelled");

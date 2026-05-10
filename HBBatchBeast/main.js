@@ -31,7 +31,6 @@ if (__dirname.includes('.asar')) { // If dev
 let appIcon
 
 app.on('ready', function () {
-
     console.log("App loading")
 
     //create new window
@@ -65,7 +64,6 @@ app.on('ready', function () {
     Menu.setApplicationMenu(mainMenu);
 
     if (process.platform == 'win32') {
-
         appIcon = new Tray(iconpath)
 
         const contextMenu = Menu.buildFromTemplate([
@@ -77,9 +75,7 @@ app.on('ready', function () {
             {
 
                 label: 'Clear notification', click: function () {
-
                     appIcon.setImage(iconpath);
-
                 }
             },
             {
@@ -122,7 +118,6 @@ app.on('ready', function () {
 
         //appIcon.setToolTip('Error!');
     }
-
 });
 
 let platform;
@@ -137,31 +132,25 @@ if (process.platform == 'win32') {
 if (process.platform == 'linux') {
     platform = "png"
     iconpath = "./assets/icons/png/icon.png"
-
 }
 
 if (process.platform == 'darwin') {
     platform = "mac"
     iconpath = "./assets/icons/mac/icon.icns"
-
 }
 
 //Catch icon updates
 ipcMain.on('item:add', function (e, item) {
-
     //  console.log(item);
 
     const icon = path.join(__dirname, '.\\assets\\icons\\' + platform + '\\' + item + '.ico')
 
     //var icon ="./assets/icons/"+platform+"/"+item+"."+type;
     appIcon.setImage(icon);
-
 });
 
 ipcMain.on('item:ready', function (e, item) {
-
     mainWindow.webContents.send('item:ready', "Test");
-
 });
 
 ipcMain.on('mediaview:ready', function (e, item) {
@@ -199,10 +188,8 @@ const mainMenuTemplate = [
 //If mac, add empty object to menu
 
 if (process.platform == 'darwin') {
-
     //adds on empty object '{}' to beginning of array. Need this part for Macs so 'file' shows in top right of main window
     mainMenuTemplate.unshift({});
-
 }
 
 //Add developer tools item if not in production
@@ -224,7 +211,6 @@ if (process.env.NODE_ENV != 'production') {
         ]
 
     });
-
 }
 
 //Catch item:add
