@@ -4,16 +4,16 @@
 
 const workerNumber = process.argv[2]
 
-function updateConsole(workerNumber, text) {
+const updateConsole = (workerNumber, text) => {
     const message = [
         workerNumber,
         "consoleMessage",
         text,
     ];
     process.send(message);
-}
+};
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
     console.error(err.stack);
 
     updateConsole(workerNumber, ":" + err.stack)
@@ -326,8 +326,48 @@ process.on('message', (m) => {
 
             checkifQueuePause();
         } else if (skipOrCopy == 1) {
+            const endCyle = () => {
+                checkifQueuePause();
+            };
+
             if (copyOnOff == true || currentSourceLine.includes('.srt') || currentSourceLine.includes('.SRT')) {
                 // currentSourceLine + "\" -o \"" + currentDestinationLine
+                const copyFail = () => {
+                    const message = [
+                        workerNumber,
+                        "copiedFail",
+                        globalQueueNumber,
+                        "Copy",
+                        errorLogFull
+                    ];
+                    process.send(message);
+                };
+
+                const copySuccess = () => {
+                    const message = [
+                        workerNumber,
+                        "copied",
+                        globalQueueNumber,
+                        "Copy",
+                        errorLogFull
+                    ];
+                    process.send(message);
+
+                    if (deleteSourceFilesOnOff == true) {
+                        const message = [
+                            workerNumber,
+                            "deleteThisFile",
+                            globalQueueNumber,
+
+                        ];
+                        process.send(message);
+
+                        // if (fs.existsSync(currentSourceLine)) {
+                        //     fs.unlinkSync(currentSourceLine)
+                        // }
+                    }
+                };
+
                 if (tempFolderSelected == true) {
                     try {
                         updateConsole(workerNumber, "Copying file:" + currentSourceLine + " to " + currentDestinationFinalLine_unmodified)
@@ -352,42 +392,6 @@ process.on('message', (m) => {
                     }
                 }
 
-                function copySuccess() {
-                    const message = [
-                        workerNumber,
-                        "copied",
-                        globalQueueNumber,
-                        "Copy",
-                        errorLogFull
-                    ];
-                    process.send(message);
-
-                    if (deleteSourceFilesOnOff == true) {
-                        const message = [
-                            workerNumber,
-                            "deleteThisFile",
-                            globalQueueNumber,
-
-                        ];
-                        process.send(message);
-
-                        // if (fs.existsSync(currentSourceLine)) {
-                        //     fs.unlinkSync(currentSourceLine)
-                        // }
-                    }
-                }
-
-                function copyFail() {
-                    const message = [
-                        workerNumber,
-                        "copiedFail",
-                        globalQueueNumber,
-                        "Copy",
-                        errorLogFull
-                    ];
-                    process.send(message);
-                }
-
                 endCyle();
             } else {
                 const message = [
@@ -402,10 +406,6 @@ process.on('message', (m) => {
                 updateConsole(workerNumber, "Skipped: File title word filter:" + currentSourceLine)
 
                 endCyle();
-            }
-
-            function endCyle() {
-                checkifQueuePause();
             }
         } else {
             updateConsole(workerNumber, "Launching FFprobe:" + currentSourceLine)
@@ -425,314 +425,13 @@ process.on('message', (m) => {
 
             updateConsole(workerNumber, "Sent to FFprobe:" + currentSourceLine)
 
-            infoExtractModule.on('message', function (message) {
+            infoExtractModule.on('message', (message) => {
                 if (message[0] == "consoleMessage") {
                     updateConsole("Worker " + workerNumber + ":" + message[1] + "");
                 }
 
                 if (message[0] == "fileInfo") {
-                    updateConsole(workerNumber, "FFprobe response received:" + currentSourceLine)
-
-                    const jsonInfo = message[1]
-
-                    try {
-                        frameCount = jsonInfo.streams[0]["nb_frames"]
-                        updateConsole(workerNumber, "Source file frame count extract:Success:" + currentSourceLine)
-                    } catch (err) {
-                        updateConsole(workerNumber, "Source file frame count extract:Fail:" + currentSourceLine)
-                    }
-
-                    try {
-                        source_file_length = jsonInfo.streams[0]["duration"]
-                        updateConsole(workerNumber, "Source file length extract:Success:" + currentSourceLine)
-                    } catch (err) {
-                        updateConsole(workerNumber, "Source file length extract:Fail:" + currentSourceLine)
-                    }
-
-                    let filterReason = "";
-                    let processFileY;
-                    let validateArray;
-
-                    if (mode == "healthCheck") {
-                        try {
-                            for (let i = 0; i < jsonInfo.streams.length; i++) {
-                                Object.keys(jsonInfo.streams[i]).forEach(function (key) {
-                                    // JSONBomb += key+": '"+jsonInfo.streams[i][key]+"' \n"
-                                });
-                            }
-
-                            const message = [
-                                workerNumber,
-                                "FFPROBE",
-                                globalQueueNumber,
-                                "OK",
-                                currentSourceLine,
-
-                            ];
-                            process.send(message);
-                            updateConsole(workerNumber, "FFprobe OK:" + currentSourceLine)
-                        } catch (err) {
-                            const message = [
-                                workerNumber,
-                                "FFPROBE",
-                                globalQueueNumber,
-                                "Fail",
-                                currentSourceLine,
-                            ];
-                            process.send(message);
-                            updateConsole(workerNumber, "FFprobe Fail:" + currentSourceLine)
-                        }
-
-                        processFileY = true
-                    } else if (includeAnyFilesWithProperties == true || includeAllFilesWithProperties == true) {
-                        try {
-                            processFileY = false
-                            validateArray = []
-                            filterReason = "Excluded, does not meet 'Include' conditions"
-
-                            fileFiltersIncludeArray = fileFiltersIncludeArray.split(',');
-
-                            for (let i = 0; i < jsonInfo.streams.length; i++) {
-                                Object.keys(jsonInfo.streams[i]).forEach(function (key) {
-                                    for (let j = 0; j < fileFiltersIncludeArray.length; j++) {
-                                        if (fileFiltersIncludeArray[j].includes(key + ": '" + jsonInfo.streams[i][key] + "'")) {
-                                            processFileY = true
-                                            filterReason = "Include: " + key + ": '" + jsonInfo.streams[i][key] + "' "
-                                            validateArray.push(true)
-                                        }
-                                    }
-                                });
-                            }
-
-                            if (includeAllFilesWithProperties == true) {
-                                if ((validateArray.length + 1) == fileFiltersIncludeArray.length) {
-                                    processFileY = true
-                                } else {
-                                    processFileY = false
-                                }
-                            }
-
-                            const message = [
-                                workerNumber,
-                                "FFPROBE",
-                                globalQueueNumber,
-                                "OK",
-                                currentSourceLine,
-                            ];
-                            process.send(message);
-                            updateConsole(workerNumber, "FFprobe OK:" + currentSourceLine)
-                        } catch (err) {
-                            const message = [
-                                workerNumber,
-                                "FFPROBE",
-                                globalQueueNumber,
-                                "Fail",
-                                currentSourceLine,
-                            ];
-                            process.send(message);
-                            updateConsole(workerNumber, "FFprobe Fail:" + currentSourceLine)
-
-                            processFileY = true
-                        }
-
-                        minmaxThreshold();
-                    } else if (excludeAnyFilesWithProperties == true || excludeAllFilesWithProperties == true) {
-                        try {
-                            processFileY = true
-                            validateArray = []
-                            //   fileFiltersExcludeArray = "codec_name: 'h264',codec_name: 'aac'"
-                            // codec_name: 'h264',codec_name: 'aac',channel_layout: 'stereo',codec_long_name: 'H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10'
-                            fileFiltersExcludeArray = fileFiltersExcludeArray.split(',');
-
-                            for (let i = 0; i < jsonInfo.streams.length; i++) {
-                                Object.keys(jsonInfo.streams[i]).forEach(function (key) {
-                                    for (let j = 0; j < fileFiltersExcludeArray.length; j++) {
-                                        if (fileFiltersExcludeArray[j].includes(key + ": '" + jsonInfo.streams[i][key] + "'")) {
-                                            processFileY = false
-                                            filterReason += "Exclude: " + key + ": '" + jsonInfo.streams[i][key] + "' "
-                                            validateArray.push(true)
-                                        }
-                                    }
-                                });
-                            }
-
-                            if (excludeAllFilesWithProperties == true) {
-                                if ((validateArray.length + 1) == fileFiltersExcludeArray.length) {
-                                    processFileY = false
-                                } else {
-                                    processFileY = true
-                                }
-                            }
-
-                            const message = [
-                                workerNumber,
-                                "FFPROBE",
-                                globalQueueNumber,
-                                "OK",
-                                currentSourceLine,
-                            ];
-                            process.send(message);
-                            updateConsole(workerNumber, "FFprobe OK:" + currentSourceLine)
-                        } catch (err) {
-                            const message = [
-                                workerNumber,
-                                "FFPROBE",
-                                globalQueueNumber,
-                                "Fail",
-                                currentSourceLine,
-
-                            ];
-                            process.send(message);
-                            updateConsole(workerNumber, "FFprobe Fail:" + currentSourceLine)
-
-                            processFileY = true
-                        }
-
-                        minmaxThreshold();
-                    } else {
-                        try {
-                            for (let i = 0; i < jsonInfo.streams.length; i++) {
-                                Object.keys(jsonInfo.streams[i]).forEach(function (key) {
-
-                                });
-                            }
-
-                            const message = [
-                                workerNumber,
-                                "FFPROBE",
-                                globalQueueNumber,
-                                "OK",
-                                currentSourceLine,
-                            ];
-                            process.send(message);
-                            updateConsole(workerNumber, "FFprobe OK:" + currentSourceLine)
-                        } catch (err) {
-                            const message = [
-                                workerNumber,
-                                "FFPROBE",
-                                globalQueueNumber,
-                                "Fail",
-                                currentSourceLine,
-
-                            ];
-                            process.send(message);
-                            updateConsole(workerNumber, "FFprobe Fail:" + currentSourceLine)
-                        }
-                        processFileY = true
-
-                        minmaxThreshold();
-                    }
-
-                    function minmaxThreshold() {
-                        if (minimumFileSizeOnOff == true || maximumFileSizeOnOff == true) {
-                            //
-
-                            try {
-                                let singleFileSize = fs.statSync(currentSourceLine)
-                                singleFileSize = singleFileSize.size
-                                const fileSizeInMbytes = singleFileSize / 1000000.0;
-
-                                if (minimumFileSizeOnOff == true) {
-                                    if (fileSizeInMbytes < minimumFileSize) {
-                                        processFileY = false
-                                        filterReason += "File below minimum MB size "
-                                    }
-                                }
-
-                                if (maximumFileSizeOnOff == true) {
-                                    if (fileSizeInMbytes > maximumFileSize) {
-                                        processFileY = false
-                                        filterReason += "File above maximum MB size "
-                                    }
-                                }
-                            } catch (err) { }
-                        }
-                    }
-
-                    //jsonInfo.streams[0]["codec_name"] == "h264"
-                    if (processFileY == true) {
-                        processFile();
-                    } else {
-                        if (copyOnOff == true) {
-                            // currentSourceLine + "\" -o \"" + currentDestinationLine
-                            if (tempFolderSelected == true) {
-                                try {
-                                    updateConsole(workerNumber, "Copying file:" + currentSourceLine + " to " + currentDestinationFinalLine_unmodified)
-                                    fs.copyFileSync(currentSourceLine, currentDestinationFinalLine_unmodified);
-                                    updateConsole(workerNumber, "Copy successful:" + currentSourceLine + " to " + currentDestinationFinalLine_unmodified)
-                                    copySuccess();
-                                } catch (err) {
-                                    updateConsole(workerNumber, "Copy failed:" + currentSourceLine + " to " + currentDestinationFinalLine_unmodified)
-                                    copyFail();
-                                }
-                            } else {
-                                try {
-                                    updateConsole(workerNumber, "Copying file:" + currentSourceLine + " to " + currentDestinationLine_unmodified)
-                                    fs.copyFileSync(currentSourceLine, currentDestinationLine_unmodified);
-                                    updateConsole(workerNumber, "Copy successful:" + currentSourceLine + " to " + currentDestinationLine_unmodified)
-                                    copySuccess();
-                                } catch (err) {
-                                    updateConsole(workerNumber, "Copy failed:" + currentSourceLine + " to " + currentDestinationLine_unmodified)
-                                    copyFail();
-                                }
-                            }
-
-                            function copySuccess() {
-                                const message = [
-                                    workerNumber,
-                                    "copied",
-                                    globalQueueNumber,
-                                    "Copy",
-                                    errorLogFull
-                                ];
-                                process.send(message);
-
-                                if (deleteSourceFilesOnOff == true) {
-                                    const message = [
-                                        workerNumber,
-                                        "deleteThisFile",
-                                        globalQueueNumber,
-
-                                    ];
-                                    process.send(message);
-
-                                    // if (fs.existsSync(currentSourceLine)) {
-                                    //     fs.unlinkSync(currentSourceLine)
-                                    // }
-                                }
-                            }
-
-                            function copyFail() {
-                                const message = [
-                                    workerNumber,
-                                    "copiedFail",
-                                    globalQueueNumber,
-                                    "Copy",
-                                    errorLogFull
-                                ];
-                                process.send(message);
-                            }
-
-                            endCyle();
-                        } else {
-                            const message = [
-                                workerNumber,
-                                "Skipped: File property filter:" + filterReason,
-                                globalQueueNumber,
-                                "Skip",
-                                errorLogFull
-                            ];
-                            process.send(message);
-
-                            endCyle();
-                        }
-
-                        function endCyle() {
-                            checkifQueuePause();
-                        }
-                    }
-
-                    function processFile() {
+                    const processFile = () => {
                         //
 
                         const childProcess = require("child_process");
@@ -755,7 +454,7 @@ process.on('message', (m) => {
                         updateConsole(workerNumber, "Sending command to sub-worker:" + workerCommand)
                         shellThreadModule.send(infoArray);
 
-                        shellThreadModule.stdout.on('data', function (data) {
+                        shellThreadModule.stdout.on('data', (data) => {
                             //  console.log('stdoutWorker: ' + data);
                             //log console output to text file
 
@@ -823,7 +522,7 @@ process.on('message', (m) => {
                             }
                         });
 
-                        shellThreadModule.stderr.on('data', function (data) {
+                        shellThreadModule.stderr.on('data', (data) => {
                             // console.log('stderrorWorker: ' + data);
                             const str = "" + data;
 
@@ -882,12 +581,12 @@ process.on('message', (m) => {
                             }
                         });
 
-                        shellThreadModule.on("exit", function (code, ) {
+                        shellThreadModule.on("exit", (code, ) => {
                             //  console.log('shellThreadExited:', code,);
                             updateConsole(workerNumber, "Sub-worker exited")
                         });
 
-                        shellThreadModule.on('message', function (message) {
+                        shellThreadModule.on('message', (message) => {
                             if (message[0] == "consoleMessage") {
                                 updateConsole("Worker " + workerNumber + ":" + message[1] + "");
                             }
@@ -936,6 +635,307 @@ process.on('message', (m) => {
                                 /// exit finish
                             }
                         });
+                    };
+
+                    const minmaxThreshold = () => {
+                        if (minimumFileSizeOnOff == true || maximumFileSizeOnOff == true) {
+                            //
+
+                            try {
+                                let singleFileSize = fs.statSync(currentSourceLine)
+                                singleFileSize = singleFileSize.size
+                                const fileSizeInMbytes = singleFileSize / 1000000.0;
+
+                                if (minimumFileSizeOnOff == true) {
+                                    if (fileSizeInMbytes < minimumFileSize) {
+                                        processFileY = false
+                                        filterReason += "File below minimum MB size "
+                                    }
+                                }
+
+                                if (maximumFileSizeOnOff == true) {
+                                    if (fileSizeInMbytes > maximumFileSize) {
+                                        processFileY = false
+                                        filterReason += "File above maximum MB size "
+                                    }
+                                }
+                            } catch (err) { }
+                        }
+                    };
+
+                    updateConsole(workerNumber, "FFprobe response received:" + currentSourceLine)
+
+                    const jsonInfo = message[1]
+
+                    try {
+                        frameCount = jsonInfo.streams[0]["nb_frames"]
+                        updateConsole(workerNumber, "Source file frame count extract:Success:" + currentSourceLine)
+                    } catch (err) {
+                        updateConsole(workerNumber, "Source file frame count extract:Fail:" + currentSourceLine)
+                    }
+
+                    try {
+                        source_file_length = jsonInfo.streams[0]["duration"]
+                        updateConsole(workerNumber, "Source file length extract:Success:" + currentSourceLine)
+                    } catch (err) {
+                        updateConsole(workerNumber, "Source file length extract:Fail:" + currentSourceLine)
+                    }
+
+                    let filterReason = "";
+                    let processFileY;
+                    let validateArray;
+
+                    if (mode == "healthCheck") {
+                        try {
+                            for (let i = 0; i < jsonInfo.streams.length; i++) {
+                                Object.keys(jsonInfo.streams[i]).forEach((key) => {
+                                    // JSONBomb += key+": '"+jsonInfo.streams[i][key]+"' \n"
+                                });
+                            }
+
+                            const message = [
+                                workerNumber,
+                                "FFPROBE",
+                                globalQueueNumber,
+                                "OK",
+                                currentSourceLine,
+
+                            ];
+                            process.send(message);
+                            updateConsole(workerNumber, "FFprobe OK:" + currentSourceLine)
+                        } catch (err) {
+                            const message = [
+                                workerNumber,
+                                "FFPROBE",
+                                globalQueueNumber,
+                                "Fail",
+                                currentSourceLine,
+                            ];
+                            process.send(message);
+                            updateConsole(workerNumber, "FFprobe Fail:" + currentSourceLine)
+                        }
+
+                        processFileY = true
+                    } else if (includeAnyFilesWithProperties == true || includeAllFilesWithProperties == true) {
+                        try {
+                            processFileY = false
+                            validateArray = []
+                            filterReason = "Excluded, does not meet 'Include' conditions"
+
+                            fileFiltersIncludeArray = fileFiltersIncludeArray.split(',');
+
+                            for (let i = 0; i < jsonInfo.streams.length; i++) {
+                                Object.keys(jsonInfo.streams[i]).forEach((key) => {
+                                    for (let j = 0; j < fileFiltersIncludeArray.length; j++) {
+                                        if (fileFiltersIncludeArray[j].includes(key + ": '" + jsonInfo.streams[i][key] + "'")) {
+                                            processFileY = true
+                                            filterReason = "Include: " + key + ": '" + jsonInfo.streams[i][key] + "' "
+                                            validateArray.push(true)
+                                        }
+                                    }
+                                });
+                            }
+
+                            if (includeAllFilesWithProperties == true) {
+                                if ((validateArray.length + 1) == fileFiltersIncludeArray.length) {
+                                    processFileY = true
+                                } else {
+                                    processFileY = false
+                                }
+                            }
+
+                            const message = [
+                                workerNumber,
+                                "FFPROBE",
+                                globalQueueNumber,
+                                "OK",
+                                currentSourceLine,
+                            ];
+                            process.send(message);
+                            updateConsole(workerNumber, "FFprobe OK:" + currentSourceLine)
+                        } catch (err) {
+                            const message = [
+                                workerNumber,
+                                "FFPROBE",
+                                globalQueueNumber,
+                                "Fail",
+                                currentSourceLine,
+                            ];
+                            process.send(message);
+                            updateConsole(workerNumber, "FFprobe Fail:" + currentSourceLine)
+
+                            processFileY = true
+                        }
+
+                        minmaxThreshold();
+                    } else if (excludeAnyFilesWithProperties == true || excludeAllFilesWithProperties == true) {
+                        try {
+                            processFileY = true
+                            validateArray = []
+                            //   fileFiltersExcludeArray = "codec_name: 'h264',codec_name: 'aac'"
+                            // codec_name: 'h264',codec_name: 'aac',channel_layout: 'stereo',codec_long_name: 'H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10'
+                            fileFiltersExcludeArray = fileFiltersExcludeArray.split(',');
+
+                            for (let i = 0; i < jsonInfo.streams.length; i++) {
+                                Object.keys(jsonInfo.streams[i]).forEach((key) => {
+                                    for (let j = 0; j < fileFiltersExcludeArray.length; j++) {
+                                        if (fileFiltersExcludeArray[j].includes(key + ": '" + jsonInfo.streams[i][key] + "'")) {
+                                            processFileY = false
+                                            filterReason += "Exclude: " + key + ": '" + jsonInfo.streams[i][key] + "' "
+                                            validateArray.push(true)
+                                        }
+                                    }
+                                });
+                            }
+
+                            if (excludeAllFilesWithProperties == true) {
+                                if ((validateArray.length + 1) == fileFiltersExcludeArray.length) {
+                                    processFileY = false
+                                } else {
+                                    processFileY = true
+                                }
+                            }
+
+                            const message = [
+                                workerNumber,
+                                "FFPROBE",
+                                globalQueueNumber,
+                                "OK",
+                                currentSourceLine,
+                            ];
+                            process.send(message);
+                            updateConsole(workerNumber, "FFprobe OK:" + currentSourceLine)
+                        } catch (err) {
+                            const message = [
+                                workerNumber,
+                                "FFPROBE",
+                                globalQueueNumber,
+                                "Fail",
+                                currentSourceLine,
+
+                            ];
+                            process.send(message);
+                            updateConsole(workerNumber, "FFprobe Fail:" + currentSourceLine)
+
+                            processFileY = true
+                        }
+
+                        minmaxThreshold();
+                    } else {
+                        try {
+                            for (let i = 0; i < jsonInfo.streams.length; i++) {
+                                Object.keys(jsonInfo.streams[i]).forEach((key) => {
+
+                                });
+                            }
+
+                            const message = [
+                                workerNumber,
+                                "FFPROBE",
+                                globalQueueNumber,
+                                "OK",
+                                currentSourceLine,
+                            ];
+                            process.send(message);
+                            updateConsole(workerNumber, "FFprobe OK:" + currentSourceLine)
+                        } catch (err) {
+                            const message = [
+                                workerNumber,
+                                "FFPROBE",
+                                globalQueueNumber,
+                                "Fail",
+                                currentSourceLine,
+
+                            ];
+                            process.send(message);
+                            updateConsole(workerNumber, "FFprobe Fail:" + currentSourceLine)
+                        }
+                        processFileY = true
+
+                        minmaxThreshold();
+                    }
+
+                    //jsonInfo.streams[0]["codec_name"] == "h264"
+                    if (processFileY == true) {
+                        processFile();
+                    } else {
+                        const endCyle = () => {
+                            checkifQueuePause();
+                        };
+
+                        if (copyOnOff == true) {
+                            // currentSourceLine + "\" -o \"" + currentDestinationLine
+                            const copyFail = () => {
+                                const message = [
+                                    workerNumber,
+                                    "copiedFail",
+                                    globalQueueNumber,
+                                    "Copy",
+                                    errorLogFull
+                                ];
+                                process.send(message);
+                            };
+
+                            const copySuccess = () => {
+                                const message = [
+                                    workerNumber,
+                                    "copied",
+                                    globalQueueNumber,
+                                    "Copy",
+                                    errorLogFull
+                                ];
+                                process.send(message);
+
+                                if (deleteSourceFilesOnOff == true) {
+                                    const message = [
+                                        workerNumber,
+                                        "deleteThisFile",
+                                        globalQueueNumber,
+
+                                    ];
+                                    process.send(message);
+
+                                    // if (fs.existsSync(currentSourceLine)) {
+                                    //     fs.unlinkSync(currentSourceLine)
+                                    // }
+                                }
+                            };
+
+                            if (tempFolderSelected == true) {
+                                try {
+                                    updateConsole(workerNumber, "Copying file:" + currentSourceLine + " to " + currentDestinationFinalLine_unmodified)
+                                    fs.copyFileSync(currentSourceLine, currentDestinationFinalLine_unmodified);
+                                    updateConsole(workerNumber, "Copy successful:" + currentSourceLine + " to " + currentDestinationFinalLine_unmodified)
+                                    copySuccess();
+                                } catch (err) {
+                                    updateConsole(workerNumber, "Copy failed:" + currentSourceLine + " to " + currentDestinationFinalLine_unmodified)
+                                    copyFail();
+                                }
+                            } else {
+                                try {
+                                    updateConsole(workerNumber, "Copying file:" + currentSourceLine + " to " + currentDestinationLine_unmodified)
+                                    fs.copyFileSync(currentSourceLine, currentDestinationLine_unmodified);
+                                    updateConsole(workerNumber, "Copy successful:" + currentSourceLine + " to " + currentDestinationLine_unmodified)
+                                    copySuccess();
+                                } catch (err) {
+                                    updateConsole(workerNumber, "Copy failed:" + currentSourceLine + " to " + currentDestinationLine_unmodified)
+                                    copyFail();
+                                }
+                            }
+
+                            endCyle();
+                        } else {
+                            const message = [
+                                workerNumber,
+                                "Skipped: File property filter:" + filterReason,
+                                globalQueueNumber,
+                                "Skip",
+                                errorLogFull
+                            ];
+                            process.send(message);
+
+                            endCyle();
+                        }
                     }
                 }
             });
@@ -962,7 +962,7 @@ process.on('message', (m) => {
     }
 });
 
-function moveCorruptedFile() {
+const moveCorruptedFile = () => {
     //  currentSourceLine  corruptDestinationPath
 
     let stringProcessingSlash;
@@ -990,9 +990,9 @@ function moveCorruptedFile() {
     } catch (err) {
         updateConsole(workerNumber, "Moving corrupt file unsuccessful:" + currentSourceLine + " to " + corruptDestinationPath)
     }
-}
+};
 
-function workerEncounteredError(messageOne) {
+const workerEncounteredError = (messageOne) => {
     if (messageOne == "Cancelled") {
         const message = [
             workerNumber,
@@ -1121,9 +1121,9 @@ function workerEncounteredError(messageOne) {
             checkifQueuePause();
         }
     }
-}
+};
 
-function workerNotEncounteredError() {
+const workerNotEncounteredError = () => {
     if (mode == "healthCheck") {
         const appendMessage = [
             workerNumber,
@@ -1166,7 +1166,7 @@ function workerNotEncounteredError() {
 
             try {
                 updateConsole(workerNumber, "Launching bat file:" + pathBat)
-                require('child_process').execSync(pathBat, function (err, stdout, stderr) {
+                require('child_process').execSync(pathBat, (err, stdout, stderr) => {
                     if (err) {
                         // Ooops.
 
@@ -1246,7 +1246,7 @@ function workerNotEncounteredError() {
                 newFinalFileSize = newFinalFileSize.size
             }
 
-            function replaceOriginalFile(actualDestinationPath) {
+            const replaceOriginalFile = (actualDestinationPath) => {
                 let newCurrentSourceLine;
 
                 try {
@@ -1295,7 +1295,7 @@ function workerNotEncounteredError() {
 
                     updateConsole(workerNumber, "Error replacing original file:" + currentSourceLine + " to " + newCurrentSourceLine)
                 }
-            }
+            };
 
             if (tempFolderSelected == true) {
                 if (newFinalFileSize < originalFileSize || replaceOriginalFileAlways == true) {
@@ -1342,9 +1342,9 @@ function workerNotEncounteredError() {
 
         checkifQueuePause();
     }
-}
+};
 
-function checkifQueuePause() {
+const checkifQueuePause = () => {
     const f = fs.readFileSync(homePath + '/Documents/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
     if (f == "1") {
         const message = [
@@ -1353,9 +1353,9 @@ function checkifQueuePause() {
         ];
         process.send(message);
     }
-}
+};
 
-function getDateNow() {
+const getDateNow = () => {
     const today = new Date();
     let dd = today.getDate();
     let mm = today.getMonth() + 1;
@@ -1373,9 +1373,9 @@ function getDateNow() {
     mm = months[mm - 1];
     const today2 = dd + '-' + mm + '-' + yyyy;
     return today2
-}
+};
 
-function getTimeNow() {
+const getTimeNow = () => {
     const d = new Date(),
         h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
         m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
@@ -1383,9 +1383,9 @@ function getTimeNow() {
     const timenow = h + ':' + m + ':' + s;
 
     return timenow
-}
+};
 
-function attemptToRepair() {
+const attemptToRepair = () => {
     const childProcess = require("child_process");
     const repair_worker_path = "worker2.js"
 
@@ -1443,7 +1443,7 @@ function attemptToRepair() {
     updateConsole(workerNumber, "Sending command to repair worker:" + workerCommand)
     repair_worker.send(infoArray);
 
-    repair_worker.stdout.on('data', function (data) {
+    repair_worker.stdout.on('data', (data) => {
         //  console.log('stdoutWorker: ' + data);
         //log console output to text file
         const str = "" + data;
@@ -1494,7 +1494,7 @@ function attemptToRepair() {
         }
     });
 
-    repair_worker.stderr.on('data', function (data) {
+    repair_worker.stderr.on('data', (data) => {
         // console.log('stderrorWorker: ' + data);
         const str = "" + data;
 
@@ -1538,12 +1538,12 @@ function attemptToRepair() {
         }
     });
 
-    repair_worker.on("exit", function (code, ) {
+    repair_worker.on("exit", (code, ) => {
         //  console.log('shellThreadExited:', code,);
         updateConsole(workerNumber, "Repair worker exited")
     });
 
-    repair_worker.on('message', function (message) {
+    repair_worker.on('message', (message) => {
         if (message[0] == "consoleMessage") {
             updateConsole("Worker " + workerNumber + ":" + message[1] + "");
         }
@@ -1627,7 +1627,7 @@ function attemptToRepair() {
 
                     let thisval
 
-                    ffprobe(repair_file_path, { path: ffprobeStaticPath }, function (err, info) {
+                    ffprobe(repair_file_path, { path: ffprobeStaticPath }, (err, info) => {
                         if (err) return done(err);
                         //console.log(info);
 
@@ -1685,4 +1685,4 @@ function attemptToRepair() {
             }
         }
     });
-}
+};

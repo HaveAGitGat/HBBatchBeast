@@ -15,7 +15,7 @@
   const { ipcRenderer } = electron
 
 
-  window.onload = function () {
+  window.onload = () => {
 
 
     if (process.platform == 'win32' || process.platform == 'linux') {
@@ -52,7 +52,7 @@
 
 
 
-  ipcRenderer.on('item:Error', function (e, errorMessage) {
+  ipcRenderer.on('item:Error', (e, errorMessage) => {
 
     document.getElementById("informationWindow").innerHTML = "<p>Error is also in log file.<\p><br>";
 
@@ -75,7 +75,7 @@
 
   const remote = require('electron').remote;
 
-  (function handleWindowControls() {
+  (() => {
     // When document has loaded, initialise
     document.onreadystatechange = () => {
       if (document.readyState == "complete") {
@@ -83,12 +83,23 @@
       }
     };
 
-    function init() {
+    const init = () => {
       let window = remote.getCurrentWindow();
       const minButton = document.getElementById('min-button'),
         maxButton = document.getElementById('max-button'),
         restoreButton = document.getElementById('restore-button'),
         closeButton = document.getElementById('close-button');
+
+      const toggleMaxRestoreButtons = () => {
+        window = remote.getCurrentWindow();
+        if (window.isMaximized()) {
+          maxButton.style.display = "none";
+          restoreButton.style.display = "flex";
+        } else {
+          restoreButton.style.display = "none";
+          maxButton.style.display = "flex";
+        }
+      };
 
       minButton.addEventListener("click", event => {
         window = remote.getCurrentWindow();
@@ -119,17 +130,7 @@
         window.close();
       });
 
-      function toggleMaxRestoreButtons() {
-        window = remote.getCurrentWindow();
-        if (window.isMaximized()) {
-          maxButton.style.display = "none";
-          restoreButton.style.display = "flex";
-        } else {
-          restoreButton.style.display = "none";
-          maxButton.style.display = "flex";
-        }
-      }
-    }
+    };
   })();
 
 

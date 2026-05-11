@@ -1,14 +1,7 @@
 const createWindowsInstaller = require('electron-winstaller').createWindowsInstaller
 const path = require('path')
 
-getInstallerConfig()
-  .then(createWindowsInstaller)
-  .catch((error) => {
-    console.error(error.message || error)
-    process.exit(1)
-  })
-
-function getInstallerConfig() {
+const getInstallerConfig = () => {
   console.log('creating windows installer')
   const rootPath = path.join('./')
   const outPath = path.join(rootPath, 'release-builds')
@@ -22,4 +15,11 @@ function getInstallerConfig() {
     setupExe: 'ElectronTutorialAppInstaller.exe',
     setupIcon: path.join(rootPath, 'assets', 'icons', 'win', 'icon.ico')
   })
-}
+};
+
+getInstallerConfig()
+  .then(createWindowsInstaller)
+  .catch((error) => {
+    console.error(error.message || error)
+    process.exit(1)
+  })

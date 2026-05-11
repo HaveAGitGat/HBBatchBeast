@@ -2,7 +2,7 @@ const electron = require('electron')
 const app = electron.app
 
 module.exports = {
-    handleSquirrelEvent: function () {
+    handleSquirrelEvent: () => {
         if (process.argv.length === 1) {
             return false;
         }
@@ -14,7 +14,7 @@ module.exports = {
         const rootAtomFolder = path.resolve(appFolder, '..');
         const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
         const exeName = path.basename(process.execPath);
-        const spawn = function (command, args) {
+        const spawn = (command, args) => {
             let spawnedProcess;
 
             try {
@@ -24,7 +24,7 @@ module.exports = {
             return spawnedProcess;
         };
 
-        const spawnUpdate = function (args) {
+        const spawnUpdate = (args) => {
             return spawn(updateDotExe, args);
         };
 

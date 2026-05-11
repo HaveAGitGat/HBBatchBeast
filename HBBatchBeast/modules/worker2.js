@@ -1,13 +1,13 @@
 
-function updateConsole(text) {
+const updateConsole = (text) => {
     const message = [
         "consoleMessage",
         text,
     ];
     process.send(message);
-}
+};
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
     //console.error(err.stack);
     updateConsole("Shell thread module: " + err.stack)
     process.exit();
@@ -25,7 +25,7 @@ process.on('message', (infoArray) => {
     if (infoArray[0] == "processFile") {
         const workerCommand = infoArray[1];
 
-        shellWorker = shell.exec(workerCommand, function (code, stdout, stderr, stdin) {
+        shellWorker = shell.exec(workerCommand, (code, stdout, stderr, stdin) => {
             //console.log('Exit code:', code);
 
             const message = [

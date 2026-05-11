@@ -1,14 +1,12 @@
 
 //ar windowRefresh = window.setInterval("runTimer();", 1000);
 
-setInterval(runTimer, 1000);
-
 //global variables
 let runTimerOn = 0;
 
 let timer = 4;
 
-function runTimer() {
+const runTimer = () => {
     //timer--;
     console.log(timer)
 
@@ -23,7 +21,9 @@ function runTimer() {
             process.exit()
         }
     }
-}
+};
+
+setInterval(runTimer, 1000);
 
 process.on('message', (infoArray) => {
     if (infoArray[0] == "runTimer") {

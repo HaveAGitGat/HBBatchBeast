@@ -1,12 +1,12 @@
-function updateConsole(text) {
+const updateConsole = (text) => {
   const message = [
     "consoleMessage",
     text,
   ];
   process.send(message);
-}
+};
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
   console.log(err.stack);
 
   updateConsole(err.stack)
@@ -39,7 +39,7 @@ process.on('message', (infoArray) => {
 
     let thisval
 
-    ffprobe(filepath, { path: ffprobeStaticPath }, function (err, info) {
+    ffprobe(filepath, { path: ffprobeStaticPath }, (err, info) => {
       //if (err) return done(err);
 
       if (err) {

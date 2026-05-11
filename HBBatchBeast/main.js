@@ -30,7 +30,7 @@ if (__dirname.includes('.asar')) { // If dev
 
 let appIcon
 
-app.on('ready', function () {
+app.on('ready', () => {
     console.log("App loading")
 
     //create new window
@@ -68,18 +68,18 @@ app.on('ready', function () {
 
         const contextMenu = Menu.buildFromTemplate([
             {
-                label: 'Show', click: function () {
+                label: 'Show', click: () => {
                     mainWindow.show()
                 }
             },
             {
 
-                label: 'Clear notification', click: function () {
+                label: 'Clear notification', click: () => {
                     appIcon.setImage(iconpath);
                 }
             },
             {
-                label: 'Quit', click: function () {
+                label: 'Quit', click: () => {
                     app.isQuiting = true
                     app.quit()
                 }
@@ -89,28 +89,28 @@ app.on('ready', function () {
 
         appIcon.setContextMenu(contextMenu)
 
-        mainWindow.on('close', function (event) {
+        mainWindow.on('close', (event) => {
             //  mainWindow = null
             app.isQuiting = true
             app.quit()
         })
 
-        mainWindow.on('minimize', function (event) {
+        mainWindow.on('minimize', (event) => {
             event.preventDefault()
             mainWindow.hide()
         })
 
-        mainWindow.on('maximize', function (event) {
+        mainWindow.on('maximize', (event) => {
             event.preventDefault()
             mainWindow.maximize();
         })
 
-        mainWindow.on('unmaximize', function (event) {
+        mainWindow.on('unmaximize', (event) => {
             event.preventDefault()
             mainWindow.unmaximize();
         })
 
-        mainWindow.on('show', function () {
+        mainWindow.on('show', () => {
             appIcon.setHighlightMode('always')
 
             //appIcon.setImage(iconpath);
@@ -140,7 +140,7 @@ if (process.platform == 'darwin') {
 }
 
 //Catch icon updates
-ipcMain.on('item:add', function (e, item) {
+ipcMain.on('item:add', (e, item) => {
     //  console.log(item);
 
     const icon = path.join(__dirname, '.\\assets\\icons\\' + platform + '\\' + item + '.ico')
@@ -149,15 +149,15 @@ ipcMain.on('item:add', function (e, item) {
     appIcon.setImage(icon);
 });
 
-ipcMain.on('item:ready', function (e, item) {
+ipcMain.on('item:ready', (e, item) => {
     mainWindow.webContents.send('item:ready', "Test");
 });
 
-ipcMain.on('mediaview:ready', function (e, item) {
+ipcMain.on('mediaview:ready', (e, item) => {
     mainWindow.webContents.send('mediaview:ready', "Test");
 });
 
-ipcMain.on('benchstatus:ready', function (e, item) {
+ipcMain.on('benchstatus:ready', (e, item) => {
     mainWindow.webContents.send('benchstatus:ready', "Test");
 });
 
@@ -215,7 +215,7 @@ if (process.env.NODE_ENV != 'production') {
 
 //Catch item:add
 
-ipcMain.on('item:add', function (e, item) {
+ipcMain.on('item:add', (e, item) => {
 
     //  console.log(item);
 

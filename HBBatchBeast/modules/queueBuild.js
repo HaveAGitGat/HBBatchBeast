@@ -1,12 +1,12 @@
-function updateConsole(text) {
+const updateConsole = (text) => {
     const message = [
         "consoleMessage",
         text,
     ];
     process.send(message);
-}
+};
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
     console.log(err.stack);
 
     updateConsole(err.stack)
@@ -121,24 +121,7 @@ process.on('message', (queueInfoBomb) => {
 
         // folder loop begin 
         for (let y = 0; y < inputPathStemArray.length; y++) {
-            inputPathStem = inputPathStemArray[y]   // input folder path with comma:  /path/to/folder,
-            outPutPathStem = outPutPathStemArray[y]
-
-            if (tempConversionFolderCheckedOnOff == true) {
-                outPutPathStemFinal = outPutPathStemFinalArray[y]
-            }
-
-            inputPathStemSplit = inputPathStem.split(','); // comma removed step 1:  /path/to/folder
-
-            topFolder = inputPathStemSplit[inputPathStemSplit.length - 1] // comma removed step 2:  /path/to/folder
-
-            topFolderCharLength = topFolder.length   //
-
-            try {
-                traverseDir(inputPathStem);
-            } catch (err) { }
-
-            function traverseDir(inputPathStem) {
+            const traverseDir = (inputPathStem) => {
                 fs.readdirSync(inputPathStem).forEach(file => {
                     const fullPath = path.join(inputPathStem, file);
 
@@ -352,7 +335,24 @@ process.on('message', (queueInfoBomb) => {
                         }  //end current file, go to next
                     } catch (err) { }
                 });
+            };
+
+            inputPathStem = inputPathStemArray[y]   // input folder path with comma:  /path/to/folder,
+            outPutPathStem = outPutPathStemArray[y]
+
+            if (tempConversionFolderCheckedOnOff == true) {
+                outPutPathStemFinal = outPutPathStemFinalArray[y]
             }
+
+            inputPathStemSplit = inputPathStem.split(','); // comma removed step 1:  /path/to/folder
+
+            topFolder = inputPathStemSplit[inputPathStemSplit.length - 1] // comma removed step 2:  /path/to/folder
+
+            topFolderCharLength = topFolder.length   //
+
+            try {
+                traverseDir(inputPathStem);
+            } catch (err) { }
         }//end source folder loop
 
         //var currentWindowPath = window.location.pathname;

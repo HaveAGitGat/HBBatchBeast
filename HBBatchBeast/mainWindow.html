@@ -13,9 +13,45 @@
 
     "use strict";
 
+    //timenow
+
+    const getTimeNow = window.getTimeNow = () => {
+
+        var d = new Date(),
+            h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
+            m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+        var s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
+        var timenow = h + ':' + m + ':' + s;
+
+        return timenow
+    };
+
+    const getDateNow = window.getDateNow = () => {
+
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+        // if (mm < 10) {
+        //     mm = '0' + mm
+        // }
+
+        var months = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"];
+
+        mm = months[mm - 1];
+        today = dd + '/' + mm + '/' + yyyy;
+        var today2 = dd + '-' + mm + '-' + yyyy;
+        return today2
+    };
+
+
     //2 functions to catch/display any errors as early as possible.
 
-    function updateConsole(message, skipWrite) {
+    const updateConsole = window.updateConsole = (message, skipWrite) => {
 
         consoleItemCount++
 
@@ -34,10 +70,10 @@
             fs.appendFileSync(homePath + '/Documents/HBBatchBeast/Logs/MasterLog.txt', "[" + getDateNow() + "#" + getTimeNow() + "]" + message + "\r\n", 'utf8');
         }
 
-    }
+    };
 
 
-    process.on('uncaughtException', function (err) {
+    process.on('uncaughtException', (err) => {
         //console.error(err.stack);
 
         updateConsole(err.stack);
@@ -94,47 +130,7 @@
         var homePath2 = home
     }
 
-    //timenow
-
-    function getTimeNow() {
-
-        var d = new Date(),
-            h = (d.getHours() < 10 ? '0' : '') + d.getHours(),
-            m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
-        var s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
-        var timenow = h + ':' + m + ':' + s;
-
-        return timenow
-    }
-
-    function getDateNow() {
-
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth() + 1;
-        var yyyy = today.getFullYear();
-        if (dd < 10) {
-            dd = '0' + dd
-        }
-        // if (mm < 10) {
-        //     mm = '0' + mm
-        // }
-
-        var months = ["January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"];
-
-        mm = months[mm - 1];
-        today = dd + '/' + mm + '/' + yyyy;
-        var today2 = dd + '-' + mm + '-' + yyyy;
-        return today2
-    }
-
-
-
-
-
-
-    function textAreaHeight() {
+    const textAreaHeight = window.textAreaHeight = () => {
         //auto height text boxes
         var tx = document.getElementsByTagName('textarea');
         for (var i = 0; i < tx.length; i++) {
@@ -143,7 +139,7 @@
         }
 
 
-    }
+    };
 
 
     //create scan number window
@@ -155,7 +151,7 @@
     const electron2 = require('electron');
     const { ipcRenderer } = electron2;
 
-    function createViewError() {
+    const createViewError = window.createViewError = () => {
 
         //create new window
 
@@ -179,14 +175,14 @@
 
 
         //Garbage collection handle
-        ViewError.on('close', function () {
+        ViewError.on('close', () => {
             ViewError = null;
 
         });
 
-    }
+    };
 
-    function createViewMediaInfo() {
+    const createViewMediaInfo = window.createViewMediaInfo = () => {
 
         //create new window
 
@@ -209,13 +205,13 @@
 
 
         //Garbage collection handle
-        viewMedia.on('close', function () {
+        viewMedia.on('close', () => {
             viewMedia = null;
         });
 
 
 
-    }
+    };
 
 
 
@@ -266,8 +262,7 @@
     var exportOther
     var exportLastCompletedTime
 
-    // evaluates "runScan();", deprecated behaviour, need to improve
-    var windowRefresh = window.setInterval("runScan();", 1000);
+    var windowRefresh = window.setInterval(() => runScan(), 1000);
     var updateInfo = 0;
 
     var countDownOn = 0;
@@ -321,7 +316,7 @@
 
 
 
-    function toolTip(id) {
+    const toolTip = window.toolTip = (id) => {
         if (document.getElementById("consoleBar").style.height == "5%") {
 
             document.getElementById("consoleBar").style.height = "50%";
@@ -345,31 +340,67 @@
         }
 
 
-    }
+    };
 
 
 
 
 
 
-    function setLanguage() {
+    const setLanguage = window.setLanguage = () => {
 
 
         saveConfig();
         location.reload()
 
-    }
+    };
 
-    function setConfig() {
+    const setConfig = window.setConfig = () => {
         saveConfig("skip");
         location.reload()
-    }
+    };
 
     var selLang
     var selConf
 
-    window.onload = function () {
+    window.onload = () => {
 
+
+        const initConfig = () => {
+
+
+            jsonConfig = {
+                lang: "en",
+                selected_config: 0,
+                configs: [
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                    {},
+                ]
+
+            }
+
+            updateConsole("" + "Configuration created" + "")
+        };
+
+        const folderChangeAlert = () => {
+            if (process.platform == 'win32') {
+                alert("Hello \n\nAs of v2.1.3, the way configuration settings are stored has been changed in order to allow multiple configurations so you'll need to re-do your configurations. \n\nAlso, in order to improve consistency across platforms and to make upgrading easier in future, the HBBatchBeast logs and config settings folder has changed to inside your 'Documents' folder.\n\n To retain your healthy file logs etc please move your old 'HBBatchBeast\\HBBatchBeast\\Logs' and 'HBBatchBeast\\HBBatchBeast\\Config' folders to:\n\n" + home + "\\Documents\\HBBatchBeast\\ \n\nSorry for the inconvenience.");
+
+            }
+
+            if (process.platform == 'linux' || process.platform == 'darwin') {
+                alert("Hello \n\nAs of v2.1.3, the way configuration settings are stored has been changed in order to allow multiple configurations so you'll need to re-do your configurations. \n\nAlso, in order to improve consistency across platforms and to make upgrading easier in future, the HBBatchBeast logs and config settings folder has changed to inside your 'Documents' folder.\n\n To retain your healthy file logs etc please move your old 'home\\HBBatchBeast\\Logs' and 'home\\HBBatchBeast\\Config' folders to:\n\n" + home + "\\Documents\\HBBatchBeast\\ \n\nSorry for the inconvenience.");
+
+            }
+        };
 
         // save lang strings to json
         if (process.env.NODE_ENV != 'production') {
@@ -567,42 +598,8 @@
         }
 
 
-        function folderChangeAlert() {
-            if (process.platform == 'win32') {
-                alert("Hello \n\nAs of v2.1.3, the way configuration settings are stored has been changed in order to allow multiple configurations so you'll need to re-do your configurations. \n\nAlso, in order to improve consistency across platforms and to make upgrading easier in future, the HBBatchBeast logs and config settings folder has changed to inside your 'Documents' folder.\n\n To retain your healthy file logs etc please move your old 'HBBatchBeast\\HBBatchBeast\\Logs' and 'HBBatchBeast\\HBBatchBeast\\Config' folders to:\n\n" + home + "\\Documents\\HBBatchBeast\\ \n\nSorry for the inconvenience.");
-
-            }
-
-            if (process.platform == 'linux' || process.platform == 'darwin') {
-                alert("Hello \n\nAs of v2.1.3, the way configuration settings are stored has been changed in order to allow multiple configurations so you'll need to re-do your configurations. \n\nAlso, in order to improve consistency across platforms and to make upgrading easier in future, the HBBatchBeast logs and config settings folder has changed to inside your 'Documents' folder.\n\n To retain your healthy file logs etc please move your old 'home\\HBBatchBeast\\Logs' and 'home\\HBBatchBeast\\Config' folders to:\n\n" + home + "\\Documents\\HBBatchBeast\\ \n\nSorry for the inconvenience.");
-
-            }
-        }
 
 
-        function initConfig() {
-
-
-            jsonConfig = {
-                lang: "en",
-                selected_config: 0,
-                configs: [
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                    {},
-                ]
-
-            }
-
-            updateConsole("" + "Configuration created" + "")
-        }
 
 
         if (jsonConfig.version_message != "2.1.5") {
@@ -1010,11 +1007,11 @@ Features/additions:
 
         var checkboxDelete = document.querySelector("input[name=deleteSourceFilesname]");
 
-        checkboxDelete.addEventListener('change', function () {
-            if (this.checked == true) {
+        checkboxDelete.addEventListener('change', (event) => {
+            if (event.currentTarget.checked == true) {
                 //document.getElementById("deleteItemDiv2").style.backgroundColor = '#ef435d';
                 document.getElementById("deleteSourceFilesdiv").style.color = '#ef435d';
-            } else if (this.checked == false) {
+            } else if (event.currentTarget.checked == false) {
                 document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,0.4)';
             }
         });
@@ -1035,7 +1032,7 @@ Features/additions:
 
 
 
-    function cbChange1(obj) {
+    const cbChange1 = window.cbChange1 = (obj) => {
         if (obj.checked == false) {
             obj.checked = false;
         } else if (obj.checked == true) {
@@ -1058,12 +1055,12 @@ Features/additions:
         }
 
         textAreaHeight()
-    }
+    };
 
 
 
 
-    function cbChange2() {
+    const cbChange2 = window.cbChange2 = () => {
 
         if (document.getElementById("selectTemporaryConversionFolder").checked == true) {
             document.getElementById("tempConversionFolderDiv").style.display = 'block';
@@ -1076,23 +1073,23 @@ Features/additions:
         }
 
         textAreaHeight()
-    }
+    };
 
 
-    function cbChange3() {
+    const cbChange3 = window.cbChange3 = () => {
         if (document.getElementById("advancedSettings").style.display == 'block') {
             document.getElementById("advancedSettings").style.display = 'none';
         } else {
             document.getElementById("advancedSettings").style.display = 'block'
         }
         textAreaHeight()
-    }
+    };
 
 
 
 
 
-    function cbChange4(obj) {
+    const cbChange4 = window.cbChange4 = (obj) => {
         if (obj.checked == false) {
             obj.checked = false;
         } else if (obj.checked == true) {
@@ -1115,9 +1112,9 @@ Features/additions:
         }
 
         textAreaHeight()
-    }
+    };
 
-    function cbChange5(obj) {
+    const cbChange5 = window.cbChange5 = (obj) => {
         document.getElementById("deleteSourceFilesdiv").style.color = 'rgba(255,255,255,0.4)';
 
         if (obj.checked == false) {
@@ -1129,9 +1126,9 @@ Features/additions:
             }
             obj.checked = true;
         }
-    }
+    };
 
-    function cbChange6(obj) {
+    const cbChange6 = window.cbChange6 = (obj) => {
 
         if (obj.checked == false) {
             obj.checked = false;
@@ -1142,10 +1139,10 @@ Features/additions:
             }
             obj.checked = true;
         }
-    }
+    };
 
 
-    function cbChange7(obj) {
+    const cbChange7 = window.cbChange7 = (obj) => {
 
         if (obj.checked == false) {
             obj.checked = false;
@@ -1187,32 +1184,31 @@ Features/additions:
         }
 
         textAreaHeight()
-    }
+    };
 
 
 
 
 
 
-    function showAlert(message, obj) {
+    const showAlert = window.showAlert = (message, obj) => {
 
         if (document.getElementById("deleteSourceFiles").checked == true) {
             alert(message);
         }
         cbChange5(obj);
-    }
+    };
 
     var errorIndex
 
-    function showAlert2(message) {
+    const showAlert2 = window.showAlert2 = (message) => {
 
         createViewError();
         errorIndex = message
-        //sleep(1000);    
-    }
+    };
 
 
-    ipcRenderer.on('item:ready', function (e, item) {
+    ipcRenderer.on('item:ready', (e, item) => {
         ViewError.webContents.send('item:Error', fullErrorLogArray[errorIndex]);
         // /fullErrorLogArray[message]
 
@@ -1223,7 +1219,7 @@ Features/additions:
 
 
 
-    ipcRenderer.on('mediaview:ready', function (e, item) {
+    ipcRenderer.on('mediaview:ready', (e, item) => {
 
         viewMedia.webContents.send('item:filepath', itemfilePath);
         itemfilePath = "";
@@ -1233,7 +1229,7 @@ Features/additions:
 
     var itemfilePath = "";
 
-    function showAlert3(filepath) {
+    const showAlert3 = window.showAlert3 = (filepath) => {
 
         createViewMediaInfo()
 
@@ -1282,11 +1278,11 @@ Features/additions:
 
 
         // });
-    }
+    };
 
 
 
-    function getHandBrakeCLIPath() {
+    const getHandBrakeCLIPath = window.getHandBrakeCLIPath = () => {
 
 
         var fullPath = __dirname;
@@ -1314,9 +1310,9 @@ Features/additions:
 
         return handBrakeCLIPath
 
-    }
+    };
 
-    function getFFmpegCLIPath() {
+    const getFFmpegCLIPath = window.getFFmpegCLIPath = () => {
 
         if (process.env.NODE_ENV == 'production') {
             if (process.platform == 'win32') {
@@ -1330,14 +1326,14 @@ Features/additions:
 
         return ffmpegPath
 
-    }
+    };
 
 
 
 
 
 
-    function saveConfig(skipSave) {
+    const saveConfig = window.saveConfig = (skipSave) => {
 
 
 
@@ -1459,22 +1455,10 @@ Features/additions:
 
 
 
-    }
+    };
 
 
-    function sleep(milliseconds) {
-        var start = new Date().getTime();
-        for (var i = 0; i < 1e7; i++) {
-            if ((new Date().getTime() - start) > milliseconds) {
-                break;
-            }
-        }
-    }
-
-
-
-
-    function convertFiles(processMode, Benchmark) {
+    const convertFiles = window.convertFiles = (processMode, Benchmark) => {
 
 
         if (processMode == "healthCheck") {
@@ -2573,7 +2557,7 @@ Features/additions:
 
 
 
-            queueBuildModule.on("exit", function (code, signal, ) {
+            queueBuildModule.on("exit", (code, signal, ) => {
                 console.log('Child exited:', code, signal);
 
                 updateConsole("" + "File scanner exited" + "")
@@ -2588,7 +2572,7 @@ Features/additions:
 
 
 
-            queueBuildModule.on('message', function (message) {
+            queueBuildModule.on('message', (message) => {
 
                 //   console.log("Message:"+message);
 
@@ -2713,9 +2697,9 @@ Features/additions:
 
 
 
-    }//end convertfiles function
+    };//end convertfiles function
 
-    function runEndSection() {
+    const runEndSection = window.runEndSection = () => {
 
 
         updateConsole("" + "Configuring pre-launch" + "")
@@ -2933,10 +2917,10 @@ Features/additions:
 
         }// end if
 
-    }
+    };
 
 
-    function launchWorkerModules(mode2) {
+    const launchWorkerModules = window.launchWorkerModules = (mode2) => {
 
 
 
@@ -3035,7 +3019,7 @@ Features/additions:
             //  worker.send("w:"+2);
 
 
-            workers[i - 1].on("exit", function (code, signal) {
+            workers[i - 1].on("exit", (code, signal) => {
 
                 updateConsole("" + "Worker exited" + "")
 
@@ -3049,7 +3033,7 @@ Features/additions:
 
 
 
-            workers[i - 1].on('message', function (message) {
+            workers[i - 1].on('message', (message) => {
 
                 // updateConsole("Worker "+message[0]+":"+message+"");
 
@@ -3212,7 +3196,7 @@ Features/additions:
 
 
 
-                function informationUpdate(workerNumber, preset, errorLog, globalQueueNumber, backgroundColor, Status, Status2) {
+                const informationUpdate = (workerNumber, preset, errorLog, globalQueueNumber, backgroundColor, Status, Status2) => {
 
                     workerStatusFinishedArray[workerNumber - 1] = "Finished"
 
@@ -3330,7 +3314,7 @@ Features/additions:
 
                     sessionNumber++;
 
-                }
+                };
 
 
 
@@ -3514,9 +3498,9 @@ Features/additions:
         inProgress = true
 
 
-    }
+    };
 
-    function updateGraph(graphMode) {
+    const updateGraph = window.updateGraph = (graphMode) => {
 
         var successfulCount2;
         var errorCount2;
@@ -3763,13 +3747,13 @@ Features/additions:
         }
 
 
-    }
+    };
 
 
 
 
 
-    function fancyTimeFormat(time) {
+    const fancyTimeFormat = window.fancyTimeFormat = (time) => {
         // Hours, minutes and seconds
         var hrs = ~~(time / 3600);
         var mins = ~~((time % 3600) / 60);
@@ -3785,13 +3769,13 @@ Features/additions:
         ret += "" + mins + ":" + (secs < 10 ? "0" : "");
         ret += "" + secs;
         return ret;
-    }
+    };
 
 
 
 
 
-    function runScan() {
+    const runScan = window.runScan = () => {
 
 
 
@@ -3902,141 +3886,7 @@ Features/additions:
         if (updateInfo == 1) {
 
 
-            if (document.getElementById("runPriority").checked == true) {
-                setProcessPriority();
-
-            }
-
-            apiStatusSend();
-
-
-
-
-
-            if (mode == "scanandconvert" || mode == "healthCheck") {
-                endDate = new Date();
-                var seconds2 = (endDate.getTime() - startDate.getTime()) / 1000;
-
-                var time = Math.round(seconds2);
-
-
-
-                document.getElementById("durationDiv").innerHTML = "<p>Duration: " + fancyTimeFormat(time) + "<\p>";
-
-
-                //timeout if item takes too long
-
-
-
-                if (document.getElementById("handBrakeMode").checked && queueStatusPaused != 1 && mode != "healthCheck") {
-
-
-
-
-                    if (timeoutCounter == 0) {
-
-                        for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
-
-                            try {
-                                workerProgressArray[j - 1] = document.getElementById("worker" + (j) + "Status").innerHTML
-                            } catch (err) { }
-
-                        }
-                    }
-
-
-
-                    timeoutCounter++
-
-                    if (timeoutCounter == 180) {
-
-                        for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
-
-                            if (workerProgressArray[j - 1] == document.getElementById("worker" + (j) + "Status").innerHTML) {
-
-                                updateConsole("" + "Worker " + j + " 180 second timeout, cancelling item" + "")
-
-                                cancelItemProcess(j)
-
-                            }
-
-
-                        }
-
-
-                        timeoutCounter = 0
-
-                    }
-
-
-
-                }
-
-            }
-
-
-
-            if (mode != "healthCheck" && mode != "scanandconvert") {
-
-                updateInfo = 0;
-
-            }
-
-
-
-
-
-            var globalQueueNumber = globalQueueNumberManager - 1;
-
-
-            if (sourceQueueArray.length >= 1) {
-
-            } else {
-
-                document.getElementById("myChartDiv").style.display = 'none';
-            }
-
-            if (sourceQueueArray.length == 0) {
-
-                updateConsole("" + "All workers complete " + "")
-
-                AllComplete();
-
-            }
-
-
-
-
-
-
-
-            if (sourceQueueArray.length >= 1) {
-
-
-                // console.log("workerStatusArray.length"+workerStatusArray.length)
-                // console.log("instanceNumber"+document.getElementById("instanceNumber").value)
-
-                if (workerStatusArray.length == document.getElementById("instanceNumber").value) {
-
-                    updateConsole("" + "All workers complete " + "")
-
-                    AllComplete();
-                }
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-            function AllComplete() {
+            const AllComplete = () => {
 
                 workersRunning = false
                 inProgress = false
@@ -4326,10 +4176,145 @@ Features/additions:
                 sourceQueueArray = [];
                 AllCompleted = 1;
                 clearInterval(windowRefresh);
-                windowRefresh = window.setInterval("runScan();", 1000)
+                windowRefresh = window.setInterval(() => runScan(), 1000)
 
                 updateConsole("" + "Finished" + "")
+            };
+
+            if (document.getElementById("runPriority").checked == true) {
+                setProcessPriority();
+
             }
+
+            apiStatusSend();
+
+
+
+
+
+            if (mode == "scanandconvert" || mode == "healthCheck") {
+                endDate = new Date();
+                var seconds2 = (endDate.getTime() - startDate.getTime()) / 1000;
+
+                var time = Math.round(seconds2);
+
+
+
+                document.getElementById("durationDiv").innerHTML = "<p>Duration: " + fancyTimeFormat(time) + "<\p>";
+
+
+                //timeout if item takes too long
+
+
+
+                if (document.getElementById("handBrakeMode").checked && queueStatusPaused != 1 && mode != "healthCheck") {
+
+
+
+
+                    if (timeoutCounter == 0) {
+
+                        for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
+
+                            try {
+                                workerProgressArray[j - 1] = document.getElementById("worker" + (j) + "Status").innerHTML
+                            } catch (err) { }
+
+                        }
+                    }
+
+
+
+                    timeoutCounter++
+
+                    if (timeoutCounter == 180) {
+
+                        for (var j = 1; j <= document.getElementById("instanceNumber").value; j++) {
+
+                            if (workerProgressArray[j - 1] == document.getElementById("worker" + (j) + "Status").innerHTML) {
+
+                                updateConsole("" + "Worker " + j + " 180 second timeout, cancelling item" + "")
+
+                                cancelItemProcess(j)
+
+                            }
+
+
+                        }
+
+
+                        timeoutCounter = 0
+
+                    }
+
+
+
+                }
+
+            }
+
+
+
+            if (mode != "healthCheck" && mode != "scanandconvert") {
+
+                updateInfo = 0;
+
+            }
+
+
+
+
+
+            var globalQueueNumber = globalQueueNumberManager - 1;
+
+
+            if (sourceQueueArray.length >= 1) {
+
+            } else {
+
+                document.getElementById("myChartDiv").style.display = 'none';
+            }
+
+            if (sourceQueueArray.length == 0) {
+
+                updateConsole("" + "All workers complete " + "")
+
+                AllComplete();
+
+            }
+
+
+
+
+
+
+
+            if (sourceQueueArray.length >= 1) {
+
+
+                // console.log("workerStatusArray.length"+workerStatusArray.length)
+                // console.log("instanceNumber"+document.getElementById("instanceNumber").value)
+
+                if (workerStatusArray.length == document.getElementById("instanceNumber").value) {
+
+                    updateConsole("" + "All workers complete " + "")
+
+                    AllComplete();
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
 
         if (countDownOn == 1 && AllCompleted == "1") {
@@ -4403,10 +4388,10 @@ Features/additions:
             //
 
         }
-    }
+    };
 
 
-    function selectFolder(folder) {
+    const selectFolder = window.selectFolder = (folder) => {
 
 
         var folderPaths
@@ -4430,10 +4415,10 @@ Features/additions:
 
 
 
-    }
+    };
 
 
-    function viewLogs(logType) {
+    const viewLogs = window.viewLogs = (logType) => {
 
         if (process.platform == 'win32') {
 
@@ -4528,11 +4513,11 @@ Features/additions:
 
 
 
-    }
+    };
 
 
 
-    function viewFolder(folderPath) {
+    const viewFolder = window.viewFolder = (folderPath) => {
 
         if (process.platform == 'win32') {
 
@@ -4608,10 +4593,10 @@ Features/additions:
 
 
 
-    }
+    };
 
 
-    function openURL(link) {
+    const openURL = window.openURL = (link) => {
 
         var opener = require("opener");
         opener(link);
@@ -4620,21 +4605,21 @@ Features/additions:
 
         // opn(link);
 
-    }
+    };
 
 
 
 
-    function OnInput() {
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
-    }
+    const OnInput = window.OnInput = (event) => {
+        event.currentTarget.style.height = 'auto';
+        event.currentTarget.style.height = (event.currentTarget.scrollHeight) + 'px';
+    };
 
 
 
     const remote = require('electron').remote;
 
-    (function handleWindowControls() {
+    (() => {
         // When document has loaded, initialise
         document.onreadystatechange = () => {
             if (document.readyState == "complete") {
@@ -4642,12 +4627,23 @@ Features/additions:
             }
         };
 
-        function init() {
+        const init = () => {
             let window = remote.getCurrentWindow();
             const minButton = document.getElementById('min-button'),
                 maxButton = document.getElementById('max-button'),
                 restoreButton = document.getElementById('restore-button'),
                 closeButton = document.getElementById('close-button');
+
+            const toggleMaxRestoreButtons = () => {
+                window = remote.getCurrentWindow();
+                if (window.isMaximized()) {
+                    maxButton.style.display = "none";
+                    restoreButton.style.display = "flex";
+                } else {
+                    restoreButton.style.display = "none";
+                    maxButton.style.display = "flex";
+                }
+            };
 
             minButton.addEventListener("click", event => {
                 window = remote.getCurrentWindow();
@@ -4684,22 +4680,12 @@ Features/additions:
 
             });
 
-            function toggleMaxRestoreButtons() {
-                window = remote.getCurrentWindow();
-                if (window.isMaximized()) {
-                    maxButton.style.display = "none";
-                    restoreButton.style.display = "flex";
-                } else {
-                    restoreButton.style.display = "none";
-                    maxButton.style.display = "flex";
-                }
-            }
-        }
+        };
     })();
 
 
 
-    function openTab(evt, tabName) {
+    const openTab = window.openTab = (evt, tabName) => {
         // Declare all variables
         var i, tabcontent, tablinks;
 
@@ -4728,11 +4714,11 @@ Features/additions:
         }
 
         textAreaHeight();
-    }
+    };
 
 
 
-    function toggleView(id) {
+    const toggleView = window.toggleView = (id) => {
 
         if (document.getElementById(id).style.display == 'none') {
 
@@ -4744,10 +4730,10 @@ Features/additions:
             document.getElementById(id).style.display = 'none';
 
         }
-    }
+    };
 
 
-    function emailAlert(emailMode) {
+    const emailAlert = window.emailAlert = (emailMode) => {
 
         try {
 
@@ -4784,7 +4770,7 @@ Features/additions:
                 from: document.getElementById("emailAddress").value,
                 to: document.getElementById("emailAddress").value,
                 subject: subjectLine
-            }, function (err, message) {
+            }, (err, message) => {
                 (err || message);
 
                 if (err) {
@@ -4808,9 +4794,9 @@ Features/additions:
 
         } catch (err) { }
 
-    }
+    };
 
-    function verifyContinue() {
+    const verifyContinue = window.verifyContinue = () => {
 
         var continueQueueProcess = 1;
 
@@ -4834,9 +4820,9 @@ Features/additions:
         }
 
 
-    }
+    };
 
-    function stopQueue() {
+    const stopQueue = window.stopQueue = () => {
 
         if (confirm('Are you sure you want to stop the queue and end all running processes?')) {
 
@@ -4867,10 +4853,10 @@ Features/additions:
         }
 
 
-    }
+    };
 
 
-    function pauseQueue() {
+    const pauseQueue = window.pauseQueue = () => {
 
 
 
@@ -4883,9 +4869,9 @@ Features/additions:
             alert(document.getElementById("alert_confirm_queue_pause_2").textContent)
 
         }
-    }
+    };
 
-    function pauseQueueInitiate(statusMessage) {
+    const pauseQueueInitiate = window.pauseQueueInitiate = (statusMessage) => {
 
         if (statusMessage == 1) {
 
@@ -4909,11 +4895,11 @@ Features/additions:
         document.getElementById("pauseButtonDiv").style.display = 'none';
         document.getElementById("continueButtonDiv").style.display = 'none';
         document.getElementById("continueButtonGreyDiv").style.display = 'block';
-    }
+    };
 
 
 
-    function queueWorkerMessage() {
+    const queueWorkerMessage = window.queueWorkerMessage = () => {
 
         return [
 
@@ -4962,7 +4948,7 @@ Features/additions:
 
         ]
 
-    }
+    };
 
 
 
@@ -4971,7 +4957,7 @@ Features/additions:
 
 
 
-    function continueQueue() {
+    const continueQueue = window.continueQueue = () => {
 
 
 
@@ -5031,29 +5017,29 @@ Features/additions:
 
 
 
-    }
+    };
 
 
-    function clearHealthyFileCache() {
+    const clearHealthyFileCache = window.clearHealthyFileCache = () => {
 
         fs.writeFileSync(homePath + '/Documents/HBBatchBeast/Logs/healthyFileList.txt', "", 'utf8');
         alert(document.getElementById("alert_healthy_file_cache_cleared").textContent)
 
         updateConsole("" + document.getElementById("alert_healthy_file_cache_cleared").textContent + "")
 
-    }
+    };
 
-    function clearOriginalFileCompressAttemptCache() {
+    const clearOriginalFileCompressAttemptCache = window.clearOriginalFileCompressAttemptCache = () => {
 
         fs.writeFileSync(homePath + '/Documents/HBBatchBeast/Logs/originalFileReplacedList.txt', "", 'utf8');
 
         alert(document.getElementById("alert_cache_cleared").textContent)
 
         updateConsole("" + document.getElementById("alert_cache_cleared").textContent + "")
-    }
+    };
 
 
-    function cancelItemProcess(workerNumber) {
+    const cancelItemProcess = window.cancelItemProcess = (workerNumber) => {
 
 
         document.getElementById("cancelButtonDiv" + workerNumber).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='" + document.getElementById("button_cancel_item").textContent + "' />"
@@ -5061,7 +5047,7 @@ Features/additions:
             "exitThread",
         ];
         workers[workerNumber - 1].send(messageOut);
-    }
+    };
 
 
 
@@ -5166,7 +5152,7 @@ Features/additions:
     ]
 
 
-    function verifyBenchFiles() {
+    const verifyBenchFiles = window.verifyBenchFiles = () => {
 
 
         updateConsole("" + "Initialising benchmark" + "")
@@ -5204,7 +5190,7 @@ Features/additions:
 
             var fileObject
 
-            ffprobe(homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test1.mp4", { path: ffprobeStaticPath }, function (err, info) {
+            ffprobe(homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test1.mp4", { path: ffprobeStaticPath }, (err, info) => {
                 if (err) {
                     console.log("FFprobe encountered an error while trying to read Test1.mp4")
 
@@ -5216,13 +5202,13 @@ Features/additions:
 
             });
 
-            function FFprobeDone() {
+            const FFprobeDone = () => {
                 var redownloadFilesVar = false
 
                 try {
                     var k = 0
                     for (var i = 0; i < fileObject.streams.length; i++) {
-                        Object.keys(fileObject.streams[i]).forEach(function (key) {
+                        Object.keys(fileObject.streams[i]).forEach((key) => {
 
                             if (benchFileProperties[k] != key + ": '" + fileObject.streams[i][key] + "'") {
                                 redownloadFilesVar = true
@@ -5250,7 +5236,7 @@ Features/additions:
                     copyFiles()
                 }
 
-            }
+            };
 
 
 
@@ -5265,11 +5251,11 @@ Features/additions:
 
 
 
-    }
+    };
 
 
 
-    function redownloadFiles() {
+    const redownloadFiles = window.redownloadFiles = () => {
 
         updateConsole("" + "Downloading benchmark files" + "")
 
@@ -5283,11 +5269,11 @@ Features/additions:
             console.log("Files downloaded. Now copying.")
             copyFiles()
         });
-    }
+    };
 
 
 
-    function copyFiles() {
+    const copyFiles = window.copyFiles = () => {
         fs.copyFileSync(homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test1.mp4", homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test2.mp4");
         fs.copyFileSync(homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test1.mp4", homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test3.mp4");
         fs.copyFileSync(homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test1.mp4", homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test4.mp4");
@@ -5296,11 +5282,11 @@ Features/additions:
         convertFiles("scanandconvert", 1)
         updateConsole("" + "Running benchmark" + "")
 
-    }
+    };
 
 
 
-    function cleanupFiles() {
+    const cleanupFiles = window.cleanupFiles = () => {
         if (fs.existsSync(homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test2.mp4")) { fs.unlinkSync(homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test2.mp4") }
         if (fs.existsSync(homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test3.mp4")) { fs.unlinkSync(homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test3.mp4") }
         if (fs.existsSync(homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test4.mp4")) { fs.unlinkSync(homePath2 + "/Documents/HBBatchBeast/Bench/Input/Test4.mp4") }
@@ -5311,27 +5297,27 @@ Features/additions:
         try { fs.unlinkSync(homePath2 + "/Documents/HBBatchBeast/Bench/Output/Test4.mp4") } catch (err) { }
 
 
-    }
+    };
 
 
-    function selectAllItems() {
+    const selectAllItems = window.selectAllItems = () => {
 
 
         for (var i = 1; i <= (sourceQueueArray.length); i++) {
             document.getElementById("tableQueueNumber" + (i)).checked = true
         }
-    }
+    };
 
 
-    function deselectAllItems() {
+    const deselectAllItems = window.deselectAllItems = () => {
 
 
         for (var i = 1; i <= (sourceQueueArray.length); i++) {
             document.getElementById("tableQueueNumber" + (i)).checked = false
         }
-    }
+    };
 
-    function invertAllItems() {
+    const invertAllItems = window.invertAllItems = () => {
         for (var i = 1; i <= (sourceQueueArray.length); i++) {
 
             if (document.getElementById("tableQueueNumber" + (i)).checked == true) {
@@ -5342,20 +5328,20 @@ Features/additions:
             }
 
         }
-    }
+    };
 
 
-    function hideTabs() {
+    const hideTabs = window.hideTabs = () => {
         var i, tabcontent, tablinks;
         // Get all elements with class="tabcontent" and hide them
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
         }
-    }
+    };
 
 
-    function launchRemoteView() {
+    const launchRemoteView = window.launchRemoteView = () => {
 
         if (document.getElementById("remoteViewOnOFF").checked == true) {
 
@@ -5388,9 +5374,9 @@ Features/additions:
 
         }
 
-    }
+    };
 
-    function apiStatusSend() {
+    const apiStatusSend = window.apiStatusSend = () => {
 
         if (document.getElementById("remoteViewOnOFF").checked == true) {
 
@@ -5431,10 +5417,10 @@ Features/additions:
 
 
         }
-    }
+    };
 
 
-    function generateNewAPIKey() {
+    const generateNewAPIKey = window.generateNewAPIKey = () => {
 
 
         updateConsole("" + "Generating new API Key" + "")
@@ -5452,12 +5438,12 @@ Features/additions:
 
 
 
-    }
+    };
 
 
 
 
-    function setProcessPriority() {
+    const setProcessPriority = window.setProcessPriority = () => {
 
 
         //var path = require("path");
@@ -5561,11 +5547,11 @@ Features/additions:
 
         priorityModule.send(infoArray);
 
-    }
+    };
 
 
 
-    function toggleConsole() {
+    const toggleConsole = window.toggleConsole = () => {
 
         if (document.getElementById("consoleBar").style.height == "50%") {
 
@@ -5582,9 +5568,9 @@ Features/additions:
 
         }
 
-    }
+    };
 
-    function toggleShowRowsQ(obj, colour, colour1) {
+    const toggleShowRowsQ = window.toggleShowRowsQ = (obj, colour, colour1) => {
 
         //  var tb = document.getElementById("sessionConversionsTable");
         // tb.getElementsByTagName("th")[0].style.display = "none";
@@ -5619,11 +5605,11 @@ Features/additions:
             }
 
         } catch (err) { }
-    }
+    };
 
 
 
-    function toggleShowRowsO(obj, colour) {
+    const toggleShowRowsO = window.toggleShowRowsO = (obj, colour) => {
 
         //  var tb = document.getElementById("sessionConversionsTable");
         // tb.getElementsByTagName("th")[0].style.display = "none";
@@ -5655,7 +5641,7 @@ Features/additions:
                 }
             }
         } catch (err) { }
-    }
+    };
 
 </script>
 
