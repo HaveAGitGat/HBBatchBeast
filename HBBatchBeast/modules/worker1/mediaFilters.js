@@ -1,14 +1,10 @@
 "use strict";
 
+const { ffprobeStatusMessage } = require('./messages');
+
 const sendFfprobeStatus = (ctx, status) => {
   const { state, updateConsole } = ctx;
-  const message = [
-    state.workerNumber,
-    "FFPROBE",
-    state.globalQueueNumber,
-    status,
-    state.currentSourceLine,
-  ];
+  const message = ffprobeStatusMessage(state, status);
   ctx.send(message);
   updateConsole(state.workerNumber, "FFprobe " + status + ":" + state.currentSourceLine)
 };

@@ -1,35 +1,24 @@
 "use strict";
 
+const {
+  appendRequestMessage,
+  deleteSourceFileMessage,
+  workerResultMessage,
+} = require('./messages');
+
 const sendCopyFail = (ctx) => {
   const { state } = ctx;
-  const message = [
-    state.workerNumber,
-    "copiedFail",
-    state.globalQueueNumber,
-    "Copy",
-    state.errorLogFull
-  ];
+  const message = workerResultMessage(state, "copiedFail", "Copy");
   ctx.send(message);
 };
 
 const sendCopySuccess = (ctx) => {
   const { state } = ctx;
-  const message = [
-    state.workerNumber,
-    "copied",
-    state.globalQueueNumber,
-    "Copy",
-    state.errorLogFull
-  ];
+  const message = workerResultMessage(state, "copied", "Copy");
   ctx.send(message);
 
   if (state.deleteSourceFilesOnOff == true) {
-    const deleteMessage = [
-      state.workerNumber,
-      "deleteThisFile",
-      state.globalQueueNumber,
-
-    ];
+    const deleteMessage = deleteSourceFileMessage(state);
     ctx.send(deleteMessage);
   }
 };
@@ -59,21 +48,14 @@ const copyCurrentFile = (ctx) => {
 
 const handleUncheckedItem = (ctx) => {
   const { state, updateConsole } = ctx;
-  const appendMessage = [
-    state.workerNumber,
-    "appendRequest",
+  const appendMessage = appendRequestMessage(
+    state,
     state.homePath + "/Documents/HBBatchBeast/Logs/CommandList.txt",
-    state.workerCommand + "\n",
-  ];
+    state.workerCommand + "\n"
+  );
   ctx.send(appendMessage);
 
-  const skippedMessage = [
-    state.workerNumber,
-    "Skipped: Not selected",
-    state.globalQueueNumber,
-    "Skip",
-    state.errorLogFull
-  ];
+  const skippedMessage = workerResultMessage(state, "Skipped: Not selected", "Skip");
   ctx.send(skippedMessage);
 
   updateConsole(state.workerNumber, "Skipped: Not selected - " + state.currentSourceLine)
@@ -88,13 +70,7 @@ const handleSkipOrCopy = (ctx) => {
     copyCurrentFile(ctx);
     ctx.checkifQueuePause();
   } else {
-    const message = [
-      state.workerNumber,
-      "Skipped: File title word filter",
-      state.globalQueueNumber,
-      "Skip",
-      state.errorLogFull
-    ];
+    const message = workerResultMessage(state, "Skipped: File title word filter", "Skip");
     ctx.send(message);
 
     updateConsole(state.workerNumber, "Skipped: File title word filter:" + state.currentSourceLine)
@@ -110,13 +86,7 @@ const handleFilteredOut = (ctx, filterReason) => {
     copyCurrentFile(ctx);
     ctx.checkifQueuePause();
   } else {
-    const message = [
-      state.workerNumber,
-      "Skipped: File property filter:" + filterReason,
-      state.globalQueueNumber,
-      "Skip",
-      state.errorLogFull
-    ];
+    const message = workerResultMessage(state, "Skipped: File property filter:" + filterReason, "Skip");
     ctx.send(message);
 
     ctx.checkifQueuePause();

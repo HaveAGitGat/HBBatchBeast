@@ -1,15 +1,19 @@
 "use strict";
 
+const {
+  appendRequestMessage,
+  progressMessage,
+} = require('./messages');
+
 const appendWorkerLog = (ctx, str, isError) => {
   const { state } = ctx;
 
   if (state.saveWorkerLogs) {
-    const message = [
-      state.workerNumber,
-      "appendRequest",
+    const message = appendRequestMessage(
+      state,
       state.homePath + "/Documents/HBBatchBeast/Logs/Worker" + state.workerNumber + (isError ? "ConsoleOutputError.txt" : "ConsoleOutput.txt"),
-      str,
-    ];
+      str
+    );
     ctx.send(message);
   }
 };
@@ -25,12 +29,7 @@ const sendProgressFromOutput = (ctx, str, messageType, includeHandBrake) => {
       const output = str.substring(n - 6, n + 1)
 
       console.log(output)
-      const message = [
-        state.workerNumber,
-        messageType,
-        state.globalQueueNumber,
-        output
-      ];
+      const message = progressMessage(state, messageType, output);
       ctx.send(message);
     }
   } else if (state.FFmpegMode == true) {
@@ -46,12 +45,7 @@ const sendProgressFromOutput = (ctx, str, messageType, includeHandBrake) => {
           } catch (err) { }
 
           console.log(output)
-          const message = [
-            state.workerNumber,
-            messageType,
-            state.globalQueueNumber,
-            output
-          ];
+          const message = progressMessage(state, messageType, output);
           ctx.send(message);
         }
       }

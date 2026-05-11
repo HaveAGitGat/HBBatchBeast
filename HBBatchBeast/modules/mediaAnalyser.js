@@ -1,8 +1,8 @@
 const updateConsole = (text) => {
-  const message = [
-    "consoleMessage",
+  const message = {
+    type: "consoleMessage",
     text,
-  ];
+  };
   process.send(message);
 };
 
@@ -19,10 +19,10 @@ process.on('uncaughtException', (err) => {
 //global variable
 
 process.on('message', (infoArray) => {
-  if (infoArray[0] == "analyseThis") {
-    //var workerCommand = infoArray[1];
+  if (infoArray.type == "analyseThis") {
+    //var workerCommand = infoArray.command;
 
-    const filepath = infoArray[1]
+    const filepath = infoArray.filePath
 
     if (__dirname.includes('.asar')) {
       process.env.NODE_ENV = "production";
@@ -43,10 +43,10 @@ process.on('message', (infoArray) => {
       //if (err) return done(err);
 
       if (err) {
-        const message = [
-          "fileInfo",
+        const message = {
+          type: "fileInfo",
           info,
-        ];
+        };
         process.send(message);
 
         process.exit()
@@ -60,10 +60,10 @@ process.on('message', (infoArray) => {
 
       console.log(thisval.streams[0]["codec_name"]);
 
-      const message = [
-        "fileInfo",
+      const message = {
+        type: "fileInfo",
         info,
-      ];
+      };
       process.send(message);
 
       process.exit()

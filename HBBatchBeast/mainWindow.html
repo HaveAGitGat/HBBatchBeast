@@ -2335,7 +2335,7 @@ Features/additions:
 
 
 
-              //     if (message[0] == "scanandconvert") {
+              //     if (message.type == "scanandconvert") {
 
 
               //         convertFiles('scanandconvert');
@@ -2470,28 +2470,6 @@ Features/additions:
 
       }
 
-
-
-      // var queueInfoBomb = {
-
-
-
-      //     inputPathStemArray: inputPathStemArray,
-      //     outPutPathStemArray: outPutPathStemArray,
-
-      //     outPutPathStemFinalArray: outPutPathStemFinalArray,
-
-      //     tempConversionFolderCheckedOnOff: document.getElementById("selectTemporaryConversionFolder").checked,
-
-      //     supportedFileTypeArray: document.getElementById("includedFileTypes").value,
-
-      //     containerType: document.getElementById("container").options[document.getElementById("container").selectedIndex].text,
-
-      //     mode: mode,
-
-
-      // };
-
       if (document.getElementById("copySRTFiles").checked == true && mode != "healthCheck") {
         var fileFilterArray = document.getElementById("includedFileTypes").value + ",srt,SRT"
 
@@ -2502,26 +2480,23 @@ Features/additions:
 
 
 
-      var queueInfoBomb = [
-
-        "queueInfoBomb",
-        inputPathStemArray,
-        outPutPathStemArray,
-        outPutPathStemFinalArray,
-        document.getElementById("selectTemporaryConversionFolder").checked,
-        fileFilterArray,
-        document.getElementById("container").value,
-        mode,
-        presetArray,
-        document.getElementById("titleWordFilter").value,
-        document.getElementById("replaceOriginalFile").checked,
-        fileNameSuffixArray,
-        document.getElementById("removeApostrophes").checked,
-        document.getElementById("replaceOriginalFileAlways").checked,
-        document.getElementById("reverseFileQueue").checked
-
-
-      ];
+      var queueInfoBomb = {
+        type: "queueInfoBomb",
+        inputPathStemArray: inputPathStemArray,
+        outPutPathStemArray: outPutPathStemArray,
+        outPutPathStemFinalArray: outPutPathStemFinalArray,
+        tempConversionFolderCheckedOnOff: document.getElementById("selectTemporaryConversionFolder").checked,
+        supportedFileTypeArray: fileFilterArray,
+        containerType: document.getElementById("container").value,
+        mode: mode,
+        presetArray: presetArray,
+        titleWordFilter: document.getElementById("titleWordFilter").value,
+        replaceOriginalFile: document.getElementById("replaceOriginalFile").checked,
+        fileNameSuffixArray: fileNameSuffixArray,
+        removeApostrophes: document.getElementById("removeApostrophes").checked,
+        replaceOriginalFileAlways: document.getElementById("replaceOriginalFileAlways").checked,
+        reverseFileQueue: document.getElementById("reverseFileQueue").checked
+      };
 
 
 
@@ -2580,7 +2555,7 @@ Features/additions:
           console.error(message.error);
         }
 
-        if (message[0] == "readyforInfo") {
+        if (message.type == "readyforInfo") {
 
           updateConsole("" + "File scanner ready for info. Sending." + "")
           queueBuildModule.send(queueInfoBomb);
@@ -2590,46 +2565,27 @@ Features/additions:
 
 
 
-        if (message[0] == "writeRequest") {
-
-          try {
-            fs.writeFileSync(message[1], message[2], 'utf8');
-
-          } catch (err) { }
-
-        }
-
-        if (message[0] == "consoleMessage") {
+        if (message.type == "consoleMessage") {
 
 
-          updateConsole("" + message[1] + "")
+          updateConsole("" + message.text + "")
 
 
         }
 
 
-
-
-        if (message[0] == "appendRequest") {
-          try {
-            fs.appendFileSync(message[1], message[2], 'utf8');
-          } catch (err) { }
-
-        }
-
-
-        if (message[0] == "complete") {
+        if (message.type == "complete") {
 
           updateConsole("" + "File scanner finished" + "")
 
 
-          totalFileFoundCounter = message[1];
-          sourceQueueArray = message[2];
-          presetArray2 = message[3];
-          skipOrCopyArray = message[4];
-          destinationQueue = message[5];
-          destinationFinalQueue = message[6];
-          unConvertedFiles = message[7];
+          totalFileFoundCounter = message.totalFileFoundCounter;
+          sourceQueueArray = message.sourceQueueArray;
+          presetArray2 = message.presetArray;
+          skipOrCopyArray = message.skipOrCopyArray;
+          destinationQueue = message.destinationQueueArray;
+          destinationFinalQueue = message.destinationFinalQueueArray;
+          unConvertedFiles = message.fileNotExistsCounter;
 
 
 
@@ -2638,20 +2594,20 @@ Features/additions:
 
         }
 
-        if (message[0] == "exitRequest") {
-          var exitMessage = [
-            "exitApproved",
-          ];
+        if (message.type == "exitRequest") {
+          var exitMessage = {
+            type: "exitApproved",
+          };
           queueBuildModule.send(exitMessage);
 
         }
 
-        if (message[0] == "totalFiles") {
-          document.getElementById("totalFilesDiv").innerHTML = "<p>Files found: " + message[1] + "<\p>";
+        if (message.type == "totalFiles") {
+          document.getElementById("totalFilesDiv").innerHTML = "<p>Files found: " + message.totalFiles + "<\p>";
         }
 
-        if (message[0] == "buildQueue") {
-          document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + message[1] + "<\p>";
+        if (message.type == "buildQueue") {
+          document.getElementById("buildQueueDiv").innerHTML = "<p>Building queue: " + message.queuedFiles + "<\p>";
         }
 
 
@@ -3035,11 +2991,14 @@ Features/additions:
 
       workers[i - 1].on('message', (message) => {
 
-        // updateConsole("Worker "+message[0]+":"+message+"");
+        // updateConsole("Worker "+message.workerNumber+":"+message+"");
 
 
         //  console.log("Message:" + message);
 
+        var workerNumber = message.workerNumber;
+        var messageType = message.type;
+        var queueNumber = message.queueNumber;
 
 
 
@@ -3047,9 +3006,10 @@ Features/additions:
 
 
 
-        if (message[1] == "deleteThisFile") {
 
-          deleteArray.push(sourceQueueArray[message[2]])
+        if (messageType == "deleteThisFile") {
+
+          deleteArray.push(sourceQueueArray[queueNumber])
 
 
         }
@@ -3057,23 +3017,23 @@ Features/additions:
 
 
 
-        if (message[1] == "exitRequest") {
-          var exitMessage = [
-            "exitApproved",
-          ];
-          workers[message[0] - 1].send(exitMessage);
+        if (messageType == "exitRequest") {
+          var exitMessage = {
+            type: "exitApproved",
+          };
+          workers[workerNumber - 1].send(exitMessage);
 
         }
 
 
-        if (message[1] == "consoleMessage") {
+        if (messageType == "consoleMessage") {
 
           if (document.getElementById("saveWorkerLogs").checked == true) {
 
-            updateConsole("Worker " + message[0] + ":" + message[2] + "");
+            updateConsole("Worker " + workerNumber + ":" + message.text + "");
 
           } else {
-            updateConsole("Worker " + message[0] + ":" + message[2] + "", true);
+            updateConsole("Worker " + workerNumber + ":" + message.text + "", true);
 
           }
         }
@@ -3081,7 +3041,7 @@ Features/additions:
 
 
 
-        if (message[1] == "queueRequest") {
+        if (messageType == "queueRequest") {
 
           console.log(globalQueueNumberManager)
 
@@ -3096,16 +3056,16 @@ Features/additions:
 
             workerStatusArray.push("Complete")
 
-            var messageOut = [
-              "completed",
-            ];
+            var messageOut = {
+              type: "completed",
+            };
 
           }
-          //  workers[message[0] - 1].send(message);
+          //  workers[message.workerNumber - 1].send(message);
 
           // console.log(messageOut)
 
-          workers[message[0] - 1].send(messageOut);
+          workers[workerNumber - 1].send(messageOut);
 
 
 
@@ -3114,22 +3074,22 @@ Features/additions:
         }
 
 
-        if (message[1] == "processing") {
+        if (messageType == "processing") {
 
-          workerStatusFinishedArray[message[0] - 1] = ""
-          var currentRow = parseInt(message[2]) + 1
+          workerStatusFinishedArray[workerNumber - 1] = ""
+          var currentRow = parseInt(queueNumber) + 1
           if (queueView == "enabled") {
-            queueTable.rows[currentRow].cells[3].innerHTML = "Worker " + message[0];
+            queueTable.rows[currentRow].cells[3].innerHTML = "Worker " + workerNumber;
 
 
             //done
-            queueTable.rows[currentRow].cells[5].innerHTML = message[3];
+            queueTable.rows[currentRow].cells[5].innerHTML = message.status;
 
             queueTable.rows[currentRow].style.backgroundColor = "#ffa24c";
           }
 
           //Need to update workerprogressarray if this is changed.
-          document.getElementById("worker" + message[0] + "Status").innerHTML = "<div class=\"grid-itemleft\" style=\"white-space:nowrap;\"><p>Worker " + message[0] + " processing file:<div id=\"cancelButtonDiv" + message[0] + "\"><input type='button' id=\"cancelButton" + message[0] + "\" class=\"infoButton\" value='Cancel item' onclick='cancelItemProcess(\"" + message[0] + "\")'/></div></p><div id=\"worker" + message[0] + "Percentage\"><p><font color=\"#66ccff\">Running</font></p></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[message[2]] + "</p></div>";
+          document.getElementById("worker" + workerNumber + "Status").innerHTML = "<div class=\"grid-itemleft\" style=\"white-space:nowrap;\"><p>Worker " + workerNumber + " processing file:<div id=\"cancelButtonDiv" + workerNumber + "\"><input type='button' id=\"cancelButton" + workerNumber + "\" class=\"infoButton\" value='Cancel item' onclick='cancelItemProcess(\"" + workerNumber + "\")'/></div></p><div id=\"worker" + workerNumber + "Percentage\"><p><font color=\"#66ccff\">Running</font></p></div></div><div class=\"grid-itemright\"><p>" + sourceQueueArray[queueNumber] + "</p></div>";
 
 
 
@@ -3145,17 +3105,17 @@ Features/additions:
 
         if (mode != "healthCheck") {
 
-          if (message[1] == "fileSizes") {
+          if (messageType == "fileSizes") {
 
-            sourceFileSize += parseFloat(message[3])
-            outputFileSize += parseFloat(message[4])
+            sourceFileSize += parseFloat(message.sourceFileSize)
+            outputFileSize += parseFloat(message.outputFileSize)
 
-            var currentRow = parseInt(message[2]) + 1
+            var currentRow = parseInt(queueNumber) + 1
 
 
             try{
-            queueTable.rows[currentRow].cells[8].innerHTML = parseFloat(message[3]).toPrecision(3)
-            queueTable.rows[currentRow].cells[9].innerHTML = parseFloat(message[4]).toPrecision(3)
+            queueTable.rows[currentRow].cells[8].innerHTML = parseFloat(message.sourceFileSize).toPrecision(3)
+            queueTable.rows[currentRow].cells[9].innerHTML = parseFloat(message.outputFileSize).toPrecision(3)
           }catch(err){}
 
             //    console.log(sourceFileSize)
@@ -3167,26 +3127,26 @@ Features/additions:
 
         }
 
-        if (message[1] == "percentage") {
+        if (messageType == "percentage") {
           // document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker" + i + "Status\"> </div>";
-          document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">" + message[3] + "</font></p>";
-          //updateConsole("Worker " + message[0] + ":" + message[3] + ":" + sourceQueueArray[message[2]] + "");
-          var currentRow = parseInt(message[2]) + 1
+          document.getElementById("worker" + workerNumber + "Percentage").innerHTML = "<p><font color=\"#66ccff\">" + message.progress + "</font></p>";
+          //updateConsole("Worker " + message.workerNumber + ":" + message.progress + ":" + sourceQueueArray[message.queueNumber] + "");
+          var currentRow = parseInt(queueNumber) + 1
           if (queueView == "enabled") {
             //done
-            queueTable.rows[currentRow].cells[5].innerHTML = message[3];
+            queueTable.rows[currentRow].cells[5].innerHTML = message.progress;
           }
           // workerStatusDiv
         }
 
-        if (message[1] == "repair_worker_percentage") {
+        if (messageType == "repair_worker_percentage") {
           // document.getElementById("workerStatusDiv").innerHTML += "<div id=\"worker" + i + "Status\"> </div>";
-          document.getElementById("worker" + message[0] + "Percentage").innerHTML = "<p><font color=\"#66ccff\">Attempting repair:" + message[3] + "</font></p>";
-          updateConsole("Worker " + message[0] + ":" + message[3] + ":" + sourceQueueArray[message[2]] + "");
-          var currentRow = parseInt(message[2]) + 1
+          document.getElementById("worker" + workerNumber + "Percentage").innerHTML = "<p><font color=\"#66ccff\">Attempting repair:" + message.progress + "</font></p>";
+          updateConsole("Worker " + workerNumber + ":" + message.progress + ":" + sourceQueueArray[queueNumber] + "");
+          var currentRow = parseInt(queueNumber) + 1
           if (queueView == "enabled") {
             //done
-            queueTable.rows[currentRow].cells[5].innerHTML = "Attempting repair:" + message[3];
+            queueTable.rows[currentRow].cells[5].innerHTML = "Attempting repair:" + message.progress;
           }
           // workerStatusDiv
         }
@@ -3213,7 +3173,7 @@ Features/additions:
 
 
 
-          //var currentRow = parseInt(message[2]) + 1
+          //var currentRow = parseInt(message.queueNumber) + 1
           if (queueView == "enabled") {
             queueTable.rows[currentRow].cells[2].innerHTML = preset;
             queueTable.rows[currentRow].cells[3].innerHTML = "";
@@ -3318,83 +3278,78 @@ Features/additions:
 
 
 
-        if (message[1] == "error") {
+        if (messageType == "error") {
           errorCount++;
 
-          informationUpdate(message[0], message[3], message[4], message[2], "#ff2d2d", "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('" + sessionNumber + "')\" value=\"Error (Click for info)\">", "<p><font color=\"#ff2d2d\">Error</font></p>")
+          informationUpdate(workerNumber, message.preset, message.errorLog, queueNumber, "#ff2d2d", "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('" + sessionNumber + "')\" value=\"Error (Click for info)\">", "<p><font color=\"#ff2d2d\">Error</font></p>")
 
         }
 
 
 
-        if (message[1] == "success") {
+        if (messageType == "success") {
           successfulCount++;
-          informationUpdate(message[0], message[3], message[4], message[2], "#59ff74", "Completed", "<p><font color=\"#66ccff\">Completed</font></p>")
+          informationUpdate(workerNumber, message.preset, message.errorLog, queueNumber, "#59ff74", "Completed", "<p><font color=\"#66ccff\">Completed</font></p>")
 
         }
 
         try {
-          if (message[1].includes("Skipped")) {
+          if (messageType.includes("Skipped")) {
 
             otherCount++;
-            informationUpdate(message[0], message[3], message[4], message[2], "#ffa24c", message[1], "<p><font color=\"#66ccff\">Completed</font></p>")
+            informationUpdate(workerNumber, message.preset, message.errorLog, queueNumber, "#ffa24c", messageType, "<p><font color=\"#66ccff\">Completed</font></p>")
           }
         } catch (err) { }
 
-        if (message[1] == "copied") {
+        if (messageType == "copied") {
 
           successfulCount++;
-          informationUpdate(message[0], message[3], message[4], message[2], "#59ff74", "Copied to destination", "<p><font color=\"#66ccff\">Completed</font></p>")
+          informationUpdate(workerNumber, message.preset, message.errorLog, queueNumber, "#59ff74", "Copied to destination", "<p><font color=\"#66ccff\">Completed</font></p>")
         }
 
 
-        if (message[1] == "copiedFail") {
+        if (messageType == "copiedFail") {
 
           errorCount++;
-          informationUpdate(message[0], message[3], message[4], message[2], "#ff2d2d", "Copy to destination failed", "<p><font color=\"#66ccff\">Completed</font></p>")
+          informationUpdate(workerNumber, message.preset, message.errorLog, queueNumber, "#ff2d2d", "Copy to destination failed", "<p><font color=\"#66ccff\">Completed</font></p>")
 
         }
 
 
-        //if (message[1] == "originalReplaced") {
         try {
-          if (message[1].includes("Original replaced")) {
+          if (messageType.includes("Original replaced")) {
 
             successfulCount++;
-            informationUpdate(message[0], message[3], message[4], message[2], "#59ff74", message[1], "<p><font color=\"#66ccff\">Completed</font></p>")
-
-          }
-        } catch (err) { }
-
-        //if (message[1] == "originalNotReplaced") {
-        try {
-          if (message[1].includes("Original not replaced")) {
-
-            successfulCount++;
-            informationUpdate(message[0], message[3], message[4], message[2], "#ffa24c", message[1], "<p><font color=\"#66ccff\">Completed</font></p>")
-
-          }
-        } catch (err) { }
-
-
-
-        try {
-          if (message[1].includes("File repaired")) {
-
-            successfulCount++;
-            informationUpdate(message[0], message[3], message[4], message[2], "#59ff74", message[1], "<p><font color=\"#66ccff\">File repaired. Please inspect files.</font></p>")
+            informationUpdate(workerNumber, message.preset, message.errorLog, queueNumber, "#59ff74", messageType, "<p><font color=\"#66ccff\">Completed</font></p>")
 
           }
         } catch (err) { }
 
         try {
-          if (message[1].includes("Unable to repair file")) {
+          if (messageType.includes("Original not replaced")) {
+
+            successfulCount++;
+            informationUpdate(workerNumber, message.preset, message.errorLog, queueNumber, "#ffa24c", messageType, "<p><font color=\"#66ccff\">Completed</font></p>")
+
+          }
+        } catch (err) { }
+
+
+
+        try {
+          if (messageType.includes("File repaired")) {
+
+            successfulCount++;
+            informationUpdate(workerNumber, message.preset, message.errorLog, queueNumber, "#59ff74", messageType, "<p><font color=\"#66ccff\">File repaired. Please inspect files.</font></p>")
+
+          }
+        } catch (err) { }
+
+        try {
+          if (messageType.includes("Unable to repair file")) {
 
             errorCount++;
-            informationUpdate(message[0], message[3], message[4], message[2], "#ff2d2d", "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('" + sessionNumber + "')\" value=\"Error: Unable to repair file(Click for info)\">", "<p><font color=\"#ff2d2d\">Error:Unable to repair file</font></p>")
-
-
-            //  informationUpdate(message[0], message[3], message[4], message[2], "#ff2d2d", "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('" + sessionNumber + "')\" value=\"Unable to repair (Click for info)\">", "<p><font color=\"#ff2d2d\">Error</font></p>")
+            informationUpdate(workerNumber, message.preset, message.errorLog, queueNumber, "#ff2d2d", "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('" + sessionNumber + "')\" value=\"Error: Unable to repair file(Click for info)\">", "<p><font color=\"#ff2d2d\">Error:Unable to repair file</font></p>")
 
           }
         } catch (err) { }
@@ -3402,19 +3357,15 @@ Features/additions:
 
 
 
-        if (message[1] == "FFPROBE") {
+        if (messageType == "FFPROBE") {
 
-          var currentRow = parseInt(message[2]) + 1
+          var currentRow = parseInt(queueNumber) + 1
           if (queueView == "enabled") {
 
 
-            queueTable.rows[currentRow].cells[4].innerHTML = "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert3('" + encodeURI(message[4]) + "')\" value=\"" + message[3] + "\">"
-
-            // message[3];
-
-            //  "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert2('"+sessionNumber+"')\" value=\"Error (Click for info)\">"
+            queueTable.rows[currentRow].cells[4].innerHTML = "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert3('" + encodeURI(message.filePath) + "')\" value=\"" + message.status + "\">"
           }
-          FFprobeArray[currentRow - 1] = "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert3('" + encodeURI(message[4]) + "')\" value=\"" + message[3] + "\">"
+          FFprobeArray[currentRow - 1] = "<input type=\"button\" class=\"infoButton\" onclick=\"showAlert3('" + encodeURI(message.filePath) + "')\" value=\"" + message.status + "\">"
 
         }
 
@@ -3423,30 +3374,16 @@ Features/additions:
 
 
 
-        if (message[1] == "cancelled") {
+        if (messageType == "cancelled") {
 
           cancelCount++;
-          informationUpdate(message[0], message[3], message[4], message[2], "#ffda6d", "Cancelled", "<p>Cancelled</p>")
+          informationUpdate(workerNumber, message.preset, message.errorLog, queueNumber, "#ffda6d", "Cancelled", "<p>Cancelled</p>")
         }
 
 
-        if (message[1] == "writeRequest") {
-
-
-
+        if (messageType == "appendRequest") {
           try {
-            fs.writeFileSync(message[2], message[3], 'utf8');
-
-          } catch (err) { }
-
-        }
-
-
-
-
-        if (message[1] == "appendRequest") {
-          try {
-            fs.appendFileSync(message[2], message[3], 'utf8');
+            fs.appendFileSync(message.filePath, message.contents, 'utf8');
           } catch (err) { }
 
         }
@@ -4831,9 +4768,9 @@ Features/additions:
 
       for (var j = 0; j < document.getElementById("instanceNumber").value; j++) {
 
-        var messageOut = [
-          "suicide",
-        ];
+        var messageOut = {
+          type: "suicide",
+        };
 
         workers[j].send(messageOut);
 
@@ -4901,52 +4838,43 @@ Features/additions:
 
   const queueWorkerMessage = window.queueWorkerMessage = () => {
 
-    return [
-
-      "queueNumber",
-      globalQueueNumberManager,
-      skipOrCopyArray[globalQueueNumberManager],
-      document.getElementById("copyFilteredFiles").checked,
-      document.getElementById("replaceOriginalFile").checked,
-      document.getElementById("moveCorruptFileOnOff").checked,
-      document.getElementById("corruptDestinationPath").value,
-      mode,
-      document.getElementById("runPriority").checked,
-      document.getElementById("tableQueueNumber" + (globalQueueNumberManager + 1)).checked,
-      document.getElementById("includePropertyFileFilter").value + "",
-      document.getElementById("excludePropertyFileFilter").value + "",
-      document.getElementById("replaceOriginalFileAlways").checked,
-
-      document.getElementById("includeAnyFilesWithProperties").checked,
-      document.getElementById("includeAllFilesWithProperties").checked,
-      document.getElementById("excludeAnyFilesWithProperties").checked,
-      document.getElementById("excludeAllFilesWithProperties").checked,
-      document.getElementById("handBrakeMode").checked,
-      document.getElementById("FFmpegMode").checked,
-      document.getElementById("deleteSourceFiles").checked,
-      document.getElementById("customBatPath").value,
-      document.getElementById("selectTemporaryConversionFolder").checked,
-      sourceQueueArray[globalQueueNumberManager],
-      presetArray2[globalQueueNumberManager],
-      destinationQueue[globalQueueNumberManager],
-      destinationFinalQueue[globalQueueNumberManager],
-      document.getElementById("minimumFileSizeOnOff").checked,
-      document.getElementById("minimumFileSize").value,
-      document.getElementById("maximumFileSizeOnOff").checked,
-      document.getElementById("maximumFileSize").value,
-      document.getElementById("runThoroughHealthCheck").checked,
-      document.getElementById("repairAttempt").checked,
-      document.getElementById("CRFRepairValue").value,
-      getHandBrakeCLIPath(),
-      getFFmpegCLIPath(),
-      document.getElementById("saveWorkerLogs").checked,
-
-
-
-
-
-
-    ]
+    return {
+      type: "queueNumber",
+      globalQueueNumber: globalQueueNumberManager,
+      skipOrCopy: skipOrCopyArray[globalQueueNumberManager],
+      copyOnOff: document.getElementById("copyFilteredFiles").checked,
+      replaceOriginalFile: document.getElementById("replaceOriginalFile").checked,
+      moveCorruptFileOnOff: document.getElementById("moveCorruptFileOnOff").checked,
+      corruptDestinationPath: document.getElementById("corruptDestinationPath").value,
+      mode: mode,
+      itemChecked: document.getElementById("tableQueueNumber" + (globalQueueNumberManager + 1)).checked,
+      fileFiltersIncludeArray: document.getElementById("includePropertyFileFilter").value + "",
+      fileFiltersExcludeArray: document.getElementById("excludePropertyFileFilter").value + "",
+      replaceOriginalFileAlways: document.getElementById("replaceOriginalFileAlways").checked,
+      includeAnyFilesWithProperties: document.getElementById("includeAnyFilesWithProperties").checked,
+      includeAllFilesWithProperties: document.getElementById("includeAllFilesWithProperties").checked,
+      excludeAnyFilesWithProperties: document.getElementById("excludeAnyFilesWithProperties").checked,
+      excludeAllFilesWithProperties: document.getElementById("excludeAllFilesWithProperties").checked,
+      handBrakeMode: document.getElementById("handBrakeMode").checked,
+      FFmpegMode: document.getElementById("FFmpegMode").checked,
+      deleteSourceFilesOnOff: document.getElementById("deleteSourceFiles").checked,
+      batOnOff: document.getElementById("customBatPath").value,
+      tempFolderSelected: document.getElementById("selectTemporaryConversionFolder").checked,
+      currentSourceLine: sourceQueueArray[globalQueueNumberManager],
+      preset: presetArray2[globalQueueNumberManager],
+      currentDestinationLine: destinationQueue[globalQueueNumberManager],
+      currentDestinationFinalLine: destinationFinalQueue[globalQueueNumberManager],
+      minimumFileSizeOnOff: document.getElementById("minimumFileSizeOnOff").checked,
+      minimumFileSize: document.getElementById("minimumFileSize").value,
+      maximumFileSizeOnOff: document.getElementById("maximumFileSizeOnOff").checked,
+      maximumFileSize: document.getElementById("maximumFileSize").value,
+      runThoroughHealthCheck: document.getElementById("runThoroughHealthCheck").checked,
+      repairFile: document.getElementById("repairAttempt").checked,
+      repairCRFValue: document.getElementById("CRFRepairValue").value,
+      handBrakeCLIPath: getHandBrakeCLIPath(),
+      ffmpegPath: getFFmpegCLIPath(),
+      saveWorkerLogs: document.getElementById("saveWorkerLogs").checked,
+    }
 
   };
 
@@ -4981,9 +4909,9 @@ Features/additions:
 
     for (var i = 0; i < workers.length; i++) {
 
-      var messageOut = [
-        "continueWork",
-      ];
+      var messageOut = {
+        type: "continueWork",
+      };
       workers[i].send(messageOut);
 
 
@@ -5043,9 +4971,9 @@ Features/additions:
 
 
     document.getElementById("cancelButtonDiv" + workerNumber).innerHTML = "<input type='button' class=\"infoButtonGrey\" value='" + document.getElementById("button_cancel_item").textContent + "' />"
-    var messageOut = [
-      "exitThread",
-    ];
+    var messageOut = {
+      type: "exitThread",
+    };
     workers[workerNumber - 1].send(messageOut);
   };
 
@@ -5539,13 +5467,13 @@ Features/additions:
 
     var priorityModule = childProcess.fork(path.join(__dirname, priorityModulePath), [], { silent: true });
 
-    var infoArray = [
-      "setPriority",
-      workerCommand
-    ];
+    var priorityMessage = {
+      type: "setPriority",
+      command: workerCommand,
+    };
 
 
-    priorityModule.send(infoArray);
+    priorityModule.send(priorityMessage);
 
   };
 

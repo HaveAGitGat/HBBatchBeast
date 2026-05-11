@@ -1,40 +1,42 @@
 "use strict";
 
-const assignQueueMessage = (state, m) => {
-  state.globalQueueNumber = m[1];
-  state.skipOrCopy = m[2];
-  state.copyOnOff = m[3];
-  state.replaceOriginalFile = m[4];
-  state.moveCorruptFileOnOff = m[5];
-  state.corruptDestinationPath = m[6];
-  state.mode = m[7];
-  state.itemChecked = m[9];
-  state.fileFiltersIncludeArray = m[10] + "";
-  state.fileFiltersExcludeArray = m[11] + "";
-  state.replaceOriginalFileAlways = m[12];
-  state.includeAnyFilesWithProperties = m[13];
-  state.includeAllFilesWithProperties = m[14];
-  state.excludeAnyFilesWithProperties = m[15];
-  state.excludeAllFilesWithProperties = m[16];
-  state.handBrakeMode = m[17];
-  state.FFmpegMode = m[18];
-  state.deleteSourceFilesOnOff = m[19];
-  state.batOnOff = m[20];
-  state.tempFolderSelected = m[21];
-  state.currentSourceLine = m[22];
-  state.preset = m[23];
-  state.currentDestinationLine = m[24];
-  state.currentDestinationFinalLine = m[25];
-  state.minimumFileSizeOnOff = m[26]
-  state.minimumFileSize = m[27]
-  state.maximumFileSizeOnOff = m[28]
-  state.maximumFileSize = m[29]
-  state.runThoroughHealthCheck = m[30]
-  state.repairFile = m[31]
-  state.repairCRFValue = m[32]
-  state.handBrakeCLIPath = m[33]
-  state.ffmpegPath = m[34]
-  state.saveWorkerLogs = m[35]
+const { processingMessage } = require('./messages');
+
+const assignQueueMessage = (state, queueItem) => {
+  state.globalQueueNumber = queueItem.globalQueueNumber;
+  state.skipOrCopy = queueItem.skipOrCopy;
+  state.copyOnOff = queueItem.copyOnOff;
+  state.replaceOriginalFile = queueItem.replaceOriginalFile;
+  state.moveCorruptFileOnOff = queueItem.moveCorruptFileOnOff;
+  state.corruptDestinationPath = queueItem.corruptDestinationPath;
+  state.mode = queueItem.mode;
+  state.itemChecked = queueItem.itemChecked;
+  state.fileFiltersIncludeArray = queueItem.fileFiltersIncludeArray + "";
+  state.fileFiltersExcludeArray = queueItem.fileFiltersExcludeArray + "";
+  state.replaceOriginalFileAlways = queueItem.replaceOriginalFileAlways;
+  state.includeAnyFilesWithProperties = queueItem.includeAnyFilesWithProperties;
+  state.includeAllFilesWithProperties = queueItem.includeAllFilesWithProperties;
+  state.excludeAnyFilesWithProperties = queueItem.excludeAnyFilesWithProperties;
+  state.excludeAllFilesWithProperties = queueItem.excludeAllFilesWithProperties;
+  state.handBrakeMode = queueItem.handBrakeMode;
+  state.FFmpegMode = queueItem.FFmpegMode;
+  state.deleteSourceFilesOnOff = queueItem.deleteSourceFilesOnOff;
+  state.batOnOff = queueItem.batOnOff;
+  state.tempFolderSelected = queueItem.tempFolderSelected;
+  state.currentSourceLine = queueItem.currentSourceLine;
+  state.preset = queueItem.preset;
+  state.currentDestinationLine = queueItem.currentDestinationLine;
+  state.currentDestinationFinalLine = queueItem.currentDestinationFinalLine;
+  state.minimumFileSizeOnOff = queueItem.minimumFileSizeOnOff
+  state.minimumFileSize = queueItem.minimumFileSize
+  state.maximumFileSizeOnOff = queueItem.maximumFileSizeOnOff
+  state.maximumFileSize = queueItem.maximumFileSize
+  state.runThoroughHealthCheck = queueItem.runThoroughHealthCheck
+  state.repairFile = queueItem.repairFile
+  state.repairCRFValue = queueItem.repairCRFValue
+  state.handBrakeCLIPath = queueItem.handBrakeCLIPath
+  state.ffmpegPath = queueItem.ffmpegPath
+  state.saveWorkerLogs = queueItem.saveWorkerLogs
 };
 
 const prepareDestinationNames = (state) => {
@@ -122,13 +124,7 @@ const prepareQueueItem = (ctx, m) => {
   state.errorLogFull += "Command: \n\n"
   state.errorLogFull += state.workerCommand + "\n\n"
 
-  const processingMessage = [
-    state.workerNumber,
-    "processing",
-    state.globalQueueNumber,
-    "Running"
-  ];
-  ctx.send(processingMessage);
+  ctx.send(processingMessage(state, "Running"));
 };
 
 module.exports = {

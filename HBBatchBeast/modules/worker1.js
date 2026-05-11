@@ -65,10 +65,10 @@ process.on('uncaughtException', (err) => {
   process.exit();
 });
 
-const requestMessage = [
+const requestMessage = {
   workerNumber,
-  "queueRequest",
-];
+  type: "queueRequest",
+};
 process.send(requestMessage);
 updateConsole(workerNumber, "Worker online. Requesting item")
 
@@ -93,20 +93,20 @@ const stopWorkerTree = () => {
 const cancelCurrentItem = () => {
   updateConsole(workerNumber, "Cancelling")
 
-  const infoArray = [
-    "exitThread",
-    "itemCancelled",
-  ];
+  const cancelMessage = {
+    type: "exitThread",
+    reason: "itemCancelled",
+  };
 
   try {
     if (state.shellThreadModule != "") {
-      state.shellThreadModule.send(infoArray);
+      state.shellThreadModule.send(cancelMessage);
     }
   } catch (err) { }
 
   try {
     if (state.repair_worker != "") {
-      state.repair_worker.send(infoArray);
+      state.repair_worker.send(cancelMessage);
     }
   } catch (err) { }
 };
@@ -124,34 +124,34 @@ const handleQueueNumber = (m) => {
 };
 
 process.on('message', (m) => {
-  if (m[0] == "continueWork") {
+  if (m.type == "continueWork") {
     checkifQueuePause(ctx)
   }
 
-  if (m[0] == "suicide") {
+  if (m.type == "suicide") {
     stopWorkerTree();
   }
 
-  if (m[0] == "exitThread") {
+  if (m.type == "exitThread") {
     cancelCurrentItem();
   }
 
-  if (m[0] == "queueNumber") {
+  if (m.type == "queueNumber") {
     handleQueueNumber(m);
   }
 
-  if (m[0] == "completed") {
-    const message = [
+  if (m.type == "completed") {
+    const message = {
       workerNumber,
-      "exitRequest",
-    ];
+      type: "exitRequest",
+    };
 
     process.send(message);
 
     updateConsole(workerNumber, "Exit request")
   }
 
-  if (m[0] == "exitApproved") {
+  if (m.type == "exitApproved") {
     updateConsole(workerNumber, "Exiting")
 
     process.exit();

@@ -77,11 +77,11 @@ const createWorkerState = ({
 });
 
 const updateConsole = (workerNumber, text) => {
-  const message = [
+  const message = {
     workerNumber,
-    "consoleMessage",
+    type: "consoleMessage",
     text,
-  ];
+  };
   process.send(message);
 };
 
@@ -89,10 +89,10 @@ const checkifQueuePause = (ctx) => {
   const { state } = ctx;
   const f = state.fs.readFileSync(state.homePath + '/Documents/HBBatchBeast/Config/queueStartStop.txt', 'utf8');
   if (f == "1") {
-    const message = [
-      state.workerNumber,
-      "queueRequest",
-    ];
+    const message = {
+      workerNumber: state.workerNumber,
+      type: "queueRequest",
+    };
     ctx.send(message);
   }
 };

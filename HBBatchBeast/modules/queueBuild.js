@@ -1,8 +1,8 @@
 const updateConsole = (text) => {
-  const message = [
-    "consoleMessage",
+  const message = {
+    type: "consoleMessage",
     text,
-  ];
+  };
   process.send(message);
 };
 
@@ -60,49 +60,49 @@ const destinationFinalQueueArray = [];
 let removeApostrophes_chkbx
 let reverseFileQueue_chxbx
 
-const message = [
-  "readyforInfo",
-];
+const message = {
+  type: "readyforInfo",
+};
 
 process.send(message);
 
 updateConsole("File scanner: online.")
 
 process.on('message', (queueInfoBomb) => {
-  if (queueInfoBomb[0] == "queueInfoBomb") {
+  if (queueInfoBomb.type == "queueInfoBomb") {
     updateConsole("File scanner: received info")
 
-    inputPathStemArray = queueInfoBomb[1]
+    inputPathStemArray = queueInfoBomb.inputPathStemArray
 
-    outPutPathStemArray = queueInfoBomb[2]
+    outPutPathStemArray = queueInfoBomb.outPutPathStemArray
 
-    outPutPathStemFinalArray = queueInfoBomb[3]
+    outPutPathStemFinalArray = queueInfoBomb.outPutPathStemFinalArray
 
     //
 
-    //   document.getElementById("selectTemporaryConversionFolder").checked=queueInfoBomb[3]
+    //   document.getElementById("selectTemporaryConversionFolder").checked=queueInfoBomb.tempConversionFolderCheckedOnOff
 
-    tempConversionFolderCheckedOnOff = queueInfoBomb[4]
+    tempConversionFolderCheckedOnOff = queueInfoBomb.tempConversionFolderCheckedOnOff
 
-    //document.getElementById("includedFileTypes").value=queueInfoBomb[4]
-    supportedFileTypeArrayImport = queueInfoBomb[5]
+    //document.getElementById("includedFileTypes").value=queueInfoBomb.supportedFileTypeArray
+    supportedFileTypeArrayImport = queueInfoBomb.supportedFileTypeArray
 
-    //document.getElementById("container").options[document.getElementById("container").selectedIndex].text=queueInfoBomb[5]
-    containerType = queueInfoBomb[6]
+    //document.getElementById("container").options[document.getElementById("container").selectedIndex].text=queueInfoBomb.containerType
+    containerType = queueInfoBomb.containerType
 
-    mode = queueInfoBomb[7]
+    mode = queueInfoBomb.mode
 
-    presetArray = queueInfoBomb[8]
+    presetArray = queueInfoBomb.presetArray
 
-    titleWordFilterArrayImport = queueInfoBomb[9]
+    titleWordFilterArrayImport = queueInfoBomb.titleWordFilter
 
-    replaceOriginalFile = queueInfoBomb[10]
+    replaceOriginalFile = queueInfoBomb.replaceOriginalFile
 
-    fileNameSuffixArray = queueInfoBomb[11]
+    fileNameSuffixArray = queueInfoBomb.fileNameSuffixArray
 
-    removeApostrophes_chkbx = queueInfoBomb[12]
-    replaceOriginalFileAlways= queueInfoBomb[13]
-    reverseFileQueue_chxbx = queueInfoBomb[14]
+    removeApostrophes_chkbx = queueInfoBomb.removeApostrophes
+    replaceOriginalFileAlways= queueInfoBomb.replaceOriginalFileAlways
+    reverseFileQueue_chxbx = queueInfoBomb.reverseFileQueue
 
     const homePath = require("os").homedir();
 
@@ -203,10 +203,10 @@ process.on('message', (queueInfoBomb) => {
 
                   updateConsole("File scanner: Valid files found:" + (totalFileFoundCounter + 1))
 
-                  const message = [
-                    "totalFiles",
-                    (totalFileFoundCounter + 1),
-                  ];
+                  const message = {
+                    type: "totalFiles",
+                    totalFiles: (totalFileFoundCounter + 1),
+                  };
                   process.send(message);
                 }
 
@@ -375,10 +375,10 @@ process.on('message', (queueInfoBomb) => {
             sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
 
             if ((sourceQueueArrayCounter + 1) % 100 == 0) {
-              const message = [
-                "buildQueue",
-                (sourceQueueArrayCounter + 1),
-              ];
+              const message = {
+                type: "buildQueue",
+                queuedFiles: (sourceQueueArrayCounter + 1),
+              };
               process.send(message);
 
               updateConsole("File scanner: Building queue:" + (sourceQueueArrayCounter + 1))
@@ -436,10 +436,10 @@ process.on('message', (queueInfoBomb) => {
             sourceQueueArray[sourceQueueArrayCounter] = inputPathArray[i]
 
             if ((sourceQueueArrayCounter + 1) % 100 == 0) {
-              const message = [
-                "buildQueue",
-                (sourceQueueArrayCounter + 1),
-              ];
+              const message = {
+                type: "buildQueue",
+                queuedFiles: (sourceQueueArrayCounter + 1),
+              };
 
               process.send(message);
 
@@ -489,15 +489,6 @@ process.on('message', (queueInfoBomb) => {
       }//
     }
 
-    ////
-
-    // var message = [
-    //     "writeRequest",
-    //     homePath + '/Documents/HBBatchBeast/Config/unconvertedFilesFound.txt',
-    //     (fileNotExistsCounter),
-    // ];
-    // process.send(message);
-
     updateConsole("File scanner: Finished")
 
     // reverse file queue
@@ -509,28 +500,28 @@ process.on('message', (queueInfoBomb) => {
       destinationFinalQueueArray.reverse();
     }
 
-    const completeMessage = [
-      "complete",
+    const completeMessage = {
+      type: "complete",
       totalFileFoundCounter,
       sourceQueueArray,
-      presetArray3,
+      presetArray: presetArray3,
       skipOrCopyArray,
       destinationQueueArray,
       destinationFinalQueueArray,
       fileNotExistsCounter,
-    ];
+    };
     process.send(completeMessage);
 
-    const exitMessage = [
-      "exitRequest",
-    ];
+    const exitMessage = {
+      type: "exitRequest",
+    };
 
     process.send(exitMessage);
 
     //process.exit();
   }
 
-  if (queueInfoBomb[0] == "exitApproved") {
+  if (queueInfoBomb.type == "exitApproved") {
     process.exit();
   }
 });

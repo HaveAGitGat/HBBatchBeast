@@ -14,9 +14,9 @@ const runTimer = () => {
     timer--;
 
     if (timer == 0) {
-      const messageOut = [
-        "scanandconvert",
-      ];
+      const messageOut = {
+        type: "scanandconvert",
+      };
       process.send(messageOut);
       process.exit()
     }
@@ -26,8 +26,8 @@ const runTimer = () => {
 setInterval(runTimer, 1000);
 
 process.on('message', (infoArray) => {
-  if (infoArray[0] == "runTimer") {
-    if (infoArray[1] == "dailyRunTime") {
+  if (infoArray.type == "runTimer") {
+    if (infoArray.reason == "dailyRunTime") {
       runTimerOn = 1;
     }
   }

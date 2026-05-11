@@ -2,6 +2,7 @@
 
 const childProcess = require("child_process");
 const { appendWorkerLog, sendProgressFromOutput } = require('./progress');
+const { workerResultMessage } = require('./messages');
 
 const buildRepairCommand = (state, repairFilePath) => {
   const preset = "-y,-c:v libx264 -crf " + state.repairCRFValue + " -c:a aac -q:a 100 -strict -2 -movflags faststart -level 41"
@@ -50,13 +51,7 @@ const sendUnableToRepair = (ctx, preset, repairFilePath) => {
   const { state, updateConsole } = ctx;
 
   updateConsole(state.workerNumber, "Unable to repair file!:" + state.currentSourceLine + (repairFilePath ? " to " + repairFilePath : ""))
-  const message = [
-    state.workerNumber,
-    "Unable to repair file",
-    state.globalQueueNumber,
-    preset,
-    state.errorLogFull
-  ];
+  const message = workerResultMessage(state, "Unable to repair file", preset);
   ctx.send(message);
 
   if (state.moveCorruptFileOnOff == true) {
@@ -99,13 +94,7 @@ const verifyRepairLength = (ctx, preset, repairFilePath) => {
     if (parseInt(state.source_file_length) === parseInt(repaired_file_length)) {
       updateConsole(state.workerNumber, "File repaired successfully!:" + state.currentSourceLine + " to " + repairFilePath)
 
-      const message = [
-        state.workerNumber,
-        "File repaired. Please inspect files.",
-        state.globalQueueNumber,
-        preset,
-        state.errorLogFull
-      ];
+      const message = workerResultMessage(state, "File repaired. Please inspect files.", preset);
       ctx.send(message);
 
       if (state.moveCorruptFileOnOff == true) {
@@ -118,13 +107,7 @@ const verifyRepairLength = (ctx, preset, repairFilePath) => {
         state.fs.unlinkSync(repairFilePath)
       } catch (err) { }
 
-      const message = [
-        state.workerNumber,
-        "Unable to repair file",
-        state.globalQueueNumber,
-        preset,
-        state.errorLogFull
-      ];
+      const message = workerResultMessage(state, "Unable to repair file", preset);
       ctx.send(message);
 
       if (state.moveCorruptFileOnOff == true) {
@@ -143,16 +126,10 @@ const handleRepairExit = (ctx, message, preset, repairFilePath) => {
 
   state.repair_worker = "";
 
-  console.log('shellThreadExited:', message[1]);
+  console.log('shellThreadExited:', message.code);
 
-  if (message[1] == "Cancelled") {
-    const cancelledMessage = [
-      state.workerNumber,
-      "cancelled",
-      state.globalQueueNumber,
-      preset,
-      state.errorLogFull
-    ];
+  if (message.code == "Cancelled") {
+    const cancelledMessage = workerResultMessage(state, "cancelled", preset);
     ctx.send(cancelledMessage);
 
     updateConsole(state.workerNumber, "Repair cancelled:" + state.currentSourceLine)
@@ -164,7 +141,7 @@ const handleRepairExit = (ctx, message, preset, repairFilePath) => {
     updateConsole(state.workerNumber, "File deleted:" + repairFilePath)
 
     ctx.checkifQueuePause();
-  } else if (message[1] != 0) {
+  } else if (message.code != 0) {
     if (state.currentSourceLine.includes("'") && process.platform == 'linux') {
       state.errorLogFull += "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + state.currentSourceLine
       updateConsole(state.workerNumber, "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + state.currentSourceLine)
@@ -200,15 +177,15 @@ const attachRepairWorkerListeners = (ctx, preset, repairFilePath) => {
   });
 
   state.repair_worker.on('message', (message) => {
-    if (message[0] == "consoleMessage") {
-      updateConsole(state.workerNumber, message[1]);
+    if (message.type == "consoleMessage") {
+      updateConsole(state.workerNumber, message.text);
     }
 
     if (message.error) {
       console.error(message.error);
     }
 
-    if (message[0] == "Exit") {
+    if (message.type == "Exit") {
       handleRepairExit(ctx, message, preset, repairFilePath);
     }
   });
@@ -227,13 +204,13 @@ const attemptToRepair = (ctx) => {
 
   const repairFilePath = getRepairFilePath(state);
   const repairCommand = buildRepairCommand(state, repairFilePath);
-  const infoArray = [
-    "processFile",
-    repairCommand.workerCommand
-  ];
+  const processFileMessage = {
+    type: "processFile",
+    command: repairCommand.workerCommand,
+  };
 
   updateConsole(state.workerNumber, "Sending command to repair worker:" + repairCommand.workerCommand)
-  state.repair_worker.send(infoArray);
+  state.repair_worker.send(processFileMessage);
 
   attachRepairWorkerListeners(ctx, repairCommand.preset, repairFilePath);
 };

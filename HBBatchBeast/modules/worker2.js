@@ -1,9 +1,9 @@
 
 const updateConsole = (text) => {
-  const message = [
-    "consoleMessage",
+  const message = {
+    type: "consoleMessage",
     text,
-  ];
+  };
   process.send(message);
 };
 
@@ -22,16 +22,16 @@ const shell = require('shelljs');
 process.on('message', (infoArray) => {
   console.log("shellThread")
 
-  if (infoArray[0] == "processFile") {
-    const workerCommand = infoArray[1];
+  if (infoArray.type == "processFile") {
+    const workerCommand = infoArray.command;
 
     shellWorker = shell.exec(workerCommand, (code, stdout, stderr, stdin) => {
       //console.log('Exit code:', code);
 
-      const message = [
-        "Exit",
+      const message = {
+        type: "Exit",
         code,
-      ];
+      };
       process.send(message);
 
       //console.log('Program output:', stdout+"    PID:"+shellWorker.pid);
@@ -42,12 +42,12 @@ process.on('message', (infoArray) => {
     });
   }
 
-  if (infoArray[0] == "exitThread") {
-    if (infoArray[1] == "itemCancelled") {
-      const message = [
-        "Exit",
-        "Cancelled",
-      ];
+  if (infoArray.type == "exitThread") {
+    if (infoArray.reason == "itemCancelled") {
+      const message = {
+        type: "Exit",
+        code: "Cancelled",
+      };
       process.send(message);
     }
 

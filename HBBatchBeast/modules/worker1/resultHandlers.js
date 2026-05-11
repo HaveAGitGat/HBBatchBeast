@@ -1,5 +1,12 @@
 "use strict";
 
+const {
+  appendRequestMessage,
+  deleteSourceFileMessage,
+  fileSizesMessage,
+  workerResultMessage,
+} = require('./messages');
+
 const moveCorruptedFile = (ctx) => {
   const { state, updateConsole } = ctx;
   let stringProcessingSlash;
@@ -39,12 +46,11 @@ const writeHealthCheckErrorLog = (ctx) => {
     errorLogWrite = state.currentSourceLine + "\r\n"
   }
 
-  const message = [
-    state.workerNumber,
-    "appendRequest",
+  const message = appendRequestMessage(
+    state,
     state.homePath + "/Documents/HBBatchBeast/Logs/ErrorLog.txt",
-    errorLogWrite,
-  ];
+    errorLogWrite
+  );
   ctx.send(message);
 };
 
@@ -61,13 +67,7 @@ const handleHealthCheckError = (ctx) => {
       }
 
       updateConsole(state.workerNumber, "Unable to repair file!:" + state.currentSourceLine)
-      const message = [
-        state.workerNumber,
-        "Unable to repair file",
-        state.globalQueueNumber,
-        state.preset,
-        state.errorLogFull
-      ];
+      const message = workerResultMessage(state, "Unable to repair file");
       ctx.send(message);
 
       if (state.moveCorruptFileOnOff == true) {
@@ -79,13 +79,7 @@ const handleHealthCheckError = (ctx) => {
 
     writeHealthCheckErrorLog(ctx);
   } else {
-    const errorMessage = [
-      state.workerNumber,
-      "error",
-      state.globalQueueNumber,
-      state.preset,
-      state.errorLogFull
-    ];
+    const errorMessage = workerResultMessage(state, "error");
     ctx.send(errorMessage);
 
     updateConsole(state.workerNumber, "Sub worker error when processing:" + state.currentSourceLine)
@@ -103,20 +97,18 @@ const writeConversionErrorLog = (ctx) => {
   const { state } = ctx;
 
   if (state.tempFolderSelected == true) {
-    const message = [
-      state.workerNumber,
-      "appendRequest",
+    const message = appendRequestMessage(
+      state,
       state.homePath + "/Documents/HBBatchBeast/Logs/fileConversionLog.txt",
-      "[" + ctx.getDateNow() + "#" + ctx.getTimeNow() + "]" + "--------ERROR----------" + state.currentSourceLine + "------------to----------" + state.currentDestinationFinalLine + "----------using preset----------:" + state.preset + "\r\n" + state.errorLogFull + "\r\n",
-    ];
+      "[" + ctx.getDateNow() + "#" + ctx.getTimeNow() + "]" + "--------ERROR----------" + state.currentSourceLine + "------------to----------" + state.currentDestinationFinalLine + "----------using preset----------:" + state.preset + "\r\n" + state.errorLogFull + "\r\n"
+    );
     ctx.send(message);
   } else {
-    const message = [
-      state.workerNumber,
-      "appendRequest",
+    const message = appendRequestMessage(
+      state,
       state.homePath + "/Documents/HBBatchBeast/Logs/fileConversionLog.txt",
-      "[" + ctx.getDateNow() + "#" + ctx.getTimeNow() + "]" + "--------ERROR----------" + state.currentSourceLine + "------------to----------" + state.currentDestinationLine + "----------using preset----------:" + state.preset + "\r\n" + state.errorLogFull + "\r\n",
-    ];
+      "[" + ctx.getDateNow() + "#" + ctx.getTimeNow() + "]" + "--------ERROR----------" + state.currentSourceLine + "------------to----------" + state.currentDestinationLine + "----------using preset----------:" + state.preset + "\r\n" + state.errorLogFull + "\r\n"
+    );
     ctx.send(message);
   }
 };
@@ -125,13 +117,7 @@ const workerEncounteredError = (ctx, messageOne) => {
   const { state, updateConsole } = ctx;
 
   if (messageOne == "Cancelled") {
-    const message = [
-      state.workerNumber,
-      "cancelled",
-      state.globalQueueNumber,
-      state.preset,
-      state.errorLogFull
-    ];
+    const message = workerResultMessage(state, "cancelled");
     ctx.send(message);
 
     updateConsole(state.workerNumber, "Item cancelled:" + state.currentSourceLine)
@@ -141,13 +127,7 @@ const workerEncounteredError = (ctx, messageOne) => {
     if (state.mode == "healthCheck") {
       handleHealthCheckError(ctx);
     } else {
-      const message = [
-        state.workerNumber,
-        "error",
-        state.globalQueueNumber,
-        state.preset,
-        state.errorLogFull
-      ];
+      const message = workerResultMessage(state, "error");
       ctx.send(message);
 
       updateConsole(state.workerNumber, "Sub worker error when processing:" + state.currentSourceLine)
@@ -162,20 +142,18 @@ const appendProcessedLog = (ctx) => {
   const { state } = ctx;
 
   if (state.tempFolderSelected == true) {
-    const message = [
-      state.workerNumber,
-      "appendRequest",
+    const message = appendRequestMessage(
+      state,
       state.homePath + "/Documents/HBBatchBeast/Logs/fileConversionLog.txt",
-      "[" + ctx.getDateNow() + "#" + ctx.getTimeNow() + "]" + "--------Processed----------" + state.currentSourceLine + "------------to----------" + state.currentDestinationFinalLine + "----------using preset----------:" + state.preset + "\r\n",
-    ];
+      "[" + ctx.getDateNow() + "#" + ctx.getTimeNow() + "]" + "--------Processed----------" + state.currentSourceLine + "------------to----------" + state.currentDestinationFinalLine + "----------using preset----------:" + state.preset + "\r\n"
+    );
     ctx.send(message);
   } else {
-    const message = [
-      state.workerNumber,
-      "appendRequest",
+    const message = appendRequestMessage(
+      state,
       state.homePath + "/Documents/HBBatchBeast/Logs/fileConversionLog.txt",
-      "[" + ctx.getDateNow() + "#" + ctx.getTimeNow() + "]" + "--------Processed----------" + state.currentSourceLine + "------------to----------" + state.currentDestinationLine + "----------using preset----------:" + state.preset + "\r\n",
-    ];
+      "[" + ctx.getDateNow() + "#" + ctx.getTimeNow() + "]" + "--------Processed----------" + state.currentSourceLine + "------------to----------" + state.currentDestinationLine + "----------using preset----------:" + state.preset + "\r\n"
+    );
     ctx.send(message);
   }
 };
@@ -220,12 +198,7 @@ const maybeQueueSourceDeletion = (ctx) => {
   const { state, updateConsole } = ctx;
 
   if (state.deleteSourceFilesOnOff == true) {
-    const message = [
-      state.workerNumber,
-      "deleteThisFile",
-      state.globalQueueNumber,
-
-    ];
+    const message = deleteSourceFileMessage(state);
     ctx.send(message);
 
     updateConsole(state.workerNumber, "File queued for deletion:" + state.currentSourceLine)
@@ -251,33 +224,20 @@ const replaceOriginalFileAtPath = (ctx, actualDestinationPath) => {
       overwrite: true
     })
 
-    const replacedMessage = [
-      state.workerNumber,
-      "Original replaced",
-      state.globalQueueNumber,
-      state.preset,
-      state.errorLogFull
-    ];
+    const replacedMessage = workerResultMessage(state, "Original replaced");
     ctx.send(replacedMessage);
     updateConsole(state.workerNumber, "Original file replaced:" + state.currentSourceLine + " to " + newCurrentSourceLine)
 
-    const appendMessage = [
-      state.workerNumber,
-      "appendRequest",
+    const appendMessage = appendRequestMessage(
+      state,
       state.homePath + "/Documents/HBBatchBeast/Logs/originalFileReplacedList.txt",
-      state.path.normalize(newCurrentSourceLine) + "\n",
-    ];
+      state.path.normalize(newCurrentSourceLine) + "\n"
+    );
     ctx.send(appendMessage);
   } catch (err) {
     state.errorLogFull += "\n HBBatchBeast ALERT: Error replacing original file";
 
-    const message = [
-      state.workerNumber,
-      "error",
-      state.globalQueueNumber,
-      state.preset,
-      state.errorLogFull + "\n" + err.stack
-    ];
+    const message = workerResultMessage(state, "error", state.preset, state.errorLogFull + "\n" + err.stack);
     ctx.send(message);
 
     updateConsole(state.workerNumber, "Error replacing original file:" + state.currentSourceLine + " to " + newCurrentSourceLine)
@@ -311,13 +271,7 @@ const maybeReplaceOriginalFile = (ctx) => {
       if (newFinalFileSize < originalFileSize || state.replaceOriginalFileAlways == true) {
         replaceOriginalFileAtPath(ctx, state.currentDestinationFinalLine)
       } else {
-        const message = [
-          state.workerNumber,
-          "Original not replaced: New file is larger",
-          state.globalQueueNumber,
-          state.preset,
-          state.errorLogFull
-        ];
+        const message = workerResultMessage(state, "Original not replaced: New file is larger");
         ctx.send(message);
 
         updateConsole(state.workerNumber, "Original not replaced: New file is larger:" + state.currentSourceLine)
@@ -326,25 +280,13 @@ const maybeReplaceOriginalFile = (ctx) => {
       if (newFileSize < originalFileSize || state.replaceOriginalFileAlways == true) {
         replaceOriginalFileAtPath(ctx, state.currentDestinationLine)
       } else {
-        const message = [
-          state.workerNumber,
-          "Original not replaced: New file is larger",
-          state.globalQueueNumber,
-          state.preset,
-          state.errorLogFull
-        ];
+        const message = workerResultMessage(state, "Original not replaced: New file is larger");
         ctx.send(message);
         updateConsole(state.workerNumber, "Original not replaced: New file is larger:" + state.currentDestinationLine)
       }
     }
   } else {
-    const message = [
-      state.workerNumber,
-      "success",
-      state.globalQueueNumber,
-      state.preset,
-      state.errorLogFull
-    ];
+    const message = workerResultMessage(state, "success");
     ctx.send(message);
   }
 };
@@ -353,23 +295,16 @@ const workerNotEncounteredError = (ctx) => {
   const { state, updateConsole } = ctx;
 
   if (state.mode == "healthCheck") {
-    const appendMessage = [
-      state.workerNumber,
-      "appendRequest",
+    const appendMessage = appendRequestMessage(
+      state,
       state.homePath + "/Documents/HBBatchBeast/Logs/healthyFileList.txt",
-      state.currentSourceLine + "\n",
-    ];
+      state.currentSourceLine + "\n"
+    );
     ctx.send(appendMessage);
 
     updateConsole(state.workerNumber, "No errors found with this file:" + state.currentSourceLine)
 
-    const successMessage = [
-      state.workerNumber,
-      "success",
-      state.globalQueueNumber,
-      state.preset,
-      state.errorLogFull
-    ];
+    const successMessage = workerResultMessage(state, "success");
     ctx.send(successMessage);
 
     ctx.checkifQueuePause();
@@ -377,14 +312,7 @@ const workerNotEncounteredError = (ctx) => {
     const sourcefileSizeInGbytes = (((state.fs.statSync(state.currentSourceLine)).size) / 1000000000.0);
     const destfileSizeInGbytes = (((state.fs.statSync(state.currentDestinationLine)).size) / 1000000000.0);
 
-    const message = [
-      state.workerNumber,
-      "fileSizes",
-      state.globalQueueNumber,
-      sourcefileSizeInGbytes,
-      destfileSizeInGbytes
-
-    ];
+    const message = fileSizesMessage(state, sourcefileSizeInGbytes, destfileSizeInGbytes);
     ctx.send(message);
 
     maybeRunBatFile(ctx);

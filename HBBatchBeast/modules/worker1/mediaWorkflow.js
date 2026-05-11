@@ -44,22 +44,22 @@ const startMediaWorkflow = (ctx) => {
 
   updateConsole(state.workerNumber, "FFprobe launched successfully:" + state.currentSourceLine)
 
-  const extractCommand = [
-    "analyseThis",
-    state.currentSourceLine,
-  ];
+  const extractCommand = {
+    type: "analyseThis",
+    filePath: state.currentSourceLine,
+  };
 
   state.infoExtractModule.send(extractCommand);
 
   updateConsole(state.workerNumber, "Sent to FFprobe:" + state.currentSourceLine)
 
   state.infoExtractModule.on('message', (message) => {
-    if (message[0] == "consoleMessage") {
-      updateConsole(state.workerNumber, message[1]);
+    if (message.type == "consoleMessage") {
+      updateConsole(state.workerNumber, message.text);
     }
 
-    if (message[0] == "fileInfo") {
-      handleFileInfo(ctx, message[1]);
+    if (message.type == "fileInfo") {
+      handleFileInfo(ctx, message.info);
     }
   });
 };
