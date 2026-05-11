@@ -4,94 +4,94 @@ const childProcess = require("child_process");
 const { appendWorkerLog, sendProgressFromOutput } = require('./progress');
 
 const handleWorkerExit = (ctx, message) => {
-    const { state, updateConsole } = ctx;
+  const { state, updateConsole } = ctx;
 
-    updateConsole(state.workerNumber, "Sub-worker exit status received")
+  updateConsole(state.workerNumber, "Sub-worker exit status received")
 
-    state.shellThreadModule = "";
+  state.shellThreadModule = "";
 
-    console.log('shellThreadExited:', message[1]);
+  console.log('shellThreadExited:', message[1]);
 
-    if (state.mode != "healthCheck" && !state.fs.existsSync(state.currentDestinationLine)) {
-        updateConsole(state.workerNumber, "HBBatchBeast ALERT: NO OUTPUT FILE PRODUCED" + state.currentDestinationLine)
+  if (state.mode != "healthCheck" && !state.fs.existsSync(state.currentDestinationLine)) {
+    updateConsole(state.workerNumber, "HBBatchBeast ALERT: NO OUTPUT FILE PRODUCED" + state.currentDestinationLine)
 
-        state.errorLogFull += "\n HBBatchBeast ALERT: NO OUTPUT FILE PRODUCED";
-        if (state.currentSourceLine.includes("'") && process.platform == 'linux') {
-            state.errorLogFull += "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + state.currentSourceLine
-            updateConsole(state.workerNumber, "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + state.currentSourceLine)
-        }
-
-        const errorMessage = [
-            state.workerNumber,
-            "error",
-            state.globalQueueNumber,
-            state.preset,
-            state.errorLogFull
-        ];
-        ctx.send(errorMessage);
-
-        ctx.checkifQueuePause();
-    } else if (message[1] != 0) {
-        ctx.workerEncounteredError(message[1])
-    } else {
-        ctx.workerNotEncounteredError();
+    state.errorLogFull += "\n HBBatchBeast ALERT: NO OUTPUT FILE PRODUCED";
+    if (state.currentSourceLine.includes("'") && process.platform == 'linux') {
+      state.errorLogFull += "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + state.currentSourceLine
+      updateConsole(state.workerNumber, "\n Operation may have failed due to apostrophe in file name. Please try using the setting 'Remove apostrophes from filenames' in the advanced settings section.:" + state.currentSourceLine)
     }
+
+    const errorMessage = [
+      state.workerNumber,
+      "error",
+      state.globalQueueNumber,
+      state.preset,
+      state.errorLogFull
+    ];
+    ctx.send(errorMessage);
+
+    ctx.checkifQueuePause();
+  } else if (message[1] != 0) {
+    ctx.workerEncounteredError(message[1])
+  } else {
+    ctx.workerNotEncounteredError();
+  }
 };
 
 const startTranscodeWorker = (ctx) => {
-    const { state, updateConsole } = ctx;
-    const shellThreadPath = "worker2.js"
+  const { state, updateConsole } = ctx;
+  const shellThreadPath = "worker2.js"
 
-    updateConsole(state.workerNumber, "Launching sub-worker:")
+  updateConsole(state.workerNumber, "Launching sub-worker:")
 
-    state.shellThreadModule = childProcess.fork(state.path.join(state.moduleDir, shellThreadPath), [], {
-        silent: true
-    });
-    updateConsole(state.workerNumber, "Launching sub-worker successful:")
+  state.shellThreadModule = childProcess.fork(state.path.join(state.moduleDir, shellThreadPath), [], {
+    silent: true
+  });
+  updateConsole(state.workerNumber, "Launching sub-worker successful:")
 
-    const infoArray = [
-        "processFile",
-        state.workerCommand
-    ];
+  const infoArray = [
+    "processFile",
+    state.workerCommand
+  ];
 
-    updateConsole(state.workerNumber, "Sending command to sub-worker:" + state.workerCommand)
-    state.shellThreadModule.send(infoArray);
+  updateConsole(state.workerNumber, "Sending command to sub-worker:" + state.workerCommand)
+  state.shellThreadModule.send(infoArray);
 
-    state.shellThreadModule.stdout.on('data', (data) => {
-        const str = "" + data;
+  state.shellThreadModule.stdout.on('data', (data) => {
+    const str = "" + data;
 
-        appendWorkerLog(ctx, str, false);
-        sendProgressFromOutput(ctx, str, "percentage", true);
-    });
+    appendWorkerLog(ctx, str, false);
+    sendProgressFromOutput(ctx, str, "percentage", true);
+  });
 
-    state.shellThreadModule.stderr.on('data', (data) => {
-        const str = "" + data;
+  state.shellThreadModule.stderr.on('data', (data) => {
+    const str = "" + data;
 
-        appendWorkerLog(ctx, str, true);
+    appendWorkerLog(ctx, str, true);
 
-        state.errorLogFull += data;
-        sendProgressFromOutput(ctx, str, "percentage", true);
-    });
+    state.errorLogFull += data;
+    sendProgressFromOutput(ctx, str, "percentage", true);
+  });
 
-    state.shellThreadModule.on("exit", () => {
-        updateConsole(state.workerNumber, "Sub-worker exited")
-    });
+  state.shellThreadModule.on("exit", () => {
+    updateConsole(state.workerNumber, "Sub-worker exited")
+  });
 
-    state.shellThreadModule.on('message', (message) => {
-        if (message[0] == "consoleMessage") {
-            updateConsole(state.workerNumber, message[1]);
-        }
+  state.shellThreadModule.on('message', (message) => {
+    if (message[0] == "consoleMessage") {
+      updateConsole(state.workerNumber, message[1]);
+    }
 
-        if (message.error) {
-            console.error(message.error);
-        }
+    if (message.error) {
+      console.error(message.error);
+    }
 
-        if (message[0] == "Exit") {
-            handleWorkerExit(ctx, message);
-        }
-    });
+    if (message[0] == "Exit") {
+      handleWorkerExit(ctx, message);
+    }
+  });
 };
 
 module.exports = {
-    startTranscodeWorker,
+  startTranscodeWorker,
 };

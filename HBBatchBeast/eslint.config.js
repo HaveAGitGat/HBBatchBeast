@@ -39,6 +39,9 @@ module.exports = [
       ...js.configs.recommended.rules,
       'no-empty': 'off',
       'no-debugger': 'warn',
+      indent: ['error', 2, {
+        SwitchCase: 1
+      }],
       'no-multiple-empty-lines': ['error', {
         max: 1
       }],

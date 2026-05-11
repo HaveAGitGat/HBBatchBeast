@@ -23,7 +23,7 @@ let mainWindow;
 //SET ENV
 
 if (__dirname.includes('.asar')) { // If dev
-    process.env.NODE_ENV = "production";
+  process.env.NODE_ENV = "production";
 }
 
 //listen for app to be ready
@@ -31,192 +31,192 @@ if (__dirname.includes('.asar')) { // If dev
 let appIcon
 
 app.on('ready', () => {
-    console.log("App loading")
+  console.log("App loading")
 
-    //create new window
+  //create new window
 
-    mainWindow = new BrowserWindow({
-        width: 1400,
-        height: 1000,
-        frame: false,
-        title: 'HBBatchBeast'
+  mainWindow = new BrowserWindow({
+    width: 1400,
+    height: 1000,
+    frame: false,
+    title: 'HBBatchBeast'
 
-    });
+  });
 
-    //Load html into window
+  //Load html into window
 
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'mainWindow.html'),
-        protocol: 'file:',
-        slashes: true
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'mainWindow.html'),
+    protocol: 'file:',
+    slashes: true
 
-    }));
+  }));
 
-    // //Quit app when closed
-    // mainWindow.on('closed', function () {
-    //     app.quit();
+  // //Quit app when closed
+  // mainWindow.on('closed', function () {
+  //     app.quit();
 
-    // });
+  // });
 
-    //Build menu from template
-    const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-    //Insert menu
-    Menu.setApplicationMenu(mainMenu);
+  //Build menu from template
+  const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+  //Insert menu
+  Menu.setApplicationMenu(mainMenu);
 
-    if (process.platform == 'win32') {
-        appIcon = new Tray(iconpath)
+  if (process.platform == 'win32') {
+    appIcon = new Tray(iconpath)
 
-        const contextMenu = Menu.buildFromTemplate([
-            {
-                label: 'Show', click: () => {
-                    mainWindow.show()
-                }
-            },
-            {
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: 'Show', click: () => {
+          mainWindow.show()
+        }
+      },
+      {
 
-                label: 'Clear notification', click: () => {
-                    appIcon.setImage(iconpath);
-                }
-            },
-            {
-                label: 'Quit', click: () => {
-                    app.isQuiting = true
-                    app.quit()
-                }
-            }
+        label: 'Clear notification', click: () => {
+          appIcon.setImage(iconpath);
+        }
+      },
+      {
+        label: 'Quit', click: () => {
+          app.isQuiting = true
+          app.quit()
+        }
+      }
 
-        ])
+    ])
 
-        appIcon.setContextMenu(contextMenu)
+    appIcon.setContextMenu(contextMenu)
 
-        mainWindow.on('close', (event) => {
-            //  mainWindow = null
-            app.isQuiting = true
-            app.quit()
-        })
+    mainWindow.on('close', (event) => {
+      //  mainWindow = null
+      app.isQuiting = true
+      app.quit()
+    })
 
-        mainWindow.on('minimize', (event) => {
-            event.preventDefault()
-            mainWindow.hide()
-        })
+    mainWindow.on('minimize', (event) => {
+      event.preventDefault()
+      mainWindow.hide()
+    })
 
-        mainWindow.on('maximize', (event) => {
-            event.preventDefault()
-            mainWindow.maximize();
-        })
+    mainWindow.on('maximize', (event) => {
+      event.preventDefault()
+      mainWindow.maximize();
+    })
 
-        mainWindow.on('unmaximize', (event) => {
-            event.preventDefault()
-            mainWindow.unmaximize();
-        })
+    mainWindow.on('unmaximize', (event) => {
+      event.preventDefault()
+      mainWindow.unmaximize();
+    })
 
-        mainWindow.on('show', () => {
-            appIcon.setHighlightMode('always')
+    mainWindow.on('show', () => {
+      appIcon.setHighlightMode('always')
 
-            //appIcon.setImage(iconpath);
-        })
+      //appIcon.setImage(iconpath);
+    })
 
-        //appIcon.setToolTip('Error!');
-    }
+    //appIcon.setToolTip('Error!');
+  }
 });
 
 let platform;
 let iconpath;
 
 if (process.platform == 'win32') {
-    platform = "win"
-    iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.ico')
-    //var iconpath = "./assets/icons/win/icon.ico"
+  platform = "win"
+  iconpath = path.join(__dirname, '.\\assets\\icons\\win\\icon.ico')
+  //var iconpath = "./assets/icons/win/icon.ico"
 }
 
 if (process.platform == 'linux') {
-    platform = "png"
-    iconpath = "./assets/icons/png/icon.png"
+  platform = "png"
+  iconpath = "./assets/icons/png/icon.png"
 }
 
 if (process.platform == 'darwin') {
-    platform = "mac"
-    iconpath = "./assets/icons/mac/icon.icns"
+  platform = "mac"
+  iconpath = "./assets/icons/mac/icon.icns"
 }
 
 //Catch icon updates
 ipcMain.on('item:add', (e, item) => {
-    //  console.log(item);
+  //  console.log(item);
 
-    const icon = path.join(__dirname, '.\\assets\\icons\\' + platform + '\\' + item + '.ico')
+  const icon = path.join(__dirname, '.\\assets\\icons\\' + platform + '\\' + item + '.ico')
 
-    //var icon ="./assets/icons/"+platform+"/"+item+"."+type;
-    appIcon.setImage(icon);
+  //var icon ="./assets/icons/"+platform+"/"+item+"."+type;
+  appIcon.setImage(icon);
 });
 
 ipcMain.on('item:ready', (e, item) => {
-    mainWindow.webContents.send('item:ready', "Test");
+  mainWindow.webContents.send('item:ready', "Test");
 });
 
 ipcMain.on('mediaview:ready', (e, item) => {
-    mainWindow.webContents.send('mediaview:ready', "Test");
+  mainWindow.webContents.send('mediaview:ready', "Test");
 });
 
 ipcMain.on('benchstatus:ready', (e, item) => {
-    mainWindow.webContents.send('benchstatus:ready', "Test");
+  mainWindow.webContents.send('benchstatus:ready', "Test");
 });
 
 //Create menu template
 
 const mainMenuTemplate = [
 
-    {
-        label: 'File',
+  {
+    label: 'File',
 
-        submenu: [
+    submenu: [
 
-            {
-                label: 'Quit',
-                accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+      {
+        label: 'Quit',
+        accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
 
-                click() {
-                    app.quit();
-                }
+        click() {
+          app.quit();
+        }
 
-            }
+      }
 
-        ]
+    ]
 
-    }
+  }
 ];
 
 //If mac, add empty object to menu
 
 if (process.platform == 'darwin') {
-    //adds on empty object '{}' to beginning of array. Need this part for Macs so 'file' shows in top right of main window
-    mainMenuTemplate.unshift({});
+  //adds on empty object '{}' to beginning of array. Need this part for Macs so 'file' shows in top right of main window
+  mainMenuTemplate.unshift({});
 }
 
 //Add developer tools item if not in production
 
 if (process.env.NODE_ENV != 'production') {
-    mainMenuTemplate.push({
-        label: 'Developer Tools',
-        submenu: [
-            {
-                label: 'Toggle DevTools',
-                accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
-                click(item, focusedWindow) {
-                    focusedWindow.toggleDevTools();
-                }
-            },
-            {
-                role: 'reload'
-            }
-        ]
+  mainMenuTemplate.push({
+    label: 'Developer Tools',
+    submenu: [
+      {
+        label: 'Toggle DevTools',
+        accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
+        click(item, focusedWindow) {
+          focusedWindow.toggleDevTools();
+        }
+      },
+      {
+        role: 'reload'
+      }
+    ]
 
-    });
+  });
 }
 
 //Catch item:add
 
 ipcMain.on('item:add', (e, item) => {
 
-    //  console.log(item);
+  //  console.log(item);
 
 });
