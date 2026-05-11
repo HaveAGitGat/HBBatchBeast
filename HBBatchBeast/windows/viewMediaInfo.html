@@ -31,7 +31,7 @@
   const { ipcRenderer } = electron
 
 
-  window.onload = function () {
+  window.onload = () => {
 
     if (process.platform == 'win32' || process.platform == 'linux') {
 
@@ -70,7 +70,7 @@
 
 
 
-  ipcRenderer.on('item:filepath', function (e, itemfilePath) {
+  ipcRenderer.on('item:filepath', (e, itemfilePath) => {
 
 
     if (itemfilePath != "") {
@@ -83,7 +83,7 @@
 
 
 
-  function analyseFile(thispath) {
+  const analyseFile = window.analyseFile = (thispath) => {
 
     document.getElementById("errorTextArea").value += thispath + "\n\n"
 
@@ -103,7 +103,7 @@
     } else { ffprobeStaticPath = require('ffprobe-static').path }
 
 
-    ffprobe(filepath, { path: ffprobeStaticPath }, function (err, info) {
+    ffprobe(filepath, { path: ffprobeStaticPath }, (err, info) => {
 
       if (err) {
         document.getElementById("errorTextArea").value += "FFprobe encountered an error while reading the file. Error: " + err
@@ -112,7 +112,7 @@
       console.log(info)
 
       for (var i = 0; i < info.streams.length; i++) {
-        Object.keys(info.streams[i]).forEach(function (key) {
+        Object.keys(info.streams[i]).forEach((key) => {
 
           document.getElementById("errorTextArea").value += key + ": '" + info.streams[i][key] + "', \n"
 
@@ -126,14 +126,14 @@
 
     });
 
-  }
+  };
 
 
 
 
   const remote = require('electron').remote;
 
-  (function handleWindowControls() {
+  (() => {
     // When document has loaded, initialise
     document.onreadystatechange = () => {
       if (document.readyState == "complete") {
@@ -141,12 +141,23 @@
       }
     };
 
-    function init() {
+    const init = () => {
       let window = remote.getCurrentWindow();
       const minButton = document.getElementById('min-button'),
         maxButton = document.getElementById('max-button'),
         restoreButton = document.getElementById('restore-button'),
         closeButton = document.getElementById('close-button');
+
+      const toggleMaxRestoreButtons = () => {
+        window = remote.getCurrentWindow();
+        if (window.isMaximized()) {
+          maxButton.style.display = "none";
+          restoreButton.style.display = "flex";
+        } else {
+          restoreButton.style.display = "none";
+          maxButton.style.display = "flex";
+        }
+      };
 
       minButton.addEventListener("click", event => {
         window = remote.getCurrentWindow();
@@ -177,17 +188,7 @@
         window.close();
       });
 
-      function toggleMaxRestoreButtons() {
-        window = remote.getCurrentWindow();
-        if (window.isMaximized()) {
-          maxButton.style.display = "none";
-          restoreButton.style.display = "flex";
-        } else {
-          restoreButton.style.display = "none";
-          maxButton.style.display = "flex";
-        }
-      }
-    }
+    };
   })();
 
 
@@ -411,7 +412,7 @@
     </div>
 
     <script>
-      (function () {
+      (() => {
         var holder = document.getElementById('drag-file');
 
         holder.ondragover = () => {

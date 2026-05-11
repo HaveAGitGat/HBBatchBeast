@@ -1,14 +1,12 @@
-function updateConsole(text) {
-  var message = [
-    "consoleMessage",
+const updateConsole = (text) => {
+  const message = {
+    type: "consoleMessage",
     text,
-  ];
+  };
   process.send(message);
+};
 
-
-}
-
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
   console.log(err.stack);
 
   updateConsole(err.stack)
@@ -18,58 +16,41 @@ process.on('uncaughtException', function (err) {
 
 //console.log(randomvariable)
 
-
-
 //global variable
 
-
 process.on('message', (infoArray) => {
+  if (infoArray.type == "analyseThis") {
+    //var workerCommand = infoArray.command;
 
-
-
-
-  if (infoArray[0] == "analyseThis") {
-
-
-    //var workerCommand = infoArray[1];
-
-
-    var filepath = infoArray[1]
+    const filepath = infoArray.filePath
 
     if (__dirname.includes('.asar')) {
       process.env.NODE_ENV = "production";
     }
 
-    var ffprobe = require('ffprobe'),
-      ffprobeStatic = require('ffprobe-static');
-    var path = require("path");
-    var ffprobeStaticPath = ''
+    const ffprobe = require('ffprobe');
+    let ffprobeStaticPath;
 
     if (process.env.NODE_ENV == 'production') {
-
       ffprobeStaticPath = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
-
     } else {
       ffprobeStaticPath = require('ffprobe-static').path
     }
 
-    var thisval
+    let thisval
 
-    ffprobe(filepath, { path: ffprobeStaticPath }, function (err, info) {
+    ffprobe(filepath, { path: ffprobeStaticPath }, (err, info) => {
       //if (err) return done(err);
 
       if (err) {
-        var message = [
-          "fileInfo",
+        const message = {
+          type: "fileInfo",
           info,
-        ];
+        };
         process.send(message);
 
         process.exit()
-
-
       }
-
 
       //console.log(info);
 
@@ -79,21 +60,15 @@ process.on('message', (infoArray) => {
 
       console.log(thisval.streams[0]["codec_name"]);
 
-      var message = [
-        "fileInfo",
+      const message = {
+        type: "fileInfo",
         info,
-      ];
+      };
       process.send(message);
 
       process.exit()
-
     });
 
-
     //
-
   }
-
-
-
 });

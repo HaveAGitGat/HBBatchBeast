@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: HBBatchBeast
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+          cache: yarn
+          cache-dependency-path: HBBatchBeast/yarn.lock
+
+      - name: Enable Yarn
+        run: corepack prepare yarn@1.22.22 --activate
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --ignore-scripts
+
+      - name: Run lint checks
+        run: yarn lint
+
+  build-zips:
+    name: Build ${{ matrix.name }} zip
+    runs-on: ${{ matrix.os }}
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-latest
+            package_script: package-linux
+            package_dir: hbbatchbeast-linux-x64
+            artifact_name: hbbatchbeast-linux-x64
+          - name: Windows
+            os: windows-latest
+            package_script: package-win
+            package_dir: hbbatchbeast-win32-x64
+            artifact_name: hbbatchbeast-windows-x64
+    defaults:
+      run:
+        working-directory: HBBatchBeast
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+          cache: yarn
+          cache-dependency-path: HBBatchBeast/yarn.lock
+
+      - name: Enable Yarn
+        run: corepack prepare yarn@1.22.22 --activate
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --ignore-scripts
+
+      - name: Build package
+        run: yarn ${{ matrix.package_script }}
+
+      - name: Create Linux zip
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          cd release-builds
+          zip -r "../artifacts/${{ matrix.artifact_name }}.zip" "${{ matrix.package_dir }}"
+
+      - name: Create Windows zip
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force artifacts | Out-Null
+          Compress-Archive `
+            -Path "release-builds/${{ matrix.package_dir }}" `
+            -DestinationPath "artifacts/${{ matrix.artifact_name }}.zip" `
+            -Force
+
+      - name: Upload zip artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: HBBatchBeast/artifacts/${{ matrix.artifact_name }}.zip
+          if-no-files-found: error
+          archive: false

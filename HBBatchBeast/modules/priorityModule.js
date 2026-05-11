@@ -1,31 +1,12 @@
 
-//global variables
-var shellWorker
-
-
-var shell = require('shelljs');
-
-
-
-var fs = require('fs');
-
-
+const shell = require('shelljs');
 
 process.on('message', (infoArray) => {
+  if (infoArray.type == "setPriority") {
+    const workerCommand = infoArray.command;
 
-
-
-    if (infoArray[0] == "setPriority") {
-
-
-        var workerCommand = infoArray[1];
-
-
-        shellWorker = shell.exec(workerCommand, function (code, stdout, stderr, stdin) {
-
-
-            process.exit()
-        });
-    }
-
+    shell.exec(workerCommand, (code, stdout, stderr, stdin) => {
+      process.exit()
+    });
+  }
 });

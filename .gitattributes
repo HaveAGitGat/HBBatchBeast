@@ -1,0 +1,14 @@
+* text=auto eol=lf
+
+# Binary files
+*.avi binary
+*.exe binary
+*.gif binary
+*.icns binary
+*.ico binary
+*.jpg binary
+*.jpeg binary
+*.mp4 binary
+*.otf binary
+*.png binary
+*.ttf binary
