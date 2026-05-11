@@ -1285,10 +1285,7 @@ Features/additions:
   const getHandBrakeCLIPath = window.getHandBrakeCLIPath = () => {
 
 
-    var fullPath = __dirname;
-    fullPath = fullPath.slice(0, fullPath.lastIndexOf(global.stringProcessingSlash));
-    fullPath = fullPath.slice(0, fullPath.lastIndexOf(global.stringProcessingSlash));
-    var fullPath2 = fullPath + "\\HandBrakeCLI.exe"
+    var fullPath2 = path.join(__dirname.replace('app.asar', 'app.asar.unpacked'), 'HandBrakeCLI.exe')
 
 
 

@@ -52,8 +52,8 @@ jobs:
           - name: Windows
             os: windows-latest
             package_script: package-win
-            package_dir: hbbatchbeast-win32-ia32
-            artifact_name: hbbatchbeast-windows-ia32
+            package_dir: hbbatchbeast-win32-x64
+            artifact_name: hbbatchbeast-windows-x64
     defaults:
       run:
         working-directory: HBBatchBeast
